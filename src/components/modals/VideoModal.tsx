@@ -1,0 +1,221 @@
+import React, { FC, useEffect, useState } from 'react';
+import {
+    Modal,
+    ModalContent,
+    ModalOverlay,
+    ModalHeader,
+    ModalBody,
+    ModalCloseButton,
+    Box,
+    Flex,
+    Button,
+    Text,
+    Image,
+    useDisclosure,
+} from "@chakra-ui/react";
+import Vimeo from '@u-wave/react-vimeo';
+
+// Components
+import AlertModal from './AlertModal';
+import LoadingState from '../LoadingState';
+
+// Requisitions
+import api from '../../services/api';
+
+// Styles
+import fontTheme from '../../styles/base';
+import colorPalette from "../../styles/colorPalette";
+
+// Images
+import VideoIcon from '../../assets/icons/video.png';
+
+interface IVideoModal {
+    id: string;
+    name: string;
+    usersId: string[];
+    url: string;
+    nick: string;
+}
+
+interface IUser {
+    _id: string;
+    userName: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    birthday_date: string;
+    is_confirmed: boolean;
+    status: [number];
+    coins: number;
+    contribution: number;
+    first_certificate: string;
+    second_certificate: string;
+}
+
+const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick }) => {
+    const { isOpen: videoIsOpen,
+        onClose: videoOnClose,
+        onOpen: videoOnOpen,
+        onToggle: videoOnToggle
+    } = useDisclosure();
+
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState<IUser>({} as IUser);
+    const [buttonValidation, setButtonValidation] = useState(false);
+    const [onError, setOnError] = useState(false);
+
+    // Pega as informações do usuário logado
+    const getUser = async () => {
+        try {
+            const userId = sessionStorage.getItem('@pionira/userId');
+            const res = await api.get(`/user/${userId}`);
+            setUser(res.data);
+        } catch (error) {
+            setOnError(true);
+        }
+    }
+
+    const updateVideo = async (videoId: string) => {
+        try {
+            await api.patch(`video/${videoId}`, {
+                user_id: user._id
+            });
+        } catch (error) {
+            setOnError(true);
+        }
+    }
+
+    // Verifica qual modal abrir
+    const handleModal = async () => {
+        try {
+            setIsLoading(true);
+            await updateVideo(id);
+            videoOnToggle();
+            setButtonValidation(true);
+        } catch (error) {
+            setOnError(true);
+        }
+    }
+
+    // Pega o necessario da URL do video
+    const parseVideoUrl = () => {
+        if (url)
+            return url.split("//")[1].split("/")[1];
+    }
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
+
+    return (
+        <>
+            <Flex
+                minH='5.5rem'
+                h='5.5rem'
+                justifyContent='center'
+                alignItems='center'
+                mb='2rem'
+                _hover={{
+                    cursor: 'pointer'
+                }}
+                onClick={videoOnOpen}>
+                <Flex bg={buttonValidation || usersId.includes(user._id) ? "#E48A0A" : "#F6F6F6"} boxShadow='6px 6px 4px rgba(0,0,0,0.25)' w='85%' h='100%' borderRadius='5' justifyContent='space-between' alignItems='center'>
+                    <Image src={VideoIcon} ml='2rem' h='59' />
+                    <Text
+                        fontFamily={fontTheme.fonts}
+                        mr='2rem'
+                        fontWeight='semibold'
+                        fontSize='1.5rem'
+                        color={buttonValidation || usersId.includes(user._id) ? "#FFFFFF" : "black"}
+                    >
+                        {nick}
+                    </Text>
+                </Flex>
+            </Flex>
+
+            <Modal isOpen={videoIsOpen} onClose={videoOnClose} size="4xl">
+                <ModalOverlay />
+                <ModalContent height="34rem">
+                    <ModalHeader display="flex" justifyContent="center" paddingBottom="0px">
+                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="3.7rem">
+                            {name}
+                        </Text>
+                    </ModalHeader>
+                    <Box
+                        w="25%"
+                        bg={colorPalette.primaryColor}
+                        h="55vh"
+                        position="absolute"
+                        zIndex="-1"
+                        left="0"
+                        top="0"
+                        borderTopStartRadius='5px'
+                        clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
+                    />
+                    <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={() => {
+                        videoOnToggle();
+                        setIsLoading(true);
+                    }} />
+                    <ModalBody>
+                        <Flex direction="column" alignItems="center" paddingTop="0px">
+
+                            {isLoading ? (
+                                <Flex position="absolute" zIndex="-1" width="100%" height="50vh" justifyContent="center">
+                                    <LoadingState />
+                                </Flex>
+                            ) : null}
+
+                            <Vimeo
+                                onLoaded={() => { setIsLoading(false) }}
+                                width="625rem"
+                                height="350rem"
+                                video={parseVideoUrl() as string | number}
+                            />
+                        </Flex>
+                        {
+                            isLoading ? null : (
+                                <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
+                                    <Button
+                                        bgColor={colorPalette.confirmButton}
+                                        width="50%"
+                                        height="3rem"
+                                        onClick={() => handleModal()}
+                                    >
+                                        <Text
+                                            fontFamily={fontTheme.fonts}
+                                            fontWeight="semibold"
+                                            fontSize="2rem"
+                                        >
+                                            Concluido
+                                        </Text>
+                                    </Button>
+                                </Flex>
+                            )
+                        }
+                    </ModalBody>
+                </ModalContent >
+            </Modal >
+            <AlertModal
+                isOpen={onError}
+                onClose={() => window.location.reload()}
+                alertTitle='Ops!'
+                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+
+                buttonBody={
+                    <Button
+                        color='white'
+                        bg={colorPalette.primaryColor}
+                        onClick={() => window.location.reload()}
+                    >
+                        Recarregar
+                    </Button>
+                }
+            />
+        </>
+    )
+}
+
+export default VideoModal;

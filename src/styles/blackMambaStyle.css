@@ -1,0 +1,13 @@
+.bush-item {
+	transition: all 200ms ease;
+}
+
+.bush-item-container:hover .bush-item {
+	margin-top: -40vh;
+}
+
+.bush-item-container:hover {
+	cursor: pointer;
+}
+
+
