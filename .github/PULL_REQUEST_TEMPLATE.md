@@ -7,6 +7,7 @@ Marque com um X dentro do [ ].
 
 ### Qual história foi resolvida? (Colar link)
 Coloque o link entre os `.
+
 ``` 
 Link
 ```
@@ -18,7 +19,7 @@ Marque com um X dentro do [].
 - [] Grande
 
 ### Checklist
- O ideial é todos os [] estarem marcados com um X.
+O ideial é todos os [] estarem marcados com um X.
 
 - [] Minha mudança condiz com todos os críterios de aceitação?
 
