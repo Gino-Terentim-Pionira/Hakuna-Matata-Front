@@ -11,12 +11,6 @@ Coloque o link entre os `.
 ``` 
 Link
 ```
-### Risco ao introduzar essa issue
-Marque com um X dentro do [].
-
-- [] Baixa
-- [] Media
-- [] Grande
 
 ### Checklist
 O ideial é todos os [] estarem marcados com um X.
@@ -30,5 +24,4 @@ O ideial é todos os [] estarem marcados com um X.
 - [] Minha mudança não gerou nenhum warning novo?
 
 ### Colar imagens da alteração implementada
-
 Cole imagens da alteração implementada rodando localmente.
