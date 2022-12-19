@@ -3,6 +3,7 @@ import LoginRegister from '../components/LoginRegister';
 import { useHistory } from 'react-router-dom';
 import { CreateUser } from '../services/createUser';
 import { useAuth } from '../contexts/authContext';
+import { errorCases } from '../utils/errors/errorsCases';
 import {
     Flex,
     Center,
@@ -35,10 +36,16 @@ const Register = () => {
     const [validationError, setValidationError] = useState('');
     const [hasValidationError, setHasValidationError] = useState(false);
 
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-    const onClose = () => setIsConfirmOpen(false);
+    const [alertModal, setAlertModal] = useState({
+        isOpen: false,
+        alertAnswer: '',
+        action: () => console.log(),
+    });
     const cancelRef = useRef<HTMLButtonElement>(null);
-    const [alertAnswer, setAlertAnswer] = useState('');
+    const onClose = () => setAlertModal({
+        ...alertModal,
+        isOpen: false
+    });
 
     const history = useHistory();
 
@@ -49,6 +56,55 @@ const Register = () => {
             history.replace('/mainPage');
         }
     }, [authenticated]);
+
+    const ERROR_TYPES: {
+        [key: string]: {
+            label: string,
+            action: VoidFunction
+        }
+    } = {
+        'SMALL_PASSWORD_ERROR': {
+            label: errorCases.SMALL_PASSWORD_ERROR,
+            action: onClose
+        },
+        'INVALID_NAME_ERROR': {
+            label: errorCases.INVALID_NAME_ERROR,
+            action: onClose
+        },
+        'INVALID_EMAIL_ERROR': {
+            label: errorCases.INVALID_EMAIL_ERROR,
+            action: onClose,
+        },
+        'DIFFERENT_PASSWORDS_ERROR': {
+            label: errorCases.DIFFERENT_PASSWORDS_ERROR,
+            action: onClose
+        },
+        'MISSING_FIELDS_ERROR': {
+            label: errorCases.MISSING_FIELDS_ERROR,
+            action: onClose
+        },
+        'SENDING_EMAIL_PROBLEM_ERROR': {
+            label: errorCases.SENDING_EMAIL_PROBLEM_ERROR,
+            action: onClose
+        },
+        'DUPLICATE_EMAIL_ERROR': {
+            label: errorCases.DUPLICATE_EMAIL_ERROR,
+            action: () => {setStep(2); onClose()}
+        },
+        'SUCCESS_CASE_REGISTER': {
+            label: errorCases.SUCCESS_CASE_REGISTER,
+            action: () => history.push('/login')
+        }
+    };
+
+    const handleAlertModal = (erroType: string) => {
+        setAlertModal({
+            ...alertModal,
+            isOpen: !alertModal.isOpen,
+            alertAnswer: ERROR_TYPES[erroType].label,
+            action: ERROR_TYPES[erroType].action
+        })
+    }
 
     const lastIndexValidation = (name: string[]) => {
         for (let i = 1; i <= name.length; i++) {
@@ -147,20 +203,16 @@ const Register = () => {
 
                         await CreateUser(name[0], lastName, formEmail, formPassword, formDate, formUserName);
 
-                        setAlertAnswer('Prontinho, agora a Savana possui o seu cadastro. Por favor cheque o seu email para confirmá-lo!');
-                        setIsConfirmOpen(true);
+                        handleAlertModal('SUCCESS_CASE_REGISTER');
 
                     } catch (err) {
-                        setAlertAnswer(err.response.data.message);
-                        setIsConfirmOpen(true);
+                        handleAlertModal(err.response.data.message)
                     }
                 } else {
-                    setAlertAnswer("Por favor, coloque as mesmas senhas");
-                    setIsConfirmOpen(true);
+                    handleAlertModal('DIFFERENT_PASSWORDS_ERROR');
                 }
             } else {
-                setAlertAnswer('Calma aí, viajante. Parece que você não preencheu todos os campos corretamente!');
-                setIsConfirmOpen(true);
+                handleAlertModal('MISSING_FIELDS_ERROR');
             }
 
         } else if (step == 2) {
@@ -170,8 +222,7 @@ const Register = () => {
             if (formEmail && formDate && !invalidName) {
                 setStep(step + 1);
             } else {
-                setAlertAnswer("Calma aí, viajante. Parece que você não preencheu todos os campos corretamente!");
-                setIsConfirmOpen(true);
+                handleAlertModal('MISSING_FIELDS_ERROR');
                 setHasValidationError(true);
             }
 
@@ -182,8 +233,7 @@ const Register = () => {
             if (formName && formUserName && !invalidName) {
                 setStep(step + 1);
             } else {
-                setAlertAnswer("Calma aí, viajante. Parece que você não preencheu todos os campos corretamente!");
-                setIsConfirmOpen(true);
+                handleAlertModal('MISSING_FIELDS_ERROR');
                 setHasValidationError(true);
             }
 
@@ -280,23 +330,17 @@ const Register = () => {
 
                 {(step === 3 && !hasValidationError) ? (
                     <AlertModal
-                        isOpen={isConfirmOpen}
+                        isOpen={alertModal.isOpen}
                         onClose={onClose}
                         alertTitle='Cadastro de Usuário'
-                        alertBody={alertAnswer}
-                        onClickClose={
-                            () => {
-                                onClose();
-                            }
-                        }
+                        alertBody={alertModal.alertAnswer}
+                        onClickClose={() => onClose()}
                         buttonBody={
                             <Button
                                 ref={cancelRef}
                                 color='white'
                                 bg={colorPalette.primaryColor}
-                                onClick={() => {
-                                    history.push('/');
-                                }}
+                                onClick={alertModal.action}
                             >
                                 Continuar
                             </Button>
@@ -305,23 +349,17 @@ const Register = () => {
                 ) : (
 
                     <AlertModal
-                        isOpen={isConfirmOpen}
+                        isOpen={alertModal.isOpen}
                         onClose={onClose}
                         alertTitle='Cadastro de Usuário'
-                        alertBody={alertAnswer}
-                        onClickClose={
-                            () => {
-                                onClose();
-                            }
-                        }
+                        alertBody={alertModal.alertAnswer}
+                        onClickClose={() => onClose()}
                         buttonBody={
                             <Button
                                 ref={cancelRef}
                                 color='white'
                                 bg={colorPalette.primaryColor}
-                                onClick={() => {
-                                    onClose();
-                                }}
+                                onClick={alertModal.action}
                             >
                                 Continuar
                             </Button>

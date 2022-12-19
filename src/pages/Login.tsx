@@ -2,6 +2,7 @@ import React, { BaseSyntheticEvent, useEffect, useState, useRef } from 'react';
 import LoginRegister from '../components/LoginRegister';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
+import { errorCases } from '../utils/errors/errorsCases';
 import {
 	Flex,
 	Center,
@@ -26,11 +27,16 @@ const Login = () => {
 	const history = useHistory();
 	const { handleLogin, authenticated } = useAuth();
 
-	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-	const [alertAnswer, setAlertAnswer] = useState<string>('');
-	const [onError, setOnError] = useState(false);
+	const [alertModal, setAlertModal] = useState({
+		alertAnswer: '',
+		isOpen: false,
+		action: () => console.log()
+	});
 
-	const onClose = () => setIsConfirmOpen(false);
+	const onClose = () => setAlertModal({
+		...alertModal,
+		isOpen: false
+	});
 	const cancelRef = useRef<HTMLButtonElement>(null);
 
 	useEffect(() => {
@@ -39,20 +45,56 @@ const Login = () => {
 		}
 	}, [authenticated]);
 
+	const ERROR_TYPES: {[key: string]: {
+		label: string,
+		action: VoidFunction
+	}} = {
+		'MISSING_FIELDS_ERROR': {
+			label: errorCases.MISSING_FIELDS_ERROR,
+			action: onClose
+		},
+		'SERVER_ERROR': {
+			label: errorCases.SERVER_ERROR,
+			action: () => window.location.reload()
+		},
+		'NON_EXISTING_EMAIL_ERROR': {
+			label: errorCases.NON_EXISTING_EMAIL_ERROR,
+			action: onClose
+		},
+		'WRONG_PASSWORD_ERROR': {
+			label: errorCases.WRONG_PASSWORD_ERROR,
+			action: onClose
+		},
+		'USER_IS_NOT_CONFIRMED_ERROR': {
+			label: errorCases.USER_IS_NOT_CONFIRMED_ERROR,
+			action: onClose
+		},
+		'FAILED_LOGIN_ERROR': {
+			label: errorCases.FAILED_LOGIN_ERROR,
+			action: onClose
+		}
+	}
+
+	const handleAlertModal = (erroTypes: string) => {
+		setAlertModal({
+			alertAnswer: ERROR_TYPES[erroTypes].label,
+			isOpen: true,
+			action: ERROR_TYPES[erroTypes].action
+		});
+	}
+
 	const _handleLogin = async () => {
 		if (email && password) {
 			try {
 				const res = await handleLogin(email, password);
 				if (typeof res == 'string') {
-					setAlertAnswer(res);
-					setIsConfirmOpen(true);
+					handleAlertModal(res)
 				}
 			} catch (erro) {
-				setOnError(true);
+				handleAlertModal('SERVER_ERROR')
 			}
 		} else {
-			setAlertAnswer('Ei, viajante! Para entrar na savana todos os campos precisam ser preenchidos!');
-			setIsConfirmOpen(true);
+			handleAlertModal('MISSING_FIELDS_ERROR');
 		}
 	};
 
@@ -115,42 +157,22 @@ const Login = () => {
 				/>
 
 				<AlertModal
-					isOpen={isConfirmOpen}
+					isOpen={alertModal.isOpen}
 					onClose={onClose}
 					alertTitle='Login'
-					alertBody={alertAnswer}
-
+					alertBody={alertModal.alertAnswer}
 					buttonBody={
 						<Button
 							ref={cancelRef}
 							color='white'
 							bg={colorPalette.primaryColor}
-							onClick={() => {
-								onClose();
-							}}
+							onClick={alertModal.action}
 						>
 							Continuar
 						</Button>
 					}
 				/>
-
 			</Center>
-			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
-
-				buttonBody={
-					<Button
-						color='white'
-						bg={colorPalette.primaryColor}
-						onClick={() => window.location.reload()}
-					>
-						Recarregar
-					</Button>
-				}
-			/>
 		</Flex>
 	);
 };
