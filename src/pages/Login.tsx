@@ -2,6 +2,7 @@ import React, { BaseSyntheticEvent, useEffect, useState, useRef } from 'react';
 import LoginRegister from '../components/LoginRegister';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
+import { errorCases } from '../utils/errors/errorsCases';
 import {
 	Flex,
 	Center,
@@ -49,27 +50,27 @@ const Login = () => {
 		action: VoidFunction
 	}} = {
 		'MISSING_FIELDS_ERROR': {
-			label: 'Ei, viajante! Para entrar na savana todos os campos precisam ser preenchidos!',
+			label: errorCases.MISSING_FIELDS_ERROR,
 			action: onClose
 		},
 		'SERVER_ERROR': {
-			label: 'Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!',
+			label: errorCases.SERVER_ERROR,
 			action: () => window.location.reload()
 		},
 		'NON_EXISTING_EMAIL_ERROR': {
-			label: "Ops! Você é novo por aqui? Parece que esse endereço de email ainda não existe na savana!",
+			label: errorCases.NON_EXISTING_EMAIL_ERROR,
 			action: onClose
 		},
 		'WRONG_PASSWORD_ERROR': {
-			label: 'Ops, não posso permitir que entre na savana pois essa não é a sua senha!',
+			label: errorCases.WRONG_PASSWORD_ERROR,
 			action: onClose
 		},
 		'USER_IS_NOT_CONFIRMED_ERROR': {
-			label: 'Usuário não confirmado!',
+			label: errorCases.USER_IS_NOT_CONFIRMED_ERROR,
 			action: onClose
 		},
 		'FAILED_LOGIN_ERROR': {
-			label: 'Login falhou!',
+			label: errorCases.FAILED_LOGIN_ERROR,
 			action: onClose
 		}
 	}

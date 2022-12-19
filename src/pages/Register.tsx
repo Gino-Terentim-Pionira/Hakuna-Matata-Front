@@ -3,6 +3,7 @@ import LoginRegister from '../components/LoginRegister';
 import { useHistory } from 'react-router-dom';
 import { CreateUser } from '../services/createUser';
 import { useAuth } from '../contexts/authContext';
+import { errorCases } from '../utils/errors/errorsCases';
 import {
     Flex,
     Center,
@@ -63,40 +64,40 @@ const Register = () => {
         }
     } = {
         'SMALL_PASSWORD_ERROR': {
-            label: 'Senha muito pequena',
+            label: errorCases.SMALL_PASSWORD_ERROR,
             action: onClose
         },
         'INVALID_NAME_ERROR': {
-            label: 'Escreva um nome válido',
+            label: errorCases.INVALID_NAME_ERROR,
             action: onClose
         },
         'INVALID_EMAIL_ERROR': {
-            label: 'Formato de e-mail inválido',
+            label: errorCases.INVALID_EMAIL_ERROR,
             action: onClose,
         },
         'DIFFERENT_PASSWORDS_ERROR': {
-            label: 'Por favor, coloque as mesmas senhas',
+            label: errorCases.DIFFERENT_PASSWORDS_ERROR,
             action: onClose
         },
         'MISSING_FIELDS_ERROR': {
-            label: 'Calma aí, viajante. Parece que você não preencheu todos os campos corretamente!',
+            label: errorCases.MISSING_FIELDS_ERROR,
             action: onClose
         },
         'SENDING_EMAIL_PROBLEM_ERROR': {
-            label: 'Ocorreu um erro ao enviar o email, tente criar a conta novamente!',
+            label: errorCases.SENDING_EMAIL_PROBLEM_ERROR,
             action: onClose
         },
         'DUPLICATE_EMAIL_ERROR': {
-            label: 'Esse e-mail já está em uso, utilize outro ou faça login com o o existente',
+            label: errorCases.DUPLICATE_EMAIL_ERROR,
             action: () => {setStep(2); onClose()}
         },
-        'SUCCESS_CASE': {
-            label: 'Prontinho, agora a Savana possui o seu cadastro. Por favor cheque o seu email para confirmá-lo!',
+        'SUCCESS_CASE_REGISTER': {
+            label: errorCases.SUCCESS_CASE_REGISTER,
             action: () => history.push('/login')
         }
     };
 
-    const callAlertModal = (erroType: string) => {
+    const handleAlertModal = (erroType: string) => {
         setAlertModal({
             ...alertModal,
             isOpen: !alertModal.isOpen,
@@ -202,16 +203,16 @@ const Register = () => {
 
                         await CreateUser(name[0], lastName, formEmail, formPassword, formDate, formUserName);
 
-                        callAlertModal('SUCCESS_CASE');
+                        handleAlertModal('SUCCESS_CASE_REGISTER');
 
-                    } catch (err: any) {
-                        callAlertModal(err.response.data.message)
+                    } catch (err) {
+                        handleAlertModal(err.response.data.message)
                     }
                 } else {
-                    callAlertModal('DIFFERENT_PASSWORDS_ERROR');
+                    handleAlertModal('DIFFERENT_PASSWORDS_ERROR');
                 }
             } else {
-                callAlertModal('MISSING_FIELDS_ERROR');
+                handleAlertModal('MISSING_FIELDS_ERROR');
             }
 
         } else if (step == 2) {
@@ -221,7 +222,7 @@ const Register = () => {
             if (formEmail && formDate && !invalidName) {
                 setStep(step + 1);
             } else {
-                callAlertModal('MISSING_FIELDS_ERROR');
+                handleAlertModal('MISSING_FIELDS_ERROR');
                 setHasValidationError(true);
             }
 
@@ -232,7 +233,7 @@ const Register = () => {
             if (formName && formUserName && !invalidName) {
                 setStep(step + 1);
             } else {
-                callAlertModal('MISSING_FIELDS_ERROR');
+                handleAlertModal('MISSING_FIELDS_ERROR');
                 setHasValidationError(true);
             }
 
