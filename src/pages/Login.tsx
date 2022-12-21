@@ -26,6 +26,7 @@ const Login = () => {
 	const [password, setPassword] = useState<string>('');
 	const history = useHistory();
 	const { handleLogin, authenticated } = useAuth();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const [alertModal, setAlertModal] = useState({
 		alertAnswer: '',
@@ -86,12 +87,15 @@ const Login = () => {
 	const _handleLogin = async () => {
 		if (email && password) {
 			try {
+				setIsLoading(true);
 				const res = await handleLogin(email, password);
 				if (typeof res == 'string') {
-					handleAlertModal(res)
+					handleAlertModal(res);
+					setIsLoading(false);
 				}
 			} catch (erro) {
-				handleAlertModal('SERVER_ERROR')
+				handleAlertModal('SERVER_ERROR');
+				setIsLoading(false);
 			}
 		} else {
 			handleAlertModal('MISSING_FIELDS_ERROR');
@@ -154,6 +158,7 @@ const Login = () => {
 					forgetPassword='Esqueci minha senha'
 					forgetPasswordLink={() => goToForgotPassword()}
 					buttonText='Próximo'
+					loading={isLoading}
 				/>
 
 				<AlertModal
