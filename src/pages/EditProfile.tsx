@@ -88,6 +88,7 @@ const EditProfile = () => {
 			setUserPhoto(res.data?.profileImage?.url);
 		} catch (error) {
 			setOnError(true);
+			// ALTERAR
 		}
 	};
 
@@ -124,6 +125,7 @@ const EditProfile = () => {
 			setAlertAnswer('Suas informações foram atualizadas, viajante!');
 			setCorrectUpdate(true);
 		} catch (error) {
+			// ALTERAR
 			setAlertAnswer(error.response.data.message);
 			setLoading(false);
 		}
@@ -145,6 +147,7 @@ const EditProfile = () => {
 					setNewPhoto(e.target.files[0]);
 					setLoading(true);
 				} else {
+					//ALTERAR
 					setAlertAnswer(
 						'Ops! É só permitido imagens menores que 5Mb. \n E que sejam jpeg, jpg ou png!',
 					);
@@ -157,6 +160,7 @@ const EditProfile = () => {
 			await api.patch(`/user/image/${userId}`, data);
 			setLoading(false);
 		} catch (error) {
+			//ALTERAR
 			alert(error);
 		}
 	};
@@ -282,13 +286,13 @@ const EditProfile = () => {
 									margin='0 auto'
 									width='90%'
 									padding='2%'
-									bg={colorPalette.backgroundColor}
+									bg={colorPalette.primaryColor}
 									color={colorPalette.textColor}
 									fontSize='1.5rem'
 									borderRadius='50px'
 									textAlign='center'
 								>
-									Escolher Arquivo
+									Escolher Imagem
 								</Box>
 							</label>
 						</Box>
@@ -340,20 +344,6 @@ const EditProfile = () => {
 									setName(e.target.value)
 								}
 							/>
-							<Text w='100%' color={colorPalette.textColor}> Qual o seu melhor endereço de email para entrarmos em contato com você?</Text>
-							<Input
-								marginTop='0.5rem'
-								marginBottom='0.5rem'
-								h='13%'
-								w='95%'
-								color={colorPalette.textColor}
-								borderColor={colorPalette.inputBoder}
-								placeholder='Email'
-								value={email}
-								onChange={(e: BaseSyntheticEvent) =>
-									setEmail(e.target.value)
-								}
-							/>
 							<Text w='100%' color={colorPalette.textColor}> Qual a sua data de nascimento?</Text>
 							<Input
 								marginTop='0.5rem'
@@ -403,7 +393,7 @@ const EditProfile = () => {
 					</Flex>
 				</Center>
 			)}
-
+{/* ALTERAR */}
 			{isNaviPhoto ? (
 				<AlertModal
 					isOpen={isConfirmOpen}
@@ -414,7 +404,7 @@ const EditProfile = () => {
 						<Button
 							ref={cancelRef}
 							color='white'
-							bg={colorPalette.buttonTextColor}
+							bg={colorPalette.primaryColor}
 							onClick={() => {
 								onClose();
 							}}
@@ -437,7 +427,7 @@ const EditProfile = () => {
 					buttonBody={
 						<Button
 							color='white'
-							bg={colorPalette.buttonTextColor}
+							bg={colorPalette.primaryColor}
 							ref={cancelRef}
 							onClick={() => {
 								onClose();
@@ -460,7 +450,7 @@ const EditProfile = () => {
 				buttonBody={
 					<Button
 						color='white'
-						bg={colorPalette.buttonTextColor}
+						bg={colorPalette.primaryColor}
 						onClick={() => window.location.reload()}
 					>
 						Recarregar
