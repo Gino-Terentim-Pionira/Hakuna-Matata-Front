@@ -106,7 +106,7 @@ const MainPage = () => {
 	const [onError, setOnError] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -170,7 +170,6 @@ const MainPage = () => {
 	};
 
 	const getUserRequisition = async () => {
-		setIsLoading(true);
 		try {
 			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
 				'@pionira/userId',
@@ -185,7 +184,7 @@ const MainPage = () => {
 			}
 
 			await checkCanCollectDaily(res.data.lastCollected);
-			//setIsLoading(false);
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
@@ -496,7 +495,13 @@ const MainPage = () => {
 				)}
 				{
 					isLoading ? (
-						<Box position='fixed' top='0' left='0' right='0' bottom='0' backgroundColor={colorPalette.backgroundColor}>
+						<Box 
+						position='fixed' 
+						top='0' 
+						left='0' 
+						right='0' 
+						bottom='0' 
+						backgroundColor={colorPalette.primaryColor}>
 							<LoadingState />
 						</Box>
 					) : (null)

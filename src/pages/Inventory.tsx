@@ -26,6 +26,7 @@ const Shop = () => {
 	const [validation, setValidation] = useState(false);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const getShopItens = async () => {
 		try {
@@ -37,6 +38,7 @@ const Shop = () => {
 			res.data.map(({ user_id }: { user_id: [string] }) => {
 				user_id.includes(userId as string) ? setValidation(true) : null;
 			});
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
@@ -212,6 +214,20 @@ const Shop = () => {
 					</Button>
 				}
 			/>
+			{
+				isLoading ? (
+					<Box 
+					position='fixed'
+					zIndex='10' 
+					top='0' 
+					left='0' 
+					right='0' 
+					bottom='0' 
+					backgroundColor={colorPalette.primaryColor}>
+						<LoadingState />
+					</Box>
+				) : (null)
+			}
 		</Box>
 	);
 };
