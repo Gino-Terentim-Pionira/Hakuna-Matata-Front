@@ -1,6 +1,6 @@
 import React, { SetStateAction, useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDisclosure, Image, Flex, Center, Button } from '@chakra-ui/react';
+import { useDisclosure, Image, Flex, Center, Button, Box } from '@chakra-ui/react';
 
 // Components
 import ProfileModal from '../components/modals/ProfileModal';
@@ -36,6 +36,7 @@ import ignorance100 from '../assets/ignorance/mainPage/ignorance100.png';
 import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
+import LoadingState from '../components/LoadingState';
 
 interface IUser {
 	ignorance: number;
@@ -105,6 +106,7 @@ const MainPage = () => {
 	const [onError, setOnError] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -168,6 +170,7 @@ const MainPage = () => {
 	};
 
 	const getUserRequisition = async () => {
+		setIsLoading(true);
 		try {
 			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
 				'@pionira/userId',
@@ -182,6 +185,7 @@ const MainPage = () => {
 			}
 
 			await checkCanCollectDaily(res.data.lastCollected);
+			//setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
@@ -490,7 +494,15 @@ const MainPage = () => {
 						/>
 					</>
 				)}
+				{
+					isLoading ? (
+						<Box position='fixed' top='0' left='0' right='0' bottom='0' backgroundColor={colorPalette.backgroundColor}>
+							<LoadingState />
+						</Box>
+					) : (null)
+				}
 			</Flex>
+
 
 			<AlertModal
 				isOpen={onError}
