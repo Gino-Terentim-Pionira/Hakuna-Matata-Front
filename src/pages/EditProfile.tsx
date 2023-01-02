@@ -41,7 +41,6 @@ const EditProfile = () => {
 	const [userInfo, setUserInfo] = useState({
 		userName: '',
 		name: '',
-		email: '',
 		birthday_date: '',
 	});
 
@@ -173,7 +172,6 @@ const EditProfile = () => {
 				...userInfo,
 				userName: res.data.userName,
 				name: `${res.data.first_name} ${res.data.last_name}`,
-				email: res.data.email,
 				birthday_date
 			});
 			setUserPhoto(res.data?.profileImage?.url);
@@ -196,7 +194,7 @@ const EditProfile = () => {
 
 		try {
 			const userId = sessionStorage.getItem('@pionira/userId');
-			const { userName, name, birthday_date, email } = userInfo;
+			const { userName, name, birthday_date } = userInfo;
 			const firstName = name.split(' ');
 			const last_name = lastIndexValidation(firstName) as string;
 			const first_name = firstName[0];
@@ -205,7 +203,6 @@ const EditProfile = () => {
 				userName,
 				first_name,
 				last_name,
-				email,
 				birthday_date
 			});
 			setLoading(false);
