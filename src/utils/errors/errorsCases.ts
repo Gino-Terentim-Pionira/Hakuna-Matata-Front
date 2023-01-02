@@ -19,11 +19,8 @@ export const editProfileErrorCases: {[key: string]: string} = {
   IMAGE_FORMAT_ERROR: 'Ops! É só permitido imagens menores que 5Mb. \n E que sejam jpeg, jpg ou png!',
   SERVER_SENDING_IMAGE_ERROR: 'Vish, acredito que nossa camera estragou viajante. Tente tirar sua foto novamente mais tarde!',
   SERVER_USER_DO_NOT_EXIST_ERROR: 'Usuário não encontrado!',
-  SERVER_EMAIL_ERROR: 'Informe seu email corretamente, precisamos ter um meio para contatar você!',
-  SERVE_DUPLICATE_EMAIL_ERROR: 'Ops! Esse email já esta em uso!',
   SERVER_NAME_ERROR: 'Não esqueça de informar seu nome inteiro, queremos te conhecer!',
   SERVER_BIRTHDAY_ERROR: 'Não esqueça de informar sua data de aniversário, queremos te conhecer!',
   SERVER_USERNAME_ERROR: 'Não esqueça de informar seu nome de usuário, precisamos saber como te chamar!',
   SERVER_ERROR: 'Falha ao atualizar usuário!',
-
 }

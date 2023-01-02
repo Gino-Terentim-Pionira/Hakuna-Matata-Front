@@ -68,7 +68,7 @@ const EditProfile = () => {
 	const preview = useMemo(() => {
 		try {
 			return newPhoto
-				? URL.createObjectURL(newPhoto)
+				? URL.createObjectURL(newPhoto as Blob)
 				: userPhoto
 					? userPhoto
 					: null;
