@@ -55,7 +55,7 @@ const EditProfile = () => {
 	const [alertAnswer, setAlertAnswer] = useState('');
 	const [userPhoto, setUserPhoto] = useState(null);
 	const [newPhoto, setNewPhoto] = useState<IImage>({} as IImage);
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setLoading] = useState(false);
 	const [onError, setOnError] = useState(false);
 
 	const preview = useMemo(() => {
@@ -76,6 +76,7 @@ const EditProfile = () => {
 
 	const getUser = async () => {
 		try {
+			setLoading(true);
 			const userId = sessionStorage.getItem('@pionira/userId');
 			const res = await api.get(`/user/${userId}`);
 			const birthday_date = moment(res.data.birthday_date)
@@ -86,7 +87,7 @@ const EditProfile = () => {
 			setName(`${res.data.first_name} ${res.data.last_name}`);
 			setEmail(res.data.email);
 			setUserPhoto(res.data?.profileImage?.url);
-			setIsLoading(false);
+			setLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
@@ -111,6 +112,8 @@ const EditProfile = () => {
 			const first_name = firstName[0];
 			const birthday_date = date;
 
+			setLoading(true);
+
 			await api.patch(`/user/${userId}`, {
 				userName,
 				first_name,
@@ -118,11 +121,13 @@ const EditProfile = () => {
 				email,
 				birthday_date,
 			});
+			setLoading(false);
 
 			setAlertAnswer('Suas informações foram atualizadas, viajante!');
 			setCorrectUpdate(true);
 		} catch (error) {
 			setAlertAnswer(error.response.data.message);
+			setLoading(false);
 		}
 		setIsConfirmOpen(true);
 	};
@@ -140,6 +145,7 @@ const EditProfile = () => {
 				) {
 					data.append('file', photo as string | Blob);
 					setNewPhoto(e.target.files[0]);
+					setLoading(true);
 				} else {
 					setAlertAnswer(
 						'Ops! É só permitido imagens menores que 5Mb. \n E que sejam jpeg, jpg ou png!',
@@ -151,6 +157,7 @@ const EditProfile = () => {
 			}
 
 			await api.patch(`/user/image/${userId}`, data);
+			setLoading(false);
 		} catch (error) {
 			alert(error);
 		}
