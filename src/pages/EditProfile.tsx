@@ -3,7 +3,6 @@ import React, {
 	useEffect,
 	useState,
 	useMemo,
-	useRef,
 } from 'react';
 import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
@@ -18,6 +17,7 @@ import {
 	Image,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import { editProfileErrorCases, errorCases } from '../utils/errors/errorsCases';
 
 // Components
 import LoadingState from '../components/LoadingState';
@@ -38,30 +38,36 @@ interface IImage {
 const EditProfile = () => {
 	const history = useHistory();
 
-	const [userName, setUserName] = useState('');
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [date, setDate] = useState('');
+	const [userInfo, setUserInfo] = useState({
+		userName: '',
+		name: '',
+		birthday_date: '',
+	});
 
-	const [correctUpdate, setCorrectUpdate] = useState(false);
+	const [alertModalInfo, setAlertModalInfo] = useState({
+		isOpen: false,
+		onClose: () => console.log(),
+		alertTitle: '',
+		alertBody: '',
+		buttonOnClick: () => console.log(),
+		buttonLabel: '',
+	});
 
-	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-	const [isNaviPhoto, setIsNaviPhoto] = useState(false);
 	const onClose = () => {
-		setIsConfirmOpen(false);
-		setIsNaviPhoto(false);
+		setAlertModalInfo({
+			...alertModalInfo,
+			isOpen: false
+		});
+		setLoading(false);
 	};
-	const cancelRef = useRef<HTMLButtonElement>(null);
-	const [alertAnswer, setAlertAnswer] = useState('');
 	const [userPhoto, setUserPhoto] = useState(null);
 	const [newPhoto, setNewPhoto] = useState<IImage>({} as IImage);
 	const [isLoading, setLoading] = useState(false);
-	const [onError, setOnError] = useState(false);
 
 	const preview = useMemo(() => {
 		try {
 			return newPhoto
-				? URL.createObjectURL(newPhoto)
+				? URL.createObjectURL(newPhoto as Blob)
 				: userPhoto
 					? userPhoto
 					: null;
@@ -70,9 +76,90 @@ const EditProfile = () => {
 		}
 	}, [userPhoto, newPhoto]);
 
-	const goToHome = () => {
-		history.push('/mainPage');
+
+	const verifyErrorType = (erroType: string) => {
+		const ERROR_TYPES: {
+			[key: string]: {
+				onClose: VoidFunction,
+				alertTitle: string,
+				alertBody: string,
+				buttonOnClick: VoidFunction,
+				buttonLabel: string,
+			}
+		} = {
+			'SUCCES_CASE_EDIT': {
+				alertTitle: 'Editar perfil',
+				alertBody: editProfileErrorCases.SUCCES_CASE_EDIT,
+				buttonOnClick: () => history.push('/mainPage'),
+				onClose: () => history.push('/mainPage'),
+				buttonLabel: 'Continuar'
+			},
+			'IMAGE_FORMAT_ERROR': {
+				alertTitle: 'Editar perfil - Ops!',
+				alertBody: editProfileErrorCases.IMAGE_FORMAT_ERROR,
+				buttonOnClick: onClose,
+				onClose: onClose,
+				buttonLabel: 'Tentar novamente'
+			},
+			'SERVER_SENDING_IMAGE_ERROR': {
+				alertTitle: 'Editar perfil - Ops!',
+				alertBody: editProfileErrorCases.SERVER_SENDING_IMAGE_ERROR,
+				buttonOnClick: onClose,
+				onClose: onClose,
+				buttonLabel: 'Tentar novamente'
+			},
+			'SERVER_EDIT_ERRORS': {
+				alertTitle: 'Editar perfil - Ops!',
+				alertBody: editProfileErrorCases[erroType],
+				buttonOnClick: onClose,
+				onClose: onClose,
+				buttonLabel: 'Tentar novamente'
+			},
+			'SERVER_ERROR': {
+				alertTitle: 'Ops!',
+				alertBody: errorCases.SERVER_ERROR,
+				buttonOnClick: () => window.location.reload(),
+				onClose: () => window.location.reload(),
+				buttonLabel: 'Recarregar',
+			}
+		};
+		switch (erroType) {
+			case 'SUCCES_CASE_EDIT':
+				handleAlertModal(ERROR_TYPES[erroType]);
+				return
+			case 'IMAGE_FORMAT_ERROR':
+				handleAlertModal(ERROR_TYPES[erroType]);
+				return
+			case 'SERVER_SENDING_IMAGE_ERROR':
+				handleAlertModal(ERROR_TYPES[erroType]);
+				return
+			case 'SERVER_ERROR':
+				handleAlertModal(ERROR_TYPES[erroType]);
+				return
+			default:
+				handleAlertModal(ERROR_TYPES['SERVER_EDIT_ERRORS']);
+				return
+		}
 	};
+
+	const handleAlertModal = (errorObject: {
+		onClose: VoidFunction,
+		alertTitle: string,
+		alertBody: string,
+		buttonOnClick: VoidFunction,
+		buttonLabel: string,
+	}) => {
+		const { alertTitle, alertBody, onClose, buttonLabel, buttonOnClick } = errorObject
+		setAlertModalInfo({
+			...alertModalInfo,
+			isOpen: !alertModalInfo.isOpen,
+			alertTitle,
+			alertBody,
+			onClose,
+			buttonLabel,
+			buttonOnClick
+		})
+	}
 
 	const getUser = async () => {
 		try {
@@ -81,13 +168,15 @@ const EditProfile = () => {
 			const birthday_date = moment(res.data.birthday_date)
 				.add(1, 'days')
 				.format('YYYY-MM-DD');
-			setDate(birthday_date);
-			setUserName(res.data.userName);
-			setName(`${res.data.first_name} ${res.data.last_name}`);
-			setEmail(res.data.email);
+			setUserInfo({
+				...userInfo,
+				userName: res.data.userName,
+				name: `${res.data.first_name} ${res.data.last_name}`,
+				birthday_date
+			});
 			setUserPhoto(res.data?.profileImage?.url);
 		} catch (error) {
-			setOnError(true);
+			verifyErrorType('SERVER_ERROR');
 		}
 	};
 
@@ -105,29 +194,24 @@ const EditProfile = () => {
 
 		try {
 			const userId = sessionStorage.getItem('@pionira/userId');
+			const { userName, name, birthday_date } = userInfo;
 			const firstName = name.split(' ');
 			const last_name = lastIndexValidation(firstName) as string;
 			const first_name = firstName[0];
-			const birthday_date = date;
-
 			setLoading(true);
-
 			await api.patch(`/user/${userId}`, {
 				userName,
 				first_name,
 				last_name,
-				email,
-				birthday_date,
+				birthday_date
 			});
 			setLoading(false);
-
-			setAlertAnswer('Suas informações foram atualizadas, viajante!');
-			setCorrectUpdate(true);
+			verifyErrorType('SUCCES_CASE_EDIT');
 		} catch (error) {
-			setAlertAnswer(error.response.data.message);
+
+			verifyErrorType(error.response.data.message);
 			setLoading(false);
 		}
-		setIsConfirmOpen(true);
 	};
 
 	const changeImage = async (e: BaseSyntheticEvent) => {
@@ -145,11 +229,8 @@ const EditProfile = () => {
 					setNewPhoto(e.target.files[0]);
 					setLoading(true);
 				} else {
-					setAlertAnswer(
-						'Ops! É só permitido imagens menores que 5Mb. \n E que sejam jpeg, jpg ou png!',
-					);
-					setIsNaviPhoto(true);
-					setIsConfirmOpen(true);
+
+					verifyErrorType('IMAGE_FORMAT_ERROR');
 					return;
 				}
 			}
@@ -157,7 +238,8 @@ const EditProfile = () => {
 			await api.patch(`/user/image/${userId}`, data);
 			setLoading(false);
 		} catch (error) {
-			alert(error);
+			verifyErrorType('SERVER_SENDING_IMAGE_ERROR');
+			setNewPhoto({} as IImage);
 		}
 	};
 
@@ -282,13 +364,13 @@ const EditProfile = () => {
 									margin='0 auto'
 									width='90%'
 									padding='2%'
-									bg={colorPalette.backgroundColor}
+									bg={colorPalette.primaryColor}
 									color={colorPalette.textColor}
 									fontSize='1.5rem'
 									borderRadius='50px'
 									textAlign='center'
 								>
-									Escolher Arquivo
+									Escolher Imagem
 								</Box>
 							</label>
 						</Box>
@@ -321,9 +403,12 @@ const EditProfile = () => {
 								color={colorPalette.textColor}
 								borderColor={colorPalette.inputBoder}
 								placeholder='Nome de usuário'
-								value={userName}
+								value={userInfo.userName}
 								onChange={(e: BaseSyntheticEvent) =>
-									setUserName(e.target.value)
+									setUserInfo({
+										...userInfo,
+										userName: e.target.value
+									})
 								}
 							/>
 							<Text w='100%' color={colorPalette.textColor}>Qual o seu nome completo?</Text>
@@ -335,23 +420,12 @@ const EditProfile = () => {
 								color={colorPalette.textColor}
 								borderColor={colorPalette.inputBoder}
 								placeholder='Nome Completo'
-								value={name}
+								value={userInfo.name}
 								onChange={(e: BaseSyntheticEvent) =>
-									setName(e.target.value)
-								}
-							/>
-							<Text w='100%' color={colorPalette.textColor}> Qual o seu melhor endereço de email para entrarmos em contato com você?</Text>
-							<Input
-								marginTop='0.5rem'
-								marginBottom='0.5rem'
-								h='13%'
-								w='95%'
-								color={colorPalette.textColor}
-								borderColor={colorPalette.inputBoder}
-								placeholder='Email'
-								value={email}
-								onChange={(e: BaseSyntheticEvent) =>
-									setEmail(e.target.value)
+									setUserInfo({
+										...userInfo,
+										name: e.target.value
+									})
 								}
 							/>
 							<Text w='100%' color={colorPalette.textColor}> Qual a sua data de nascimento?</Text>
@@ -363,9 +437,12 @@ const EditProfile = () => {
 								color={colorPalette.textColor}
 								borderColor={colorPalette.inputBoder}
 								type='date'
-								value={date}
+								value={userInfo.birthday_date}
 								onChange={(e: BaseSyntheticEvent) =>
-									setDate(e.target.value)
+									setUserInfo({
+										...userInfo,
+										birthday_date: e.target.value
+									})
 								}
 							/>
 						</Box>
@@ -394,7 +471,7 @@ const EditProfile = () => {
 									marginTop='0.3rem'
 									color={colorPalette.linkTextColor}
 									textDecoration='underLine'
-									onClick={() => goToHome()}
+									onClick={() => history.push('/mainPage')}
 								>
 									Voltar
 								</Link>
@@ -403,67 +480,19 @@ const EditProfile = () => {
 					</Flex>
 				</Center>
 			)}
-
-			{isNaviPhoto ? (
-				<AlertModal
-					isOpen={isConfirmOpen}
-					onClose={onClose}
-					alertTitle='Editar Perfil'
-					alertBody={alertAnswer}
-					buttonBody={
-						<Button
-							ref={cancelRef}
-							color='white'
-							bg={colorPalette.buttonTextColor}
-							onClick={() => {
-								onClose();
-							}}
-						>
-							Continuar
-						</Button>
-					}
-				/>
-			) : (
-				<AlertModal
-					isOpen={isConfirmOpen}
-					onClose={onClose}
-					alertTitle='Editar Perfil'
-					alertBody={alertAnswer}
-					onClickClose={() => {
-						if (correctUpdate)
-							history.push('/mainPage');
-						else history.go(0);
-					}}
-					buttonBody={
-						<Button
-							color='white'
-							bg={colorPalette.buttonTextColor}
-							ref={cancelRef}
-							onClick={() => {
-								onClose();
-								if (correctUpdate)
-									history.push('/mainPage');
-								else history.go(0);
-							}}
-						>
-							Continuar
-						</Button>
-					}
-				/>
-			)}
 			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				isOpen={alertModalInfo.isOpen}
+				onClose={alertModalInfo.onClose}
+				alertTitle={alertModalInfo.alertTitle}
+				alertBody={alertModalInfo.alertBody}
 
 				buttonBody={
 					<Button
 						color='white'
-						bg={colorPalette.buttonTextColor}
-						onClick={() => window.location.reload()}
+						bg={colorPalette.primaryColor}
+						onClick={alertModalInfo.buttonOnClick}
 					>
-						Recarregar
+						{alertModalInfo.buttonLabel}
 					</Button>
 				}
 			/>
