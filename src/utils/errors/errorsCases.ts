@@ -12,4 +12,15 @@
   USER_IS_NOT_CONFIRMED_ERROR: 'Usuário não confirmado!',
   FAILED_LOGIN_ERROR: 'Login falhou!',
   SUCCESS_CASE_REGISTER: 'Prontinho, agora a Savana possui o seu cadastro. Por favor cheque o seu email para confirmá-lo!',
+};
+
+export const editProfileErrorCases: {[key: string]: string} = {
+  SUCCES_CASE_EDIT: 'Suas informações foram atualizadas, viajante!',
+  IMAGE_FORMAT_ERROR: 'Ops! É só permitido imagens menores que 5Mb. \n E que sejam jpeg, jpg ou png!',
+  SERVER_SENDING_IMAGE_ERROR: 'Vish, acredito que nossa camera estragou viajante. Tente tirar sua foto novamente mais tarde!',
+  SERVER_USER_DO_NOT_EXIST_ERROR: 'Usuário não encontrado!',
+  SERVER_NAME_ERROR: 'Não esqueça de informar seu nome inteiro, queremos te conhecer!',
+  SERVER_BIRTHDAY_ERROR: 'Não esqueça de informar sua data de aniversário, queremos te conhecer!',
+  SERVER_USERNAME_ERROR: 'Não esqueça de informar seu nome de usuário, precisamos saber como te chamar!',
+  SERVER_ERROR: 'Falha ao atualizar usuário!',
 }
