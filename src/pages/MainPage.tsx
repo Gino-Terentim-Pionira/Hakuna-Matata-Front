@@ -28,7 +28,6 @@ import icon_profile from '../assets/icons/icon_profile.svg';
 import icon_tutorial from '../assets/icons/icon_tutorial.svg';
 import icon_shop from '../assets/icons/icon_shop.svg';
 import icon_logout from '../assets/icons/icon_logout.svg';
-import icon_membership from '../assets/icons/icon_membership.svg';
 import icon_cheeta from '../assets/icons/icon_cheeta.svg';
 import icon_blackMamba from '../assets/icons/icon_blackMamba.svg';
 import icon_leao from '../assets/icons/icone_leao.svg';
@@ -79,7 +78,6 @@ const MainPage = () => {
 	const {
 		isOpen: premiumIsOpen,
 		onClose: premiumOnClose,
-		onOpen: premiumOnOpen,
 		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
@@ -227,22 +225,22 @@ const MainPage = () => {
 		}
 	};
 
-	const validIsPrime = async () => {
-		const userId = sessionStorage.getItem('@pionira/userId');
-		try {
-			const res = await api.get(`user/${userId}`);
-			const isSubscribed = res.data.isSubscribed;
+	// To add later:
+	// const validIsPrime = async () => {
+	// 	const userId = sessionStorage.getItem('@pionira/userId');
+	// 	try {
+	// 		const res = await api.get(`user/${userId}`);
+	// 		const isSubscribed = res.data.isSubscribed;
 
-			if (isSubscribed) {
-				setIsSubscribedModal(true);
-			}
-			else
-				premiumOnOpen();
-		} catch (error) {
-			setOnError(true);
-		}
-	}
-
+	// 		if (isSubscribed) {
+	// 			setIsSubscribedModal(true);
+	// 		}
+	// 		else
+	// 			premiumOnOpen();
+	// 	} catch (error) {
+	// 		setOnError(true);
+	// 	}
+	// }
 	const checkSubscription = async () => {
 		const userId = sessionStorage.getItem('@pionira/userId');
 		try {
@@ -384,21 +382,10 @@ const MainPage = () => {
 				{narrativeIsOpen ? null : (
 					<Flex
 						flexDirection='column'
-						justifyContent='space-between'
-						alignItems='flex-end'
+						justifyContent='flex-end'
 						h='85.5vh'
 						marginTop='1.5rem'
 					>
-						<Image
-							src={icon_membership}
-							width='5.5rem'
-							_hover={{
-								cursor: 'pointer',
-								transform: 'scale(1.1)',
-							}}
-							transition='all 0.2s ease'
-							onClick={validIsPrime}
-						/>
 						<Flex
 							flexDirection='row'
 							marginTop='64vh'

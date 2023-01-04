@@ -11,7 +11,6 @@ import api from '../../services/api';
 import moment from 'moment';
 
 // Images
-import moneyIcon from '../../assets/icons/moneyIcon.svg';
 import profilePlaceholder from '../../assets/icons/profilePlaceholder.png';
 import colorPalette from '../../styles/colorPalette';
 
@@ -103,14 +102,6 @@ const ProfileDataModal = () => {
                                 </Text>
                                 <Text fontSize='1.5rem' >
                                     {userData.birthday_date}
-                                </Text>
-                            </Flex>
-                        </Flex>
-                        <Flex marginLeft='2rem' marginBottom='0.5rem' alignItems='center'>
-                            <Image src={moneyIcon} alt="moneyIcon" />
-                            <Flex marginLeft='2rem' direction="column">
-                                <Text>
-                                    Você já contribuiu com R$ {userData.contribution} para tornar o mundo um lugar melhor!
                                 </Text>
                             </Flex>
                         </Flex>
