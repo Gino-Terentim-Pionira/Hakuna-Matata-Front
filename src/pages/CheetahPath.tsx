@@ -655,7 +655,7 @@ const CheetahPath = () => {
 							<Box
 								position='absolute'
 								left='19vw'
-								top='61vh'
+								top='64vh'
 								w='10vw'
 							>
 								<ModuleModal quizIndex={0} />
@@ -664,7 +664,7 @@ const CheetahPath = () => {
 							<Box
 								position='absolute'
 								left='45vw'
-								top='49vh'
+								top='50vh'
 								w='10vw'
 							>
 								<ModuleModal quizIndex={1} />
@@ -672,7 +672,7 @@ const CheetahPath = () => {
 							<Box
 								position='absolute'
 								left='68vw'
-								top='77vh'
+								top='79vh'
 								w='10vw'
 							>
 								<ModuleModal quizIndex={2} />
@@ -680,7 +680,7 @@ const CheetahPath = () => {
 							<Box
 								position='absolute'
 								left='89vw'
-								top='54vh'
+								top='57vh'
 								w='10vw'
 							>
 								<ModuleModal quizIndex={3} />
