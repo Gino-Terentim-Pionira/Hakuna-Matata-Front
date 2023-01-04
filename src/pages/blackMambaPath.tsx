@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, SetStateAction } from 'react';
 import {
 	Image,
 	Flex,
-	Center,
 	useDisclosure,
 	Button,
 	Box,
@@ -19,10 +18,9 @@ import { useHistory } from 'react-router-dom';
 // Components
 import NarrativeModal from '../components/modals/NarrativeModal';
 import FinalQuizModal from './../components/FinalQuiz';
-import ProfileModal from '../components/modals/ProfileModal';
 import AlertModal from '../components/modals/AlertModal';
-import TutorialModal from '../components/modals/TutorialModal';
 import PremiumPassport from '../components/modals/PremiumPassport';
+import NavActions from '../components/NavActions';
 
 // Requisitions
 import api from '../services/api';
@@ -37,12 +35,6 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import BlackMambaBackground from '../assets/scenerys/blackMamba/blackMamba.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
 import ModalMamba from '../assets/modal/modalMamba.png';
 
 interface IScript {
@@ -90,19 +82,6 @@ const BaboonPath = () => {
 		isOpen: quizIsOpen,
 		onClose: quizOnClose,
 		onOpen: quizOnOpen,
-	} = useDisclosure();
-
-	const {
-		isOpen: profileIsOpen,
-		onClose: profileOnClose,
-		onOpen: profileOnOpen,
-	} = useDisclosure();
-
-	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
-		onToggle: tutorialOnToggle,
 	} = useDisclosure();
 
 	const {
@@ -310,15 +289,9 @@ const BaboonPath = () => {
 		setScript(newScript);
 	};
 
-	const goToShop = () => {
-		history.push('/shop');
-	};
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da savana?');
 		setIsConfirmOpen(true);
-	};
-	const goToMap = () => {
-		history.push('/mainPage');
 	};
 
 	const alertQuizConfirm = () => {
@@ -406,112 +379,7 @@ const BaboonPath = () => {
 							zIndex='10'
 							position='fixed'
 						>
-							<Flex
-								maxWidth='4.5rem'
-								marginTop='1.5rem'
-								flexDirection='column'
-								alignItems='center'
-							>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={profileOnOpen}
-								>
-									<Image
-										src={icon_profile}
-										marginBottom='.5rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={() => goToShop()}
-								>
-									<Image
-										src={icon_shop}
-										marginBottom='.1rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={tutorialOnOpen}
-								>
-									<Image src={icon_tutorial} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={() => logout()}
-								>
-									<Image src={icon_logout} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='6.55rem'
-									height='6.55rem'
-									bg='white'
-									onClick={() => goToMap()}
-									position='absolute'
-									mt='78vh'
-								>
-									<Image
-										src={icon_map}
-										onMouseOverCapture={(e) =>
-											(e.currentTarget.src = icon_map_opened)
-										}
-										onMouseOut={(e) =>
-											(e.currentTarget.src = icon_map)
-										}
-									/>
-								</Center>
-							</Flex>
+							<NavActions logout={logout}/>
 						</Flex>
 
 						<Modal isOpen={isOpen} onClose={onClose} size='4xl'>
@@ -705,14 +573,6 @@ const BaboonPath = () => {
 							Cancelar
 						</Button>
 					}
-				/>
-
-				<ProfileModal isOpen={profileIsOpen} onClose={profileOnClose} />
-
-				<TutorialModal
-					isOpen={tutorialIsOpen}
-					onClose={tutorialOnClose}
-					onToggle={tutorialOnToggle}
 				/>
 
 				<PremiumPassport

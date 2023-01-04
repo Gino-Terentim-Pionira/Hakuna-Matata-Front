@@ -26,8 +26,6 @@ import './../styles/fadeEffect.css';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import TutorialModal from '../components/modals/TutorialModal';
-import ProfileModal from '../components/modals/ProfileModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz';
@@ -42,12 +40,6 @@ import trail1FinalQuiz from '../utils/scripts/CheetahTrail/Trail1FinalQuiz';
 
 // Images
 import trail_bg from '../assets/scenerys/cheetah/trail_bg.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
 import final_cheetah_icon from '../assets/icons/final_cheetah_icon.svg';
 import cheetah from '../assets/sprites/cheetah/cheetah.png';
 import insignaCheetah from '../assets/icons/insignia/insignaCheetah.svg';
@@ -57,6 +49,7 @@ import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
+import NavActions from '../components/NavActions';
 
 interface IQuiz {
 	_id: string;
@@ -102,7 +95,6 @@ interface IScript {
 }
 
 const CheetahPath = () => {
-	const { isOpen, onClose, onOpen } = useDisclosure();
 	const history = useHistory();
 
 	const [user, setUser] = useState<IUser>({} as IUser);
@@ -123,13 +115,6 @@ const CheetahPath = () => {
 		ignorance50,
 		ignorance25,
 	];
-
-	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
-		onToggle: tutorialOnToggle,
-	} = useDisclosure();
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -236,15 +221,9 @@ const CheetahPath = () => {
 		[],
 	);
 
-	const goToShop = () => {
-		history.push('/shop');
-	};
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da savana?');
 		setIsConfirmOpen(true);
-	};
-	const goToMap = () => {
-		history.push('/mainPage');
 	};
 
 	const setIgnoranceFilter = (
@@ -489,128 +468,22 @@ const CheetahPath = () => {
 					zIndex='10'
 					position='fixed'
 				>
-					<Flex
-						maxWidth='4.5rem'
-						marginTop='1.5rem'
-						flexDirection='column'
-						alignItems='center'
-					>
-						{narrativeIsOpen ||
+					{narrativeIsOpen ||
 						narrativeChallengeIsOpen ||
 						finalNarrativeChallengeIsOpen ? null : (
-							<>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={onOpen}
-								>
-									<Image
-										src={icon_profile}
-										marginBottom='.5rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={() => goToShop()}
-								>
-									<Image
-										src={icon_shop}
-										marginBottom='.1rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={tutorialOnOpen}
-								>
-									<Image src={icon_tutorial} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={() => logout()}
-								>
-									<Image src={icon_logout} />
-								</Center>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='6.55rem'
-									height='6.55rem'
-									bg='white'
-									onClick={() => goToMap()}
-									position='absolute'
-									mt='78vh'
-								>
-									<Image
-										src={icon_map}
-										onMouseOverCapture={(e) =>
-											(e.currentTarget.src = icon_map_opened)
-										}
-										onMouseOut={(e) =>
-											(e.currentTarget.src = icon_map)
-										}
-									/>
-								</Center>
-							</>
+							<NavActions logout={logout}/>
 						)}
-					</Flex>
 
 					{narrativeIsOpen ||
-					narrativeChallengeIsOpen ||
-					finalNarrativeChallengeIsOpen ? null : (
+						narrativeChallengeIsOpen ||
+						finalNarrativeChallengeIsOpen ? null : (
 						<IgnorancePremiumIcons ignorance={user.ignorance} />
 					)}
 				</Flex>
 
 				{narrativeIsOpen ||
-				narrativeChallengeIsOpen ||
-				finalNarrativeChallengeIsOpen ? null : (
+					narrativeChallengeIsOpen ||
+					finalNarrativeChallengeIsOpen ? null : (
 					<>
 						<Flex
 							margin='2vw'
@@ -825,7 +698,6 @@ const CheetahPath = () => {
 					</>
 				)}
 
-				<ProfileModal isOpen={isOpen} onClose={onClose} />
 
 				{script.length > 0 ? (
 					//verifica se o script possui algum conteúdo
@@ -852,12 +724,6 @@ const CheetahPath = () => {
 						onToggle={finalNarrativeChallengeOnToggle}
 					/>
 				) : null}
-
-				<TutorialModal
-					isOpen={tutorialIsOpen}
-					onClose={tutorialOnClose}
-					onToggle={tutorialOnToggle}
-				/>
 
 				<PremiumPassport
 					isOpen={premiumIsOpen}

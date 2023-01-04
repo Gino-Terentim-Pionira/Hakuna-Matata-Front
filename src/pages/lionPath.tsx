@@ -25,8 +25,6 @@ import colorPalette from "../styles/colorPalette";
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import TutorialModal from '../components/modals/TutorialModal';
-import ProfileModal from '../components/modals/ProfileModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalLionQuiz from '../components/FinalLionQuiz';
@@ -42,22 +40,17 @@ import trail2FinalQuiz from '../utils/scripts/LionTrail/Trail2FinalQuiz';
 
 // Images
 import trail_bg from '../assets/scenerys/lion/Trilha_leao_e_leoa.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
 import final_lion_icon from '../assets/icons/final_lion_icon.svg';
 import couple from '../assets/sprites/lion/couple.png';
 import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.svg';
 import lion_bg from '../assets/modal/lion_bg.png';
 
- import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
- import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
- import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
- import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
+import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
+import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
+import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
+import NavActions from '../components/NavActions';
 
 interface IQuiz {
 	_id: string;
@@ -103,7 +96,6 @@ interface IScript {
 }
 
 const LionPath = () => {
-	const { isOpen, onClose, onOpen } = useDisclosure();
 	const history = useHistory();
 
 	const [user, setUser] = useState<IUser>({} as IUser);
@@ -119,13 +111,6 @@ const LionPath = () => {
 	const [completeTrail, setCompleteTrail] = useState(false);
 
 	const ignoranceArray = [ignorance100, ignorance75, ignorance50, ignorance25];
-
-	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
-		onToggle: tutorialOnToggle,
-	} = useDisclosure();
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -224,28 +209,22 @@ const LionPath = () => {
 	const [isAlertCoins, setIsAlertCoins] = useState(false);
 	const [isCoinsCheck, setIsCoinsCheck] = useState(false);
 	const cancelRef = useRef<HTMLButtonElement>(null);
-	
+
 	const [ignoranceImage, setIgnoranceImage] = useState("");
 
 	const [script, setScript] = useState<IScript[]>([]);
 	const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>([]);
 
-	const goToShop = () => {
-		history.push('/shop');
-	};
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da savana?');
 		setIsConfirmOpen(true);
 	};
-	const goToMap = () => {
-		history.push('/mainPage');
-	};
 
-	 const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
-	 	const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
-	 	setIgnoranceImage(filterBackgroung);
-	 }
+	const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
+		const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
+		setIgnoranceImage(filterBackgroung);
+	}
 
 	const getUser = async () => {
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
@@ -362,7 +341,7 @@ const LionPath = () => {
 			const newScript = await trail2Beggining();
 			setScript(newScript);
 			narrativeOnOpen();
-	
+
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
 					trail1: res.data.narrative_status.trail1,
@@ -374,7 +353,7 @@ const LionPath = () => {
 			const newScript = await trail2First();
 			setScript(newScript);
 			narrativeOnOpen();
-		} 
+		}
 		// else if (res.data.narrative_status.trail2 == 2 && !isComplete) {
 		// 	//Verifica se o usuário está no dia a dia da trilha
 		// 	const randomNumber = Math.floor(Math.random() * 10);
@@ -473,7 +452,7 @@ const LionPath = () => {
 					zIndex='-3'
 					left='0'
 					top='0'
-				/> 
+				/>
 
 				<Flex
 					width='92.5%'
@@ -483,115 +462,9 @@ const LionPath = () => {
 					zIndex='10'
 					position='fixed'
 				>
-					<Flex
-						maxWidth='4.5rem'
-						marginTop='1.5rem'
-						flexDirection='column'
-						alignItems='center'
-					>
-						{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-							<>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={onOpen}
-								>
-									<Image
-										src={icon_profile}
-										marginBottom='.5rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={() => goToShop()}
-								>
-									<Image
-										src={icon_shop}
-										marginBottom='.1rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={tutorialOnOpen}
-								>
-									<Image src={icon_tutorial} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={() => logout()}
-								>
-									<Image src={icon_logout} />
-								</Center>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='6.55rem'
-									height='6.55rem'
-									bg='white'
-									onClick={() => goToMap()}
-									position='absolute'
-									mt='78vh'
-								>
-									<Image
-										src={icon_map}
-										onMouseOverCapture={(e) =>
-											(e.currentTarget.src = icon_map_opened)
-										}
-										onMouseOut={(e) =>
-											(e.currentTarget.src = icon_map)
-										}
-									/>
-								</Center>
-							</>
-						)}
-					</Flex>
+					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
+							<NavActions logout={logout}/>
+					)}
 
 					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
 						<IgnorancePremiumIcons ignorance={user.ignorance} />
@@ -805,8 +678,6 @@ const LionPath = () => {
 					</>
 				)}
 
-				<ProfileModal isOpen={isOpen} onClose={onClose} />
-
 				{script.length > 0 ? (
 					//verifica se o script possui algum conteúdo
 					<NarrativeModal
@@ -832,12 +703,6 @@ const LionPath = () => {
 						onToggle={finalNarrativeChallengeOnToggle}
 					/>
 				) : null}
-
-				<TutorialModal
-					isOpen={tutorialIsOpen}
-					onClose={tutorialOnClose}
-					onToggle={tutorialOnToggle}
-				/>
 
 				<PremiumPassport
 					isOpen={premiumIsOpen}
@@ -923,7 +788,7 @@ const LionPath = () => {
 										setIsCoinsCheck(false);
 									}}
 								>
-									Proseguir
+									Prosseguir
 								</Button>
 							) : null}
 							<Button

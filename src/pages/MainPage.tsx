@@ -1,9 +1,8 @@
 import React, { SetStateAction, useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDisclosure, Image, Flex, Center, Button } from '@chakra-ui/react';
+import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
 
 // Components
-import ProfileModal from '../components/modals/ProfileModal';
 import TutorialModal from '../components/modals/TutorialModal';
 import PremiumPassport from '../components/modals/PremiumPassport';
 import NarrativeModal from '../components/modals/NarrativeModal';
@@ -22,10 +21,6 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import map1_bg from '../assets/scenerys/mainPage/map1_bg.png';
 import map2_bg from '../assets/scenerys/mainPage/map2_bg.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
 import icon_cheeta from '../assets/icons/icon_cheeta.svg';
 import icon_blackMamba from '../assets/icons/icon_blackMamba.svg';
 import icon_leao from '../assets/icons/icone_leao.svg';
@@ -34,6 +29,7 @@ import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
+import NavActions from '../components/NavActions';
 
 interface IUser {
 	ignorance: number;
@@ -65,7 +61,6 @@ interface IScript {
 }
 
 const MainPage = () => {
-	const { isOpen, onClose, onOpen } = useDisclosure();
 	const history = useHistory();
 	const {
 		isOpen: tutorialIsOpen,
@@ -184,10 +179,6 @@ const MainPage = () => {
 		}
 	};
 
-	const goToShop = () => {
-		history.push('/shop');
-	};
-
 	const goToPath1 = () => {
 		history.push('/finalTrail');
 	};
@@ -304,86 +295,12 @@ const MainPage = () => {
 				alignItems='flex-start'
 				margin='auto'
 			>
-				<Flex
-					maxWidth='4.5rem'
-					marginTop='1.5rem'
-					flexDirection='column'
-					alignItems='center'
-				>
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='4.5rem'
-						height='4.5rem'
-						bg='white'
-						onClick={onOpen}
-					>
-						<Image src={icon_profile} marginBottom='.5rem' />
-					</Center>
-
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='4.5rem'
-						height='4.5rem'
-						bg='white'
-						onClick={() => goToShop()}
-					>
-						<Image src={icon_shop} marginBottom='.1rem' />
-					</Center>
-
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='3.75rem'
-						height='3.75rem'
-						bg='white'
-						onClick={tutorialOnOpen}
-					>
-						<Image src={icon_tutorial} />
-					</Center>
-
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='3.75rem'
-						height='3.75rem'
-						bg='white'
-						onClick={() => logout()}
-					>
-						<Image src={icon_logout} />
-					</Center>
-				</Flex>
+				<NavActions logout={logout} dontShowMap/>
 				{narrativeIsOpen ? null : (
 						<IgnorancePremiumIcons ignorance={user.ignorance} />
 				)}
 			</Flex>
 
-			<ProfileModal isOpen={isOpen} onClose={onClose} />
 			{script.length > 0 ? (
 				//verifica se o script possui algum conteúdo
 				<NarrativeModal
