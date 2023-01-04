@@ -160,6 +160,7 @@ const EditProfile = () => {
 			setLoading(false);
 		} catch (error) {
 			alert(error);
+			setLoading(false);
 		}
 	};
 
