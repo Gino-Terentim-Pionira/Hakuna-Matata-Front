@@ -43,7 +43,6 @@ import icon_shop from '../assets/icons/icon_shop.svg';
 import icon_map from '../assets/icons/icon_map.svg';
 import icon_map_opened from '../assets/icons/icon_map_opened.svg';
 import icon_logout from '../assets/icons/icon_logout.svg';
-import icon_membership from '../assets/icons/icon_membership.svg';
 import ModalMamba from '../assets/modal/modalMamba.png';
 
 interface IScript {
@@ -121,7 +120,6 @@ const BaboonPath = () => {
 	const {
 		isOpen: premiumIsOpen,
 		onClose: premiumOnClose,
-		onOpen: premiumOnOpen,
 		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
@@ -514,18 +512,6 @@ const BaboonPath = () => {
 									/>
 								</Center>
 							</Flex>
-							<Box marginTop='1.5rem' marginRight='0.1rem'>
-								<Image
-									src={icon_membership}
-									width='5.5rem'
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									onClick={premiumOnOpen}
-								/>
-							</Box>
 						</Flex>
 
 						<Modal isOpen={isOpen} onClose={onClose} size='4xl'>

@@ -27,8 +27,6 @@ import colorPalette from "../styles/colorPalette";
 import AlertModal from '../components/modals/AlertModal';
 import TutorialModal from '../components/modals/TutorialModal';
 import ProfileModal from '../components/modals/ProfileModal';
-import RandomRewardModal from '../components/modals/RandomRewardModal';
-import IgnoranceProgress from '../components/IgnoranceProgress';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalLionQuiz from '../components/FinalLionQuiz';
@@ -51,7 +49,6 @@ import icon_map from '../assets/icons/icon_map.svg';
 import icon_map_opened from '../assets/icons/icon_map_opened.svg';
 import icon_logout from '../assets/icons/icon_logout.svg';
 import final_lion_icon from '../assets/icons/final_lion_icon.svg';
-import icon_membership from '../assets/icons/icon_membership.svg';
 import couple from '../assets/sprites/lion/couple.png';
 import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.svg';
 import lion_bg from '../assets/modal/lion_bg.png';
@@ -60,6 +57,7 @@ import lion_bg from '../assets/modal/lion_bg.png';
  import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
  import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
  import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 
 interface IQuiz {
 	_id: string;
@@ -162,7 +160,6 @@ const LionPath = () => {
 	const {
 		isOpen: premiumIsOpen,
 		onClose: premiumOnClose,
-		onOpen: premiumOnOpen,
 		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
@@ -597,39 +594,7 @@ const LionPath = () => {
 					</Flex>
 
 					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-						<Flex
-							flexDirection='column'
-							justifyContent='space-between'
-							alignItems='flex-end'
-							h='87.5vh'
-							marginTop='1.5rem'
-						>
-							<Image
-								src={icon_membership}
-								width='5.5rem'
-								_hover={{
-									cursor: 'pointer',
-									transform: 'scale(1.1)',
-								}}
-								transition='all 0.2s ease'
-								onClick={premiumOnOpen}
-							/>
-							<Flex
-								flexDirection='row'
-								marginTop='65vh'
-								justifyContent='flex-end'
-								alignItems='center'
-							>
-								<RandomRewardModal />
-								<IgnoranceProgress
-									fontSize='1.7rem'
-									marginTop='0'
-									size='6rem'
-									ignorance={user.ignorance}
-									position='absolute'
-								/>
-							</Flex>
-						</Flex>
+						<IgnorancePremiumIcons ignorance={user.ignorance} />
 					)}
 				</Flex>
 

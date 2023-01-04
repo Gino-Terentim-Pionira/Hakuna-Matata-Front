@@ -6,10 +6,8 @@ import { useDisclosure, Image, Flex, Center, Button } from '@chakra-ui/react';
 import ProfileModal from '../components/modals/ProfileModal';
 import TutorialModal from '../components/modals/TutorialModal';
 import PremiumPassport from '../components/modals/PremiumPassport';
-import RandomRewardModal from '../components/modals/RandomRewardModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import AlertModal from '../components/modals/AlertModal';
-import IgnoranceProgress from '../components/IgnoranceProgress';
 import DailyReward from '../components/modals/DailyRewardModal';
 import SubscribedModal from '../components/modals/SubscribedModal';
 
@@ -35,6 +33,7 @@ import ignorance100 from '../assets/ignorance/mainPage/ignorance100.png';
 import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
+import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 
 interface IUser {
 	ignorance: number;
@@ -380,28 +379,7 @@ const MainPage = () => {
 					</Center>
 				</Flex>
 				{narrativeIsOpen ? null : (
-					<Flex
-						flexDirection='column'
-						justifyContent='flex-end'
-						h='85.5vh'
-						marginTop='1.5rem'
-					>
-						<Flex
-							flexDirection='row'
-							marginTop='64vh'
-							justifyContent='flex-end'
-							alignItems='center'
-						>
-							<RandomRewardModal />
-							<IgnoranceProgress
-								fontSize='1.7rem'
-								marginTop='0'
-								size='6rem'
-								ignorance={user.ignorance}
-								position='absolute'
-							/>
-						</Flex>
-					</Flex>
+						<IgnorancePremiumIcons ignorance={user.ignorance} />
 				)}
 			</Flex>
 
