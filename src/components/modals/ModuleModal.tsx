@@ -238,6 +238,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
                     transform: 'scale(1.1)',
                 }}
                 transition='all 0.2s ease'
+                height='110px'
             />
 
             <Modal isOpen={isOpen} onClose={onClose} size="4xl">
