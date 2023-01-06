@@ -56,10 +56,11 @@ import couple from '../assets/sprites/lion/couple.png';
 import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.svg';
 import lion_bg from '../assets/modal/lion_bg.png';
 
- import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
- import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
- import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
- import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
+import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
+import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
+import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import LoadingOverlay from '../components/LoadingOverlay';
 
 interface IQuiz {
 	_id: string;
@@ -119,6 +120,7 @@ const LionPath = () => {
 	const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
 	const [onError, setOnError] = useState(false);
 	const [completeTrail, setCompleteTrail] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const ignoranceArray = [ignorance100, ignorance75, ignorance50, ignorance25];
 
@@ -227,7 +229,7 @@ const LionPath = () => {
 	const [isAlertCoins, setIsAlertCoins] = useState(false);
 	const [isCoinsCheck, setIsCoinsCheck] = useState(false);
 	const cancelRef = useRef<HTMLButtonElement>(null);
-	
+
 	const [ignoranceImage, setIgnoranceImage] = useState("");
 
 	const [script, setScript] = useState<IScript[]>([]);
@@ -245,43 +247,48 @@ const LionPath = () => {
 		history.push('/mainPage');
 	};
 
-	 const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
-	 	const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
-	 	setIgnoranceImage(filterBackgroung);
-	 }
+	const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
+		const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
+		setIgnoranceImage(filterBackgroung);
+	}
 
 	const getUser = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
-		setIgnoranceFilter(data.ignorance, ignoranceArray);
-		const isComplete = data.finalQuizComplete.lionFinal;
+		try {
+			const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
+			const { data } = await api.get(`/user/${_userId}`);
+			setIgnoranceFilter(data.ignorance, ignoranceArray);
+			const isComplete = data.finalQuizComplete.lionFinal;
+			setIsLoading(false);
 
-		if (isComplete) {
-			setLionText(
-				`Você já alcançou o máximo da sua liderança, aprendiz... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
-			);
-			setCompleteTrail(true);
-			if (data.narrative_status.trail2 !== 4) {
-				await api.patch(`/user/narrative/${_userId}`, {
-					narrative_status: {
-						trail2: 3
-					},
-				});
-				await finalLionNarrative();
+			if (isComplete) {
+				setLionText(
+					`Você já alcançou o máximo da sua liderança, aprendiz... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+				);
+				setCompleteTrail(true);
+				if (data.narrative_status.trail2 !== 4) {
+					await api.patch(`/user/narrative/${_userId}`, {
+						narrative_status: {
+							trail2: 3
+						},
+					});
+					await finalLionNarrative();
+				}
+			} else {
+				if (data.ignorance > 80)
+					setLionText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
+					);
+				else if (data.ignorance > 40)
+					setLionText(
+						'Você está definitivamente mais forte, jovem! Mas temo que a Leão e Leoa é um desafio muito grande para você!',
+					);
+				else
+					setLionText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
 			}
-		} else {
-			if (data.ignorance > 80)
-				setLionText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
-				);
-			else if (data.ignorance > 40)
-				setLionText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Leão e Leoa é um desafio muito grande para você!',
-				);
-			else
-				setLionText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
@@ -365,7 +372,7 @@ const LionPath = () => {
 			const newScript = await trail2Beggining();
 			setScript(newScript);
 			narrativeOnOpen();
-	
+
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
 					trail1: res.data.narrative_status.trail1,
@@ -377,7 +384,7 @@ const LionPath = () => {
 			const newScript = await trail2First();
 			setScript(newScript);
 			narrativeOnOpen();
-		} 
+		}
 		// else if (res.data.narrative_status.trail2 == 2 && !isComplete) {
 		// 	//Verifica se o usuário está no dia a dia da trilha
 		// 	const randomNumber = Math.floor(Math.random() * 10);
@@ -476,7 +483,7 @@ const LionPath = () => {
 					zIndex='-3'
 					left='0'
 					top='0'
-				/> 
+				/>
 
 				<Flex
 					width='92.5%'
@@ -901,6 +908,11 @@ const LionPath = () => {
 					}
 				/>
 			</Flex>
+			{
+				isLoading ? (
+					<LoadingOverlay />
+				) : (null)
+			}
 
 			<FinalLionQuiz
 				openModal={quizIsOpen}
