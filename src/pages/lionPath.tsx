@@ -642,8 +642,8 @@ const LionPath = () => {
 						>
 							<ModuleModal left='7vw' top='62vh' quizIndex={4} />
 							<ModuleModal left='22vw' top='86vh' quizIndex={5} />
-							<ModuleModal left='58vw' top='85vh' quizIndex={6} />
-							<ModuleModal left='79vw' top='55vh' quizIndex={7} />
+							<ModuleModal left='58vw' top='87vh' quizIndex={6} />
+							<ModuleModal left='79vw' top='58vh' quizIndex={7} />
 							<Center
 								_hover={{
 									cursor: 'pointer',

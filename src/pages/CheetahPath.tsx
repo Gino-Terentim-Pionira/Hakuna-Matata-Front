@@ -652,10 +652,10 @@ const CheetahPath = () => {
 							justifyContent='space-between'
 							zIndex='10'
 						>
-							<ModuleModal left='19vw' top='64vh' quizIndex={0} />
-							<ModuleModal left='45vw'top='50vh' quizIndex={1} />
-							<ModuleModal left='68vw' top='79vh' quizIndex={2} />
-							<ModuleModal left='89vw'top='57vh' quizIndex={3} />
+							<ModuleModal left='19vw' top='67vh' quizIndex={0} />
+							<ModuleModal left='45vw'top='54vh' quizIndex={1} />
+							<ModuleModal left='68vw' top='82vh' quizIndex={2} />
+							<ModuleModal left='89vw'top='60vh' quizIndex={3} />
 							<Center
 								_hover={{
 									cursor: 'pointer',
