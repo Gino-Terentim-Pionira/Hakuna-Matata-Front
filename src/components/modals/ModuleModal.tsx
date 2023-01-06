@@ -242,8 +242,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                 }}
                 position="absolute"
                 transition='all 0.2s ease'
-                width="120px"
-                height="120px"
+                width="116px"
+                height="70px"
                 top={top}
                 bottom={bottom}
                 left={left}

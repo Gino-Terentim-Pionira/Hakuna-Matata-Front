@@ -652,39 +652,10 @@ const CheetahPath = () => {
 							justifyContent='space-between'
 							zIndex='10'
 						>
-							<Box
-								position='absolute'
-								left='19vw'
-								top='64vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={0} />
-							</Box>
-
-							<Box
-								position='absolute'
-								left='45vw'
-								top='50vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={1} />
-							</Box>
-							<Box
-								position='absolute'
-								left='68vw'
-								top='79vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={2} />
-							</Box>
-							<Box
-								position='absolute'
-								left='89vw'
-								top='57vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={3} />
-							</Box>
+							<ModuleModal left='19vw' top='64vh' quizIndex={0} />
+							<ModuleModal left='45vw'top='50vh' quizIndex={1} />
+							<ModuleModal left='68vw' top='79vh' quizIndex={2} />
+							<ModuleModal left='89vw'top='57vh' quizIndex={3} />
 							<Center
 								_hover={{
 									cursor: 'pointer',
