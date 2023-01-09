@@ -17,6 +17,7 @@ import fontTheme from '../../styles/base';
 import LoadingState from '../LoadingState';
 import AlertModal from './AlertModal';
 import colorPalette from '../../styles/colorPalette';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface IDailyReward {
     isOpen: boolean;
@@ -142,7 +143,7 @@ const DailyRewardModal: FC<IDailyReward> = ({
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

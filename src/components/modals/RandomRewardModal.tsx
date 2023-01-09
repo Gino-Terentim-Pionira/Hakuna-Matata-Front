@@ -26,6 +26,7 @@ import colorPalette from "../../styles/colorPalette";
 // Images
 import Coins from '../../assets/icons/coinicon.svg';
 import rewardChest from "../../assets/icons/bau.png";
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface userDataProps {
     coins: number
@@ -149,7 +150,7 @@ const RandomRewardModal = () => {
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

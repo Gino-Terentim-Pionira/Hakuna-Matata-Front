@@ -24,6 +24,7 @@ import LoadingState from './LoadingState';
 import AlertModal from './modals/AlertModal';
 import Certificate from './modals/CertificateModal';
 import colorPalette from '../styles/colorPalette';
+import { errorCases } from '../utils/errors/errorsCases';
 
 interface IFinalLionRewardModal {
 	isOpen: boolean;
@@ -510,7 +511,7 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

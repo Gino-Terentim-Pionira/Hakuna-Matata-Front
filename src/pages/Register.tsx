@@ -290,7 +290,7 @@ const Register = () => {
 
                 ) : step === 2 ? (
                     <LoginRegister
-                        firstText="Poderia me falar seu endereço de e-mail? Nós da Savana precisamos de um meio para te contatar!"
+                        firstText="Aqui no formulário está dizendo que preciso do seu 'e-mail'. Não sei o que é isso, mas você deve saber!"
                         secondText="Queria saber também, que ano e dia você nasceu?"
                         firstPlaceholder="Endereço de e-mail"
                         secondPlaceholder="Data de Nascimento"
@@ -332,7 +332,7 @@ const Register = () => {
                     <AlertModal
                         isOpen={alertModal.isOpen}
                         onClose={onClose}
-                        alertTitle='Cadastro de Usuário'
+                        alertTitle='Criação do Passaporte'
                         alertBody={alertModal.alertAnswer}
                         onClickClose={() => onClose()}
                         buttonBody={
@@ -351,7 +351,7 @@ const Register = () => {
                     <AlertModal
                         isOpen={alertModal.isOpen}
                         onClose={onClose}
-                        alertTitle='Cadastro de Usuário'
+                        alertTitle='Criação do Passaporte'
                         alertBody={alertModal.alertAnswer}
                         onClickClose={() => onClose()}
                         buttonBody={

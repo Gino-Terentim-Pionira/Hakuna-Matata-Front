@@ -59,6 +59,7 @@ import ignorance100 from '../assets/ignorance/cheetahPath/ignorance100.png';
 import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
+import { errorCases } from '../utils/errors/errorsCases';
 
 interface IQuiz {
 	_id: string;
@@ -271,7 +272,7 @@ const CheetahPath = () => {
 
 		if (isComplete) {
 			setCheetahText(
-				`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+				`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Agora, você até consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
 			);
 			setCompleteTrail(true);
 			if (data.narrative_status.trail1 !== 4) {
@@ -1000,7 +1001,7 @@ const CheetahPath = () => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

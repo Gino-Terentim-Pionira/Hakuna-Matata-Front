@@ -25,6 +25,7 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import blackMamba from "../assets/sprites/blackMamba/mamba_negra.png";
+import { errorCases } from '../utils/errors/errorsCases';
 
 interface IQuestions {
     alternatives: string[];
@@ -379,7 +380,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

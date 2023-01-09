@@ -41,7 +41,7 @@ const ForgotPassword = () => {
 	const sendEmail = async () => {
 		try {
 			await api.post('/user/forgotPassword', { email });
-			setAlertAnswer('Ótimo! Enviamos um email para você. Dê uma olhada!');
+			setAlertAnswer('Instruções de recuperação de senha foram enviadas!');
 		} catch (error) {
 			setAlertAnswer('Parece que esse email não existe na savana!');
 		}
@@ -79,7 +79,7 @@ const ForgotPassword = () => {
 				</Box>
 
 				<LoginRegister
-					firstText='Parece que vocês esqueceu a sua senha. Sem problemas, me passe seu email para que possamos enviar um email de recuperação de senha para você'
+					firstText="Parece que você esqueceu a sua senha. Não consigo entender isso, mas sinto que se você me passar o 'e-mail' cadastrado no passaporte, instruções serão enviadas para a recuperação da senha."
 					firstPlaceholder='E-mail'
 					firstValue={email}
 					firstChange={(e: BaseSyntheticEvent) =>

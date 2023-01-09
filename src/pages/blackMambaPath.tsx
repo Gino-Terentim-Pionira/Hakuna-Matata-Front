@@ -45,6 +45,7 @@ import icon_map_opened from '../assets/icons/icon_map_opened.svg';
 import icon_logout from '../assets/icons/icon_logout.svg';
 import icon_membership from '../assets/icons/icon_membership.svg';
 import ModalMamba from '../assets/modal/modalMamba.png';
+import { errorCases } from '../utils/errors/errorsCases';
 
 interface IScript {
 	name: string;
@@ -776,7 +777,7 @@ const BaboonPath = () => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

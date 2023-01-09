@@ -159,7 +159,7 @@ const Login = () => {
 				<AlertModal
 					isOpen={alertModal.isOpen}
 					onClose={onClose}
-					alertTitle='Login'
+					alertTitle='Entrada da Savana'
 					alertBody={alertModal.alertAnswer}
 					buttonBody={
 						<Button
