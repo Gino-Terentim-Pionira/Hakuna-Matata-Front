@@ -49,8 +49,6 @@ import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
 import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
 import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
 import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
-import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
-import NavActions from '../components/NavActions';
 
 interface IQuiz {
 	_id: string;
@@ -478,39 +476,10 @@ const LionPath = () => {
 							justifyContent='space-between'
 							zIndex='10'
 						>
-							<Box
-								position='absolute'
-								left='7vw'
-								top='58vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={4} />
-							</Box>
-
-							<Box
-								position='absolute'
-								left='22vw'
-								top='81vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={5} />
-							</Box>
-							<Box
-								position='absolute'
-								left='58vw'
-								top='82vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={6} />
-							</Box>
-							<Box
-								position='absolute'
-								left='79vw'
-								top='52vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={7} />
-							</Box>
+							<ModuleModal left='7vw' top='62vh' quizIndex={4} />
+							<ModuleModal left='22vw' top='86vh' quizIndex={5} />
+							<ModuleModal left='58vw' top='87vh' quizIndex={6} />
+							<ModuleModal left='79vw' top='58vh' quizIndex={7} />
 							<Center
 								_hover={{
 									cursor: 'pointer',
