@@ -56,10 +56,10 @@ import couple from '../assets/sprites/lion/couple.png';
 import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.svg';
 import lion_bg from '../assets/modal/lion_bg.png';
 
- import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
- import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
- import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
- import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
+import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
+import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
+import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
 
 interface IQuiz {
 	_id: string;
@@ -227,7 +227,7 @@ const LionPath = () => {
 	const [isAlertCoins, setIsAlertCoins] = useState(false);
 	const [isCoinsCheck, setIsCoinsCheck] = useState(false);
 	const cancelRef = useRef<HTMLButtonElement>(null);
-	
+
 	const [ignoranceImage, setIgnoranceImage] = useState("");
 
 	const [script, setScript] = useState<IScript[]>([]);
@@ -245,10 +245,10 @@ const LionPath = () => {
 		history.push('/mainPage');
 	};
 
-	 const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
-	 	const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
-	 	setIgnoranceImage(filterBackgroung);
-	 }
+	const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
+		const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
+		setIgnoranceImage(filterBackgroung);
+	}
 
 	const getUser = async () => {
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
@@ -365,7 +365,7 @@ const LionPath = () => {
 			const newScript = await trail2Beggining();
 			setScript(newScript);
 			narrativeOnOpen();
-	
+
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
 					trail1: res.data.narrative_status.trail1,
@@ -377,7 +377,7 @@ const LionPath = () => {
 			const newScript = await trail2First();
 			setScript(newScript);
 			narrativeOnOpen();
-		} 
+		}
 		// else if (res.data.narrative_status.trail2 == 2 && !isComplete) {
 		// 	//Verifica se o usuário está no dia a dia da trilha
 		// 	const randomNumber = Math.floor(Math.random() * 10);
@@ -476,7 +476,7 @@ const LionPath = () => {
 					zIndex='-3'
 					left='0'
 					top='0'
-				/> 
+				/>
 
 				<Flex
 					width='92.5%'
@@ -640,39 +640,10 @@ const LionPath = () => {
 							justifyContent='space-between'
 							zIndex='10'
 						>
-							<Box
-								position='absolute'
-								left='7vw'
-								top='58vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={4} />
-							</Box>
-
-							<Box
-								position='absolute'
-								left='22vw'
-								top='81vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={5} />
-							</Box>
-							<Box
-								position='absolute'
-								left='58vw'
-								top='82vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={6} />
-							</Box>
-							<Box
-								position='absolute'
-								left='79vw'
-								top='52vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={7} />
-							</Box>
+							<ModuleModal left='7vw' top='62vh' quizIndex={4} />
+							<ModuleModal left='22vw' top='86vh' quizIndex={5} />
+							<ModuleModal left='58vw' top='87vh' quizIndex={6} />
+							<ModuleModal left='79vw' top='58vh' quizIndex={7} />
 							<Center
 								_hover={{
 									cursor: 'pointer',
