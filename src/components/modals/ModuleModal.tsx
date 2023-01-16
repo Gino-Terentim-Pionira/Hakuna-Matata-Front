@@ -37,6 +37,9 @@ import colorPalette from '../../styles/colorPalette';
 
 interface IModuleModal {
     quizIndex: number;
+    top?: string;
+    bottom?: string;
+    left?: string; 
 }
 
 interface IQuizz {
@@ -86,7 +89,7 @@ interface IUser {
     }
 }
 
-const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
+const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     //modais
     const { isOpen,
         onClose,
@@ -237,7 +240,13 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
                     cursor: 'pointer',
                     transform: 'scale(1.1)',
                 }}
+                position="absolute"
                 transition='all 0.2s ease'
+                width={[116, null, null, null, null, 180]}
+                height={[70, null, null, null, null, 110]}
+                top={top}
+                bottom={bottom}
+                left={left}
             />
 
             <Modal isOpen={isOpen} onClose={onClose} size="4xl">
