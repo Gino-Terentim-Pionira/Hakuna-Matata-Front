@@ -59,6 +59,7 @@ import ignorance100 from '../assets/ignorance/cheetahPath/ignorance100.png';
 import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 interface IQuiz {
 	_id: string;
@@ -238,6 +239,7 @@ const CheetahPath = () => {
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>(
 		[],
 	);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const goToShop = () => {
 		history.push('/shop');
@@ -262,39 +264,44 @@ const CheetahPath = () => {
 	};
 
 	const getUser = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const { data } = await api.get(`/user/${_userId}`);
-		setIgnoranceFilter(data.ignorance, ignoranceArray);
-		const isComplete = data.finalQuizComplete.cheetahFinal;
-
-		if (isComplete) {
-			setCheetahText(
-				`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+		try {
+			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+				'@pionira/userId',
 			);
-			setCompleteTrail(true);
-			if (data.narrative_status.trail1 !== 4) {
-				await api.patch(`/user/narrative/${_userId}`, {
-					narrative_status: {
-						trail1: 3,
-					},
-				});
-				await finalCheetahNarrative();
+			const { data } = await api.get(`/user/${_userId}`);
+			setIgnoranceFilter(data.ignorance, ignoranceArray);
+			const isComplete = data.finalQuizComplete.cheetahFinal;
+			setIsLoading(false);
+
+			if (isComplete) {
+				setCheetahText(
+					`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+				);
+				setCompleteTrail(true);
+				if (data.narrative_status.trail1 !== 4) {
+					await api.patch(`/user/narrative/${_userId}`, {
+						narrative_status: {
+							trail1: 3,
+						},
+					});
+					await finalCheetahNarrative();
+				}
+			} else {
+				if (data.ignorance > 80)
+					setCheetahText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
+					);
+				else if (data.ignorance > 40)
+					setCheetahText(
+						'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
+					);
+				else
+					setCheetahText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
 			}
-		} else {
-			if (data.ignorance > 80)
-				setCheetahText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
-				);
-			else if (data.ignorance > 40)
-				setCheetahText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
-				);
-			else
-				setCheetahText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
@@ -463,7 +470,7 @@ const CheetahPath = () => {
 	}, []);
 
 	return (
-		<div className="fadeIn">
+		<>
 			<Flex h='100vh' flexDirection='column' alignItems='center'>
 				<Image
 					src={trail_bg}
@@ -499,8 +506,8 @@ const CheetahPath = () => {
 						alignItems='center'
 					>
 						{narrativeIsOpen ||
-						narrativeChallengeIsOpen ||
-						finalNarrativeChallengeIsOpen ? null : (
+							narrativeChallengeIsOpen ||
+							finalNarrativeChallengeIsOpen ? null : (
 							<>
 								<Center
 									_hover={{
@@ -605,8 +612,8 @@ const CheetahPath = () => {
 					</Flex>
 
 					{narrativeIsOpen ||
-					narrativeChallengeIsOpen ||
-					finalNarrativeChallengeIsOpen ? null : (
+						narrativeChallengeIsOpen ||
+						finalNarrativeChallengeIsOpen ? null : (
 						<Flex
 							flexDirection='column'
 							justifyContent='space-between'
@@ -644,8 +651,8 @@ const CheetahPath = () => {
 				</Flex>
 
 				{narrativeIsOpen ||
-				narrativeChallengeIsOpen ||
-				finalNarrativeChallengeIsOpen ? null : (
+					narrativeChallengeIsOpen ||
+					finalNarrativeChallengeIsOpen ? null : (
 					<>
 						<Flex
 							margin='2vw'
@@ -893,6 +900,11 @@ const CheetahPath = () => {
 				/>
 			</Flex>
 
+			{
+				isLoading ? (
+					<LoadingOverlay />
+				) : (null)
+			}
 			<FinalUniversalQuiz
 				openModal={quizIsOpen}
 				closeModal={quizOnClose}
@@ -982,7 +994,7 @@ const CheetahPath = () => {
 					</Button>
 				}
 			/>
-		</div>
+		</>
 	);
 };
 

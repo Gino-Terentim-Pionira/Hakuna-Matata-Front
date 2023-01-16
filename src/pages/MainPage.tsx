@@ -36,6 +36,7 @@ import ignorance100 from '../assets/ignorance/mainPage/ignorance100.png';
 import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 interface IUser {
 	ignorance: number;
@@ -105,6 +106,7 @@ const MainPage = () => {
 	const [onError, setOnError] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -182,6 +184,7 @@ const MainPage = () => {
 			}
 
 			await checkCanCollectDaily(res.data.lastCollected);
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
@@ -490,7 +493,13 @@ const MainPage = () => {
 						/>
 					</>
 				)}
+				{
+					isLoading ? (
+						<LoadingOverlay />
+					) : (null)
+				}
 			</Flex>
+
 
 			<AlertModal
 				isOpen={onError}

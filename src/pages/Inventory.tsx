@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import LoadingState from '../components/LoadingState';
 import PurchasedItems from '../components/PurchasedItems';
 
 // Requisitions
@@ -18,6 +17,7 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import sidearrow from '../assets/icons/sidearrow.png';
 import icon_shop from '../assets/icons/icon_shop.svg';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 
 const Shop = () => {
@@ -26,6 +26,7 @@ const Shop = () => {
 	const [validation, setValidation] = useState(false);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const getShopItens = async () => {
 		try {
@@ -37,17 +38,14 @@ const Shop = () => {
 			res.data.map(({ user_id }: { user_id: [string] }) => {
 				user_id.includes(userId as string) ? setValidation(true) : null;
 			});
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
 	};
 
 	const goBackShop = async () => {
-		try {
-			history.push(`/shop`);
-		} catch (error) {
-			setOnError(true);
-		}
+		history.push(`/shop`);
 	};
 
 	const goBack = () => {
@@ -136,53 +134,49 @@ const Shop = () => {
 				</Box>
 			</Flex>
 			{validation ? (
-				shopItem.length > 0 ? (
-					<>
-						<SimpleGrid
-							zIndex='2'
-							w='70%'
-							columns={3}
-							overflowY='auto'
-							mt='2.5rem'
-						>
-							{shopItem.map(
-								({
-									_id,
-									name,
-									value,
-									description,
-									type,
-									user_id,
-									id_link,
-								}: {
-									user_id: Array<string>;
-									_id: string;
-									name: string;
-									value: number;
-									description: string;
-									type: string;
-									id_link: string;
-								}) => {
-									return (
-										<PurchasedItems
-											key={_id}
-											_id={_id}
-											current_user_id={currentUserId}
-											users_id={user_id}
-											name={name}
-											value={value}
-											description={description}
-											type={type}
-											id_link={id_link}
-										/>
-									);
-								},
-							)}
-						</SimpleGrid>
-					</>
-				) : (
-					<LoadingState />
-				)
+				<>
+					<SimpleGrid
+						zIndex='2'
+						w='70%'
+						columns={3}
+						overflowY='auto'
+						mt='2.5rem'
+					>
+						{shopItem.map(
+							({
+								_id,
+								name,
+								value,
+								description,
+								type,
+								user_id,
+								id_link,
+							}: {
+								user_id: Array<string>;
+								_id: string;
+								name: string;
+								value: number;
+								description: string;
+								type: string;
+								id_link: string;
+							}) => {
+								return (
+									<PurchasedItems
+										key={_id}
+										_id={_id}
+										current_user_id={currentUserId}
+										users_id={user_id}
+										name={name}
+										value={value}
+										description={description}
+										type={type}
+										id_link={id_link}
+									/>
+								);
+							},
+						)}
+					</SimpleGrid>
+				</>
 			) : (
 				<Text
 					mt='2.6rem'
@@ -197,6 +191,11 @@ const Shop = () => {
 					Você ainda não possui nenhum item!
 				</Text>
 			)}
+			{
+				isLoading ? (
+					<LoadingOverlay />
+				) : null
+			}
 			<AlertModal
 				isOpen={onError}
 				onClose={() => window.location.reload()}
