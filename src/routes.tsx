@@ -62,7 +62,7 @@ const Routes = () => {
 					<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
 					<ProtectedRoute path='/trilha-leao' component={LionPath} />
 					<ProtectedRoute path='/payment' component={PaymentPage} />
-					<ProtectedRoute path='/premium' component={Premium} />
+					{/* <ProtectedRoute path='/premium' component={Premium} /> */}
 				</Switch>
 
 			</AuthProvider >

@@ -22,13 +22,14 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
     <>
       <Flex
         flexDirection='column'
+        alignItems='center'
         justifyContent='flex-end'
         h='87.5vh'
         marginTop='1.5rem'
       >
         {/* <Image
           src={icon_membership}
-          width='5.5rem'
+          width='5rem'
           _hover={{
             cursor: 'pointer',
             transform: 'scale(1.1)',
