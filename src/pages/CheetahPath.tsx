@@ -103,7 +103,10 @@ const CheetahPath = () => {
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 	const [withoutMoney, setWithoutMoney] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
-	const isAlertCoinsOnClose = () => setIsAlertCoins(false);
+	const isAlertCoinsOnClose = () => {
+		setIsAlertCoins(false);
+		setIsLoading(false);
+	};
 	const [cheetahText, setCheetahText] = useState<string>();
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
 	0;
@@ -743,6 +746,8 @@ const CheetahPath = () => {
 						onClick={() => {
 							paxTax();
 							isAlertOnClose();
+							modalOnClose();
+							setIsLoading(true);
 						}}
 					>
 						Pagar
@@ -782,6 +787,7 @@ const CheetahPath = () => {
 								bg={colorPalette.primaryColor}
 								onClick={() => {
 									isAlertCoinsOnClose();
+									setIsLoading(false);
 								}}
 							>
 								Cancelar

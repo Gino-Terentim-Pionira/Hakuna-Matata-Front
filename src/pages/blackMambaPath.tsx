@@ -120,7 +120,10 @@ const BaboonPath = () => {
 	const [mambaText, setMambaText] = useState<string>();
 	const alertOnClose = () => setIsConfirmOpen(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
-	const isAlertCoinsOnClose = () => setIsAlertCoins(false);
+	const isAlertCoinsOnClose = () => {
+		setIsAlertCoins(false);
+		setIsLoading(false);
+	};
 	const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
 	const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
@@ -553,6 +556,8 @@ const BaboonPath = () => {
 							onClick={() => {
 								paxTax();
 								isAlertOnClose();
+								onClose();
+								setIsLoading(true);
 							}}
 						>
 							Pagar
@@ -569,7 +574,10 @@ const BaboonPath = () => {
 							ref={cancelRef}
 							color='white'
 							bg={colorPalette.primaryColor}
-							onClick={isAlertCoinsOnClose}
+							onClick={() => {
+								isAlertCoinsOnClose();
+								setIsLoading(false);
+							}}
 						>
 							Cancelar
 						</Button>

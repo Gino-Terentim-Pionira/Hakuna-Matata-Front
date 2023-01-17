@@ -104,7 +104,10 @@ const LionPath = () => {
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 	const [withoutMoney, setWithoutMoney] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
-	const isAlertCoinsOnClose = () => setIsAlertCoins(false);
+	const isAlertCoinsOnClose = () => {
+		setIsAlertCoins(false);
+		setIsLoading(false);
+	};
 	const [lionText, setLionText] = useState<string>();
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
 	0;
@@ -723,6 +726,8 @@ const LionPath = () => {
 						onClick={() => {
 							paxTax();
 							isAlertOnClose();
+							modalOnClose();
+							setIsLoading(true);
 						}}
 					>
 						Pagar
@@ -762,6 +767,7 @@ const LionPath = () => {
 								bg={colorPalette.primaryColor}
 								onClick={() => {
 									isAlertCoinsOnClose();
+									setIsLoading(false);
 								}}
 							>
 								Cancelar
