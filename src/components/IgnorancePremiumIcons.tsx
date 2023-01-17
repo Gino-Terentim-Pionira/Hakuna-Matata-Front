@@ -24,7 +24,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
         flexDirection='column'
         alignItems='center'
         justifyContent='flex-end'
-        h='88.5vh'
+        h='85.5vh'
         marginTop='1.5rem'
       >
         {/* <Image

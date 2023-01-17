@@ -40,7 +40,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         flexDirection='column'
         justify='space-between'
         alignItems='center'
-        h='88.5vh'
+        h='85.5vh'
       >
         <Flex flexDirection='column' align='center'>
           <Center
