@@ -63,10 +63,8 @@ const RandomRewardModal = () => {
 
     const updateUserCoins = async () => {
         try {
-
             await addCoinsStatus(coins);
             window.location.reload();
-
         } catch (error) {
             setOnError(true);
         }

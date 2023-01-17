@@ -19,7 +19,6 @@ import { useHistory } from 'react-router-dom';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import FinalQuizModal from './../components/FinalQuiz';
 import AlertModal from '../components/modals/AlertModal';
-import PremiumPassport from '../components/modals/PremiumPassport';
 import NavActions from '../components/NavActions';
 
 // Requisitions
@@ -95,12 +94,6 @@ const BaboonPath = () => {
 		isOpen: narrativeMonkeyIsOpen,
 		onOpen: narrativeMonkeyOnOpen,
 		onToggle: narrativeMonkeyOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: premiumIsOpen,
-		onClose: premiumOnClose,
-		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
 	const history = useHistory();
@@ -582,12 +575,6 @@ const BaboonPath = () => {
 					}
 				/>
 
-				<PremiumPassport
-					isOpen={premiumIsOpen}
-					onClose={premiumOnClose}
-					onToggle={premiumOnToggle}
-				/>
-
 				<AlertModal
 					isOpen={isConfirmOpen}
 					onClose={alertOnClose}
@@ -610,9 +597,7 @@ const BaboonPath = () => {
 				/>
 			</Flex>
 			{
-				isLoading ? (
-					<LoadingOverlay />
-				) : (null)
+				isLoading && <LoadingOverlay />
 			}
 
 			{script.length > 0 ? (

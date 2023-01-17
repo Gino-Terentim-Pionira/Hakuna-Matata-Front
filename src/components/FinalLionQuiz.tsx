@@ -256,7 +256,6 @@ const FinalLionQuiz: FC<IQuizComponent> = ({
 				});
 			else return;
 		} catch (error) {
-			console.log(error);
 			setOnError(true);
 		}
 	};

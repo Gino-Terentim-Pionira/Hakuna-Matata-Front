@@ -38,81 +38,86 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         maxWidth='4.5rem'
         marginTop='1.5rem'
         flexDirection='column'
+        justify='space-between'
         alignItems='center'
+        h='88.5vh'
       >
-        <Center
-          _hover={{
-            cursor: 'pointer',
-            transform: 'scale(1.1)',
-          }}
-          transition='all 0.2s ease'
-          mb='.75rem'
-          border='2px solid black'
-          borderRadius='4.5rem'
-          width='4.5rem'
-          height='4.5rem'
-          bg='white'
-          onClick={profileOnOpen}
-        >
-          <Image
-            src={icon_profile}
-            marginBottom='.5rem'
-          />
-        </Center>
+        <Flex flexDirection='column' align='center'>
+          <Center
+            _hover={{
+              cursor: 'pointer',
+              transform: 'scale(1.1)',
+            }}
+            transition='all 0.2s ease'
+            mb='.75rem'
+            border='2px solid black'
+            borderRadius='4.5rem'
+            width='4.5rem'
+            height='4.5rem'
+            bg='white'
+            onClick={profileOnOpen}
+          >
+            <Image
+              src={icon_profile}
+              marginBottom='.5rem'
+            />
+          </Center>
 
-        <Center
-          _hover={{
-            cursor: 'pointer',
-            transform: 'scale(1.1)',
-          }}
-          transition='all 0.2s ease'
-          mb='.75rem'
-          border='2px solid black'
-          borderRadius='4.5rem'
-          width='4.5rem'
-          height='4.5rem'
-          bg='white'
-          onClick={() => history.push('/shop')}
-        >
-          <Image
-            src={icon_shop}
-            marginBottom='.1rem'
-          />
-        </Center>
+          <Center
+            _hover={{
+              cursor: 'pointer',
+              transform: 'scale(1.1)',
+            }}
+            transition='all 0.2s ease'
+            mb='.75rem'
+            border='2px solid black'
+            borderRadius='4.5rem'
+            width='4.5rem'
+            height='4.5rem'
+            bg='white'
+            onClick={() => history.push('/shop')}
+          >
+            <Image
+              src={icon_shop}
+              marginBottom='.1rem'
+            />
+          </Center>
 
-        <Center
-          _hover={{
-            cursor: 'pointer',
-            transform: 'scale(1.1)',
-          }}
-          transition='all 0.2s ease'
-          mb='.75rem'
-          border='2px solid black'
-          borderRadius='4.5rem'
-          width='3.75rem'
-          height='3.75rem'
-          bg='white'
-          onClick={tutorialOnOpen}
-        >
-          <Image src={icon_tutorial} />
-        </Center>
+          <Center
+            _hover={{
+              cursor: 'pointer',
+              transform: 'scale(1.1)',
+            }}
+            transition='all 0.2s ease'
+            mb='.75rem'
+            border='2px solid black'
+            borderRadius='4.5rem'
+            width='3.75rem'
+            height='3.75rem'
+            bg='white'
+            onClick={tutorialOnOpen}
+          >
+            <Image src={icon_tutorial} />
+          </Center>
 
-        <Center
-          _hover={{
-            cursor: 'pointer',
-            transform: 'scale(1.1)',
-          }}
-          transition='all 0.2s ease'
-          mb='.75rem'
-          border='2px solid black'
-          borderRadius='4.5rem'
-          width='3.75rem'
-          height='3.75rem'
-          bg='white'
-          onClick={logout}
-        >
-          <Image src={icon_logout} />
-        </Center>
+          <Center
+            _hover={{
+              cursor: 'pointer',
+              transform: 'scale(1.1)',
+            }}
+            transition='all 0.2s ease'
+            mb='.75rem'
+            border='2px solid black'
+            borderRadius='4.5rem'
+            width='3.75rem'
+            height='3.75rem'
+            bg='white'
+            onClick={logout}
+          >
+            <Image src={icon_logout} />
+          </Center>
+        </Flex>
+
         {
           !dontShowMap && <Center
             _hover={{
@@ -126,8 +131,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
             height='6.55rem'
             bg='white'
             onClick={() => history.push('/mainPage')}
-            position='absolute'
-            mt='78vh'
           >
             <Image
               src={icon_map}

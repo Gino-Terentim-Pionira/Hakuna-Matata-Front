@@ -29,9 +29,9 @@ import AlertModal from '../components/modals/AlertModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz';
-import PremiumPassport from '../components/modals/PremiumPassport';
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 import NavActions from '../components/NavActions';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
 import api from '../services/api';
@@ -50,7 +50,6 @@ import ignorance100 from '../assets/ignorance/cheetahPath/ignorance100.png';
 import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
-import LoadingOverlay from '../components/LoadingOverlay';
 
 
 interface IQuiz {
@@ -146,12 +145,6 @@ const CheetahPath = () => {
 		isOpen: finalNarrativeChallengeIsOpen,
 		onOpen: finalNarrativeChallengeOnOpen,
 		onToggle: finalNarrativeChallengeOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: premiumIsOpen,
-		onClose: premiumOnClose,
-		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
 	const [questions, setQuestions] = useState<IQuestions[]>([
@@ -697,11 +690,6 @@ const CheetahPath = () => {
 					/>
 				) : null}
 
-				<PremiumPassport
-					isOpen={premiumIsOpen}
-					onClose={premiumOnClose}
-					onToggle={premiumOnToggle}
-				/>
 
 				<AlertModal
 					isOpen={isConfirmOpen}
@@ -726,9 +714,7 @@ const CheetahPath = () => {
 			</Flex>
 
 			{
-				isLoading ? (
-					<LoadingOverlay />
-				) : (null)
+				isLoading && <LoadingOverlay />
 			}
 			<FinalUniversalQuiz
 				openModal={quizIsOpen}

@@ -4,7 +4,6 @@ import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
 
 // Components
 import TutorialModal from '../components/modals/TutorialModal';
-import PremiumPassport from '../components/modals/PremiumPassport';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import AlertModal from '../components/modals/AlertModal';
 import DailyReward from '../components/modals/DailyRewardModal';
@@ -68,12 +67,6 @@ const MainPage = () => {
 		onClose: tutorialOnClose,
 		onOpen: tutorialOnOpen,
 		onToggle: tutorialOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: premiumIsOpen,
-		onClose: premiumOnClose,
-		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
 	const {
@@ -323,11 +316,6 @@ const MainPage = () => {
 				onClose={tutorialFirstOnClose}
 				onToggle={tutorialOnToggle}
 			/>
-			<PremiumPassport
-				isOpen={premiumIsOpen}
-				onClose={premiumOnClose}
-				onToggle={premiumOnToggle}
-			/>
 
 			<Flex margin='2vw' justifyContent='space-between'>
 				{narrativeIsOpen ? null : (
@@ -376,9 +364,7 @@ const MainPage = () => {
 					</>
 				)}
 				{
-					isLoading ? (
-						<LoadingOverlay />
-					) : (null)
+					isLoading && <LoadingOverlay />
 				}
 			</Flex>
 
