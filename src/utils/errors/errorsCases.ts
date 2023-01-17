@@ -9,9 +9,9 @@
   SERVER_ERROR: 'Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!',
   NON_EXISTING_EMAIL_ERROR: 'Ops! Você é novo por aqui? Não existe nenhum passaporte com esse e-mail!',
   WRONG_PASSWORD_ERROR: 'Ops, não posso permitir que entre na savana pois essa não é a sua senha!',
-  USER_IS_NOT_CONFIRMED_ERROR: 'Usuário não confirmado!',
+  USER_IS_NOT_CONFIRMED_ERROR: 'Não posso te deixar entrar, seu passaporte ainda não foi confirmado. Olhe seu "email" por favor.',
   FAILED_LOGIN_ERROR: 'Parece que ocorreu um erro durante a nossa viagem, Jovem! Tente novamente',
-  SUCCESS_CASE_REGISTER: 'Prontinho, agora a Savana possui o seu cadastro. Por favor cheque o seu email para confirmá-lo!',
+  SUCCESS_CASE_REGISTER: 'Tudo certo! Agora você só precisa "entrar no seu email" para confirmar o passaporte. Não sei o que significa, mas faça isso por favor.',
 };
 
 export const editProfileErrorCases: {[key: string]: string} = {
