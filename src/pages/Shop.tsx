@@ -23,6 +23,7 @@ const Shop = () => {
 	const [shopItem, setShopItem] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
 	const [onError, setOnError] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const history = useHistory();
 
@@ -33,18 +34,15 @@ const Shop = () => {
 			const userIdString = '' + userId;
 			setShopItem(res.data);
 			setCurrentUserId(userIdString);
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
 	};
 
 	const goToInventory = async () => {
-		try {
-			const userId = sessionStorage.getItem('@pionira/userId');
-			history.push(`/inventory/${userId}`);
-		} catch (error) {
-			setOnError(true);
-		}
+		const userId = sessionStorage.getItem('@pionira/userId');
+		history.push(`/inventory/${userId}`);
 	}
 
 	const goBack = () => {
@@ -131,7 +129,9 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{shopItem.length > 0 ? (
+			{isLoading ? (
+				<LoadingState />
+			) : (
 				<>
 					<SimpleGrid zIndex='2' w='72%' columns={3} overflowY='auto' mt='2rem'>
 						{shopItem.map(
@@ -166,8 +166,6 @@ const Shop = () => {
 						)}
 					</SimpleGrid>
 				</>
-			) : (
-				<LoadingState />
 			)}
 			<AlertModal
 				isOpen={onError}

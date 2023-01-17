@@ -30,6 +30,8 @@ import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz';
 import PremiumPassport from '../components/modals/PremiumPassport';
+import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
+import NavActions from '../components/NavActions';
 
 // Requisitions
 import api from '../services/api';
@@ -48,8 +50,8 @@ import ignorance100 from '../assets/ignorance/cheetahPath/ignorance100.png';
 import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
-import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
-import NavActions from '../components/NavActions';
+import LoadingOverlay from '../components/LoadingOverlay';
+
 
 interface IQuiz {
 	_id: string;
@@ -220,6 +222,7 @@ const CheetahPath = () => {
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>(
 		[],
 	);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da savana?');
@@ -238,39 +241,45 @@ const CheetahPath = () => {
 	};
 
 	const getUser = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const { data } = await api.get(`/user/${_userId}`);
-		setIgnoranceFilter(data.ignorance, ignoranceArray);
-		const isComplete = data.finalQuizComplete.cheetahFinal;
-
-		if (isComplete) {
-			setCheetahText(
-				`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+		try {
+			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+				'@pionira/userId',
 			);
-			setCompleteTrail(true);
-			if (data.narrative_status.trail1 !== 4) {
-				await api.patch(`/user/narrative/${_userId}`, {
-					narrative_status: {
-						trail1: 3,
-					},
-				});
-				await finalCheetahNarrative();
+			const { data } = await api.get(`/user/${_userId}`);
+			setUser(data);
+			setIgnoranceFilter(data.ignorance, ignoranceArray);
+			const isComplete = data.finalQuizComplete.cheetahFinal;
+			setIsLoading(false);
+
+			if (isComplete) {
+				setCheetahText(
+					`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+				);
+				setCompleteTrail(true);
+				if (data.narrative_status.trail1 !== 4) {
+					await api.patch(`/user/narrative/${_userId}`, {
+						narrative_status: {
+							trail1: 3,
+						},
+					});
+					await finalCheetahNarrative();
+				}
+			} else {
+				if (data.ignorance > 80)
+					setCheetahText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
+					);
+				else if (data.ignorance > 40)
+					setCheetahText(
+						'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
+					);
+				else
+					setCheetahText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
 			}
-		} else {
-			if (data.ignorance > 80)
-				setCheetahText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
-				);
-			else if (data.ignorance > 40)
-				setCheetahText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
-				);
-			else
-				setCheetahText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
@@ -320,13 +329,6 @@ const CheetahPath = () => {
 		}
 	};
 
-	const getUserRequisition = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const res = await api.get(`/user/${_userId}`);
-		setUser(res.data);
-	};
 	const firstAccess = async () => {
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
 			'@pionira/userId',
@@ -432,14 +434,13 @@ const CheetahPath = () => {
 
 	useEffect(() => {
 		getUser();
-		getUserRequisition();
 		firstAccess();
 		updateNarrative();
 		getQuiz();
 	}, []);
 
 	return (
-		<div className="fadeIn">
+		<>
 			<Flex h='100vh' flexDirection='column' alignItems='center'>
 				<Image
 					src={trail_bg}
@@ -475,8 +476,8 @@ const CheetahPath = () => {
 						)}
 
 					{narrativeIsOpen ||
-						narrativeChallengeIsOpen ||
-						finalNarrativeChallengeIsOpen ? null : (
+							narrativeChallengeIsOpen ||
+							finalNarrativeChallengeIsOpen ? null : (
 						<IgnorancePremiumIcons ignorance={user.ignorance} />
 					)}
 				</Flex>
@@ -724,6 +725,11 @@ const CheetahPath = () => {
 				/>
 			</Flex>
 
+			{
+				isLoading ? (
+					<LoadingOverlay />
+				) : (null)
+			}
 			<FinalUniversalQuiz
 				openModal={quizIsOpen}
 				closeModal={quizOnClose}
@@ -813,7 +819,7 @@ const CheetahPath = () => {
 					</Button>
 				}
 			/>
-		</div>
+		</>
 	);
 };
 

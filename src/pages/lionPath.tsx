@@ -29,6 +29,8 @@ import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalLionQuiz from '../components/FinalLionQuiz';
 import PremiumPassport from '../components/modals/PremiumPassport';
+import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
+import NavActions from '../components/NavActions';
 
 // Requisitions
 import api from '../services/api';
@@ -49,6 +51,8 @@ import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
 import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
 import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
 import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import LoadingOverlay from '../components/LoadingOverlay';
+
 
 interface IQuiz {
 	_id: string;
@@ -107,6 +111,7 @@ const LionPath = () => {
 	const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
 	const [onError, setOnError] = useState(false);
 	const [completeTrail, setCompleteTrail] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const ignoranceArray = [ignorance100, ignorance75, ignorance50, ignorance25];
 
@@ -225,37 +230,43 @@ const LionPath = () => {
 	}
 
 	const getUser = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
-		setIgnoranceFilter(data.ignorance, ignoranceArray);
-		const isComplete = data.finalQuizComplete.lionFinal;
+		try {
+			const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
+			const { data } = await api.get(`/user/${_userId}`);
+			setIgnoranceFilter(data.ignorance, ignoranceArray);
+			const isComplete = data.finalQuizComplete.lionFinal;
+			setUser(data);
+			setIsLoading(false);
 
-		if (isComplete) {
-			setLionText(
-				`Você já alcançou o máximo da sua liderança, aprendiz... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
-			);
-			setCompleteTrail(true);
-			if (data.narrative_status.trail2 !== 4) {
-				await api.patch(`/user/narrative/${_userId}`, {
-					narrative_status: {
-						trail2: 3
-					},
-				});
-				await finalLionNarrative();
+			if (isComplete) {
+				setLionText(
+					`Você já alcançou o máximo da sua liderança, aprendiz... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+				);
+				setCompleteTrail(true);
+				if (data.narrative_status.trail2 !== 4) {
+					await api.patch(`/user/narrative/${_userId}`, {
+						narrative_status: {
+							trail2: 3
+						},
+					});
+					await finalLionNarrative();
+				}
+			} else {
+				if (data.ignorance > 80)
+					setLionText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
+					);
+				else if (data.ignorance > 40)
+					setLionText(
+						'Você está definitivamente mais forte, jovem! Mas temo que a Leão e Leoa é um desafio muito grande para você!',
+					);
+				else
+					setLionText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
 			}
-		} else {
-			if (data.ignorance > 80)
-				setLionText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
-				);
-			else if (data.ignorance > 40)
-				setLionText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Leão e Leoa é um desafio muito grande para você!',
-				);
-			else
-				setLionText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
@@ -303,11 +314,6 @@ const LionPath = () => {
 		}
 	};
 
-	const getUserRequisition = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const res = await api.get(`/user/${_userId}`);
-		setUser(res.data);
-	};
 	const firstAccess = async () => {
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
 		const res = await api.get(`/user/${_userId}`);
@@ -424,7 +430,6 @@ const LionPath = () => {
 
 	useEffect(() => {
 		getUser();
-		getUserRequisition();
 		firstAccess();
 		updateNarrative();
 		getQuiz();
@@ -700,6 +705,11 @@ const LionPath = () => {
 					}
 				/>
 			</Flex>
+			{
+				isLoading ? (
+					<LoadingOverlay />
+				) : (null)
+			}
 
 			<FinalLionQuiz
 				openModal={quizIsOpen}

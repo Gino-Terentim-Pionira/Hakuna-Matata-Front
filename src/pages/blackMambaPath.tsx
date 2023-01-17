@@ -36,6 +36,7 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import BlackMambaBackground from '../assets/scenerys/blackMamba/blackMamba.png';
 import ModalMamba from '../assets/modal/modalMamba.png';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 interface IScript {
 	name: string;
@@ -131,6 +132,7 @@ const BaboonPath = () => {
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
 	const cancelRef = useRef<HTMLButtonElement>(null);
 	const [onError, setOnError] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [quiz, setQuiz] = useState<IQuiz>({
 		_id: '',
 		name: '',
@@ -174,28 +176,33 @@ const BaboonPath = () => {
 	};
 
 	const getUser = async () => {
-		const _userId = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
-		const isComplete = data.finalQuizComplete.blackMamba;
+		try {
+			const _userId = sessionStorage.getItem('@pionira/userId');
+			const { data } = await api.get(`/user/${_userId}`);
+			const isComplete = data.finalQuizComplete.blackMamba;
+			setIsLoading(false);
 
-		if (isComplete) {
-			setMambaText(
-				`Ora ora, vejo que sente mesmo minha falta... Já disse, você conseguiu vencer a ignorância por completo, não a nada mais a se fazer! Obrigado, ${data.userName}!`,
-			);
-			setCompleteTrail(true);
-		} else {
-			if (data.ignorance > 80)
+			if (isComplete) {
 				setMambaText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Mamba Negra!',
+					`Ora ora, vejo que sente mesmo minha falta... Já disse, você conseguiu vencer a ignorância por completo, não a nada mais a se fazer! Obrigado, ${data.userName}!`,
 				);
-			else if (data.ignorance > 40)
-				setMambaText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Mamba Negra é um desafio muito grande para você!',
-				);
-			else
-				setMambaText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+				setCompleteTrail(true);
+			} else {
+				if (data.ignorance > 80)
+					setMambaText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Mamba Negra!',
+					);
+				else if (data.ignorance > 40)
+					setMambaText(
+						'Você está definitivamente mais forte, jovem! Mas temo que a Mamba Negra é um desafio muito grande para você!',
+					);
+				else
+					setMambaText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
+			}
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
@@ -343,7 +350,7 @@ const BaboonPath = () => {
 	}, []);
 
 	return (
-		<div className="fadeIn">
+		<>
 			<Flex h='100vh' flexDirection='column' alignItems='center'>
 				<Image
 					src={BlackMambaBackground}
@@ -602,6 +609,11 @@ const BaboonPath = () => {
 					}
 				/>
 			</Flex>
+			{
+				isLoading ? (
+					<LoadingOverlay />
+				) : (null)
+			}
 
 			{script.length > 0 ? (
 				//verifica se o script possui algum conteúdo
@@ -633,7 +645,7 @@ const BaboonPath = () => {
 					</Button>
 				}
 			/>
-		</div>
+		</>
 	);
 };
 

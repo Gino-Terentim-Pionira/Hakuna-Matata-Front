@@ -18,7 +18,7 @@ import TutorialModal from './components/modals/TutorialModal';
 import BlackMambaPath from './pages/blackMambaPath';
 import LionPath from './pages/lionPath';
 import PaymentPage from './pages/PaymentPage';
-import Premium from './pages/Premium';
+// import Premium from './pages/Premium';
 
 const useWindowSize = () => {
 	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
