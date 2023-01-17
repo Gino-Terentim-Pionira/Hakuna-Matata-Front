@@ -1,15 +1,11 @@
 import React, { SetStateAction, useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDisclosure, Image, Flex, Center, Button } from '@chakra-ui/react';
+import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
 
 // Components
-import ProfileModal from '../components/modals/ProfileModal';
 import TutorialModal from '../components/modals/TutorialModal';
-import PremiumPassport from '../components/modals/PremiumPassport';
-import RandomRewardModal from '../components/modals/RandomRewardModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import AlertModal from '../components/modals/AlertModal';
-import IgnoranceProgress from '../components/IgnoranceProgress';
 import DailyReward from '../components/modals/DailyRewardModal';
 import SubscribedModal from '../components/modals/SubscribedModal';
 
@@ -24,11 +20,6 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import map1_bg from '../assets/scenerys/mainPage/map1_bg.png';
 import map2_bg from '../assets/scenerys/mainPage/map2_bg.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
-import icon_membership from '../assets/icons/icon_membership.svg';
 import icon_cheeta from '../assets/icons/icon_cheeta.svg';
 import icon_blackMamba from '../assets/icons/icon_blackMamba.svg';
 import icon_leao from '../assets/icons/icone_leao.svg';
@@ -37,6 +28,9 @@ import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
+import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
+import NavActions from '../components/NavActions';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 interface IUser {
 	ignorance: number;
@@ -68,20 +62,12 @@ interface IScript {
 }
 
 const MainPage = () => {
-	const { isOpen, onClose, onOpen } = useDisclosure();
 	const history = useHistory();
 	const {
 		isOpen: tutorialIsOpen,
 		onClose: tutorialOnClose,
 		onOpen: tutorialOnOpen,
 		onToggle: tutorialOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: premiumIsOpen,
-		onClose: premiumOnClose,
-		onOpen: premiumOnOpen,
-		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
 	const {
@@ -106,6 +92,7 @@ const MainPage = () => {
 	const [onError, setOnError] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -183,13 +170,10 @@ const MainPage = () => {
 			}
 
 			await checkCanCollectDaily(res.data.lastCollected);
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
-	};
-
-	const goToShop = () => {
-		history.push('/shop');
 	};
 
 	const goToPath1 = () => {
@@ -228,22 +212,22 @@ const MainPage = () => {
 		}
 	};
 
-	const validIsPrime = async () => {
-		const userId = sessionStorage.getItem('@pionira/userId');
-		try {
-			const res = await api.get(`user/${userId}`);
-			const isSubscribed = res.data.isSubscribed;
+	// To add later:
+	// const validIsPrime = async () => {
+	// 	const userId = sessionStorage.getItem('@pionira/userId');
+	// 	try {
+	// 		const res = await api.get(`user/${userId}`);
+	// 		const isSubscribed = res.data.isSubscribed;
 
-			if (isSubscribed) {
-				setIsSubscribedModal(true);
-			}
-			else
-				premiumOnOpen();
-		} catch (error) {
-			setOnError(true);
-		}
-	}
-
+	// 		if (isSubscribed) {
+	// 			setIsSubscribedModal(true);
+	// 		}
+	// 		else
+	// 			premiumOnOpen();
+	// 	} catch (error) {
+	// 		setOnError(true);
+	// 	}
+	// }
 	const checkSubscription = async () => {
 		const userId = sessionStorage.getItem('@pionira/userId');
 		try {
@@ -308,118 +292,12 @@ const MainPage = () => {
 				alignItems='flex-start'
 				margin='auto'
 			>
-				<Flex
-					maxWidth='4.5rem'
-					marginTop='1.5rem'
-					flexDirection='column'
-					alignItems='center'
-				>
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='4.5rem'
-						height='4.5rem'
-						bg='white'
-						onClick={onOpen}
-					>
-						<Image src={icon_profile} marginBottom='.5rem' />
-					</Center>
-
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='4.5rem'
-						height='4.5rem'
-						bg='white'
-						onClick={() => goToShop()}
-					>
-						<Image src={icon_shop} marginBottom='.1rem' />
-					</Center>
-
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='3.75rem'
-						height='3.75rem'
-						bg='white'
-						onClick={tutorialOnOpen}
-					>
-						<Image src={icon_tutorial} />
-					</Center>
-
-					<Center
-						_hover={{
-							cursor: 'pointer',
-							transform: 'scale(1.1)',
-						}}
-						transition='all 0.2s ease'
-						mb='.75rem'
-						border='2px solid black'
-						borderRadius='4.5rem'
-						width='3.75rem'
-						height='3.75rem'
-						bg='white'
-						onClick={() => logout()}
-					>
-						<Image src={icon_logout} />
-					</Center>
-				</Flex>
+				<NavActions logout={logout} dontShowMap/>
 				{narrativeIsOpen ? null : (
-					<Flex
-						flexDirection='column'
-						justifyContent='space-between'
-						alignItems='flex-end'
-						h='85.5vh'
-						marginTop='1.5rem'
-					>
-						<Image
-							src={icon_membership}
-							width='5.5rem'
-							_hover={{
-								cursor: 'pointer',
-								transform: 'scale(1.1)',
-							}}
-							transition='all 0.2s ease'
-							onClick={validIsPrime}
-						/>
-						<Flex
-							flexDirection='row'
-							marginTop='64vh'
-							justifyContent='flex-end'
-							alignItems='center'
-						>
-							<RandomRewardModal />
-							<IgnoranceProgress
-								fontSize='1.7rem'
-								marginTop='0'
-								size='6rem'
-								ignorance={user.ignorance}
-								position='absolute'
-							/>
-						</Flex>
-					</Flex>
+						<IgnorancePremiumIcons ignorance={user.ignorance} />
 				)}
 			</Flex>
 
-			<ProfileModal isOpen={isOpen} onClose={onClose} />
 			{script.length > 0 ? (
 				//verifica se o script possui algum conteúdo
 				<NarrativeModal
@@ -438,11 +316,6 @@ const MainPage = () => {
 				isOpen={tutorialIsOpen}
 				onClose={tutorialFirstOnClose}
 				onToggle={tutorialOnToggle}
-			/>
-			<PremiumPassport
-				isOpen={premiumIsOpen}
-				onClose={premiumOnClose}
-				onToggle={premiumOnToggle}
 			/>
 
 			<Flex margin='2vw' justifyContent='space-between'>
@@ -491,7 +364,11 @@ const MainPage = () => {
 						/>
 					</>
 				)}
+				{
+					isLoading && <LoadingOverlay />
+				}
 			</Flex>
+
 
 			<AlertModal
 				isOpen={onError}

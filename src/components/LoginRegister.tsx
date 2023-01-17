@@ -20,6 +20,7 @@ type LoginRegisterProps = {
     forgetPasswordLink?: VoidFunction;
     validationError?: string;
     hasValidationError?: boolean;
+    loading: boolean;
 }
 
 const LoginRegister: FC<LoginRegisterProps> = ({
@@ -39,7 +40,8 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     forgetPasswordLink,
     buttonText,
     validationError,
-    hasValidationError
+    hasValidationError,
+    loading
 }) => {
     return (
         <Flex
@@ -72,6 +74,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     type={firstInputType}
                     value={firstValue}
                     onChange={firstChange}
+                    disabled={loading}
                 />
                 <Text color="red" fontSize="15"> {validationError} </Text>
 
@@ -87,6 +90,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                             type={secondInputType}
                             value={secondValue}
                             onChange={secondChange}
+                            disabled={loading}
                         />
                     </>
                 ) : (null)}
@@ -97,7 +101,8 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                             color={colorPalette.linkTextColor}
                             fontSize="1rem"
                             textDecoration="underline"
-                            onClick={forgetPasswordLink}
+                            onClick={loading ? () => {return null} : forgetPasswordLink}
+                            _hover={loading ? { cursor: 'not-allowed'} : { cursor: 'pointer'}}
                         >
                             Esqueci minha senha
                         </Link>
@@ -111,10 +116,14 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     <Button
                         width='100%'
                         height='3rem'
-                        background={colorPalette.primaryColor}
+                        background={loading ? colorPalette.neutralGray : colorPalette.primaryColor}
                         color={colorPalette.buttonTextColor}
                         fontSize='1.7rem'
                         onClick={nextStep}
+                        isLoading={loading}
+                        loadingText="Enviando"
+                        spinnerPlacement='end'
+                        _hover={{}}
                     >
                         {buttonText}
                     </Button>
@@ -125,7 +134,9 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         marginTop='0.3rem'
                         color={colorPalette.linkTextColor}
                         textDecoration='underLine'
-                        onClick={previousStep}
+                        onClick={loading ? () => {return null} : previousStep}
+                        _hover={loading ? { cursor: 'not-allowed'} : { cursor: 'pointer'}}
+                        
                     >
                         Voltar
                     </Link>

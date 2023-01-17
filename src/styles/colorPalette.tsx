@@ -20,6 +20,7 @@ const colorPalette = {
     backgroundHighlight: '#F5F5F5',
     detailsPremium: '#232323',
     descriptionText: '#646464',
+    neutralGray: '#999'
 }
 
 export default colorPalette;

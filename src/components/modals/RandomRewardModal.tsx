@@ -69,7 +69,6 @@ const RandomRewardModal = () => {
             setIsLoading(true);
             await addCoinsStatus(coins);
             window.location.reload();
-
         } catch (error) {
             setOnError(true);
         }

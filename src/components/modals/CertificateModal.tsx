@@ -70,10 +70,8 @@ const CertificateModal: FC<ICertificate> = ({ isOpen, trail, name }) => {
 			const userCertificate = certificate.data[trail - 1].user_id;
 			const certificateId = certificate.data[trail - 1]._id;
 			const user = await api.get(`/user/${userId}`);
-			console.log("entrou na funcao");
 
 			if (!userCertificate.includes(userId)) {
-				console.log("entrou no if");
 				userCertificate.push(userId);
 
 				const today = new Date();
@@ -81,7 +79,6 @@ const CertificateModal: FC<ICertificate> = ({ isOpen, trail, name }) => {
 				const monthDic = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 				const date = String(today.getDate()) + " de " + monthDic[today.getMonth()] + " de " + String(today.getFullYear());
 				const firstDate = String(firstAccess.getDate()) + " de " + monthDic[firstAccess.getMonth()] + " de " + String(firstAccess.getFullYear());
-				console.log(firstDate);
 
 				const res = await api.post('/certificate/generate', {
 					id: userId,
@@ -109,8 +106,6 @@ const CertificateModal: FC<ICertificate> = ({ isOpen, trail, name }) => {
 				window.location.reload();
 			}
 		} catch (error) {
-			console.log("entrou no erro");
-			console.log("erro foi:",error);
 			setOnError(true);
 		}
 	};

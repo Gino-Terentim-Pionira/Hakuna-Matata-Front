@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, SetStateAction } from 'react';
 import {
 	Image,
 	Flex,
-	Center,
 	useDisclosure,
 	Button,
 	Box,
@@ -19,10 +18,8 @@ import { useHistory } from 'react-router-dom';
 // Components
 import NarrativeModal from '../components/modals/NarrativeModal';
 import FinalQuizModal from './../components/FinalQuiz';
-import ProfileModal from '../components/modals/ProfileModal';
 import AlertModal from '../components/modals/AlertModal';
-import TutorialModal from '../components/modals/TutorialModal';
-import PremiumPassport from '../components/modals/PremiumPassport';
+import NavActions from '../components/NavActions';
 
 // Requisitions
 import api from '../services/api';
@@ -37,15 +34,9 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import BlackMambaBackground from '../assets/scenerys/blackMamba/blackMamba.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
-import icon_membership from '../assets/icons/icon_membership.svg';
 import ModalMamba from '../assets/modal/modalMamba.png';
 import { errorCases } from '../utils/errors/errorsCases';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 interface IScript {
 	name: string;
@@ -95,19 +86,6 @@ const BaboonPath = () => {
 	} = useDisclosure();
 
 	const {
-		isOpen: profileIsOpen,
-		onClose: profileOnClose,
-		onOpen: profileOnOpen,
-	} = useDisclosure();
-
-	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
-		onToggle: tutorialOnToggle,
-	} = useDisclosure();
-
-	const {
 		isOpen: narrativeIsOpen,
 		onOpen: narrativeOnOpen,
 		onToggle: narrativeOnToggle,
@@ -117,13 +95,6 @@ const BaboonPath = () => {
 		isOpen: narrativeMonkeyIsOpen,
 		onOpen: narrativeMonkeyOnOpen,
 		onToggle: narrativeMonkeyOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: premiumIsOpen,
-		onClose: premiumOnClose,
-		onOpen: premiumOnOpen,
-		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
 	const history = useHistory();
@@ -155,6 +126,7 @@ const BaboonPath = () => {
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
 	const cancelRef = useRef<HTMLButtonElement>(null);
 	const [onError, setOnError] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [quiz, setQuiz] = useState<IQuiz>({
 		_id: '',
 		name: '',
@@ -198,28 +170,33 @@ const BaboonPath = () => {
 	};
 
 	const getUser = async () => {
-		const _userId = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
-		const isComplete = data.finalQuizComplete.blackMamba;
+		try {
+			const _userId = sessionStorage.getItem('@pionira/userId');
+			const { data } = await api.get(`/user/${_userId}`);
+			const isComplete = data.finalQuizComplete.blackMamba;
+			setIsLoading(false);
 
-		if (isComplete) {
-			setMambaText(
-				`Ora ora, vejo que sente mesmo minha falta... Já disse, você conseguiu vencer a ignorância por completo, não a nada mais a se fazer! Obrigado, ${data.userName}!`,
-			);
-			setCompleteTrail(true);
-		} else {
-			if (data.ignorance > 80)
+			if (isComplete) {
 				setMambaText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Mamba Negra!',
+					`Ora ora, vejo que sente mesmo minha falta... Já disse, você conseguiu vencer a ignorância por completo, não a nada mais a se fazer! Obrigado, ${data.userName}!`,
 				);
-			else if (data.ignorance > 40)
-				setMambaText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Mamba Negra é um desafio muito grande para você!',
-				);
-			else
-				setMambaText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+				setCompleteTrail(true);
+			} else {
+				if (data.ignorance > 80)
+					setMambaText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Mamba Negra!',
+					);
+				else if (data.ignorance > 40)
+					setMambaText(
+						'Você está definitivamente mais forte, jovem! Mas temo que a Mamba Negra é um desafio muito grande para você!',
+					);
+				else
+					setMambaText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
+			}
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
@@ -313,15 +290,9 @@ const BaboonPath = () => {
 		setScript(newScript);
 	};
 
-	const goToShop = () => {
-		history.push('/shop');
-	};
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da savana?');
 		setIsConfirmOpen(true);
-	};
-	const goToMap = () => {
-		history.push('/mainPage');
 	};
 
 	const alertQuizConfirm = () => {
@@ -373,7 +344,7 @@ const BaboonPath = () => {
 	}, []);
 
 	return (
-		<div className="fadeIn">
+		<>
 			<Flex h='100vh' flexDirection='column' alignItems='center'>
 				<Image
 					src={BlackMambaBackground}
@@ -409,124 +380,7 @@ const BaboonPath = () => {
 							zIndex='10'
 							position='fixed'
 						>
-							<Flex
-								maxWidth='4.5rem'
-								marginTop='1.5rem'
-								flexDirection='column'
-								alignItems='center'
-							>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={profileOnOpen}
-								>
-									<Image
-										src={icon_profile}
-										marginBottom='.5rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={() => goToShop()}
-								>
-									<Image
-										src={icon_shop}
-										marginBottom='.1rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={tutorialOnOpen}
-								>
-									<Image src={icon_tutorial} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={() => logout()}
-								>
-									<Image src={icon_logout} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='6.55rem'
-									height='6.55rem'
-									bg='white'
-									onClick={() => goToMap()}
-									position='absolute'
-									mt='78vh'
-								>
-									<Image
-										src={icon_map}
-										onMouseOverCapture={(e) =>
-											(e.currentTarget.src = icon_map_opened)
-										}
-										onMouseOut={(e) =>
-											(e.currentTarget.src = icon_map)
-										}
-									/>
-								</Center>
-							</Flex>
-							<Box marginTop='1.5rem' marginRight='0.1rem'>
-								<Image
-									src={icon_membership}
-									width='5.5rem'
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									onClick={premiumOnOpen}
-								/>
-							</Box>
+							<NavActions logout={logout}/>
 						</Flex>
 
 						<Modal isOpen={isOpen} onClose={onClose} size='4xl'>
@@ -722,20 +576,6 @@ const BaboonPath = () => {
 					}
 				/>
 
-				<ProfileModal isOpen={profileIsOpen} onClose={profileOnClose} />
-
-				<TutorialModal
-					isOpen={tutorialIsOpen}
-					onClose={tutorialOnClose}
-					onToggle={tutorialOnToggle}
-				/>
-
-				<PremiumPassport
-					isOpen={premiumIsOpen}
-					onClose={premiumOnClose}
-					onToggle={premiumOnToggle}
-				/>
-
 				<AlertModal
 					isOpen={isConfirmOpen}
 					onClose={alertOnClose}
@@ -757,6 +597,9 @@ const BaboonPath = () => {
 					}
 				/>
 			</Flex>
+			{
+				isLoading && <LoadingOverlay />
+			}
 
 			{script.length > 0 ? (
 				//verifica se o script possui algum conteúdo
@@ -788,7 +631,7 @@ const BaboonPath = () => {
 					</Button>
 				}
 			/>
-		</div>
+		</>
 	);
 };
 

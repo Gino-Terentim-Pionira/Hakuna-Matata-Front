@@ -163,6 +163,7 @@ const EditProfile = () => {
 
 	const getUser = async () => {
 		try {
+			setLoading(true);
 			const userId = sessionStorage.getItem('@pionira/userId');
 			const res = await api.get(`/user/${userId}`);
 			const birthday_date = moment(res.data.birthday_date)
@@ -175,6 +176,7 @@ const EditProfile = () => {
 				birthday_date
 			});
 			setUserPhoto(res.data?.profileImage?.url);
+			setLoading(false);
 		} catch (error) {
 			verifyErrorType('SERVER_ERROR');
 		}
@@ -240,6 +242,7 @@ const EditProfile = () => {
 		} catch (error) {
 			verifyErrorType('SERVER_SENDING_IMAGE_ERROR');
 			setNewPhoto({} as IImage);
+			setLoading(false);
 		}
 	};
 

@@ -35,6 +35,7 @@ const Register = () => {
     const [formConfirmPassword, setFormConfirmPassword] = useState('');
     const [validationError, setValidationError] = useState('');
     const [hasValidationError, setHasValidationError] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [alertModal, setAlertModal] = useState({
         isOpen: false,
@@ -192,6 +193,7 @@ const Register = () => {
             if (formConfirmPassword && formPassword && !invalidPassword) {
                 if (formPassword === formConfirmPassword) {
                     try {
+                        setIsLoading(true);
                         const name = formName.split(' ');
                         let lastName = name[1];
 
@@ -206,7 +208,8 @@ const Register = () => {
                         handleAlertModal('SUCCESS_CASE_REGISTER');
 
                     } catch (err) {
-                        handleAlertModal(err.response.data.message)
+                        handleAlertModal(err.response.data.message);
+                        setIsLoading(false);
                     }
                 } else {
                     handleAlertModal('DIFFERENT_PASSWORDS_ERROR');
@@ -286,6 +289,7 @@ const Register = () => {
                         buttonText="Próximo"
                         validationError={validationError}
                         hasValidationError={hasValidationError}
+                        loading={false}
                     />
 
                 ) : step === 2 ? (
@@ -305,6 +309,7 @@ const Register = () => {
                         buttonText="Próximo"
                         validationError={validationError}
                         hasValidationError={hasValidationError}
+                        loading={false}
                     />
                 ) : step === 3 ? (
                     <LoginRegister
@@ -323,6 +328,7 @@ const Register = () => {
                         buttonText="Próximo"
                         validationError={validationError}
                         hasValidationError={hasValidationError}
+                        loading={isLoading}
                     />
                 ) : (
                     <div>Você não devia estar aqui, chapa!</div>

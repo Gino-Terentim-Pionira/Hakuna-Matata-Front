@@ -93,7 +93,6 @@ const ShopItem: FC<ShopItemProps> = ({
 						});
 
 						setAlertAnswer('Parabéns! Seu tempo de espera foi zerado!');
-						console.log();
 						setIsConfirmOpen(true);
 						setIsAlert(true);
 					} catch (error) {

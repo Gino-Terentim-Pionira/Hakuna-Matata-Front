@@ -26,14 +26,12 @@ import './../styles/fadeEffect.css';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import TutorialModal from '../components/modals/TutorialModal';
-import ProfileModal from '../components/modals/ProfileModal';
-import RandomRewardModal from '../components/modals/RandomRewardModal';
-import IgnoranceProgress from '../components/IgnoranceProgress';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz';
-import PremiumPassport from '../components/modals/PremiumPassport';
+import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
+import NavActions from '../components/NavActions';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
 import api from '../services/api';
@@ -44,14 +42,7 @@ import trail1FinalQuiz from '../utils/scripts/CheetahTrail/Trail1FinalQuiz';
 
 // Images
 import trail_bg from '../assets/scenerys/cheetah/trail_bg.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
 import final_cheetah_icon from '../assets/icons/final_cheetah_icon.svg';
-import icon_membership from '../assets/icons/icon_membership.svg';
 import cheetah from '../assets/sprites/cheetah/cheetah.png';
 import insignaCheetah from '../assets/icons/insignia/insignaCheetah.svg';
 import cheetah_bg from '../assets/modal/cheetah_bg.png';
@@ -60,6 +51,7 @@ import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
+
 
 interface IQuiz {
 	_id: string;
@@ -105,7 +97,6 @@ interface IScript {
 }
 
 const CheetahPath = () => {
-	const { isOpen, onClose, onOpen } = useDisclosure();
 	const history = useHistory();
 
 	const [user, setUser] = useState<IUser>({} as IUser);
@@ -126,13 +117,6 @@ const CheetahPath = () => {
 		ignorance50,
 		ignorance25,
 	];
-
-	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
-		onToggle: tutorialOnToggle,
-	} = useDisclosure();
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -162,13 +146,6 @@ const CheetahPath = () => {
 		isOpen: finalNarrativeChallengeIsOpen,
 		onOpen: finalNarrativeChallengeOnOpen,
 		onToggle: finalNarrativeChallengeOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: premiumIsOpen,
-		onClose: premiumOnClose,
-		onOpen: premiumOnOpen,
-		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
 	const [questions, setQuestions] = useState<IQuestions[]>([
@@ -239,16 +216,11 @@ const CheetahPath = () => {
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>(
 		[],
 	);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	const goToShop = () => {
-		history.push('/shop');
-	};
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da savana?');
 		setIsConfirmOpen(true);
-	};
-	const goToMap = () => {
-		history.push('/mainPage');
 	};
 
 	const setIgnoranceFilter = (
@@ -263,39 +235,45 @@ const CheetahPath = () => {
 	};
 
 	const getUser = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const { data } = await api.get(`/user/${_userId}`);
-		setIgnoranceFilter(data.ignorance, ignoranceArray);
-		const isComplete = data.finalQuizComplete.cheetahFinal;
-
-		if (isComplete) {
-			setCheetahText(
-				`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Agora, você até consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+		try {
+			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+				'@pionira/userId',
 			);
-			setCompleteTrail(true);
-			if (data.narrative_status.trail1 !== 4) {
-				await api.patch(`/user/narrative/${_userId}`, {
-					narrative_status: {
-						trail1: 3,
-					},
-				});
-				await finalCheetahNarrative();
+			const { data } = await api.get(`/user/${_userId}`);
+			setUser(data);
+			setIgnoranceFilter(data.ignorance, ignoranceArray);
+			const isComplete = data.finalQuizComplete.cheetahFinal;
+			setIsLoading(false);
+
+			if (isComplete) {
+				setCheetahText(
+					`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+				);
+				setCompleteTrail(true);
+				if (data.narrative_status.trail1 !== 4) {
+					await api.patch(`/user/narrative/${_userId}`, {
+						narrative_status: {
+							trail1: 3,
+						},
+					});
+					await finalCheetahNarrative();
+				}
+			} else {
+				if (data.ignorance > 80)
+					setCheetahText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
+					);
+				else if (data.ignorance > 40)
+					setCheetahText(
+						'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
+					);
+				else
+					setCheetahText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
 			}
-		} else {
-			if (data.ignorance > 80)
-				setCheetahText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
-				);
-			else if (data.ignorance > 40)
-				setCheetahText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
-				);
-			else
-				setCheetahText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
@@ -345,13 +323,6 @@ const CheetahPath = () => {
 		}
 	};
 
-	const getUserRequisition = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const res = await api.get(`/user/${_userId}`);
-		setUser(res.data);
-	};
 	const firstAccess = async () => {
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
 			'@pionira/userId',
@@ -457,14 +428,13 @@ const CheetahPath = () => {
 
 	useEffect(() => {
 		getUser();
-		getUserRequisition();
 		firstAccess();
 		updateNarrative();
 		getQuiz();
 	}, []);
 
 	return (
-		<div className="fadeIn">
+		<>
 			<Flex h='100vh' flexDirection='column' alignItems='center'>
 				<Image
 					src={trail_bg}
@@ -493,160 +463,22 @@ const CheetahPath = () => {
 					zIndex='10'
 					position='fixed'
 				>
-					<Flex
-						maxWidth='4.5rem'
-						marginTop='1.5rem'
-						flexDirection='column'
-						alignItems='center'
-					>
-						{narrativeIsOpen ||
+					{narrativeIsOpen ||
 						narrativeChallengeIsOpen ||
 						finalNarrativeChallengeIsOpen ? null : (
-							<>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={onOpen}
-								>
-									<Image
-										src={icon_profile}
-										marginBottom='.5rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={() => goToShop()}
-								>
-									<Image
-										src={icon_shop}
-										marginBottom='.1rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={tutorialOnOpen}
-								>
-									<Image src={icon_tutorial} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={() => logout()}
-								>
-									<Image src={icon_logout} />
-								</Center>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='6.55rem'
-									height='6.55rem'
-									bg='white'
-									onClick={() => goToMap()}
-									position='absolute'
-									mt='78vh'
-								>
-									<Image
-										src={icon_map}
-										onMouseOverCapture={(e) =>
-											(e.currentTarget.src = icon_map_opened)
-										}
-										onMouseOut={(e) =>
-											(e.currentTarget.src = icon_map)
-										}
-									/>
-								</Center>
-							</>
+							<NavActions logout={logout}/>
 						)}
-					</Flex>
 
 					{narrativeIsOpen ||
-					narrativeChallengeIsOpen ||
-					finalNarrativeChallengeIsOpen ? null : (
-						<Flex
-							flexDirection='column'
-							justifyContent='space-between'
-							alignItems='flex-end'
-							h='87.5vh'
-							marginTop='1.5rem'
-						>
-							<Image
-								src={icon_membership}
-								width='5.5rem'
-								_hover={{
-									cursor: 'pointer',
-									transform: 'scale(1.1)',
-								}}
-								transition='all 0.2s ease'
-								onClick={premiumOnOpen}
-							/>
-							<Flex
-								flexDirection='row'
-								marginTop='65vh'
-								justifyContent='flex-end'
-								alignItems='center'
-							>
-								<RandomRewardModal />
-								<IgnoranceProgress
-									fontSize='1.7rem'
-									marginTop='0'
-									size='6rem'
-									ignorance={user.ignorance}
-									position='absolute'
-								/>
-							</Flex>
-						</Flex>
+							narrativeChallengeIsOpen ||
+							finalNarrativeChallengeIsOpen ? null : (
+						<IgnorancePremiumIcons ignorance={user.ignorance} />
 					)}
 				</Flex>
 
 				{narrativeIsOpen ||
-				narrativeChallengeIsOpen ||
-				finalNarrativeChallengeIsOpen ? null : (
+					narrativeChallengeIsOpen ||
+					finalNarrativeChallengeIsOpen ? null : (
 					<>
 						<Flex
 							margin='2vw'
@@ -832,7 +664,6 @@ const CheetahPath = () => {
 					</>
 				)}
 
-				<ProfileModal isOpen={isOpen} onClose={onClose} />
 
 				{script.length > 0 ? (
 					//verifica se o script possui algum conteúdo
@@ -860,17 +691,6 @@ const CheetahPath = () => {
 					/>
 				) : null}
 
-				<TutorialModal
-					isOpen={tutorialIsOpen}
-					onClose={tutorialOnClose}
-					onToggle={tutorialOnToggle}
-				/>
-
-				<PremiumPassport
-					isOpen={premiumIsOpen}
-					onClose={premiumOnClose}
-					onToggle={premiumOnToggle}
-				/>
 
 				<AlertModal
 					isOpen={isConfirmOpen}
@@ -894,6 +714,9 @@ const CheetahPath = () => {
 				/>
 			</Flex>
 
+			{
+				isLoading && <LoadingOverlay />
+			}
 			<FinalUniversalQuiz
 				openModal={quizIsOpen}
 				closeModal={quizOnClose}
@@ -983,7 +806,7 @@ const CheetahPath = () => {
 					</Button>
 				}
 			/>
-		</div>
+		</>
 	);
 };
 
