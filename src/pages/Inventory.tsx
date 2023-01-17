@@ -192,9 +192,7 @@ const Shop = () => {
 				</Text>
 			)}
 			{
-				isLoading ? (
-					<LoadingOverlay />
-				) : null
+				isLoading && <LoadingOverlay />
 			}
 			<AlertModal
 				isOpen={onError}

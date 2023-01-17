@@ -132,10 +132,7 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 
 	const updateUserCoins = async () => {
 		try {
-			console.log(allQuestionsId);
-			console.log('++++++++++++++++++++++');
 			const userId = sessionStorage.getItem('@pionira/userId');
-			console.log(userId);
 			setIsLoading(true);
 			await addCoinsStatus(coinsRecieved);
 			if (allQuestionsId) {
@@ -158,7 +155,6 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 							cheetahFinal: true,
 						},
 					});
-					console.log("Problema 01");
 				} else if (trail === 2) {
 					await api.patch(`/user/${routeQuiz}/${userId}`, {
 						finalQuizComplete: {
@@ -166,7 +162,6 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 							lionFinal: true,
 						},
 					});
-					console.log("Problema 02");
 				}
 				
 			} else {
@@ -240,10 +235,6 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 						borderTopEndRadius='5px'
 						borderBottomStartRadius='23%'
 						clipPath='polygon(0% 0%, 100% 0%, 100% 80%)'
-						onClick={() => {
-							console.log(allQuestionsId);
-							console.log('++++++++++++++++++++++');
-						}}
 					/>
 					{isLoading ? (
 						<Center w='100%' h='50vh'>
