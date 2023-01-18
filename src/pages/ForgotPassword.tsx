@@ -27,6 +27,7 @@ const ForgotPassword = () => {
 	const cancelRef = useRef<HTMLButtonElement>(null);
 
 	const [alertAnswer, setAlertAnswer] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		if (authenticated) {
@@ -40,10 +41,13 @@ const ForgotPassword = () => {
 
 	const sendEmail = async () => {
 		try {
+			setIsLoading(true);
 			await api.post('/user/forgotPassword', { email });
-			setAlertAnswer('Instruções de recuperação de senha foram enviadas!');
+			setAlertAnswer('Para recuperar sua senha, olhe esse tal de "email". Um passarinho me contou que é bem famoso no lugar que você veio.');
+			setIsLoading(false);
 		} catch (error) {
 			setAlertAnswer('Parece que esse email não existe na savana!');
+			setIsLoading(false);
 		}
 		setIsConfirmOpen(true);
 	};
@@ -79,7 +83,7 @@ const ForgotPassword = () => {
 				</Box>
 
 				<LoginRegister
-					firstText="Parece que você esqueceu a sua senha. Não consigo entender isso, mas sinto que se você me passar o 'e-mail' cadastrado no passaporte, instruções serão enviadas para a recuperação da senha."
+					firstText="Pelo visto, você não consegue mais lembrar sua senha, tem como me passar o 'e-mail' que usou para criar o passaporte? Não sei o que é 'e-mail', são as vozes da Savana que me pediram isso."
 					firstPlaceholder='E-mail'
 					firstValue={email}
 					firstChange={(e: BaseSyntheticEvent) =>
@@ -89,6 +93,7 @@ const ForgotPassword = () => {
 					nextStep={() => sendEmail()}
 					buttonText='Enviar'
 					previousStep={() => goToLogin()}
+					loading={isLoading}
 				/>
 
 				<AlertModal
