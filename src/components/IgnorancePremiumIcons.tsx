@@ -38,19 +38,14 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
           onClick={premiumOnOpen}
         /> */}
         <Flex
-          flexDirection='row'
+          flexDirection='column'
           marginTop='65vh'
-          justifyContent='flex-end'
-          alignItems='center'
+          alignItems='flex-end'
         >
           <RandomRewardModal />
           {
             !dontShowIgnorance && <IgnoranceProgress
-              fontSize='1.7rem'
-              marginTop='0'
-              size='6rem'
-              ignorance={ignorance}
-              position='absolute'
+              ignorance={100 - ignorance}
             />
           }
         </Flex>
