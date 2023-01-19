@@ -40,6 +40,7 @@ const ResetPassword = () => {
 
 	const [alertAnswer, setAlertAnswer] = useState('');
 	const [correctPassword, setCorrectPassword] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const { authenticated } = useAuth();
 
@@ -57,10 +58,13 @@ const ResetPassword = () => {
 		e.preventDefault();
 		if (password === confirmPassword) {
 			try {
+				setIsLoading(true);
 				await api.patch(`/user/resetPassword/${id}`, { password });
 				setAlertAnswer('Sua senha foi alterada com sucesso!');
 				setCorrectPassword(true);
+				setIsLoading(false);
 			} catch (error) {
+				setIsLoading(false);
 				setAlertAnswer(error.response.data.error);
 			}
 		} else {
@@ -128,6 +132,7 @@ const ResetPassword = () => {
 							h='13%'
 							placeholder='Digite sua senha nova'
 							type='password'
+							isDisabled={isLoading}
 							onChange={(e: BaseSyntheticEvent) => {
 								setPassword(e.target.value);
 							}}
@@ -141,6 +146,7 @@ const ResetPassword = () => {
 							h='13%'
 							placeholder='Confirme a sua senha'
 							type='password'
+							isDisabled={isLoading}
 							onChange={(e: BaseSyntheticEvent) => {
 								setConfirmPassword(e.target.value);
 							}}
@@ -154,6 +160,10 @@ const ResetPassword = () => {
 								background={colorPalette.primaryColor}
 								color={colorPalette.buttonTextColor}
 								fontSize='1.7rem'
+								isLoading={isLoading}
+								loadingText="Enviando"
+								spinnerPlacement='end'
+								_hover={{}}
 								onClick={(e) => {
 									submitChange(e);
 								}}
@@ -167,7 +177,8 @@ const ResetPassword = () => {
 								marginTop='0.3rem'
 								color={colorPalette.secondaryColor}
 								textDecoration='underLine'
-								onClick={() => goToLogin()}
+								onClick={isLoading ? () => {return null} : goToLogin}
+								_hover={isLoading ? { cursor: 'not-allowed'} : { cursor: 'pointer'}}
 							>
 								Voltar
 							</Link>
