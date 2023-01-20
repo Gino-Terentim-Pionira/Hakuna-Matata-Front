@@ -44,6 +44,36 @@ interface IUser {
     ignorance: number;
 }
 
+const StatusProgressionBar = ({ status, label, isBlocked = false }: {
+    status: number,
+    label: string,
+    isBlocked?: boolean
+}) => {
+    if (isBlocked) return (
+        <Box fontFamily={fontTheme.fonts}>
+            <Flex width='100%' justify='space-between' align='flex-end'>
+                <Text fontSize='12px' color={colorPalette.textColor} >Bloqueado</Text>
+                <Text fontSize="1.3rem">Icone</Text>
+            </Flex>
+            <Flex justify="flex-end" align="center" bg={colorPalette.grayBackground} paddingRight="8px" borderRadius="md" mt="4px" width="100%" height="32px" border="1px" borderColor="rgba(0, 0, 0, 0.31)" >
+                <Text color={colorPalette.textColor} fontSize='11px'>Essa habilidade será desbloqueada ao explorar novos horizontes</Text>
+            </Flex>
+        </Box>
+    );
+
+    return (
+        <Box fontFamily={fontTheme.fonts}> 
+            <Flex width='100%' justify='space-between' align='flex-end'>
+                <Text fontSize="12" align="left" color={colorPalette.primaryColor}>{status}/1200</Text>
+                <Text fontSize="1.3rem">{label}</Text>
+            </Flex>
+            <Center borderRadius="md" padding="0 8px" mt="4px" width="100%" height="32px" border="1px" borderColor="rgba(0, 0, 0, 0.31)">
+                <Progress hasStripe colorScheme="blue" width="100%" height="16px" value={status} max={1200} />
+            </Center>
+        </Box>
+    )
+}
+
 const ProgressionStatusModal = () => {
     const [userData, setUserData] = useState<IUser>({} as IUser);
     const [userPhoto, setUserPhoto] = useState(null);
@@ -81,13 +111,16 @@ const ProgressionStatusModal = () => {
                         <Flex w="95%" flexDirection="row" marginTop='1.2rem' alignItems="flex-end" justifyContent="space-between">
                             <Box w="35%" align="right">
                                 <Stack w="100%">
-                                    <Box>
-                                        <Text fontSize="1.3rem" fontFamily={fontTheme.fonts}>Agilidade (AGI)</Text>
-                                        <Text fontSize="12" align="left" color={colorPalette.primaryColor}>{userData.status[0]}/1200</Text>
+                                    {/* <Box>
+                                        <Flex width='100%' justify='space-between' align='center'>
+                                            <Text fontSize="12" align="left" color={colorPalette.primaryColor}>{userData.status[0]}/1200</Text>
+                                            <Text fontSize="1.3rem" fontFamily={fontTheme.fonts}>Agilidade (AGI)</Text>
+                                        </Flex>
                                         <Center borderRadius="md" width="100%" height="1.5rem" border="1px" borderColor="gray.300">
                                             <Progress hasStripe colorScheme="blue" width="90%" height="0.9rem" value={userData.status[0]} max={1200} />
                                         </Center>
-                                    </Box>
+                                    </Box> */}
+                                    <StatusProgressionBar status={userData.status[0]} label="Agilidade (AGI)" isBlocked />
                                     <Box>
                                         <Text fontSize="1.3rem" fontFamily={fontTheme.fonts}>Liderança (LID)</Text>
                                         <Text fontSize="12" align="left" color={colorPalette.primaryColor}>{userData.status[2]}/1200</Text>
@@ -125,13 +158,14 @@ const ProgressionStatusModal = () => {
                             </Box>
                             <Box w="35%">
                                 <Stack w="100%">
-                                    <Box>
+                                    {/* <Box>
                                         <Text fontSize="1.3rem" align="left" fontFamily={fontTheme.fonts}>Inovação (INO)</Text>
                                         <Text fontSize="12" align="right" color={colorPalette.primaryColor} >{userData.status[1]}/1200</Text>
                                         <Center borderRadius="md" width="100%" height="1.5rem" border="1px" borderColor="gray.300">
                                             <Progress hasStripe colorScheme="blue" width="90%" height="14px" value={userData.status[1]} max={1200} />
                                         </Center>
-                                    </Box>
+                                    </Box> */}
+                                    <StatusProgressionBar status={userData.status[1]} label="Inovação (INO)" />
                                     <Box>
                                         <Text fontSize="1.3rem" align="left" fontFamily={fontTheme.fonts}>Gestão de mudanças (GM)</Text>
                                         <Text fontSize="12" align="right" color={colorPalette.primaryColor}>{userData.status[3]}/1200</Text>
