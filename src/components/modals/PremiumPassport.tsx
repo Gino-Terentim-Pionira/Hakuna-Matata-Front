@@ -93,7 +93,7 @@ const PremiumPassport: FC<IPremiumPassport> = ({ isOpen, onClose }) => {
 									marginLeft='0.4rem'
 								>
 									{' '}
-									viagem na savana!
+									viagem na Savana!
 								</Text>
 							</Text>
 							<Text

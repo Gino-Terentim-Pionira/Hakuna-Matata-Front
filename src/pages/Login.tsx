@@ -140,7 +140,7 @@ const Login = () => {
 					<Image w='100%' src={monkey} alt='Image' />
 				</Box>
 				<LoginRegister
-					firstText='Seja bem vindo de volta ao Pionira, para entrar na savana preciso que você me fale seu e-mail e sua senha secreta.'
+					firstText='Seja bem vindo de volta ao Pionira, para entrar na Savana preciso que você me fale seu e-mail e sua senha secreta.'
 					firstPlaceholder='E-mail'
 					secondPlaceholder='Senha'
 					firstValue={email}

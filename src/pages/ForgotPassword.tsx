@@ -46,7 +46,7 @@ const ForgotPassword = () => {
 			setAlertAnswer('Para recuperar sua senha, olhe esse tal de "email". Um passarinho me contou que é bem famoso no lugar que você veio.');
 			setIsLoading(false);
 		} catch (error) {
-			setAlertAnswer('Parece que esse email não existe na savana!');
+			setAlertAnswer('Parece que esse email não existe na Savana!');
 			setIsLoading(false);
 		}
 		setIsConfirmOpen(true);

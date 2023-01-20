@@ -313,7 +313,7 @@ const Register = () => {
                     />
                 ) : step === 3 ? (
                     <LoginRegister
-                        firstText="Agora vamos colocar uma senha secreta para permitir sua entrada na savana"
+                        firstText="Agora vamos colocar uma senha secreta para permitir sua entrada na Savana"
                         secondText="Não ouvi muito bem, poderia repeti-lá?"
                         firstPlaceholder="Senha"
                         secondPlaceholder="Confirmar senha"

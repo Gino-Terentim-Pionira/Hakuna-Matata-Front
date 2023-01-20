@@ -217,7 +217,7 @@ const LionPath = () => {
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>([]);
 
 	const logout = () => {
-		setAlertAnswer('Tem certeza que você deseja sair da savana?');
+		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
 		setIsConfirmOpen(true);
 	};
 

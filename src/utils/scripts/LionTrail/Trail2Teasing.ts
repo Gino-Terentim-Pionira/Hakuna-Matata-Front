@@ -32,7 +32,7 @@ const trail2Teasing = async (index:number) => {
                 {
                     name: "Leão",
                     image: lion,
-                    texts: ["A savana precisa da sua dedicação, aprendiz!"]
+                    texts: ["A Savana precisa da sua dedicação, aprendiz!"]
                 }
             ];
         
@@ -99,7 +99,7 @@ const trail2Teasing = async (index:number) => {
                 {
                     name: "Leoa",
                     image: lioness,
-                    texts: ["Os moradores da savana estão confiando no seu potencial de derrotar a Ignorância, não os decepcione!"]
+                    texts: ["Os moradores da Savana estão confiando no seu potencial de derrotar a Ignorância, não os decepcione!"]
                 }
             ];
         
