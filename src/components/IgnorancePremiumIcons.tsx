@@ -22,8 +22,8 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
     <>
       <Flex
         flexDirection='column'
-        alignItems='center'
-        justifyContent='flex-end'
+        alignItems='flex-end'
+        justifyContent='space-between'
         h='85.5vh'
         marginTop='1.5rem'
       >
@@ -39,16 +39,15 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
         /> */}
         <Flex
           flexDirection='column'
-          marginTop='65vh'
-          alignItems='flex-end'
+          mt='10px'
         >
-          <RandomRewardModal />
           {
             !dontShowIgnorance && <IgnoranceProgress
-              ignorance={100 - ignorance}
+              ignorance={ignorance} 
             />
           }
         </Flex>
+        <RandomRewardModal />
       </Flex>
       {/* <PremiumPassport
         isOpen={premiumIsOpen}

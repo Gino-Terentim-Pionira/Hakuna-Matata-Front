@@ -9,10 +9,11 @@ import colorPalette from '../styles/colorPalette';
 const IgnoranceProgress = ({ ignorance }: {
     ignorance: number
 }) => {
+    const progressBar = 100 - ignorance;
     return (
         <Box
             height='32px'
-            width='250px'
+            width='392px'
             backgroundColor={colorPalette.grayBackground}
             borderWidth='3px'
             borderColor={colorPalette.blackBorder}
@@ -22,7 +23,7 @@ const IgnoranceProgress = ({ ignorance }: {
         >
             <Box
                 position='relative'
-                width={`${ignorance}%`}
+                width={`${progressBar}%`}
                 height='100%'
                 backgroundColor={colorPalette.progressOrange}
             >
