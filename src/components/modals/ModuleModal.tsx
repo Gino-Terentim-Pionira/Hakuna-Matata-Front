@@ -33,6 +33,7 @@ import Coins from '../../assets/icons/coinicon.svg';
 import button_on from '../../assets/icons/button_on.png';
 import button_off from '../../assets/icons/button_off.png';
 import colorPalette from '../../styles/colorPalette';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 
 interface IModuleModal {
@@ -427,7 +428,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

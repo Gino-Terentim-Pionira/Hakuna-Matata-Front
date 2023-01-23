@@ -19,6 +19,7 @@ import AlertModal from './modals/AlertModal';
 
 // Utils
 import { useHistory } from 'react-router-dom';
+import { errorCases } from '../utils/errors/errorsCases';
 
 type CertifiacteProps = {
 	_id: string;
@@ -196,7 +197,7 @@ const Certificate: FC<CertifiacteProps> = ({
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

@@ -294,7 +294,7 @@ const Register = () => {
 
                 ) : step === 2 ? (
                     <LoginRegister
-                        firstText="Poderia me falar seu endereço de e-mail? Nós da Savana precisamos de um meio para te contatar!"
+                        firstText="Aqui no formulário está dizendo que preciso do seu 'e-mail'. Não sei o que é isso, mas você deve saber!"
                         secondText="Queria saber também, que ano e dia você nasceu?"
                         firstPlaceholder="Endereço de e-mail"
                         secondPlaceholder="Data de Nascimento"
@@ -313,7 +313,7 @@ const Register = () => {
                     />
                 ) : step === 3 ? (
                     <LoginRegister
-                        firstText="Agora vamos colocar uma senha secreta para permitir sua entrada na savana"
+                        firstText="Agora vamos colocar uma senha secreta para permitir sua entrada na Savana"
                         secondText="Não ouvi muito bem, poderia repeti-lá?"
                         firstPlaceholder="Senha"
                         secondPlaceholder="Confirmar senha"
@@ -338,7 +338,7 @@ const Register = () => {
                     <AlertModal
                         isOpen={alertModal.isOpen}
                         onClose={onClose}
-                        alertTitle='Cadastro de Usuário'
+                        alertTitle='Criação do Passaporte'
                         alertBody={alertModal.alertAnswer}
                         onClickClose={() => onClose()}
                         buttonBody={
@@ -357,7 +357,7 @@ const Register = () => {
                     <AlertModal
                         isOpen={alertModal.isOpen}
                         onClose={onClose}
-                        alertTitle='Cadastro de Usuário'
+                        alertTitle='Criação do Passaporte'
                         alertBody={alertModal.alertAnswer}
                         onClickClose={() => onClose()}
                         buttonBody={

@@ -27,6 +27,7 @@ import ignorance100 from '../assets/ignorance/mainPage/ignorance100.png';
 import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
+import { errorCases } from '../utils/errors/errorsCases';
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 import NavActions from '../components/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
@@ -194,7 +195,7 @@ const MainPage = () => {
 	};
 
 	const logout = () => {
-		setAlertAnswer('Tem certeza que você deseja sair da savana?');
+		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
 		setIsConfirmOpen(true);
 	};
 
@@ -373,7 +374,7 @@ const MainPage = () => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

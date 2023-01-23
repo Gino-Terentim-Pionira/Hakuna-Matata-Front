@@ -73,7 +73,7 @@ const Home = () => {
 									fontSize={[25, 28, 32, 36]}
 									color='#926021'
 								>
-									Fazer Login
+									Entrar na Savana
 								</Text>
 							</Flex>
 						</Flex>
@@ -108,7 +108,7 @@ const Home = () => {
 									fontSize={[25, 28, 32, 36]}
 									color='#926021'
 								>
-									Fazer Cadastro
+									Criar Passaporte
 								</Text>
 							</Flex>
 						</Flex>

@@ -105,7 +105,7 @@ const blackMambaScript = async () => {
                 "... sniff sniff",
                 `Uau, posso sentir que você possui um nível de ignorância em ${user.ignorance}%, isso é fascinante...`,
                 "Vejo que possui a determinação e o conhecimento necessário para me desafiar!",
-                "Mas já vou lhe avisando que não sera nada fácil... Afinal, não é a toa que eu sou a rainha dessa savana!",
+                "Mas já vou lhe avisando que não sera nada fácil... Afinal, não é a toa que eu sou a rainha dessa Savana!",
                 "Prepare-se!"
             ]
         }
