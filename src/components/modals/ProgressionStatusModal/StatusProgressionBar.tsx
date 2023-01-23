@@ -24,18 +24,18 @@ const StatusProgressionBar = ({ status, label, isBlocked = false, isOnLeft, marg
             :
             <>
               <Text fontSize="20px">{label}</Text>
-              <Text fontSize="12" align="left" color={colorPalette.primaryColor}>{status}/1200</Text>
+              <Text fontSize="12px" align="left" color={colorPalette.primaryColor}>{status}/1200</Text>
             </>
 
         }
       </Flex>
       {
         isBlocked ?
-          <Flex justify={isOnLeft ? "flex-end" : "flex-start"} align="center" bg={colorPalette.grayBackground} padding="0 8px" borderRadius="md" mt="4px" width="100%" height="32px" border="1px" borderColor="rgba(0, 0, 0, 0.31)" >
-            <Text color={colorPalette.textColor} fontSize='11px'>Essa habilidade será desbloqueada ao explorar novos horizontes</Text>
+          <Flex width="100%" height={{xl:"32px", lg: "32px", md: "28px", sm:"24px"}} justify={isOnLeft ? "flex-end" : "flex-start"} align="center" bg={colorPalette.grayBackground} padding="0 8px" borderRadius="md" mt="4px" border="1px" borderColor="rgba(0, 0, 0, 0.31)" >
+            <Text color={colorPalette.textColor} fontSize={{base:'11px', xl: '10px', lg: '10px', md: '10px', sm: '9px'}}>Essa habilidade será desbloqueada ao explorar novos horizontes</Text>
           </Flex>
           :
-          <Center borderRadius="md" padding="0 8px" mt="4px" width="100%" height="32px" border="1px" borderColor="rgba(0, 0, 0, 0.31)">
+          <Center borderRadius="md" padding="0 8px" mt="4px" width="100%" height={{xl:"32px", lg: "30px", md: "28px", sm:"24px"}} border="1px" borderColor="rgba(0, 0, 0, 0.31)">
             <Progress hasStripe colorScheme="blue" width="100%" height="16px" value={status} max={1200} />
           </Center>
 
