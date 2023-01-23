@@ -22,6 +22,8 @@ const colorPalette = {
     descriptionText: '#646464',
     neutralGray: '#999',
     grayBackground: '#D9D9D9',
+    blackBorder: '#4A4A4A',
+    progressOrange: '#F0C05D'
 }
 
 export default colorPalette;
