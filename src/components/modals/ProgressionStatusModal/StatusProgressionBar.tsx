@@ -32,7 +32,7 @@ const StatusProgressionBar = ({ status, label, isBlocked = false, isOnLeft, marg
       {
         isBlocked ?
           <Flex width="100%" height={{xl:"32px", lg: "32px", md: "28px", sm:"24px"}} justify={isOnLeft ? "flex-end" : "flex-start"} align="center" bg={colorPalette.grayBackground} padding="0 8px" borderRadius="md" mt="4px" border="1px" borderColor="rgba(0, 0, 0, 0.31)" >
-            <Text color={colorPalette.textColor} fontSize={{xl: '11px', lg: '10px', md: '10px', sm: '9px'}}>Essa habilidade será desbloqueada ao explorar novos horizontes</Text>
+            <Text color={colorPalette.textColor} fontSize={{xl: '12px', lg: '10px', md: '9px', sm: '9px'}}>Essa habilidade será desbloqueada ao explorar novos horizontes</Text>
           </Flex>
           :
           <Center borderRadius="md" padding="0 8px" mt="4px" width="100%" height={{xl:"32px", lg: "30px", md: "28px", sm:"24px"}} border="1px" borderColor="rgba(0, 0, 0, 0.31)">
