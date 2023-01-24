@@ -7,7 +7,7 @@ const colorPalette = {
     secondaryColor: '#0B67A1',
     confirmButton: '#FCBF49',
     inputBoder: '#EDA641',
-    textColor: '#000000',
+    textColor: '#4a4a4a',
     infoTextColor: '#757575',
     subtitleColor: '#3A3A3A',
     buttonTextColor: '#FFFFFF',

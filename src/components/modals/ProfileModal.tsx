@@ -16,7 +16,7 @@ import {
 import InsigniaCertificate from '../InsigniaCertificate';
 import ProfileDataModal from './ProfileDataModal';
 import PerfilModalButton from '../PerfilModalButton';
-import ProgressionStatusModal from './ProgressionStatusModal';
+import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusModal';
 
 //styles
 import colorPalette from '../../styles/colorPalette';
