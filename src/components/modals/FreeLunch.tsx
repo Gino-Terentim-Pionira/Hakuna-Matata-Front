@@ -27,6 +27,7 @@ import LoadingState from '../LoadingState';
 import Coins from '../../assets/icons/coinicon.svg'
 import plusIcon from '../../assets/icons/plusIcon.png'
 import colorPalette from '../../styles/colorPalette';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface IFreeLunch {
     isOpen: boolean;
@@ -182,7 +183,7 @@ const FreeLunch: FC<IFreeLunch> = ({
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

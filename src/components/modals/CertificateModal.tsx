@@ -28,6 +28,7 @@ import certificate from '../../assets/icons/certificate/certificate.svg';
 
 // Utils
 import { useHistory } from 'react-router-dom';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface ICertificate {
 	isOpen: boolean;
@@ -307,7 +308,7 @@ const CertificateModal: FC<ICertificate> = ({ isOpen, trail, name }) => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

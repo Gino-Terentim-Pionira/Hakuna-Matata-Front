@@ -26,6 +26,8 @@ import colorPalette from "../../styles/colorPalette";
 // Images
 import Coins from '../../assets/icons/coinicon.svg';
 import rewardChest from "../../assets/icons/bau.png";
+import { errorCases } from '../../utils/errors/errorsCases';
+import LoadingState from '../LoadingState';
 
 interface userDataProps {
     coins: number
@@ -35,6 +37,7 @@ const RandomRewardModal = () => {
     const [randomNumber, setRandomNumber] = useState(false);
     const [coins, setCoins] = useState(0);
     const [onError, setOnError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { isOpen, onOpen } = useDisclosure();
 
@@ -63,6 +66,7 @@ const RandomRewardModal = () => {
 
     const updateUserCoins = async () => {
         try {
+            setIsLoading(true);
             await addCoinsStatus(coins);
             window.location.reload();
         } catch (error) {
@@ -107,33 +111,43 @@ const RandomRewardModal = () => {
                                 <ModalContent paddingBottom='1.5rem' >
                                     <Box w="15%" bg={colorPalette.primaryColor} h="50vh" position="absolute" zIndex='0' right="-0.3" top="-0.2" borderTopEndRadius='5px' borderBottomStartRadius='23%' clipPath="polygon(0% 0%, 100% 0%, 100% 80%)" />
                                     <ModalBody>
-                                        <Flex direction="column" alignItems='center' mt='1.2rem' mr='1.5rem'>
-                                            <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="4rem" color={colorPalette.secondaryColor}>
-                                                Opa! O que é isso??
-                                            </Text>
-                                            <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="1.8rem" color={colorPalette.secondaryColor}>
-                                                Ao explorar a Savana você se deparou com um baú cheio de joias!
-                                            </Text>
-                                        </Flex>
-                                        <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-                                            {/* first column of modal body  */}
-                                            <Flex mt='2rem' ml='5rem' direction="column" alignItems="flex-start" width="75%">
-                                                <Text fontFamily={fontTheme.fonts} fontSize="1.7rem">Você ganhou:</Text>
-                                            </Flex>
+                                        {
+                                            isLoading ? (
+                                                <Box height={440}>
+                                                    <LoadingState />
+                                                </Box>
+                                            ) : (
+                                                <>
+                                                    <Flex direction="column" alignItems='center' mt='1.2rem' mr='1.5rem'>
+                                                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="4rem" color={colorPalette.secondaryColor}>
+                                                            Opa! O que é isso??
+                                                        </Text>
+                                                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="1.8rem" color={colorPalette.secondaryColor}>
+                                                            Ao explorar a Savana você se deparou com um baú cheio de joias!
+                                                        </Text>
+                                                    </Flex>
+                                                    <Flex flexDirection='column' justifyContent='center' alignItems='center'>
+                                                        {/* first column of modal body  */}
+                                                        <Flex mt='2rem' ml='5rem' direction="column" alignItems="flex-start" width="75%">
+                                                            <Text fontFamily={fontTheme.fonts} fontSize="1.7rem">Você ganhou:</Text>
+                                                        </Flex>
 
-                                            <Flex ml='5rem' direction='column' marginTop='1.5rem' width='75%' >
-                                                <Flex w='50%' mt='2.5rem' ml='-5rem' justifyContent='center' alignSelf='center' alignItems='center'>
-                                                    <Image src={Coins} w='50' h='50' />
-                                                    <Text ml='1.5rem' fontSize='1.6rem'>{coins} Joias</Text>
-                                                </Flex>
-                                            </Flex>
-                                        </Flex>
+                                                        <Flex ml='5rem' direction='column' marginTop='1.5rem' width='75%' >
+                                                            <Flex w='50%' mt='2.5rem' ml='-5rem' justifyContent='center' alignSelf='center' alignItems='center'>
+                                                                <Image src={Coins} w='50' h='50' />
+                                                                <Text ml='1.5rem' fontSize='1.6rem'>{coins} Joias</Text>
+                                                            </Flex>
+                                                        </Flex>
+                                                    </Flex>
 
-                                        <Flex w='48%' h="12vh" margin='auto' justifyContent="flex-end" flexDirection="column" alignItems="center">
-                                            <Button bgColor={colorPalette.primaryColor} color="white" onClick={updateUserCoins} w="100%" h="55px" borderRadius="5px" fontSize="2.5rem" fontFamily={fontTheme.fonts}>
-                                                Continuar
-                                            </Button>
-                                        </Flex>
+                                                    <Flex w='48%' h="12vh" margin='auto' justifyContent="flex-end" flexDirection="column" alignItems="center">
+                                                        <Button bgColor={colorPalette.primaryColor} color="white" onClick={updateUserCoins} w="100%" h="55px" borderRadius="5px" fontSize="2.5rem" fontFamily={fontTheme.fonts}>
+                                                            Continuar
+                                                        </Button>
+                                                    </Flex>
+                                                </>
+                                            )
+                                        }
                                     </ModalBody>
                                 </ModalContent>
                             </Modal>
@@ -147,7 +161,7 @@ const RandomRewardModal = () => {
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

@@ -18,6 +18,7 @@ import AlertModal from '../components/modals/AlertModal';
 
 import api from '../services/api';
 import colorPalette from '../styles/colorPalette';
+import { errorCases } from '../utils/errors/errorsCases';
 
 interface IQuestions {
 	alternatives: string[];
@@ -531,7 +532,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

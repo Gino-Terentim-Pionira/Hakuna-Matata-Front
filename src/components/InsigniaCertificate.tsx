@@ -16,6 +16,7 @@ import insigniaCheetahSillouete from '../assets/icons/insignia/cheetaInsigniaSil
 import insigniaMambaSillouete from '../assets/icons/insignia/mambaInsigniaSillouete.png';
 import insigniaLionSillouete from '../assets/icons/insignia/lionInsigniaSillouete.png';
 import colorPalette from '../styles/colorPalette';
+import { errorCases } from '../utils/errors/errorsCases';
 //import { Certificate } from 'crypto';
 
 interface IUser {
@@ -200,7 +201,7 @@ const InsigniaCertificate = () => {
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

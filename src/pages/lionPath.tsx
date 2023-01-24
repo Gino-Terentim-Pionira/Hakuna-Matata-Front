@@ -51,6 +51,7 @@ import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
 import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
 import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
 import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import { errorCases } from '../utils/errors/errorsCases';
 
 
 interface IQuiz {
@@ -103,7 +104,10 @@ const LionPath = () => {
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 	const [withoutMoney, setWithoutMoney] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
-	const isAlertCoinsOnClose = () => setIsAlertCoins(false);
+	const isAlertCoinsOnClose = () => {
+		setIsAlertCoins(false);
+		setIsLoading(false);
+	};
 	const [lionText, setLionText] = useState<string>();
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
 	0;
@@ -213,7 +217,7 @@ const LionPath = () => {
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>([]);
 
 	const logout = () => {
-		setAlertAnswer('Tem certeza que você deseja sair da savana?');
+		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
 		setIsConfirmOpen(true);
 	};
 
@@ -722,6 +726,8 @@ const LionPath = () => {
 						onClick={() => {
 							paxTax();
 							isAlertOnClose();
+							modalOnClose();
+							setIsLoading(true);
 						}}
 					>
 						Pagar
@@ -761,6 +767,7 @@ const LionPath = () => {
 								bg={colorPalette.primaryColor}
 								onClick={() => {
 									isAlertCoinsOnClose();
+									setIsLoading(false);
 								}}
 							>
 								Cancelar
@@ -774,7 +781,7 @@ const LionPath = () => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'

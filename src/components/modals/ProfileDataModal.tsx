@@ -13,6 +13,7 @@ import moment from 'moment';
 // Images
 import profilePlaceholder from '../../assets/icons/profilePlaceholder.png';
 import colorPalette from '../../styles/colorPalette';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface userDataParams {
     userName: string,
@@ -114,7 +115,7 @@ const ProfileDataModal = () => {
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

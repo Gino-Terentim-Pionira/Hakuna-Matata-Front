@@ -26,6 +26,7 @@ import hourglassicon from '../assets/icons/hourglass_icon.png';
 import cardicon from '../assets/icons/shop2.svg';
 import coinicon from '../assets/icons/coinicon.svg';
 import confirmicon from '../assets/icons/confirmicon.png';
+import { errorCases } from '../utils/errors/errorsCases';
 
 type ShopItemProps = {
 	current_user_id: string;
@@ -403,7 +404,7 @@ const ShopItem: FC<ShopItemProps> = ({
 									isOpen={onError}
 									onClose={() => window.location.reload()}
 									alertTitle='Ops!'
-									alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+									alertBody={errorCases.SERVER_ERROR}
 
 									buttonBody={
 										<Button

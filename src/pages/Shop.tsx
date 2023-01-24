@@ -18,6 +18,7 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import sidearrow from '../assets/icons/sidearrow.png';
 import icon_inventory from '../assets/icons/icon_inventory.svg';
+import { errorCases } from '../utils/errors/errorsCases';
 
 const Shop = () => {
 	const [shopItem, setShopItem] = useState([]);
@@ -171,7 +172,7 @@ const Shop = () => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 
 				buttonBody={
 					<Button

@@ -28,6 +28,7 @@ import colorPalette from "../../styles/colorPalette";
 
 // Images
 import VideoIcon from '../../assets/icons/video.png';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface IVideoModal {
     id: string;
@@ -202,7 +203,7 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick }) => {
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button

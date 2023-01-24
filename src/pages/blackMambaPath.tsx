@@ -35,6 +35,7 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import BlackMambaBackground from '../assets/scenerys/blackMamba/blackMamba.png';
 import ModalMamba from '../assets/modal/modalMamba.png';
+import { errorCases } from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 interface IScript {
@@ -119,7 +120,10 @@ const BaboonPath = () => {
 	const [mambaText, setMambaText] = useState<string>();
 	const alertOnClose = () => setIsConfirmOpen(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
-	const isAlertCoinsOnClose = () => setIsAlertCoins(false);
+	const isAlertCoinsOnClose = () => {
+		setIsAlertCoins(false);
+		setIsLoading(false);
+	};
 	const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
 	const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
@@ -290,7 +294,7 @@ const BaboonPath = () => {
 	};
 
 	const logout = () => {
-		setAlertAnswer('Tem certeza que você deseja sair da savana?');
+		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
 		setIsConfirmOpen(true);
 	};
 
@@ -552,6 +556,8 @@ const BaboonPath = () => {
 							onClick={() => {
 								paxTax();
 								isAlertOnClose();
+								onClose();
+								setIsLoading(true);
 							}}
 						>
 							Pagar
@@ -568,7 +574,10 @@ const BaboonPath = () => {
 							ref={cancelRef}
 							color='white'
 							bg={colorPalette.primaryColor}
-							onClick={isAlertCoinsOnClose}
+							onClick={() => {
+								isAlertCoinsOnClose();
+								setIsLoading(false);
+							}}
 						>
 							Cancelar
 						</Button>
@@ -619,7 +628,7 @@ const BaboonPath = () => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'
