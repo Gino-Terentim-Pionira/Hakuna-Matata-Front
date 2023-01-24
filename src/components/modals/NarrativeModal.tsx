@@ -105,8 +105,8 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 lunchOnOpen();
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        trail1: 2,
-                        trail2: res.data.narrative_status.trail2
+                        ...res.data.narrative_status,
+                        trail1: 2
                     }
                 });
             } else if (user.narrative_status.trail1 == 0 && user.narrative_status.trail2 == 1) { //Verifica se é a primeira vez do uso em qualquer trilha                
@@ -114,35 +114,35 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 setFreeStatus([15, 0, 0, 0, 0, 0]);
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        trail1: res.data.narrative_status.trail1,
+                        ...res.data.narrative_status,
                         trail2: 2
                     }
                 });
             } else if (res.data.narrative_status.trail1 == 1) { //Verifica se é a primeira vez do usuário na trilha da cheetah
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        trail1: 2,
-                        trail2: res.data.narrative_status.trail2
+                        ...res.data.narrative_status,
+                        trail1: 2
                     }
                 });
             } else if (res.data.narrative_status.trail2 == 1) { //Verifica se é a primeira vez do usuário na trilha da cheetah
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        trail1: res.data.narrative_status.trail1,
+                        ...res.data.narrative_status,
                         trail2: 2
                     }
                 });
             } else if (res.data.narrative_status.trail1 == 3) { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        trail1: 4,
-                        trail2: res.data.narrative_status.trail2
+                        ...res.data.narrative_status,
+                        trail1: 4
                     }
                 });
             }else if (res.data.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        trail1: res.data.narrative_status.trail1,
+                        ...res.data.narrative_status,
                         trail2: 4
                     }
                 });

@@ -256,7 +256,8 @@ const CheetahPath = () => {
 				if (data.narrative_status.trail1 !== 4) {
 					await api.patch(`/user/narrative/${_userId}`, {
 						narrative_status: {
-							trail1: 3,
+							...data.narrative_status,
+							trail1: 3
 						},
 					});
 					await finalCheetahNarrative();
@@ -335,8 +336,8 @@ const CheetahPath = () => {
 		if (res.data.narrative_status.trail1 == 0) {
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
-					trail1: 1,
-					trail2: res.data.narrative_status.trail2,
+					...res.data.narrative_status,
+					trail1: 1
 				},
 			});
 
