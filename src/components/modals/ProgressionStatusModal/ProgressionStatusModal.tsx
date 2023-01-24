@@ -114,7 +114,7 @@ const ProgressionStatusModal = () => {
                             </Box>
                         </Flex>
                         <Flex w="90%" h="25%" flexDirection="row" justifyContent="space-between" alignItems="flex-end" marginBottom='1rem' >
-                            <IgnoranceProgress fontSize='1.3rem' marginTop='0' size='4.5rem' ignorance={userData.ignorance} position='relative' />
+                            <IgnoranceProgress ignorance={userData.ignorance} />
                             <Flex align="center">
                                 <Text fontSize="1.8rem" fontWeight="normal" fontFamily={fontTheme.fonts} marginRight="8px">{userData.coins}</Text>
                                 <Image src={Coins} />
