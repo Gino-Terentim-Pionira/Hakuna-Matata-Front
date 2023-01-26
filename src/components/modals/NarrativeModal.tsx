@@ -57,21 +57,21 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setVisibleImage(!visibleImage);
+            setVisibleImage(true);
         }, 1000);
         return () => clearTimeout(timeout);
     }, [scriptImage]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setVisibleText(!visibleText);
+            setVisibleText(true);
         }, 1000);
         return () => clearTimeout(timeout);
     }, [scriptText]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setVisibleName(!visibleName);
+            setVisibleName(true);
         }, 500);
         return () => clearTimeout(timeout);
     }, [scriptName]);
@@ -160,11 +160,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
 
             setTextIndex(nextTextIndex);
 
-            setVisibleText((p) => {
-                setScriptText(script[scriptIndex].texts[nextTextIndex]);
-                return !p
-            });
-
+            setScriptText(script[scriptIndex].texts[nextTextIndex]);
         } else if (scriptIndex < script.length - 1) {
             const nextScriptIndex = scriptIndex + 1;
             nextTextIndex = 0;
@@ -172,20 +168,11 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             setTextIndex(nextTextIndex);
             setScriptIndex(nextScriptIndex);
 
-            setVisibleText((p) => {
-                setScriptText(script[nextScriptIndex].texts[nextTextIndex]);
-                return !p
-            });
+            setScriptText(script[nextScriptIndex].texts[nextTextIndex]);
 
-            setVisibleImage((p) => {
-                setScriptImage(script[nextScriptIndex].image);
-                return !p
-            });
+            setScriptImage(script[nextScriptIndex].image);
 
-            setVisibleName((p) => {
-                setScriptName(script[nextScriptIndex].name);
-                return !p
-            });
+            setScriptName(script[nextScriptIndex].name);
         } else {
             updateNarrative();
             onToggle();
@@ -305,7 +292,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                                 setTextIndex(0);
                                 setScriptIndex(0);
                                 setScriptText(script[0].texts[0])
-                                setVisibleText(false)
                                 updateNarrative();
                                 onToggle();
                             }}
