@@ -243,6 +243,7 @@ const LionPath = () => {
 				if (data.narrative_status.trail2 !== 4) {
 					await api.patch(`/user/narrative/${_userId}`, {
 						narrative_status: {
+							...data.narrative_status,
 							trail2: 3
 						},
 					});
@@ -318,8 +319,8 @@ const LionPath = () => {
 		if (res.data.narrative_status.trail2 == 0) {
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
-					trail1: res.data.narrative_status.trail1,
-					trail2: 1,
+					...res.data.narrative_status,
+					trail2: 1
 				},
 			});
 
@@ -342,13 +343,6 @@ const LionPath = () => {
 			const newScript = await trail2Beggining();
 			setScript(newScript);
 			narrativeOnOpen();
-
-			await api.patch(`/user/narrative/${_userId}`, {
-				narrative_status: {
-					trail1: res.data.narrative_status.trail1,
-					trail2: 2,
-				},
-			});
 		} else if (res.data.narrative_status.trail2 == 1) {
 			//Verifica se é a primeira vez do usuário na trilha do leao
 			const newScript = await trail2First();

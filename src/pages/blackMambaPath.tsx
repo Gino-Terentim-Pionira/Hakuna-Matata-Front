@@ -213,8 +213,7 @@ const BaboonPath = () => {
 		if (res.data.narrative_status.blackMamba == 0) {
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
-					trail1: res.data.narrative_status.trail1,
-					trail2: res.data.narrative_status.trail2,
+					...res.data.narrative_status,
 					blackMamba: 1,
 				},
 			});
@@ -237,8 +236,7 @@ const BaboonPath = () => {
 			narrativeMonkeyOnOpen();
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
-					trail1: res.data.narrative_status.trail1,
-					trail2: res.data.narrative_status.trail2,
+					...res.data.narrative_status,
 					blackMamba: 2,
 				},
 			});
