@@ -178,6 +178,7 @@ const BaboonPath = () => {
 			const { data } = await api.get(`/user/${_userId}`);
 			const isComplete = data.finalQuizComplete.blackMamba;
 			setIsLoading(false);
+			updateScript();
 
 			if (isComplete) {
 				setMambaText(
@@ -339,11 +340,10 @@ const BaboonPath = () => {
 	};
 
 	useEffect(() => {
-		getQuiz();
 		getUser();
 		firstAccess();
 		updateNarrative();
-		updateScript();
+		getQuiz();
 	}, []);
 
 	return (
