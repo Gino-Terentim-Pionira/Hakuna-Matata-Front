@@ -35,7 +35,7 @@ import LoadingOverlay from '../components/LoadingOverlay';
 // Requisitions
 import api from '../services/api';
 import trail2Beggining from '../utils/scripts/LionTrail/Trail2Beggining';
-import trail2First from '../utils/scripts/LionTrail/Trail2First';
+import trail2FreeLunch from '../utils/scripts/LionTrail/Trail2FreeLunch';
 import trail2Conclusion from '../utils/scripts/LionTrail/Trail2Conclusion';
 // import trail2Teasing from '../utils/scripts/LionTrail/Trail2Teasing';
 import trail2FinalQuiz from '../utils/scripts/LionTrail/Trail2FinalQuiz';
@@ -340,12 +340,12 @@ const LionPath = () => {
 			res.data.narrative_status.trail2 == 1
 		) {
 			//Verifica se é a primeira vez do usuário em uma trilha
-			const newScript = await trail2Beggining();
+			const newScript = await trail2FreeLunch();
 			setScript(newScript);
 			narrativeOnOpen();
 		} else if (res.data.narrative_status.trail2 == 1) {
 			//Verifica se é a primeira vez do usuário na trilha do leao
-			const newScript = await trail2First();
+			const newScript = await trail2Beggining();
 			setScript(newScript);
 			narrativeOnOpen();
 		}

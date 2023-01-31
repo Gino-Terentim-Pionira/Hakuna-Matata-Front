@@ -11,7 +11,7 @@
   WRONG_PASSWORD_ERROR: 'Ops, não posso permitir que entre na Savana pois essa não é a sua senha!',
   USER_IS_NOT_CONFIRMED_ERROR: 'Não posso te deixar entrar, seu passaporte ainda não foi confirmado. Olhe seu "email" por favor.',
   FAILED_LOGIN_ERROR: 'Parece que ocorreu um erro durante a nossa viagem, Jovem! Vamos tentar novamente!',
-  SUCCESS_CASE_REGISTER: 'Tudo certo! Agora você só precisa "entrar no seu email" para confirmar o passaporte. Não sei o que significa, mas a sabedoria da Savana me pediu isso.',
+  SUCCESS_CASE_REGISTER: 'Tudo certo! Agora você só precisa "entrar no seu email" para confirmar o passaporte. Não sei o que significa, mas a sabedoria da savana me pediu para lhe dizer isso.',
 };
 
 export const editProfileErrorCases: {[key: string]: string} = {
