@@ -41,6 +41,11 @@ interface IUser {
     first_certificate: string;
     second_certificate: string;
     ignorance: number;
+    narrative_status: {
+        trail1: number;
+        trail2: number;
+        blackMamba: number;
+    }
 }
 
 
@@ -81,7 +86,7 @@ const ProgressionStatusModal = () => {
                         <Flex w="95%" flexDirection="row" marginTop='1.2rem' alignItems="flex-end" justifyContent="space-between">
                             <Box w="35%" align="right">
                                 <Stack w="100%">
-                                    <StatusProgressionBar status={userData.status[0]} label="Agilidade (AGI)" isOnLeft />
+                                    <StatusProgressionBar status={userData.status[0]} label="Agilidade (AGI)" isOnLeft isBlocked={userData.narrative_status.trail1 < 2} />
                                     <StatusProgressionBar status={userData.status[1]} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked/>
                                     <StatusProgressionBar status={userData.status[4]} marginTop="4px" label="Estratégia (EST)" isOnLeft isBlocked />
                                 </Stack>
@@ -107,7 +112,7 @@ const ProgressionStatusModal = () => {
                             </Box>
                             <Box w="35%">
                                 <Stack w="100%">
-                                    <StatusProgressionBar status={userData.status[2]} label="Liderança (LID)"  />
+                                    <StatusProgressionBar status={userData.status[2]} label="Liderança (LID)" isBlocked={userData.narrative_status.trail2 < 2} />
                                     <StatusProgressionBar status={userData.status[3]} isBlocked marginTop="4px" label="Gestão de mudanças (GM)"/>
                                     <StatusProgressionBar status={userData.status[5]} isBlocked marginTop="4px" label="Gestão de projetos (GP)"/>
                                 </Stack>
