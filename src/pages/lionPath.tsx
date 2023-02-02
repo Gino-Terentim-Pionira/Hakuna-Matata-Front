@@ -34,11 +34,11 @@ import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
 import api from '../services/api';
-import trail2Beggining from '../utils/scripts/LionTrail/Trail2Beggining';
-import trail2FreeLunch from '../utils/scripts/LionTrail/Trail2FreeLunch';
-import trail2Conclusion from '../utils/scripts/LionTrail/Trail2Conclusion';
+import lionBeggining from '../utils/scripts/LionTrail/LionBeggining';
+import lionFreeLunch from '../utils/scripts/LionTrail/LionFreeLunch';
+import lionConclusion from '../utils/scripts/LionTrail/LionConclusion';
 // import trail2Teasing from '../utils/scripts/LionTrail/Trail2Teasing';
-import trail2FinalQuiz from '../utils/scripts/LionTrail/Trail2FinalQuiz';
+import lionFinalQuiz from '../utils/scripts/LionTrail/LionFinalQuiz';
 
 // Images
 import trail_bg from '../assets/scenerys/lion/Trilha_leao_e_leoa.png';
@@ -340,12 +340,12 @@ const LionPath = () => {
 			res.data.narrative_status.trail2 == 1
 		) {
 			//Verifica se é a primeira vez do usuário em uma trilha
-			const newScript = await trail2FreeLunch();
+			const newScript = await lionFreeLunch();
 			setScript(newScript);
 			narrativeOnOpen();
 		} else if (res.data.narrative_status.trail2 == 1) {
 			//Verifica se é a primeira vez do usuário na trilha do leao
-			const newScript = await trail2Beggining();
+			const newScript = await lionBeggining();
 			setScript(newScript);
 			narrativeOnOpen();
 		}
@@ -360,13 +360,13 @@ const LionPath = () => {
 
 
 	const challengeNarrative = async () => {
-		const newChallengeScript = await trail2FinalQuiz();
+		const newChallengeScript = await lionFinalQuiz();
 		setChallengeScript(newChallengeScript);
 		narrativeChallengeOnOpen();
 	};
 
 	const finalLionNarrative = async () => {
-		const newChallengeScript = await trail2Conclusion();
+		const newChallengeScript = await lionConclusion();
 		setFinalChallengeScript(newChallengeScript);
 		finalNarrativeChallengeOnOpen();
 	};

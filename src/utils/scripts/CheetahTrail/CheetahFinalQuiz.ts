@@ -17,7 +17,7 @@ const checkScript = async (index: number) => {
     }
 }
 
-const trail1FinalQuiz = async () => {
+const cheetahFinalQuiz = async () => {
 	const script = await (checkScript(0) || checkScript(1) || checkScript(2)) ? [
 		{
 			name: 'Cheetah',
@@ -47,4 +47,4 @@ const trail1FinalQuiz = async () => {
 	return script;
 };
 
-export default trail1FinalQuiz;
+export default cheetahFinalQuiz;

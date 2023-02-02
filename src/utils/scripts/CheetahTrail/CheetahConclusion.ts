@@ -11,7 +11,7 @@ const getUser = async () => {
 }
 
 
-const trail1Conclusion = async () => {
+const cheetahConclusion = async () => {
 
     const userName = await getUser();
     const script = [
@@ -30,4 +30,4 @@ const trail1Conclusion = async () => {
     return script;
 }
 
-export default trail1Conclusion;
+export default cheetahConclusion;

@@ -13,7 +13,7 @@ const getUser = async () => {
 }
 
 
-const trail2Conclusion = async () => {
+const lionConclusion = async () => {
 
     const userName = await getUser();
     const script = [
@@ -47,4 +47,4 @@ const trail2Conclusion = async () => {
     return script;
 }
 
-export default trail2Conclusion;
+export default lionConclusion;

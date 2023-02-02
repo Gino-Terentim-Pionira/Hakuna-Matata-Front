@@ -1,16 +1,15 @@
-import lion from "../../../assets/sprites/lion/lion.png";
-import lioness from "../../../assets/sprites/lion/lioness.png";
+import cheetah from "../../../assets/sprites/cheetah/cheetah.png";
 
 
-const trail2Teasing = async (index:number) => {
+const cheetahTeasing = async (index:number) => {
     
     switch (index) {
         case 0:{
             const script0 = [
                 {
-                    name: "Leão",
-                    image: lion,
-                    texts: ["Vamos, aprendiz! Queremos ver você nos provar que é capaz de acabar com a Ignorância!"]
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Vamo lá filhote. Se você se descuidar, vai comer poeira!"]
                 }
             ];
         
@@ -19,9 +18,9 @@ const trail2Teasing = async (index:number) => {
         case 1: {
             const script1 = [
                 {
-                    name: "Leão",
-                    image: lion,
-                    texts: ["Não deixe a Ignorância ganhar de você!"]
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Simbora filhote, a ignorância não vai se derrotar sozinha"]
                 }
             ];
         
@@ -30,9 +29,9 @@ const trail2Teasing = async (index:number) => {
         case 2:{
             const script2 = [
                 {
-                    name: "Leão",
-                    image: lion,
-                    texts: ["A Savana precisa da sua dedicação, aprendiz!"]
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["E ai filhote, bora correr atrás do progresso!"]
                 }
             ];
         
@@ -41,9 +40,9 @@ const trail2Teasing = async (index:number) => {
         case 3:{
         const script3 = [
             {
-                name: "Leão",
-                image: lion,
-                texts: ["Para se tornar um grande líder é necessário muito treinamento. Tenha coragem, aprendiz!"]
+                name: "Cheetah",
+                image: cheetah,
+                texts: ["Vamos lá filhote, não vai perder o ritmo logo agora né?"]
             }
         ];
     
@@ -52,8 +51,8 @@ const trail2Teasing = async (index:number) => {
         case 4:{
             const script4 = [
                 {
-                    name: "Leão",
-                    image: lion,
+                    name: "Cheetah",
+                    image: cheetah,
                     texts: ["Continue em frente, sempre avançando. Não pise no freio!"]
                 }
             ];
@@ -63,8 +62,8 @@ const trail2Teasing = async (index:number) => {
         case 5:{
             const script5 = [
                 {
-                    name: "Leão",
-                    image: lion,
+                    name: "Cheetah",
+                    image: cheetah,
                     texts: ["Não desista nunca! Não podemos deixar passar essa chance de alcançar a “Ignorância”!"]
                 }
             ];
@@ -74,9 +73,9 @@ const trail2Teasing = async (index:number) => {
         case 6:{
             const script6 = [
                 {
-                    name: "Leoa",
-                    image: lioness,
-                    texts: ["Ei, nada de desistir! A Ignorância está ganhando cada vez mais poder…"]
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Aí, anda logo, a “Ignorância” não vai ser combater sozinha"]
                 }
             ];
         
@@ -85,21 +84,20 @@ const trail2Teasing = async (index:number) => {
         case 7:{
         const script7 = [
             {
-                name: "Leoa",
-                image: lioness,
-                texts: ["Vamos lá! Você teve um bom avanço mas o caminho para derrotar a Ignorância ainda é longo!"]
+                name: "Cheetah",
+                image: cheetah,
+                texts: ["Eu aposto que você não consegue me superar nessa luta!"]
             }
         ];
     
         return script7;
-
         }
         case 8:{
             const script8 = [
                 {
-                    name: "Leoa",
-                    image: lioness,
-                    texts: ["Os moradores da Savana estão confiando no seu potencial de derrotar a Ignorância, não os decepcione!"]
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Bora filhote, quero ver você me provar que é capaz de acabar com a “Ignorância”!"]
                 }
             ];
         
@@ -108,9 +106,9 @@ const trail2Teasing = async (index:number) => {
         case 9:{
             const script9 = [
                 {
-                    name: "Leoa",
-                    image: lioness,
-                    texts: ["Desistir não é uma opção, aprendiz. Siga em frente!"]
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Corra, filhote, Corra! … Sinto que já ouvi essa frase em algum lugar"]
                 }
             ];
         
@@ -120,7 +118,7 @@ const trail2Teasing = async (index:number) => {
             const script10 = [
                 {
                     name: "",
-                    image: lioness,
+                    image: cheetah,
                     texts: [""]
                 }
             ];
@@ -130,4 +128,4 @@ const trail2Teasing = async (index:number) => {
     }
 }
 
-export default trail2Teasing;
+export default cheetahTeasing;

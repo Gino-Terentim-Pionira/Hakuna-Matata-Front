@@ -20,7 +20,7 @@ const checkScript = async (index: number) => {
     }
 }
 
-const trail2FinalQuiz = async () => {
+const lionFinalQuiz = async () => {
 	const script = await (checkScript(0) || checkScript(1) || checkScript(2)) ? [
 		{
 			name: 'Leão e Leoa',
@@ -95,4 +95,4 @@ const trail2FinalQuiz = async () => {
 	return script;
 };
 
-export default trail2FinalQuiz;
+export default lionFinalQuiz;
