@@ -111,7 +111,9 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 });
             } else if (user.narrative_status.trail1 == 0 && user.narrative_status.trail2 == 1) { //Verifica se é a primeira vez do uso em qualquer trilha                
                 setFreeCoins(50);
-                setFreeStatus([15, 0, 0, 0, 0, 0]);
+                setFreeStatus([0, 15, 0, 0, 0, 0]);
+
+                lunchOnOpen();
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
                         ...res.data.narrative_status,

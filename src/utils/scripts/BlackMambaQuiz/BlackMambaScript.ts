@@ -32,6 +32,7 @@ const checkScript = async (index: number) => {
 const blackMambaScript = async () => {
 
     const user = await getUser();
+    const wisdom = 100 - user.ignorance;
 
     const script = user.finalQuizComplete.blackMamba ? [
         {
@@ -60,13 +61,13 @@ const blackMambaScript = async () => {
                 "Ora ora, não esperava ser incomodado tão cedo, viajante!",
                 "Vejo que acredita ter o conhecimento necessário para me desafiar.",
                 "... sniff sniff",
-                `Posso sentir que você possui um nível de ignorância em ${user.ignorance}%, que precoce...`,
+                `Posso sentir que você possui um nível de "Sabedoria" em ${wisdom}%, que precoce...`,
                 "Acho que devo te dar uma lição! Talvez assim você venha mais preparado da proxima vez!",
                 "Prepare-se!"
             ]
         }
 
-    ] : user.ignorance > 40 ? [await checkScript(1) ?
+    ] : user.ignorance > 15 ? [await checkScript(1) ?
         {
             name: "Mamba Negra",
             image: mamba_negra_happy,
@@ -82,7 +83,7 @@ const blackMambaScript = async () => {
                 `Ora ora, ${user.userName}!`,
                 "Vejo que seguiu um pouco de sua jornada, entretanto ainda não é o suficiente.",
                 "... sniff sniff",
-                `Posso sentir que você possui um nível de ignorância em ${user.ignorance}%, não é alto, mas não é o ideal...`,
+                `Posso sentir que você possui um nível de "Sabedoria" em ${wisdom}%, não é baixo, mas não é o ideal...`,
                 "Entretanto, vejo no seu olhar que deseja me desafiar... Meio displicente, talvez devo te ensinar uma lição...",
                 "Prepare-se!"
             ]
@@ -103,7 +104,7 @@ const blackMambaScript = async () => {
                 `Ora Ora, seja bem-vindo, ${user.userName}!`,
                 "Meus companheiros me informaram que você teve bastante êxito e suas jornadas.",
                 "... sniff sniff",
-                `Uau, posso sentir que você possui um nível de ignorância em ${user.ignorance}%, isso é fascinante...`,
+                `Uau, posso sentir que você possui um nível de "Sabedoria" em ${wisdom}%, isso é fascinante...`,
                 "Vejo que possui a determinação e o conhecimento necessário para me desafiar!",
                 "Mas já vou lhe avisando que não sera nada fácil... Afinal, não é a toa que eu sou a rainha dessa Savana!",
                 "Prepare-se!"

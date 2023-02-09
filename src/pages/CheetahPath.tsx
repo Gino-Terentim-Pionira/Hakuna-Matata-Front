@@ -35,10 +35,10 @@ import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
 import api from '../services/api';
-import trail1FreeLunch from '../utils/scripts/CheetahTrail/Trail1FreeLunch';
-import trail1Beggining from '../utils/scripts/CheetahTrail/Trail1Beggining';
-import trail1Conclusion from '../utils/scripts/CheetahTrail/Trail1Conclusion';
-import trail1FinalQuiz from '../utils/scripts/CheetahTrail/Trail1FinalQuiz';
+import cheetahFreeLunch from '../utils/scripts/CheetahTrail/CheetahFreeLunch';
+import cheetahBeggining from '../utils/scripts/CheetahTrail/CheetahBeggining';
+import cheetahConclusion from '../utils/scripts/CheetahTrail/CheetahConclusion';
+import cheetahFinalQuiz from '../utils/scripts/CheetahTrail/CheetahFinalQuiz';
 
 // Images
 import trail_bg from '../assets/scenerys/cheetah/trail_bg.png';
@@ -357,25 +357,25 @@ const CheetahPath = () => {
 			res.data.narrative_status.trail2 == 0
 		) {
 			//Verifica se é a primeira vez do usuário em uma trilha
-			const newScript = await trail1FreeLunch();
+			const newScript = await cheetahFreeLunch();
 			setScript(newScript);
 			narrativeOnOpen();
 		} else if (res.data.narrative_status.trail1 == 1) {
 			//Verifica se é a primeira vez do usuário na trilha da cheetah
-			const newScript = await trail1Beggining();
+			const newScript = await cheetahBeggining();
 			setScript(newScript);
 			narrativeOnOpen();
 		}
 	};
 
 	const challengeNarrative = async () => {
-		const newChallengeScript = await trail1FinalQuiz();
+		const newChallengeScript = await cheetahFinalQuiz();
 		setChallengeScript(newChallengeScript);
 		narrativeChallengeOnOpen();
 	};
 
 	const finalCheetahNarrative = async () => {
-		const newChallengeScript = await trail1Conclusion();
+		const newChallengeScript = await cheetahConclusion();
 		setFinalChallengeScript(newChallengeScript);
 		finalNarrativeChallengeOnOpen();
 	};
