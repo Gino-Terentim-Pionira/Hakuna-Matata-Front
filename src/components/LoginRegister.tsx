@@ -15,7 +15,7 @@ type LoginRegisterProps = {
     secondValue?: string;
     firstChange: ChangeEventHandler;
     secondChange?: ChangeEventHandler;
-    nextStep: VoidFunction;
+    nextStep: VoidFunction | ((e: never) => void);
     previousStep: VoidFunction;
     buttonText: string;
     forgetPassword?: string;
