@@ -2,6 +2,7 @@ const colorPalette = {
     primaryColor: '#EDA641',
     backgroundColor: '#FFFFFF',
     backgroundGrey: '#F6F6F6',
+    secundaryGrey: '#9D9D9D',
     greyText: '#646464',
     inactiveButton: '#6D99F2',
     secondaryColor: '#0B67A1',

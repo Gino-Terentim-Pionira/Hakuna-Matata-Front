@@ -20,7 +20,7 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import monkey from '../assets/sprites/monkey/monkeyHappy.png';
+import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
 
 const Register = () => {
 
@@ -90,7 +90,7 @@ const Register = () => {
         },
         'DUPLICATE_EMAIL_ERROR': {
             label: errorCases.DUPLICATE_EMAIL_ERROR,
-            action: () => {setStep(2); onClose()}
+            action: () => { setStep(2); onClose() }
         },
         'SUCCESS_CASE_REGISTER': {
             label: errorCases.SUCCESS_CASE_REGISTER,
@@ -207,7 +207,8 @@ const Register = () => {
 
                         handleAlertModal('SUCCESS_CASE_REGISTER');
 
-                    } catch (err) {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    } catch (err: any) {
                         handleAlertModal(err.response.data.message);
                         setIsLoading(false);
                     }
@@ -258,24 +259,12 @@ const Register = () => {
             fontFamily={fontTheme.fonts}
             fontWeight='regular'
         >
-            <Box w="40%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' left="0" top="0" clipPath="polygon(0% 0%, 85% 0, 40% 100%, 0 100%)"></Box>
-            <Center width='100%' >
-                <Box
-                    display='flex'
-                    alignItems='center'
-                    w='40%'
-                    h='90%'
-                    zIndex='1'
-                    backgroundColor='transparent'
-                    marginLeft='3rem'
-                >
-                    <Image w='100%' src={monkey} alt='Image' />
-                </Box>
-
+            <Center width='100%'>
                 {step === 1 ? (
                     <LoginRegister
-                        firstText="Vejo que temos um novo aventureiro por aqui, antes de começarmos nossa aventura, gostaria de saber quem é você, caro viajante?"
-                        secondText="E como você gostaria de ser chamado?"
+                        mainText='Vejo que temos um novo viajante por aqui, antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, jovem.'
+                        firstText="”Qual é o seu nome, jovem?”"
+                        secondText="”E como você gostaria de ser chamado dentro da savana?”"
                         firstPlaceholder="Nome Completo"
                         secondPlaceholder="Nome de Usuário"
                         nextStep={() => nextStep()}
@@ -294,8 +283,9 @@ const Register = () => {
 
                 ) : step === 2 ? (
                     <LoginRegister
-                        firstText="Aqui no formulário está dizendo que preciso do seu 'e-mail'. Não sei o que é isso, mas você deve saber!"
-                        secondText="Queria saber também, que ano e dia você nasceu?"
+                        mainText='Agora preciso de outras informações adicionais. Não sei o que é isso, mas a sabedoria da Savana está me pedindo o seu e-mail.'
+                        firstText="”Qual é o seu e-mail, jovem?”"
+                        secondText="”Queria saber também, qual a sua data de nascimento?”"
                         firstPlaceholder="Endereço de e-mail"
                         secondPlaceholder="Data de Nascimento"
                         nextStep={() => nextStep()}
@@ -313,8 +303,9 @@ const Register = () => {
                     />
                 ) : step === 3 ? (
                     <LoginRegister
-                        firstText="Agora vamos colocar uma senha secreta para permitir sua entrada na Savana"
-                        secondText="Não ouvi muito bem, poderia repeti-lá?"
+                        mainText='Por último, precisamos definir uma senha para permitir a sua entrada na Savana. Lembre-se que não pode ser uma senha fácil de adivinhar, não queremos invasores na Savana.'
+                        firstText="”Qual é a sua senha, jovem?”"
+                        secondText="”Não ouvi muito bem, poderia repeti-lá?”"
                         firstPlaceholder="Senha"
                         secondPlaceholder="Confirmar senha"
                         nextStep={() => nextStep()}
@@ -372,9 +363,11 @@ const Register = () => {
                         }
                     />
                 )}
-
+                <Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
+                <Box w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
             </Center>
         </Flex>
+
     );
 }
 
