@@ -20,6 +20,7 @@ import colorPalette from "../styles/colorPalette";
 import api from '../services/api';
 import { useAuth } from '../contexts/authContext';
 import LoginRegister from '../components/LoginRegister';
+import axios from 'axios';
 
 interface IUser {
 	id: string;
@@ -62,9 +63,14 @@ const ResetPassword = () => {
 				setCorrectPassword(true);
 				setIsLoading(false);
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			} catch (error: any) {
-				setIsLoading(false);
-				setAlertAnswer(error.response.data.error);
+			} catch (error) {
+				if (axios.isAxiosError(error)) {
+					console.log(error.response)
+					if (error.response) {
+						setIsLoading(false);
+						setAlertAnswer(error.response.data.error);
+					}
+				}
 			}
 		} else {
 			setAlertAnswer('Ops, parece que a senha não é igual à confirmação!');

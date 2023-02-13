@@ -50,7 +50,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
         <Flex
             width="55%"
             height="100vh"
-            padding="80px 0 80px 32px"
+            padding="80px 0 60px 32px"
             flexDir="column"
             justifyContent="space-between"
             fontFamily={fontTheme.fonts}
@@ -142,7 +142,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
             </Flex>
             {/* 1366 x 656 */}
 
-            <Box w='70%' h='30%'>
+            <Box w='70%' h='fit-content'>
                 <Center marginTop='1rem'>
                     <Button
                         width='100%'

@@ -21,6 +21,7 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
+import axios from 'axios';
 
 const Register = () => {
 
@@ -208,9 +209,14 @@ const Register = () => {
                         handleAlertModal('SUCCESS_CASE_REGISTER');
 
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    } catch (err: any) {
-                        handleAlertModal(err.response.data.message);
-                        setIsLoading(false);
+                    } catch (err) {
+                        if (axios.isAxiosError(err)) {
+                            console.log(err.response)
+                            if (err.response) {
+                                handleAlertModal(err.response.data.message);
+                                setIsLoading(false);
+                            }
+                        }
                     }
                 } else {
                     handleAlertModal('DIFFERENT_PASSWORDS_ERROR');
@@ -262,7 +268,7 @@ const Register = () => {
             <Center width='100%'>
                 {step === 1 ? (
                     <LoginRegister
-                        mainText='Vejo que temos um novo viajante por aqui, antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, jovem.'
+                        mainText='Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, jovem.'
                         firstText="”Qual é o seu nome, jovem?”"
                         secondText="”E como você gostaria de ser chamado dentro da savana?”"
                         firstPlaceholder="Nome Completo"
