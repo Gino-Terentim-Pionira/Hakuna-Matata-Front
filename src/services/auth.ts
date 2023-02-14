@@ -10,7 +10,6 @@ export async function SignIn(email: string, password: string) {
         return res.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log(error.response)
             if (error.response) {
                 return error.response.data.error;
             }
