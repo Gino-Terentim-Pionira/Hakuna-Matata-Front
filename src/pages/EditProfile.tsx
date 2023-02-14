@@ -210,7 +210,6 @@ const EditProfile = () => {
 			setLoading(false);
 			verifyErrorType('SUCCES_CASE_EDIT');
 		} catch (error) {
-
 			verifyErrorType(error.response.data.message);
 			setLoading(false);
 		}

@@ -15,7 +15,7 @@ import fontTheme from '../styles/base';
 import colorPalette from "../styles/colorPalette";
 
 // Images
-import monkey from '../assets/sprites/monkey/monkey.png';
+import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
 
 const ForgotPassword = () => {
 	const history = useHistory();
@@ -54,68 +54,50 @@ const ForgotPassword = () => {
 
 	return (
 		<Flex
-			h='100vh'
-			backgroundColor={colorPalette.buttonTextColor}
-			fontFamily={fontTheme.fonts}
-			fontWeight='regular'
-		>
-			<Box
-				w='40%'
-				bg={colorPalette.primaryColor}
-				h='100vh'
-				position='absolute'
-				zIndex='0'
-				left='0'
-				top='0'
-				clipPath='polygon(0% 0%, 85% 0, 40% 100%, 0 100%)'
-			></Box>
-			<Center width='100%'>
-				<Box
-					display='flex'
-					alignItems='center'
-					w='40%'
-					h='90%'
-					zIndex='1'
-					backgroundColor='transparent'
-					marginLeft='3rem'
-				>
-					<Image w='90%' src={monkey} alt='Image' />
-				</Box>
+		h='100vh'
+		backgroundColor={colorPalette.buttonTextColor}
+		fontFamily={fontTheme.fonts}
+		fontWeight='regular'
+	>
+		<Center width='100%'>
+			<LoginRegister
+				mainText='Pelo visto, você não consegue mais lembrar sua senha, tem como me passar o e-mail que usou para criar o passaporte? Não sei o que é um e-mail, são as vozes da Savana que me pediram isso.'
+				firstText='”Qual é o seu e-mail, jovem?”'
+				firstPlaceholder='E-mail'
+				firstValue={email}
+				firstChange={(e: BaseSyntheticEvent) =>
+					setEmail(e.target.value)
+				}
+				firstInputType='text'
+				nextStep={() => sendEmail()}
+				buttonText='Enviar'
+				previousStep={() => goToLogin()}
+				loading={isLoading}
+			/>
+			<Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
+			<Box w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
 
-				<LoginRegister
-					firstText="Pelo visto, você não consegue mais lembrar sua senha, tem como me passar o 'e-mail' que usou para criar o passaporte? Não sei o que é 'e-mail', são as vozes da Savana que me pediram isso."
-					firstPlaceholder='E-mail'
-					firstValue={email}
-					firstChange={(e: BaseSyntheticEvent) =>
-						setEmail(e.target.value)
-					}
-					firstInputType='text'
-					nextStep={() => sendEmail()}
-					buttonText='Enviar'
-					previousStep={() => goToLogin()}
-					loading={isLoading}
-				/>
+			<AlertModal
+				isOpen={isConfirmOpen}
+				onClose={onClose}
+				alertTitle='Senha Esquecida'
+				alertBody={alertAnswer}
+				buttonBody={
+					<Button
+						ref={cancelRef}
+						color='white'
+						bg={colorPalette.primaryColor}
+						onClick={() => {
+							onClose();
+						}}
+					>
+						Continuar
+					</Button>
+				}
+			/>
+		</Center>
+	</Flex>
 
-				<AlertModal
-					isOpen={isConfirmOpen}
-					onClose={onClose}
-					alertTitle='Senha Esquecida'
-					alertBody={alertAnswer}
-					buttonBody={
-						<Button
-							ref={cancelRef}
-							color='white'
-							bg={colorPalette.primaryColor}
-							onClick={() => {
-								onClose();
-							}}
-						>
-							Continuar
-						</Button>
-					}
-				/>
-			</Center>
-		</Flex>
 	);
 };
 

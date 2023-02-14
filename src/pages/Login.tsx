@@ -19,7 +19,7 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import monkey from '../assets/sprites/monkey/monkeyHappy.png';
+import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
 
 const Login = () => {
 	const [email, setEmail] = useState<string>('');
@@ -46,10 +46,12 @@ const Login = () => {
 		}
 	}, [authenticated]);
 
-	const ERROR_TYPES: {[key: string]: {
-		label: string,
-		action: VoidFunction
-	}} = {
+	const ERROR_TYPES: {
+		[key: string]: {
+			label: string,
+			action: VoidFunction
+		}
+	} = {
 		'MISSING_FIELDS_ERROR': {
 			label: errorCases.MISSING_FIELDS_ERROR,
 			action: onClose
@@ -117,30 +119,11 @@ const Login = () => {
 			fontFamily={fontTheme.fonts}
 			fontWeight='regular'
 		>
-			<Box
-				w='40%'
-				bg={colorPalette.primaryColor}
-				h='100vh'
-				position='absolute'
-				zIndex='0'
-				left='0'
-				top='0'
-				clipPath='polygon(0% 0%, 85% 0, 40% 100%, 0 100%)'
-			></Box>
 			<Center width='100%'>
-				<Box
-					display='flex'
-					alignItems='center'
-					w='40%'
-					h='90%'
-					zIndex='1'
-					backgroundColor='transparent'
-					marginLeft='3rem'
-				>
-					<Image w='100%' src={monkey} alt='Image' />
-				</Box>
 				<LoginRegister
-					firstText='Seja bem vindo de volta ao Pionira, para entrar na Savana preciso que você me fale seu e-mail e sua senha secreta.'
+					mainText='Seja bem vindo de volta ao Pionira. Para entrar na Savana preciso que você me fale seu e-mail e sua senha.'
+					firstText='”Qual é o seu e-mail, jovem?”'
+					secondText='”E qual a sua senha?”'
 					firstPlaceholder='E-mail'
 					secondPlaceholder='Senha'
 					firstValue={email}
@@ -161,23 +144,26 @@ const Login = () => {
 					loading={isLoading}
 				/>
 
-				<AlertModal
-					isOpen={alertModal.isOpen}
-					onClose={onClose}
-					alertTitle='Entrada da Savana'
-					alertBody={alertModal.alertAnswer}
-					buttonBody={
-						<Button
-							ref={cancelRef}
-							color='white'
-							bg={colorPalette.primaryColor}
-							onClick={alertModal.action}
-						>
-							Continuar
-						</Button>
-					}
-				/>
+				<Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
+				<Box w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
 			</Center>
+
+			<AlertModal
+				isOpen={alertModal.isOpen}
+				onClose={onClose}
+				alertTitle='Entrada da Savana'
+				alertBody={alertModal.alertAnswer}
+				buttonBody={
+					<Button
+						ref={cancelRef}
+						color='white'
+						bg={colorPalette.primaryColor}
+						onClick={alertModal.action}
+					>
+						Continuar
+					</Button>
+				}
+			/>
 		</Flex>
 	);
 };
