@@ -208,10 +208,8 @@ const Register = () => {
 
                         handleAlertModal('SUCCESS_CASE_REGISTER');
 
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     } catch (err) {
                         if (axios.isAxiosError(err)) {
-                            console.log(err.response)
                             if (err.response) {
                                 handleAlertModal(err.response.data.message);
                                 setIsLoading(false);

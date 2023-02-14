@@ -62,7 +62,7 @@ const ResetPassword = () => {
 				setAlertAnswer('Sua senha foi alterada com sucesso!');
 				setCorrectPassword(true);
 				setIsLoading(false);
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
 					console.log(error.response)

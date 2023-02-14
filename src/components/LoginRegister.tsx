@@ -140,8 +140,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     )}
                 </Box>
             </Flex>
-            {/* 1366 x 656 */}
-
+            
             <Box w='70%' h='fit-content'>
                 <Center marginTop='1rem'>
                     <Button
