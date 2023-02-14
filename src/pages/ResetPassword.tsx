@@ -65,7 +65,6 @@ const ResetPassword = () => {
 
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
-					console.log(error.response)
 					if (error.response) {
 						setIsLoading(false);
 						setAlertAnswer(error.response.data.error);
