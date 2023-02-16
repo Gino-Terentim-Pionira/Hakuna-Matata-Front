@@ -17,6 +17,19 @@ import RewardModal from './RewardModal';
 // Styles
 import fontTheme from '../../styles/base'
 import colorPalette from '../../styles/colorPalette';
+import api from '../../services/api';
+import { AxiosResponse } from 'axios';
+
+// Images
+import Cheetah from '../../assets/icons/cheetahblink.svg';
+import Cross from '../../assets/icons/cross.svg';
+
+interface userDataProps {
+    coins: number,
+    status: number[],
+    quiz_coins: number[],
+    ignorance: number
+}
 
 interface IQuizComponent {
     openModal: boolean;
@@ -64,6 +77,8 @@ const QuizModal: FC<IQuizComponent> = ({
     const [delayButton, setDelayButton] = useState(true);
     const [questionsId, setQuestionsId] = useState<string[]>([]);
     const [ignorance, setIgnorance] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [onError, setOnError] = useState(false);
 
     const isCorretAnswer = (index: number) => {
         const userId = sessionStorage.getItem('@pionira/userId');
@@ -145,18 +160,17 @@ const QuizModal: FC<IQuizComponent> = ({
                     break;
             }
         }
-        setTimeout(handleQuestion, 1000);
     }
 
     const handleQuestion = () => {
         if (step >= (length - 1)) {
             onToggle();
-
             if (corretAnswers >= length / 2) {
                 callReward(true);
             }
-            else
+            else {
                 callReward(false);
+            }
         } else {
             setStep(step + 1);
         }
@@ -167,6 +181,7 @@ const QuizModal: FC<IQuizComponent> = ({
         if (delayButton) {
             setDelayButton(!delayButton);
             isCorretAnswer(index);
+            setTimeout(handleQuestion, 1000);
         }
     }
 
@@ -183,6 +198,79 @@ const QuizModal: FC<IQuizComponent> = ({
             return () => clearTimeout(timeout);
         }
     }, [delayButton]);
+
+    const incrementAtStatusIndex = (res: AxiosResponse<userDataProps>) => {
+        for (let i = 0; i < 2; i++) {
+            res.data.status[i] = res.data.status[i] + status[i];
+        }
+        return res.data.status;
+    }
+
+    const incrementQuizCoins = (res: AxiosResponse<userDataProps>) => {
+        const length = res.data.quiz_coins.length
+
+        for (let i = 0; i < length; i++) {
+            if (i === quizIndex) {
+                res.data.quiz_coins[i] = res.data.quiz_coins[i] + coins;
+            }
+        }
+        return res.data.quiz_coins;
+    }
+
+    const addCoinsStatus = async (value: number) => {
+        try {
+            const _userId = sessionStorage.getItem('@pionira/userId');
+            const res = await api.get<userDataProps>(`/user/${_userId}`);
+
+            await api.patch<userDataProps>(`/user/coins/${_userId}`, {
+                coins: res.data.coins + value
+            });
+            await api.patch<userDataProps>(`/user/quizCoins/${_userId}`, {
+                quiz_coins: incrementQuizCoins(res)
+            });
+            await api.patch<userDataProps>(`/user/status/${_userId}`, {
+                status: incrementAtStatusIndex(res)  // first parameter of this func needs to be dynamic
+            });
+            await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
+                ignorance: (res.data.ignorance - ignorance > 0) ? res.data.ignorance - ignorance : 0,            })
+        } catch (error) {
+            console.log(error);
+            setOnError(true);
+        }
+    }
+
+    const updateUserQuizTime = async () => {
+        try {
+            const userId = sessionStorage.getItem('@pionira/userId');
+            await api.patch(`user/loadingQuiz/${userId}`, {
+                quiz_loading: Date.now() - 10800000
+            });
+        } catch (error) {
+            setOnError(true);
+        }
+    }
+
+    const updateUserCoins = async () => {
+        try {
+            setIsLoading(true);
+            await addCoinsStatus(coins);
+            if (questionsId) {
+                const userId = sessionStorage.getItem('@pionira/userId');
+                const length = questionsId.length;
+                for (let i = 0; i < length; i++) {
+                    await api.patch(`/questions/${questionsId[i]}`, {
+                        user_id: userId
+                    });
+                }
+            }
+            firsTimeChallenge ? validateUser() : null
+
+            await updateUserQuizTime();
+            window.location.reload();
+        } catch (error) {
+            setOnError(true);
+        }
+    }
 
 
 
@@ -304,15 +392,21 @@ const QuizModal: FC<IQuizComponent> = ({
                 isOpen={isOpen}
                 coins={coins}
                 score={status}
-                validateUser={validateUser}
-                correctAnswers={corretAnswers}
-                totalAnswers={length}
-                allQuestionsId={questionsId}
-                firsTimeChallenge={firsTimeChallenge}
-                quizIndex={quizIndex}
                 quizTotalCoins={quiz.total_coins}
                 userQuizCoins={userQuizCoins}
                 ignorance={ignorance}
+                confirmFunction={updateUserCoins}
+                loading={isLoading}
+                error={onError}
+                icon={passed ? Cheetah : Cross}
+                title={passed 
+                    ? 'Arrasou!'
+                    : 'Que pena!'
+                }
+                subtitle={passed
+                    ? `Você acertou ${corretAnswers} de ${length} questões!`
+                    : `Você errou ${length - corretAnswers} de ${length} questões! Tente novamente em 30 minutos`
+                }
             />
         </>
     );
