@@ -10,21 +10,19 @@ import {
 	Flex,
 	Button,
 	Text,
-	Grid,
 	Image,
-	Center,
 	useDisclosure,
 } from '@chakra-ui/react';
-import Coins from '../assets/icons/coinicon.svg';
-import plusIcon from '../assets/icons/plusIcon.png';
-import api from '../services/api';
+import api from '../../services/api';
 import { AxiosResponse } from 'axios';
-import fontTheme from '../styles/base';
-import LoadingState from './LoadingState';
-import AlertModal from './modals/AlertModal';
-import Certificate from './modals/CertificateModal';
-import colorPalette from '../styles/colorPalette';
-import { errorCases } from '../utils/errors/errorsCases';
+import fontTheme from '../../styles/base';
+import Certificate from '../modals/CertificateModal';
+import colorPalette from '../../styles/colorPalette';
+import RewardModal from '../modals/RewardModal';
+
+// Images
+import Cheetah from '../../assets/icons/cheetahblink.svg';
+import Cross from '../../assets/icons/cross.svg';
 
 interface IFinalLionRewardModal {
 	isOpen: boolean;
@@ -67,7 +65,6 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 	certificateName,
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
-
 
 	const {
 		isOpen: modalIsOpenCheetah,
@@ -164,7 +161,7 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 						},
 					});
 				}
-				
+
 			} else {
 				window.location.reload();
 			}
@@ -175,14 +172,14 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 	};
 
 	const updateCheetahBadge = async () => {
-		try {			
+		try {
 			const userId = sessionStorage.getItem('@pionira/userId');
 			setIsLoading(true);
 			const badges = await api.get('/insignias/');
-			
-			const userBadges = badges.data[trail-1].user_id;
-			const badgeId = badges.data[trail-1]._id;
-			
+
+			const userBadges = badges.data[trail - 1].user_id;
+			const badgeId = badges.data[trail - 1]._id;
+
 			if (!userBadges.includes(userId)) {
 				userBadges.push(userId);
 				await api.patch(`/insignias/${badgeId}`, {
@@ -220,182 +217,36 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 		}
 	};
 
+	const rewardModalInfo = () => {
+		if (correctAnswers === totalAnswers)
+			return {
+				title: 'Você é demais!',
+				titleColor: colorPalette.inactiveButton,
+				subtitle: `Você acertou ${correctAnswers} de ${totalAnswers} questões!`,
+				icon: Cheetah,
+				coins,
+				status: score
+			}
+		return {
+			title: 'Que pena!',
+			titleColor: colorPalette.closeButton,
+			subtitle: correctAnswers === 0 ? `Você não acertou nenhuma questão! Mas não desista, você pode vencer a ignorância!` :
+				`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você pode vencer a ignorância!`,
+			icon: Cross,
+			coins,
+			status: score
+		}
+	}
+
 	return (
 		<>
-			<Modal isOpen={isOpen} onClose={updateUserCoins} size='4xl'>
-				<ModalOverlay />
-				<ModalContent paddingBottom='1.5rem'>
-					<Box
-						w='15%'
-						bg={colorPalette.primaryColor}
-						h='50vh'
-						position='absolute'
-						zIndex='0'
-						right='-0.3'
-						top='-0.2'
-						borderTopEndRadius='5px'
-						borderBottomStartRadius='23%'
-						clipPath='polygon(0% 0%, 100% 0%, 100% 80%)'
-					/>
-					{isLoading ? (
-						<Center w='100%' h='50vh'>
-							<LoadingState />
-						</Center>
-					) : (
-						<ModalBody>
-							<Flex
-								direction='column'
-								alignItems='center'
-								mt='1.2rem'
-								mr='1.5rem'
-							>
-								{correctAnswers === totalAnswers ? (
-									<>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='4rem'
-											color={colorPalette.secondaryColor}
-										>
-											Arrasou!
-										</Text>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='1.8rem'
-											color={colorPalette.secondaryColor}
-										>
-											Você acertou {correctAnswers} de{' '}
-											{totalAnswers} questões!
-										</Text>
-									</>
-								) : (
-									<>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='4rem'
-											color={colorPalette.closeButton}
-										>
-											Que pena!
-										</Text>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='1.8rem'
-											color={colorPalette.secondaryColor}
-										>
-											Você acertou apenas {correctAnswers}{' '}
-											de {totalAnswers} questões!
-										</Text>
-									</>
-								)}
-							</Flex>
-
-							<Flex
-								flexDirection='column'
-								justifyContent='center'
-								alignItems='center'
-							>
-								{/* first column of modal body  */}
-								<Flex
-									mt='2rem'
-									ml='5rem'
-									direction='column'
-									alignItems='flex-start'
-									width='75%'
-								>
-									<Text
-										fontFamily={fontTheme.fonts}
-										fontSize='1.7rem'
-									>
-										Você ganhou:
-									</Text>
-								</Flex>
-
-								<Flex
-									ml='5rem'
-									direction='column'
-									marginTop='1.5rem'
-									width='75%'
-								>
-									<Grid
-										gridTemplateColumns='1fr 1fr 1fr'
-										gridColumnGap='2rem'
-										gridRowGap='2rem'
-									>
-										{statusPointsRecieved.map(
-											(status, index) => {
-												return (
-													<Flex
-														key={index}
-														alignItems='center'
-													>
-														<Image
-															src={plusIcon}
-															alt='plusIcon'
-															w='39'
-															h='39'
-														/>
-														<Text
-															textAlign='center'
-															fontFamily={
-																fontTheme.fonts
-															}
-															fontSize='1.6rem'
-															ml='0.5rem'
-														>
-															{' '}
-															{status.points}{' '}
-															{status.name}{' '}
-														</Text>
-													</Flex>
-												);
-											},
-										)}
-									</Grid>
-
-									<Flex
-										w='50%'
-										mt='2.5rem'
-										ml='-5rem'
-										justifyContent='center'
-										alignSelf='center'
-										alignItems='center'
-									>
-										<Image src={Coins} w='50' h='50' />
-										<Text ml='1.5rem' fontSize='1.6rem'>
-											{coinsRecieved} Joias
-										</Text>
-									</Flex>
-								</Flex>
-							</Flex>
-
-							<Flex
-								w='48%'
-								h='12vh'
-								margin='auto'
-								justifyContent='flex-end'
-								flexDirection='column'
-								alignItems='center'
-							>
-								<Button
-									bgColor={colorPalette.primaryColor}
-									color='white'
-									onClick={updateUserCoins}
-									w='100%'
-									h='55px'
-									borderRadius='5px'
-									fontSize='2.5rem'
-									fontFamily={fontTheme.fonts}
-								>
-									Continuar
-								</Button>
-							</Flex>
-						</ModalBody>
-					)}
-				</ModalContent>
-			</Modal>
+			<RewardModal
+				isOpen={isOpen}
+				rewardModalInfo={rewardModalInfo()}
+				loading={isLoading}
+				error={onError}
+				confirmFunction={updateUserCoins}
+			/>
 
 			{/* Modal de Reward */}
 			<Modal
@@ -496,22 +347,6 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 				onClose={certificateOnClose}
 				trail={trail}
 				name={certificateName}
-			/>
-
-			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody={errorCases.SERVER_ERROR}
-				buttonBody={
-					<Button
-						color='white'
-						bg={colorPalette.primaryColor}
-						onClick={() => window.location.reload()}
-					>
-						Recarregar
-					</Button>
-				}
 			/>
 		</>
 	);

@@ -14,18 +14,18 @@ import {
 
 // Components
 import FinalRewardModal from './FinalRewardModal';
-import AlertModal from "../components/modals/AlertModal";
+import AlertModal from "../modals/AlertModal";
 
 // Requisitions
-import api from '../services/api';
+import api from '../../services/api';
 
 // Styles
-import fontTheme from '../styles/base';
-import colorPalette from '../styles/colorPalette';
+import fontTheme from '../../styles/base';
+import colorPalette from '../../styles/colorPalette';
 
 // Images
-import blackMamba from "../assets/sprites/blackMamba/mamba_negra.png";
-import { errorCases } from '../utils/errors/errorsCases';
+import blackMamba from "../../assets/sprites/blackMamba/mamba_negra.png";
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface IQuestions {
     alternatives: string[];

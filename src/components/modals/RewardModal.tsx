@@ -27,51 +27,48 @@ import plusIcon from '../../assets/icons/plusIcon.png'
 import { errorCases } from '../../utils/errors/errorsCases';
 
 interface IRewardModal {
+    rewardModalInfo: {
+        title: string;
+        titleColor: string;
+        subtitle: string;
+        icon: string;
+        coins?: number;
+        status?: number[];
+    },
     isOpen: boolean;
-    coins: number;
-    score: number[];
-    quizTotalCoins: number;
-    userQuizCoins: number;
-    ignorance: number;
     confirmFunction: VoidFunction;
     loading: boolean;
     error: boolean;
-    title: string;
-    subtitle: string;
-    passed: boolean;
-    icon: string;
 }
 
 
 const RewardModal: FC<IRewardModal> = ({
     isOpen,
-    coins,
-    score,
-    quizTotalCoins,
-    userQuizCoins,
+    rewardModalInfo,
     confirmFunction,
     loading,
     error,
-    title,
-    subtitle,
-    passed,
-    icon
 }) => {
+    const { title, titleColor, subtitle, icon, coins, status } = rewardModalInfo;
+
     const statusPointsRecieved = [{
         name: "Agilidade",
-        points: score[0]
+        points: status && status[0]
     },
     {
         name: "Liderança",
-        points: score[1]
+        points: status && status[1]
     }];
+
+    const coinsValidation = coins && coins !== 0;
+    const statusValidation = statusPointsRecieved[0].points && statusPointsRecieved[0].points !== 0;
 
     return (
         <>
             <Modal isOpen={isOpen} onClose={confirmFunction}>
                 <ModalOverlay />
-                <ModalContent h='478px' w='418px'  >
-                    <ModalCloseButton color={'#E55454'} size='lg' />
+                <ModalContent minHeight="437px" h='fit-content' w='418px'  >
+                    <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     {
                         loading ?
                             (
@@ -80,33 +77,34 @@ const RewardModal: FC<IRewardModal> = ({
                                 </Center>
                             )
                             : (
-                                <ModalBody>
-                                    <Flex flexDirection='column' height='100%'>
-                                        <Center 
-                                            backgroundColor='#F5F5F5' 
+                                <ModalBody paddingBottom="28px" display="flex" justifyContent="space-between" alignItems='center' flexDirection='column' height='100%'>
+                                    <Center flexDirection='column'>
+                                        <Center
+                                            backgroundColor='#F5F5F5'
                                             width='120px'
                                             height='120px'
                                             borderRadius='1000px'
                                             marginTop='48px'
                                             alignSelf='center'
                                         >
-                                            <Image 
-                                                src={icon} 
-                                                w='96.51px' 
-                                                h='80.3px' />
+                                            <Image
+                                                src={icon}
+                                                width="105px"
+                                                height="75px"
+                                                marginLeft="5px"
+                                            />
                                         </Center>
-                                        <Center 
-                                            flexDirection='column'
+                                        <Box
                                             marginTop='8px'
                                             lineHeight='22px'
-                                            alignSelf='center'
                                             width='300px'
+                                            textAlign="center"
                                         >
                                             <Text
-                                            fontSize='20px'
-                                            fontWeight='bold'
-                                            fontFamily={fontTheme.fonts}
-                                            color={passed ? '#6D99F2' : '#F47070'}
+                                                fontSize='20px'
+                                                fontWeight='bold'
+                                                fontFamily={fontTheme.fonts}
+                                                color={titleColor}
                                             >
                                                 {title}
                                             </Text>
@@ -115,91 +113,80 @@ const RewardModal: FC<IRewardModal> = ({
                                                 fontFamily={fontTheme.fonts}
                                                 color='#9D9D9D'
                                                 textAlign='center'
+                                                marginTop='8px'
                                             >
                                                 {subtitle}
                                             </Text>
-                                        </Center>
-                                        <Center 
+                                        </Box>
+                                        <Center
                                             flexDirection='column'
                                             marginTop='26px'
                                         >
                                             {
-                                                quizTotalCoins === userQuizCoins ? (
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='18px' w='93%'>
-                                                        Você já conseguiu provar todo o seu valor nesse desafio!
-                                                        Assim, não a mais nenhuma recompensa para você!
-                                                        Pode seguir adiante, caro viajante!
-                                                    </Text>
-                                                ) : (
-                                                    <Box>
-                                                        {
-                                                            statusPointsRecieved.map((status, index) => {
-                                                                if (status.points > 0) return (
-                                                                    <Flex 
-                                                                        key={index}
-                                                                        alignItems='center'
-                                                                    >
-                                                                        <Text 
-                                                                            textAlign='center' 
-                                                                            fontFamily={fontTheme.fonts} 
-                                                                            fontSize="24px" 
-                                                                            fontWeight='semibold'
-                                                                            color='#0B67A1'
-                                                                        > 
-                                                                            + {status.points} {status.name} 
-                                                                        </Text>
-                                                                        <Image 
-                                                                            src={plusIcon} 
-                                                                            alt='plusIcon' 
-                                                                            w='30' 
-                                                                            h='30' 
-                                                                        />
-                                                                    </Flex>
-                                                                )
-                                                            })
-                                                        }
-                                                        <Flex 
+                                                statusValidation ? (statusPointsRecieved.map((status, index) => {
+                                                    if (status.points && status.points > 0) return (
+                                                        <Flex
+                                                            key={index}
                                                             alignItems='center'
-                                                            marginTop='16px'
+                                                            marginTop={index >= 1 ? '4px' : undefined}
                                                         >
-                                                            <Text 
-                                                                textAlign='center' 
-                                                                fontFamily={fontTheme.fonts} 
-                                                                fontSize="24px" 
+                                                            <Text
+                                                                textAlign='center'
+                                                                fontFamily={fontTheme.fonts}
+                                                                fontSize="24px"
                                                                 fontWeight='semibold'
-                                                                color='#EDA641'
-                                                            > 
-                                                                + {coins} Joias
+                                                                color='#0B67A1'
+                                                            >
+                                                                + {status.points} {status.name}
                                                             </Text>
-                                                            <Image 
-                                                                src={Coins} 
-                                                                alt='Coins' 
-                                                                w='30' 
-                                                                h='30' 
-                                                                marginLeft='5px'
+                                                            <Image
+                                                                src={plusIcon}
+                                                                alt='plusIcon'
+                                                                w='30'
+                                                                h='30'
                                                             />
                                                         </Flex>
-                                                    </Box>
-                                                )
-                                                
+                                                    )
+                                                })) : null
+                                            }
+                                            {
+                                                coinsValidation ? <Flex
+                                                    alignItems='center'
+                                                    marginTop={statusPointsRecieved[0].points ? '8px' : undefined}
+                                                    marginBottom='55px'
+                                                >
+                                                    <Text
+                                                        textAlign='center'
+                                                        fontFamily={fontTheme.fonts}
+                                                        fontSize="24px"
+                                                        fontWeight='semibold'
+                                                        color='#EDA641'
+                                                    >
+                                                        + {coins} Joias
+                                                    </Text>
+                                                    <Image
+                                                        src={Coins}
+                                                        alt='Coins'
+                                                        w='30'
+                                                        h='30'
+                                                        marginLeft='5px'
+                                                    />
+                                                </Flex> : null
                                             }
                                         </Center>
-                                        <Center>
-                                            <Button
-                                                width='300px'
-                                                height='50px'
-                                                background={colorPalette.primaryColor}
-                                                color={colorPalette.buttonTextColor}
-                                                fontSize='1.7rem'
-                                                onClick={confirmFunction}
-                                                _hover={{}}
-                                                loadingText="Enviando"
-                                                spinnerPlacement='end'
-                                            >
-                                                Continuar
-                                            </Button>
-                                        </Center>
-                                    </Flex>
+                                    </Center>
+                                    <Button
+                                        width='300px'
+                                        height='50px'
+                                        background={colorPalette.primaryColor}
+                                        color={colorPalette.buttonTextColor}
+                                        fontSize='1.7rem'
+                                        onClick={confirmFunction}
+                                        loadingText="Enviando"
+                                        spinnerPlacement='end'
+                                    >
+                                        Continuar
+                                    </Button>
                                 </ModalBody>
                             )
                     }

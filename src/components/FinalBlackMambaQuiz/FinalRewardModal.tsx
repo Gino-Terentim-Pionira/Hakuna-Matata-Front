@@ -8,33 +8,29 @@ import {
 	Flex,
 	Button,
 	Text,
-	Grid,
 	Image,
-	Center,
 	useDisclosure,
 	ModalHeader
 } from '@chakra-ui/react';
 
 // Components
-import LoadingState from '../components/LoadingState';
-import Certificate from './modals/CertificateModal';
+import Certificate from '../modals/CertificateModal';
+import RewardModal from '../modals/RewardModal';
 
 // Requisitions
-import api from '../services/api';
+import api from '../../services/api';
 import { AxiosResponse } from 'axios';
 
 // Styles
-import fontTheme from '../styles/base';
-import colorPalette from '../styles/colorPalette';
+import fontTheme from '../../styles/base';
+import colorPalette from '../../styles/colorPalette';
 
 // Images
-import Coins from '../assets/icons/coinicon.svg';
-import plusIcon from '../assets/icons/plusIcon.png';
-import AlertModal from './modals/AlertModal';
-import imgReward from '../assets/icons/insignia/mambaTrailInsignia.png'
-import { errorCases } from '../utils/errors/errorsCases';
+import imgReward from '../../assets/icons/insignia/mambaTrailInsignia.png'
+import Cheetah from '../../assets/icons/cheetahblink.svg';
+import Cross from '../../assets/icons/cross.svg';
 
-interface IRewardModal {
+interface IFinalRewardModal {
 	isOpen: boolean;
 	coins: number;
 	score: number[];
@@ -42,7 +38,7 @@ interface IRewardModal {
 	totalAnswers: number;
 	allQuestionsId?: string[];
 	validateUser: VoidFunction;
-	trail:number;
+	trail: number;
 	certificateName: string;
 }
 
@@ -53,7 +49,7 @@ interface userDataProps {
 	ignorance: number;
 }
 
-const RewardModal: FC<IRewardModal> = ({
+const FinalRewardModal: FC<IFinalRewardModal> = ({
 	isOpen,
 	coins,
 	score,
@@ -74,8 +70,8 @@ const RewardModal: FC<IRewardModal> = ({
 	} = useDisclosure();
 
 	const { isOpen: certificateIsOpen,
-        onOpen: certificateOnOpen,
-        onClose: certificateOnClose 
+		onOpen: certificateOnOpen,
+		onClose: certificateOnClose
 	} = useDisclosure();
 
 	const coinsRecieved = coins;
@@ -194,189 +190,43 @@ const RewardModal: FC<IRewardModal> = ({
 			await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
 				ignorance: (res.data.ignorance - 20 > 0) ? res.data.ignorance - 20 : 0,
 			});
-			
+
 			validateUser();
 		} catch (error) {
 			setOnError(true);
 		}
 	};
 
+	const rewardModalInfo = () => {
+		if (correctAnswers === totalAnswers)
+			return {
+				title: 'Você é demais!',
+				titleColor: colorPalette.inactiveButton,
+				subtitle: `Você acertou ${correctAnswers} de ${totalAnswers} questões!`,
+				icon: Cheetah,
+				coins,
+				status: score
+			}
+		return {
+			title: 'Que pena!',
+			titleColor: colorPalette.closeButton,
+			subtitle: correctAnswers === 0 ? `Você não acertou nenhuma questão! Mas não desista, você pode vencer a ignorância!` :
+				`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você pode vencer a ignorância!`,
+			icon: Cross,
+			coins,
+			status: score
+		}
+	}
+
 	return (
 		<>
-			<Modal isOpen={isOpen} onClose={updateUserCoins} size='4xl'>
-				<ModalOverlay />
-				<ModalContent paddingBottom='1.5rem'>
-					<Box
-						w='15%'
-						bg={colorPalette.primaryColor}
-						h='50vh'
-						position='absolute'
-						zIndex='0'
-						right='-0.3'
-						top='-0.2'
-						borderTopEndRadius='5px'
-						borderBottomStartRadius='23%'
-						clipPath='polygon(0% 0%, 100% 0%, 100% 80%)'
-					/>
-					{isLoading ? (
-						<Center w='100%' h='50vh'>
-							<LoadingState />
-						</Center>
-					) : (
-						<ModalBody>
-							<Flex
-								direction='column'
-								alignItems='center'
-								mt='1.2rem'
-								mr='1.5rem'
-							>
-								{correctAnswers === totalAnswers ? (
-									<>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='4rem'
-											color={colorPalette.secondaryColor}
-										>
-											Arrasou!
-										</Text>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='1.8rem'
-											color={colorPalette.secondaryColor}
-										>
-											Você acertou {correctAnswers} de{' '}
-											{totalAnswers} questões!
-										</Text>
-									</>
-								) : (
-									<>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='4rem'
-											color={colorPalette.closeButton}
-										>
-											Que pena!
-										</Text>
-										<Text
-											fontFamily={fontTheme.fonts}
-											fontWeight='semibold'
-											fontSize='1.8rem'
-											color={colorPalette.secondaryColor}
-										>
-											Você acertou apenas {correctAnswers}{' '}
-											de {totalAnswers} questões!
-										</Text>
-									</>
-								)}
-							</Flex>
-
-							<Flex
-								flexDirection='column'
-								justifyContent='center'
-								alignItems='center'
-							>
-								{/* first column of modal body  */}
-								<Flex
-									mt='2rem'
-									ml='5rem'
-									direction='column'
-									alignItems='flex-start'
-									width='75%'
-								>
-									<Text
-										fontFamily={fontTheme.fonts}
-										fontSize='1.7rem'
-									>
-										Você ganhou:
-									</Text>
-								</Flex>
-
-								<Flex
-									ml='5rem'
-									direction='column'
-									marginTop='1.5rem'
-									width='75%'
-								>
-									<Grid
-										gridTemplateColumns='1fr 1fr 1fr'
-										gridColumnGap='2rem'
-										gridRowGap='2rem'
-									>
-										{statusPointsRecieved.map(
-											(status, index) => {
-												return (
-													<Flex
-														key={index}
-														alignItems='center'
-													>
-														<Image
-															src={plusIcon}
-															alt='plusIcon'
-															w='39'
-															h='39'
-														/>
-														<Text
-															textAlign='center'
-															fontFamily={
-																fontTheme.fonts
-															}
-															fontSize='1.6rem'
-															ml='0.5rem'
-														>
-															{' '}
-															{status.points}{' '}
-															{status.name}{' '}
-														</Text>
-													</Flex>
-												);
-											},
-										)}
-									</Grid>
-
-									<Flex
-										w='50%'
-										mt='2.5rem'
-										ml='-5rem'
-										justifyContent='center'
-										alignSelf='center'
-										alignItems='center'
-									>
-										<Image src={Coins} w='50' h='50' />
-										<Text ml='1.5rem' fontSize='1.6rem'>
-											{coinsRecieved} Joias
-										</Text>
-									</Flex>
-								</Flex>
-							</Flex>
-
-							<Flex
-								w='48%'
-								h='12vh'
-								margin='auto'
-								justifyContent='flex-end'
-								flexDirection='column'
-								alignItems='center'
-							>
-								<Button
-									bgColor={colorPalette.primaryColor}
-									color='white'
-									onClick={updateUserCoins}
-									w='100%'
-									h='55px'
-									borderRadius='5px'
-									fontSize='2.5rem'
-									fontFamily={fontTheme.fonts}
-								>
-									Continuar
-								</Button>
-							</Flex>
-						</ModalBody>
-					)}
-				</ModalContent>
-			</Modal>
+			<RewardModal
+				isOpen={isOpen}
+				rewardModalInfo={rewardModalInfo()}
+				loading={isLoading}
+				error={onError}
+				confirmFunction={updateUserCoins}
+			/>
 
 			<Modal
 				isOpen={finalModalIsOpen}
@@ -468,26 +318,9 @@ const RewardModal: FC<IRewardModal> = ({
 				</ModalContent>
 			</Modal>
 
-			<Certificate isOpen={certificateIsOpen} onOpen={certificateOnOpen} onClose={certificateOnClose} trail={trail} name={certificateName}/>
-
-			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody={errorCases.SERVER_ERROR}
-
-				buttonBody={
-					<Button
-						color='white'
-						bg={colorPalette.primaryColor}
-						onClick={() => window.location.reload()}
-					>
-						Recarregar
-					</Button>
-				}
-			/>
+			<Certificate isOpen={certificateIsOpen} onOpen={certificateOnOpen} onClose={certificateOnClose} trail={trail} name={certificateName} />
 		</>
 	);
 };
 
-export default RewardModal;
+export default FinalRewardModal;

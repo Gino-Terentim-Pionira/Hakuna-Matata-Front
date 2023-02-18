@@ -28,7 +28,7 @@ import './../styles/fadeEffect.css';
 import AlertModal from '../components/modals/AlertModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
-import FinalUniversalQuiz from '../components/FinalUniversalQuiz';
+import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 import NavActions from '../components/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';

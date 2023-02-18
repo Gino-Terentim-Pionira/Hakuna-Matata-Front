@@ -17,7 +17,7 @@ import { useHistory } from 'react-router-dom';
 
 // Components
 import NarrativeModal from '../components/modals/NarrativeModal';
-import FinalQuizModal from './../components/FinalQuiz';
+import FinalQuizModal from '../components/FinalBlackMambaQuiz/FinalQuiz';
 import AlertModal from '../components/modals/AlertModal';
 import NavActions from '../components/NavActions';
 
