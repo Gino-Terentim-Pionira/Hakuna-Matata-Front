@@ -67,7 +67,7 @@ const RewardModal: FC<IRewardModal> = ({
         <>
             <Modal isOpen={isOpen} onClose={confirmFunction}>
                 <ModalOverlay />
-                <ModalContent minHeight="437px" h='fit-content' w='418px'  >
+                <ModalContent fontSize={fontTheme.fonts} minHeight="437px" h='fit-content' w='418px'  >
                     <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     {
                         loading ?
@@ -180,7 +180,8 @@ const RewardModal: FC<IRewardModal> = ({
                                         height='50px'
                                         background={colorPalette.primaryColor}
                                         color={colorPalette.buttonTextColor}
-                                        fontSize='1.7rem'
+                                        fontSize='28px'
+                                        fontFamily={fontTheme.fonts}
                                         onClick={confirmFunction}
                                         loadingText="Enviando"
                                         spinnerPlacement='end'
