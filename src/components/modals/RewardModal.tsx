@@ -25,6 +25,7 @@ import colorPalette from "../../styles/colorPalette";
 import Coins from '../../assets/icons/coinicon.svg'
 import plusIcon from '../../assets/icons/plusIcon.png'
 import { errorCases } from '../../utils/errors/errorsCases';
+import Cheetah from '../../assets/icons/cheetahblink.svg'
 
 interface IRewardModal {
     rewardModalInfo: {
@@ -86,12 +87,13 @@ const RewardModal: FC<IRewardModal> = ({
                                             borderRadius='1000px'
                                             marginTop='48px'
                                             alignSelf='center'
+                                            justifyContent="center"
+                                            alignItems="center"
                                         >
                                             <Image
                                                 src={icon}
-                                                width="105px"
-                                                height="75px"
-                                                marginLeft="5px"
+                                                marginLeft={icon === Cheetah ? '8px' : undefined}
+                                                marginTop={icon === Cheetah ? '8px' : undefined}
                                             />
                                         </Center>
                                         <Box
