@@ -11,14 +11,14 @@ import {
 	Button,
 	useDisclosure,
 } from '@chakra-ui/react';
-import fontTheme from '../styles/base';
+import fontTheme from '../../styles/base';
 
 import FinalUniversalRewardModal from './FinalUniversalRewardModal';
-import AlertModal from '../components/modals/AlertModal';
+import AlertModal from '../modals/AlertModal';
 
-import api from '../services/api';
-import colorPalette from '../styles/colorPalette';
-import { errorCases } from '../utils/errors/errorsCases';
+import api from '../../services/api';
+import colorPalette from '../../styles/colorPalette';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 interface IQuestions {
 	alternatives: string[];

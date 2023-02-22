@@ -17,6 +17,19 @@ import RewardModal from './RewardModal';
 // Styles
 import fontTheme from '../../styles/base'
 import colorPalette from '../../styles/colorPalette';
+import api from '../../services/api';
+import { AxiosResponse } from 'axios';
+
+// Images
+import Cheetah from '../../assets/icons/cheetahblink.svg';
+import Cross from '../../assets/icons/cross.svg';
+
+interface userDataProps {
+    coins: number,
+    status: number[],
+    quiz_coins: number[],
+    ignorance: number
+}
 
 interface IQuizComponent {
     openModal: boolean;
@@ -58,12 +71,14 @@ const QuizModal: FC<IQuizComponent> = ({
     const length = quiz.questions_id.length;
     const [coins, setCoins] = useState(0);
     const [status, setStatus] = useState([0, 0, 0, 0, 0, 0]);
-    const [corretAnswers, setCorretAnswers] = useState(0);
+    const [correctAnswers, setCorrectAnswers] = useState(0);
     const [passed, setPassed] = useState(Boolean);
     const [borderStyle, setBorderStyle] = useState(['none', 'none', 'none', 'none']);
     const [delayButton, setDelayButton] = useState(true);
     const [questionsId, setQuestionsId] = useState<string[]>([]);
     const [ignorance, setIgnorance] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [onError, setOnError] = useState(false);
 
     const isCorretAnswer = (index: number) => {
         const userId = sessionStorage.getItem('@pionira/userId');
@@ -77,10 +92,10 @@ const QuizModal: FC<IQuizComponent> = ({
         if (index === correctAnswer) {
 
             if (questionUsersId.includes(userId as string)) {
-                setCorretAnswers(corretAnswers + 1);
+                setCorrectAnswers(correctAnswers + 1);
             } else {
                 setCoins(coins + questionsCoins);
-                setCorretAnswers(corretAnswers + 1);
+                setCorrectAnswers(correctAnswers + 1);
                 setStatus([
                     status[0] + questionStatus[0],
                     status[1] + questionStatus[1],
@@ -145,18 +160,17 @@ const QuizModal: FC<IQuizComponent> = ({
                     break;
             }
         }
-        setTimeout(handleQuestion, 1000);
     }
 
     const handleQuestion = () => {
         if (step >= (length - 1)) {
             onToggle();
-
-            if (corretAnswers >= length / 2) {
+            if (correctAnswers >= length / 2) {
                 callReward(true);
             }
-            else
+            else {
                 callReward(false);
+            }
         } else {
             setStep(step + 1);
         }
@@ -167,6 +181,7 @@ const QuizModal: FC<IQuizComponent> = ({
         if (delayButton) {
             setDelayButton(!delayButton);
             isCorretAnswer(index);
+            setTimeout(handleQuestion, 1000);
         }
     }
 
@@ -184,7 +199,110 @@ const QuizModal: FC<IQuizComponent> = ({
         }
     }, [delayButton]);
 
+    const incrementAtStatusIndex = (res: AxiosResponse<userDataProps>) => {
+        for (let i = 0; i < 2; i++) {
+            res.data.status[i] = res.data.status[i] + status[i];
+        }
+        return res.data.status;
+    }
 
+    const incrementQuizCoins = (res: AxiosResponse<userDataProps>) => {
+        const length = res.data.quiz_coins.length
+
+        for (let i = 0; i < length; i++) {
+            if (i === quizIndex) {
+                res.data.quiz_coins[i] = res.data.quiz_coins[i] + coins;
+            }
+        }
+        return res.data.quiz_coins;
+    }
+
+    const addCoinsStatus = async (value: number) => {
+        try {
+            const _userId = sessionStorage.getItem('@pionira/userId');
+            const res = await api.get<userDataProps>(`/user/${_userId}`);
+
+            if (userQuizCoins < quiz.total_coins)
+                await api.patch<userDataProps>(`/user/coins/${_userId}`, {
+                    coins: res.data.coins + value
+                });
+
+            await api.patch<userDataProps>(`/user/quizCoins/${_userId}`, {
+                quiz_coins: incrementQuizCoins(res)
+            });
+            await api.patch<userDataProps>(`/user/status/${_userId}`, {
+                status: incrementAtStatusIndex(res)  // first parameter of this func needs to be dynamic
+            });
+            await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
+                ignorance: (res.data.ignorance - ignorance > 0) ? res.data.ignorance - ignorance : 0,
+            })
+        } catch (error) {
+            console.log(error);
+            setOnError(true);
+        }
+    }
+
+    const updateUserQuizTime = async () => {
+        try {
+            const userId = sessionStorage.getItem('@pionira/userId');
+            await api.patch(`user/loadingQuiz/${userId}`, {
+                quiz_loading: Date.now() - 10800000
+            });
+        } catch (error) {
+            setOnError(true);
+        }
+    }
+
+    const updateUserCoins = async () => {
+        try {
+            setIsLoading(true);
+            await addCoinsStatus(coins);
+            if (questionsId) {
+                const userId = sessionStorage.getItem('@pionira/userId');
+                const length = questionsId.length;
+                for (let i = 0; i < length; i++) {
+                    await api.patch(`/questions/${questionsId[i]}`, {
+                        user_id: userId
+                    });
+                }
+            }
+            firsTimeChallenge ? validateUser() : null
+
+            await updateUserQuizTime();
+            window.location.reload();
+        } catch (error) {
+            setOnError(true);
+        }
+    }
+
+    const rewardModalInfo = () => {
+        if (userQuizCoins >= quiz.total_coins)
+            return {
+                title: 'Arrasou!',
+                titleColor: colorPalette.inactiveButton,
+                subtitle: 'Você já conseguiu provar todo o seu valor nesse desafio! Pode seguir adiante com sua jornada, caro viajante!',
+                icon: Cheetah,
+                coins: undefined,
+                score: undefined
+            }
+        if(passed)
+            return {
+                title: 'Você é demais!',
+                titleColor: colorPalette.inactiveButton,
+                subtitle: `Você acertou ${correctAnswers} de ${length} questões!`,
+                icon: Cheetah,
+                coins,
+                status
+            }
+        return {
+            title: 'Que pena!',
+            titleColor: colorPalette.closeButton,
+            subtitle: `Você errou ${length - correctAnswers} de ${length} questões! Tente novamente em 30 minutos`,
+            icon: Cross,
+            coins,
+            status
+        }
+    }
 
     return (
         <>
@@ -300,19 +418,11 @@ const QuizModal: FC<IQuizComponent> = ({
             </Modal>
 
             <RewardModal
-                passed={passed}
                 isOpen={isOpen}
-                coins={coins}
-                score={status}
-                validateUser={validateUser}
-                correctAnswers={corretAnswers}
-                totalAnswers={length}
-                allQuestionsId={questionsId}
-                firsTimeChallenge={firsTimeChallenge}
-                quizIndex={quizIndex}
-                quizTotalCoins={quiz.total_coins}
-                userQuizCoins={userQuizCoins}
-                ignorance={ignorance}
+                rewardModalInfo={rewardModalInfo()}
+                confirmFunction={updateUserCoins}
+                loading={isLoading}
+                error={onError}
             />
         </>
     );

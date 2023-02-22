@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import fontTheme from '../styles/base';
 
-import FinalUniversalRewardModal from './FinalUniversalRewardModal';
+import FinalUniversalRewardModal from './FinalUniversalQuiz/FinalUniversalRewardModal';
 
 import AlertModal from '../components/modals/AlertModal';
 

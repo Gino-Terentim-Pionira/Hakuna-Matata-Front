@@ -236,12 +236,12 @@ const MainPage = () => {
 			if (subscribeId) {
 				const subscription = await api.get(`user/subscription/${userId}`);
 				const isSubscribed = subscription.data.response.status;
-				
+
 				if (isSubscribed === "canceled") {
 					await api.patch(`user/updateSubscription/${userId}`, {
 						isSubscribed: false
 					})
-				}		
+				}
 			}
 		} catch (error) {
 			setOnError(true);
@@ -292,9 +292,9 @@ const MainPage = () => {
 				alignItems='flex-start'
 				margin='auto'
 			>
-				<NavActions logout={logout} dontShowMap/>
+				<NavActions logout={logout} dontShowMap />
 				{narrativeIsOpen ? null : (
-						<IgnorancePremiumIcons ignorance={user.ignorance} />
+					<IgnorancePremiumIcons ignorance={user.ignorance} />
 				)}
 			</Flex>
 
@@ -306,7 +306,7 @@ const MainPage = () => {
 					onToggle={narrativeOnToggle}
 				/>
 			) : null}
-			
+
 			<DailyReward
 				isOpen={dailyIsOpen}
 				onOpen={dailyOnOpen}
