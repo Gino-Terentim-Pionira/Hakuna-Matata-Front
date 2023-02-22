@@ -62,7 +62,7 @@ const TutorialModal: FC<ITutorialModal> = ({ isOpen, onClose, onToggle }) => {
                             onLoaded={() => { setIsLoading(false) }}
                             width="625rem"
                             height="350rem"
-                            video="378945314" //this id needs to be changed to the real tutorial video, when it exists
+                            video="574048331" //this id needs to be changed to the real tutorial video, when it exists
                         />
                     </Flex>
                 </ModalBody>
