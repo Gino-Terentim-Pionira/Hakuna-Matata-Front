@@ -3,7 +3,7 @@ import { Flex, Box, Tabs, TabList, TabPanels, Tab, TabPanel, Image, Grid, Text, 
 
 // Components
 import Insignia from '../components/Insignia';
-import Certificate from '../components/Certificate';
+// import Certificate from '../components/Certificate';
 import AlertModal from './modals/AlertModal';
 import LoadingState from './LoadingState';
 
@@ -11,7 +11,7 @@ import LoadingState from './LoadingState';
 import api from '../services/api';
 
 // Images
-import certificateSillouete from '../assets/icons/certificate/certificateSillouete.svg';
+// import certificateSillouete from '../assets/icons/certificate/certificateSillouete.svg';
 import insigniaCheetahSillouete from '../assets/icons/insignia/cheetaInsigniaSillouete.png';
 import insigniaMambaSillouete from '../assets/icons/insignia/mambaInsigniaSillouete.png';
 import insigniaLionSillouete from '../assets/icons/insignia/lionInsigniaSillouete.png';
@@ -58,6 +58,7 @@ const InsigniaCertificate = () => {
 
     const getCertificates = async () => {
         try {
+            console.log(certificates)
             const res = await api.get('/certificate/');
             setCertificates(res.data);
         } catch (error) {
