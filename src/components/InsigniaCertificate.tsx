@@ -148,7 +148,7 @@ const InsigniaCertificate = () => {
                                 <TabPanel h='100%' paddingTop='0' paddingBottom='0'>
                                     <Box w='100%' h='100%' overflowY='auto'>
                                         <Grid templateColumns='25% 25% 25%' columnGap='12.5%' width='95%' h='95%' >
-                                            {
+                                            {/* {
                                                 certificates.map(({ _id, user_id, name, description, trail }: {
                                                     user_id: Array<string>
                                                     _id: string,
@@ -182,14 +182,14 @@ const InsigniaCertificate = () => {
                                                         )
                                                     )
                                                 })
-                                            }
+                                            } */}
                                         </Grid>
                                     </Box>
                                 </TabPanel>
                             </TabPanels>
                             <TabList width='35%' outline='none' display='flex' justifyContent='space-between'>
                                 <Tab >Insignias</Tab>
-                                <Tab >Certificado</Tab>
+                                {/* <Tab >Certificado</Tab> */}
                             </TabList>
                         </Tabs>
                     </>
