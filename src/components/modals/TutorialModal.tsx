@@ -33,7 +33,7 @@ const TutorialModal: FC<ITutorialModal> = ({ isOpen, onClose, onToggle }) => {
             <ModalOverlay />
             <ModalContent height="34rem">
                 <ModalHeader display="flex" justifyContent="center" paddingBottom="0px">
-                    <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="3.7rem">Tutorial</Text>
+                    <Text marginTop='18px' color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="3.7rem">Seja bem-vindo!</Text>
                 </ModalHeader>
                 <Box
                     w="25%"
@@ -49,19 +49,16 @@ const TutorialModal: FC<ITutorialModal> = ({ isOpen, onClose, onToggle }) => {
                     onToggle();
                     setIsLoading(true);
                 }} />
-                <ModalBody>
+                <ModalBody marginTop="16px">
                     <Flex direction="column" alignItems="center" paddingTop="0px">
-
-                        {isLoading ? (
-                            <Flex position="absolute" zIndex="-1" width="100%" height="50vh" justifyContent="center">
+                        {isLoading &&
+                            <Flex position="absolute" zIndex="-1" width="100%" justifyContent="center" top="50%">
                                 <LoadingState />
                             </Flex>
-                        ) : null}
-
+                        }
                         <Vimeo
                             onLoaded={() => { setIsLoading(false) }}
-                            width="625rem"
-                            height="350rem"
+                            width="550px"
                             video="574048331" //this id needs to be changed to the real tutorial video, when it exists
                         />
                     </Flex>
