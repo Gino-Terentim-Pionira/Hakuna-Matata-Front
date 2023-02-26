@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, ReactElement } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -9,7 +9,8 @@ import {
     ModalCloseButton,
     Flex,
     Button,
-    Text
+    Text,
+    Image
 } from "@chakra-ui/react";
 
 // Components
@@ -20,6 +21,10 @@ import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusMo
 
 //styles
 import colorPalette from '../../styles/colorPalette';
+
+// Images
+import WorldMap from '../../assets/WorldMap.png';
+import ApprovedIcon from '../../assets/icons/ApprovedIcon.png';
 
 type ProfileModalProps = {
     isOpen: boolean,
@@ -57,6 +62,25 @@ const ProfileModal: FC<ProfileModalProps> = ({
             setVariant('5xl');
         }
     }, [width]);
+
+    const renderBackgroundImage = (component: ReactElement, notShowStamp?: boolean) => (
+        <Box
+            position="relative"
+            bgColor="#FFFCEA"
+            bgImage={`url(${WorldMap})`}
+            bgPosition="top"
+            bgRepeat="no-repeat"
+            h='97%' w='100%' borderRadius='8px'
+            border='2px solid'
+            borderColor={colorPalette.secondaryColor}
+            boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'
+        >
+            {component}
+            {
+                !notShowStamp && <Image bottom="16px" right="32px" position="absolute" src={ApprovedIcon} />
+            }
+        </Box>
+    )
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size={variant}>
@@ -115,10 +139,7 @@ const ProfileModal: FC<ProfileModalProps> = ({
                                 onClick={() => setStep(3)}
                             >
                                 <Text fontSize='1.5rem'>
-                                    Insígnias e
-                                </Text>
-                                <Text fontSize='1.5rem'>
-                                    Certificados
+                                    Insígnias
                                 </Text>
                             </Button>
                         ) : (
@@ -129,25 +150,11 @@ const ProfileModal: FC<ProfileModalProps> = ({
                 <ModalCloseButton />
                 <ModalBody zIndex='1'>
                     {step === 1 ? (
-                        <Box bg={colorPalette.backgroundColor} h='97%' w='100%' borderRadius='8px' border='2px solid' borderColor={colorPalette.secondaryColor} boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'>
-                            <ProgressionStatusModal />
-                        </Box>
+                        renderBackgroundImage(<ProgressionStatusModal />, true)
                     ) : step === 2 ? (
-                        <Box bg={colorPalette.backgroundColor} h='97%' w='100%' borderRadius='8px' border='2px solid' borderColor={colorPalette.secondaryColor} boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'>
-                            <ProfileDataModal />
-                        </Box>
+                        renderBackgroundImage(<ProfileDataModal />)
                     ) : (
-                        <Box
-                            bg={colorPalette.backgroundColor}
-                            h='97%'
-                            w='100%'
-                            borderRadius='8px'
-                            border='2px solid'
-                            borderColor={colorPalette.secondaryColor}
-                            boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'
-                        >
-                            <InsigniaCertificate />
-                        </Box>
+                        renderBackgroundImage(<InsigniaCertificate />)
                     )}
                 </ModalBody>
             </ModalContent>
