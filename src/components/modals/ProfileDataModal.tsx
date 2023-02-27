@@ -58,16 +58,32 @@ const ProfileDataModal = () => {
         getUser();
     }, []);
 
-    const renderInfo = (infoLabel: string, infoValue: string) => (
-        <Flex alignItems="center" mb="16px">
-            <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="24px">
-                {infoLabel}:
-            </Text>
-            <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
-                {infoValue}
-            </Text>
-        </Flex>
-    );
+    const renderInfo = () => {
+        const infoArray = [{
+            infoLabel: "Nome de usuário",
+            infoValue: userData.userName,
+        }, {
+            infoLabel: "Nome completo",
+            infoValue: `${userData.first_name} ${userData.last_name}`,
+        }, {
+            infoLabel: "E-mail",
+            infoValue: userData.email,
+        }, {
+            infoLabel: "Data de nascimento",
+            infoValue: `${userData.birthday_date}`
+        }];
+
+        return infoArray.map(item =>
+            <Flex alignItems="center" mb="16px">
+                <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="24px">
+                    {item.infoLabel}:
+                </Text>
+                <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
+                    {item.infoValue}
+                </Text>
+            </Flex>
+        )
+    }
 
     return (
         <Box fontFamily={fontTheme.fonts} display='flex' flexDirection='column' justifyContent='space-between' h='100%'>
@@ -87,16 +103,7 @@ const ProfileDataModal = () => {
                             </Flex>
                             <Flex direction='column' marginLeft='80px'>
                                 {
-                                    renderInfo("Nome de usuário", userData.userName)
-                                }
-                                {
-                                    renderInfo("Nome completo", `${userData.first_name} ${userData.last_name}`)
-                                }
-                                {
-                                    renderInfo("E-mail", `${userData.first_name} ${userData.last_name}`)
-                                }
-                                {
-                                    renderInfo("Data de nascimento", `${userData.birthday_date}`)
+                                    renderInfo()
                                 }
                                 <Flex alignItems="center">
                                     <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="20px">
