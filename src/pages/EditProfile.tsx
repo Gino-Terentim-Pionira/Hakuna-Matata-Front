@@ -28,7 +28,7 @@ import api from '../services/api';
 import moment from 'moment';
 
 // Images
-import profilePlaceholder from '../assets/icons/profilePlaceholder.png';
+import profilePlaceholder from '../assets/icons/profile.svg';
 
 interface IImage {
 	size: number;

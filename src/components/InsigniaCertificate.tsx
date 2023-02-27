@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Box, Tabs, TabList, TabPanels, Tab, TabPanel, Image, Grid, Text, Button } from '@chakra-ui/react';
+import { Flex, Box, Tabs, TabPanels, TabPanel, Image, Grid, Text, Button } from '@chakra-ui/react';
 
 // Components
 import Insignia from '../components/Insignia';
-// import Certificate from '../components/Certificate';
 import AlertModal from './modals/AlertModal';
 import LoadingState from './LoadingState';
 
@@ -11,13 +10,11 @@ import LoadingState from './LoadingState';
 import api from '../services/api';
 
 // Images
-// import certificateSillouete from '../assets/icons/certificate/certificateSillouete.svg';
 import insigniaCheetahSillouete from '../assets/icons/insignia/cheetaInsigniaSillouete.png';
 import insigniaMambaSillouete from '../assets/icons/insignia/mambaInsigniaSillouete.png';
 import insigniaLionSillouete from '../assets/icons/insignia/lionInsigniaSillouete.png';
 import colorPalette from '../styles/colorPalette';
 import { errorCases } from '../utils/errors/errorsCases';
-//import { Certificate } from 'crypto';
 
 interface IUser {
     _id: string;
@@ -145,53 +142,7 @@ const InsigniaCertificate = () => {
                                         </Grid>
                                     </Box>
                                 </TabPanel>
-
-                                <TabPanel h='100%' paddingTop='0' paddingBottom='0'>
-                                    <Box w='100%' h='100%' overflowY='auto'>
-                                        <Grid templateColumns='25% 25% 25%' columnGap='12.5%' width='95%' h='95%' >
-                                            {/* {
-                                                certificates.map(({ _id, user_id, name, description, trail }: {
-                                                    user_id: Array<string>
-                                                    _id: string,
-                                                    name: string,
-                                                    trail: number,
-                                                    description: string
-                                                }) => {
-                                                    return (
-                                                        user_id.includes(user._id) ? (
-                                                            <Certificate _id={_id} name={name} trail={trail} description={description} />
-                                                        ) : (
-                                                            <Box
-                                                                marginTop='1rem'
-                                                                maxW='14rem'
-                                                                h='10.5rem'
-                                                                display='flex'
-                                                                flexDirection='column'
-                                                                justifyContent='space-between'
-                                                                alignItems='center'
-                                                            >
-                                                                <Image
-                                                                    boxSize='7.5rem'
-                                                                    src={certificateSillouete}
-                                                                />
-                                                                <Text
-                                                                    marginBottom='1rem'
-                                                                    fontSize='1.2rem'
-                                                                    fontWeight='extrabold'
-                                                                >???</Text>
-                                                            </ Box>
-                                                        )
-                                                    )
-                                                })
-                                            } */}
-                                        </Grid>
-                                    </Box>
-                                </TabPanel>
                             </TabPanels>
-                            <TabList width='35%' outline='none' display='flex' justifyContent='space-between'>
-                                <Tab >Insignias</Tab>
-                                {/* <Tab >Certificado</Tab> */}
-                            </TabList>
                         </Tabs>
                     </>
                 ) : (

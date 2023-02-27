@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Text, Flex, Button, Box, Image } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Text, Flex, Button, Box, Image, Center } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 
 // Components
@@ -11,8 +11,10 @@ import api from '../../services/api';
 import moment from 'moment';
 
 // Images
-import profilePlaceholder from '../../assets/icons/profilePlaceholder.png';
+import profilePlaceholder from '../../assets/icons/profile.svg';
 import colorPalette from '../../styles/colorPalette';
+import Coins from '../../assets/icons/coinicon.svg'
+import fontTheme from '../../styles/base';
 import { errorCases } from '../../utils/errors/errorsCases';
 
 interface userDataParams {
@@ -22,20 +24,12 @@ interface userDataParams {
     email: string,
     birthday_date: Date,
     contribution: string,
+    coins: string,
 }
 
 const ProfileDataModal = () => {
     const [userData, setUserData] = useState<userDataParams>(Object);
-    const [userPhoto, setUserPhoto] = useState(null);
     const [onError, setOnError] = useState(false);
-
-    const preview = useMemo(() => {
-        try {
-            return userPhoto ? URL.createObjectURL(userPhoto) : userPhoto ? userPhoto : null;
-        } catch (error) {
-            return userPhoto ? userPhoto : null
-        }
-    }, [userPhoto]);
 
     const history = useHistory();
 
@@ -45,7 +39,7 @@ const ProfileDataModal = () => {
             const res = await api.get(`/user/${userId}`);
             res.data.birthday_date = moment(res.data.birthday_date).add(1, 'days').format('DD/MM/YYYY');
             setUserData(res.data);
-            setUserPhoto(res.data?.profileImage?.url);
+            console.log(res.data)
         } catch (error) {
             setOnError(true);
         }
@@ -64,46 +58,62 @@ const ProfileDataModal = () => {
         getUser();
     }, []);
 
+    const renderInfo = () => {
+        const infoArray = [{
+            infoLabel: "Nome de usuário",
+            infoValue: userData.userName,
+        }, {
+            infoLabel: "Nome completo",
+            infoValue: `${userData.first_name} ${userData.last_name}`,
+        }, {
+            infoLabel: "E-mail",
+            infoValue: userData.email,
+        }, {
+            infoLabel: "Data de nascimento",
+            infoValue: `${userData.birthday_date}`
+        }];
+
+        return infoArray.map(item =>
+            <Flex alignItems="center" mb="16px">
+                <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="24px">
+                    {item.infoLabel}:
+                </Text>
+                <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
+                    {item.infoValue}
+                </Text>
+            </Flex>
+        )
+    }
 
     return (
-        <Box display='flex' flexDirection='column' justifyContent='space-between' h='100%'>
+        <Box fontFamily={fontTheme.fonts} display='flex' flexDirection='column' justifyContent='space-between' h='100%'>
             {
                 userData.email !== undefined ? (
                     <>
-                        <Flex>
-                            <Flex direction='column' w='33%' marginTop='3rem' alignItems='center'>
-
-                                {userPhoto ? (
-                                    <label id="photo"
-                                        style={{ marginLeft: '2rem', backgroundImage: `url(${preview})`, width: "160px", height: "160px", backgroundSize: "cover", display: "flex", borderRadius: "50%", marginTop: "-1rem", marginBottom: '0.5rem', backgroundPositionX: 'center' }}
-                                    >
-                                    </label>
-                                ) : (
-                                    <Image src={profilePlaceholder} marginBottom='1rem' marginLeft='2rem' />
-                                )
-                                }
-                                <Button bg='white' onClick={() => gotToEditProfile()} marginLeft='2rem' marginTop='0.4rem' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='50%' minWidth='7rem' height='2.5rem' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
+                        <Flex mt="40px" ml="48px">
+                            <Flex direction='column' alignItems='center'>
+                                <Center borderRadius="4px" bg="#FFFEEE">
+                                    <Image width="180px" src={profilePlaceholder} />
+                                </Center>
+                                <Button bg='white' onClick={() => gotToEditProfile()} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
                                     <Text fontSize='1.3rem'>
                                         Editar
                                     </Text>
                                 </Button>
                             </Flex>
-                            <Flex direction='column' marginTop='1rem' marginLeft='6rem'>
-                                <Text fontSize='2rem'>
-                                    {userData.userName}
-                                </Text>
-                                <Text fontSize='1.4rem' >
-                                    {`${userData.first_name} ${userData.last_name}`}
-                                </Text>
-                                <Text fontSize='1.6rem' marginTop='0.5rem'>
-                                    {userData.email}
-                                </Text>
-                                <Text fontSize='2rem' marginTop='0.5rem'>
-                                    Data de Nascimento:
-                                </Text>
-                                <Text fontSize='1.5rem' >
-                                    {userData.birthday_date}
-                                </Text>
+                            <Flex direction='column' marginLeft='80px'>
+                                {
+                                    renderInfo()
+                                }
+                                <Flex alignItems="center">
+                                    <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="20px">
+                                        Moedas:
+                                    </Text>
+                                    <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
+                                        {userData.coins}
+                                    </Text>
+                                    <Image ml="4px" width="40px" alt="userCoins" src={Coins} />
+                                </Flex>
                             </Flex>
                         </Flex>
                     </>
