@@ -86,7 +86,7 @@ const ProfileModal: FC<ProfileModalProps> = ({
         <Modal isOpen={isOpen} onClose={onClose} size={variant}>
             <ModalOverlay />
             <ModalContent height='80%' bg={colorPalette.backgroundColor}>
-                <Box w="85%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' left="0" top="0" borderTopStartRadius='5px' borderBottomStartRadius='23%' clipPath="polygon(0% 0%, 100% 0%, 30% 80%, 0% 80%)"></Box>
+                <Box w="25%" bg={colorPalette.primaryColor} h="100%" position="absolute" zIndex='0' left="0" top="0"></Box>
                 <ModalHeader margin-top='1rem'>
                     <Flex justifyContent='space-around'>
                         {step === 1 ? (
