@@ -19,6 +19,7 @@ import AlertModal from '../modals/AlertModal';
 import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
+import { shuffleString } from '../../utils/algorithms/shuffleString';
 
 interface IQuestions {
 	alternatives: string[];
@@ -61,6 +62,8 @@ interface IQuizComponent {
 	routeQuestions: string;
 	insignaName: string;
 	withoutMoney: boolean;
+	userIgnorance: number;
+	trail: number;
 }
 
 const FinalUniversalQuiz: FC<IQuizComponent> = ({
@@ -74,6 +77,8 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	routeQuestions,
 	insignaName,
 	withoutMoney,
+	userIgnorance,
+	trail
 }) => {
 	const { isOpen, onOpen } = useDisclosure();
 	const [step, setStep] = useState(0);
@@ -267,6 +272,17 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 		setIsConfirmOpen(true);
 	};
 
+	const handleQuestionDescription = () => {
+		if(userIgnorance >= 80) {
+			return shuffleString(questions[step]?.description, 'hard');
+		} else if (userIgnorance >= 40) {
+			return shuffleString(questions[step]?.description, 'medium');
+		} else {
+			return questions[step]?.description
+		}
+		
+	}
+
 	useEffect(() => {
 		if (!delayButton) {
 			const timeout = setTimeout(() => {
@@ -330,19 +346,19 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 										w='98%'
 										borderRadius='0.5rem'
 										boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-										justifyContent='center'
-										alignItems='center'
 										h='29%'
+										maxH='161px'
 										bg='white'
 										marginTop='0.5rem'
+										overflowY="auto"
+										padding="24px"
 									>
 										<Text
 											w='92%'
-											h='77%'
 											fontFamily={fontTheme.fonts}
-											fontSize='18px'
+											fontSize={{xl: '18px', lg: '16px', md: '14px', sm: '14px'}}
 										>
-											{questions[step]?.description}
+											{handleQuestionDescription()}
 										</Text>
 									</Flex>
 
@@ -524,8 +540,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 				routeQuestions={routeQuestions}
 				insignaName={insignaName}
 				ignorance={ignorance}
-				trail={1}
-				certificateName={"Conhecimento Ágil"}
+				trail={trail}
 			/>
 
 			<AlertModal

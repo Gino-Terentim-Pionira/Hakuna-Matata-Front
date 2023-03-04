@@ -76,7 +76,7 @@ interface IQuestions {
 	coins: number;
 }
 
-const BaboonPath = () => {
+const BlackMambaPath = () => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
 
 	const {
@@ -245,45 +245,18 @@ const BaboonPath = () => {
 
 	const getQuiz = async () => {
 		const _userId = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
 		const newQuiz = await api.get('/finalQuiz');
 
-		if (data.ignorance > 80) {
-			setQuiz(newQuiz.data[2]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[2].questions_id,
-				_userId as string,
-			);
+		setQuiz(newQuiz.data[0]);
+		const finishQuestions = finishQuestionIncludes(
+			newQuiz.data[0].questions_id,
+			_userId as string,
+		);
 
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[2].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
-		} else if (data.ignorance > 40) {
-			setQuiz(newQuiz.data[1]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[1].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[1].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
+		if (finishQuestions.length <= 0) {
+			setQuestions(newQuiz.data[0].questions_id);
 		} else {
-			setQuiz(newQuiz.data[0]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[0].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[0].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
+			setQuestions(finishQuestions);
 		}
 	};
 
@@ -381,7 +354,7 @@ const BaboonPath = () => {
 							zIndex='10'
 							position='fixed'
 						>
-							<NavActions logout={logout}/>
+							<NavActions logout={logout} />
 						</Flex>
 
 						<Modal isOpen={isOpen} onClose={onClose} size='4xl'>
@@ -641,4 +614,4 @@ const BaboonPath = () => {
 	);
 };
 
-export default BaboonPath;
+export default BlackMambaPath;

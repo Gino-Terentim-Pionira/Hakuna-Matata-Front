@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect, SetStateAction } from 'react';
 import {
-	Box,
-	Flex,
-	Image,
-	Center,
-	useDisclosure,
-	Button,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalOverlay,
-	Text,
-	ModalHeader,
-	ModalCloseButton,
+    Box,
+    Flex,
+    Image,
+    Center,
+    useDisclosure,
+    Button,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalOverlay,
+    Text,
+    ModalHeader,
+    ModalCloseButton,
 } from '@chakra-ui/react';
 
 //utils
@@ -54,767 +54,743 @@ import { errorCases } from '../utils/errors/errorsCases';
 
 
 interface IQuiz {
-	_id: string;
-	name: string;
-	questions_id: [
-		{
-			_id: string;
-			description: string;
-			alternatives: string[];
-			answer: number;
-			dificulty: string;
-			score: number[];
-			coins: number;
-			user_id: string[];
-		},
-	];
-	user_id: string[];
-	total_coins: number;
-	dificulty: string;
-	tax: number;
+    _id: string;
+    name: string;
+    questions_id: [
+        {
+            _id: string;
+            description: string;
+            alternatives: string[];
+            answer: number;
+            dificulty: string;
+            score: number[];
+            coins: number;
+            user_id: string[];
+        },
+    ];
+    user_id: string[];
+    total_coins: number;
+    dificulty: string;
+    tax: number;
 }
 interface IQuestions {
-	alternatives: string[];
-	dificulty: string;
-	score: number[];
-	user_id: string[];
-	_id: string;
-	description: string;
-	answer: number;
-	coins: number;
+    alternatives: string[];
+    dificulty: string;
+    score: number[];
+    user_id: string[];
+    _id: string;
+    description: string;
+    answer: number;
+    coins: number;
 }
 
 interface IUser {
-	ignorance: number;
-	_id: string;
-	userName: string;
+    ignorance: number;
+    _id: string;
+    userName: string;
 }
 
 interface IScript {
-	name: string;
-	image: string;
-	texts: string[];
+    name: string;
+    image: string;
+    texts: string[];
 }
 
 const CheetahPath = () => {
-	const history = useHistory();
+    const history = useHistory();
 
-	const [user, setUser] = useState<IUser>({} as IUser);
-	const [isAlertOpen, setIsAlertOpen] = useState(false);
-	const [withoutMoney, setWithoutMoney] = useState(false);
-	const isAlertOnClose = () => setIsAlertOpen(false);
-	const isAlertCoinsOnClose = () => {
-		setIsAlertCoins(false);
-		setIsLoading(false);
-	};
-	const [cheetahText, setCheetahText] = useState<string>();
-	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
-	0;
-	const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
-	const [onError, setOnError] = useState(false);
-	const [completeTrail, setCompleteTrail] = useState(false);
+    const [user, setUser] = useState<IUser>({} as IUser);
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const [withoutMoney, setWithoutMoney] = useState(false);
+    const isAlertOnClose = () => setIsAlertOpen(false);
+    const isAlertCoinsOnClose = () => {
+        setIsAlertCoins(false);
+        setIsLoading(false);
+    };
+    const [cheetahText, setCheetahText] = useState<string>();
+    const [alertCoins, setAlertCoins] = useState<string | undefined>('');
+    0;
+    const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
+    const [onError, setOnError] = useState(false);
+    const [completeTrail, setCompleteTrail] = useState(false);
 
-	const ignoranceArray = [
-		ignorance100,
-		ignorance75,
-		ignorance50,
-		ignorance25,
-	];
+    const ignoranceArray = [
+        ignorance100,
+        ignorance75,
+        ignorance50,
+        ignorance25,
+    ];
 
-	const {
-		isOpen: narrativeIsOpen,
-		onOpen: narrativeOnOpen,
-		onToggle: narrativeOnToggle,
-	} = useDisclosure();
+    const {
+        isOpen: narrativeIsOpen,
+        onOpen: narrativeOnOpen,
+        onToggle: narrativeOnToggle,
+    } = useDisclosure();
 
-	const {
-		isOpen: modalIsOpen,
-		onClose: modalOnClose,
-		onOpen: modalOnOpen,
-	} = useDisclosure();
+    const {
+        isOpen: modalIsOpen,
+        onClose: modalOnClose,
+        onOpen: modalOnOpen,
+    } = useDisclosure();
 
-	const {
-		isOpen: quizIsOpen,
-		onClose: quizOnClose,
-		onOpen: quizOnOpen,
-	} = useDisclosure();
+    const {
+        isOpen: quizIsOpen,
+        onClose: quizOnClose,
+        onOpen: quizOnOpen,
+    } = useDisclosure();
 
-	const {
-		isOpen: narrativeChallengeIsOpen,
-		onOpen: narrativeChallengeOnOpen,
-		onToggle: narrativeChallengeOnToggle,
-	} = useDisclosure();
+    const {
+        isOpen: narrativeChallengeIsOpen,
+        onOpen: narrativeChallengeOnOpen,
+        onToggle: narrativeChallengeOnToggle,
+    } = useDisclosure();
 
-	const {
-		isOpen: finalNarrativeChallengeIsOpen,
-		onOpen: finalNarrativeChallengeOnOpen,
-		onToggle: finalNarrativeChallengeOnToggle,
-	} = useDisclosure();
+    const {
+        isOpen: finalNarrativeChallengeIsOpen,
+        onOpen: finalNarrativeChallengeOnOpen,
+        onToggle: finalNarrativeChallengeOnToggle,
+    } = useDisclosure();
 
-	const [questions, setQuestions] = useState<IQuestions[]>([
-		{
-			alternatives: [''],
-			dificulty: '',
-			score: [0],
-			user_id: [''],
-			_id: '',
-			description: '',
-			answer: 0,
-			coins: 0,
-		},
-	]);
+    const [questions, setQuestions] = useState<IQuestions[]>([
+        {
+            alternatives: [''],
+            dificulty: '',
+            score: [0],
+            user_id: [''],
+            _id: '',
+            description: '',
+            answer: 0,
+            coins: 0,
+        },
+    ]);
 
-	const [quiz, setQuiz] = useState<IQuiz>({
-		_id: '',
-		name: '',
-		questions_id: [
-			{
-				_id: '',
-				description: '',
-				alternatives: [''],
-				answer: 0,
-				dificulty: '',
-				score: [0],
-				coins: 0,
-				user_id: [''],
-			},
-		],
-		user_id: [''],
-		total_coins: 0,
-		dificulty: '',
-		tax: 0,
-	});
+    const [quiz, setQuiz] = useState<IQuiz>({
+        _id: '',
+        name: '',
+        questions_id: [
+            {
+                _id: '',
+                description: '',
+                alternatives: [''],
+                answer: 0,
+                dificulty: '',
+                score: [0],
+                coins: 0,
+                user_id: [''],
+            },
+        ],
+        user_id: [''],
+        total_coins: 0,
+        dificulty: '',
+        tax: 0,
+    });
 
-	const finishQuestionIncludes = (
-		questions: IQuestions[],
-		_userId: string,
-	) => {
-		const res = questions.filter(
-			(data: {
-				alternatives: string[];
-				dificulty: string;
-				score: number[];
-				user_id: string[];
-				_id: string;
-				description: string;
-				answer: number;
-				coins: number;
-			}) => {
-				return !data.user_id.includes(_userId as string);
-			},
-		);
-		return res;
-	};
+    const finishQuestionIncludes = (
+        questions: IQuestions[],
+        _userId: string,
+    ) => {
+        const res = questions.filter(
+            (data: {
+                alternatives: string[];
+                dificulty: string;
+                score: number[];
+                user_id: string[];
+                _id: string;
+                description: string;
+                answer: number;
+                coins: number;
+            }) => {
+                return !data.user_id.includes(_userId as string);
+            },
+        );
+        return res;
+    };
 
-	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-	const alertOnClose = () => setIsConfirmOpen(false);
-	const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
-	const [isAlertCoins, setIsAlertCoins] = useState(false);
-	const [isCoinsCheck, setIsCoinsCheck] = useState(false);
-	const cancelRef = useRef<HTMLButtonElement>(null);
-	const [ignoranceImage, setIgnoranceImage] = useState('');
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const alertOnClose = () => setIsConfirmOpen(false);
+    const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
+    const [isAlertCoins, setIsAlertCoins] = useState(false);
+    const [isCoinsCheck, setIsCoinsCheck] = useState(false);
+    const cancelRef = useRef<HTMLButtonElement>(null);
+    const [ignoranceImage, setIgnoranceImage] = useState('');
 
-	const [script, setScript] = useState<IScript[]>([]);
-	const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
-	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>(
-		[],
-	);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [script, setScript] = useState<IScript[]>([]);
+    const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
+    const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>(
+        [],
+    );
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	const logout = () => {
-		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
-		setIsConfirmOpen(true);
-	};
+    const logout = () => {
+        setAlertAnswer('Tem certeza que você deseja sair da Savana?');
+        setIsConfirmOpen(true);
+    };
 
-	const setIgnoranceFilter = (
-		ignorance: number,
-		ignoranceArray: string[],
-	) => {
-		const filterBackgroung = ignoranceFilterFunction(
-			ignorance,
-			ignoranceArray,
-		);
-		setIgnoranceImage(filterBackgroung);
-	};
+    const setIgnoranceFilter = (
+        ignorance: number,
+        ignoranceArray: string[],
+    ) => {
+        const filterBackgroung = ignoranceFilterFunction(
+            ignorance,
+            ignoranceArray,
+        );
+        setIgnoranceImage(filterBackgroung);
+    };
 
-	const getUser = async () => {
-		try {
-			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-				'@pionira/userId',
-			);
-			const { data } = await api.get(`/user/${_userId}`);
-			setUser(data);
-			setIgnoranceFilter(data.ignorance, ignoranceArray);
-			const isComplete = data.finalQuizComplete.cheetahFinal;
-			setIsLoading(false);
+    const getUser = async () => {
+        try {
+            const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+                '@pionira/userId',
+            );
+            const { data } = await api.get(`/user/${_userId}`);
+            setUser(data);
+            setIgnoranceFilter(data.ignorance, ignoranceArray);
+            const isComplete = data.finalQuizComplete.cheetahFinal;
+            setIsLoading(false);
 
-			if (isComplete) {
-				setCheetahText(
-					`Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
-				);
-				setCompleteTrail(true);
-				if (data.narrative_status.trail1 !== 4) {
-					await api.patch(`/user/narrative/${_userId}`, {
-						narrative_status: {
-							...data.narrative_status,
-							trail1: 3
-						},
-					});
-					await finalCheetahNarrative();
-				}
-			} else {
-				if (data.ignorance > 80)
-					setCheetahText(
-						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
-					);
-				else if (data.ignorance > 40)
-					setCheetahText(
-						'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
-					);
-				else
-					setCheetahText(
-						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-					);
-			}
-		} catch (error) {
-			setOnError(true);
-		}
-	};
+            if (isComplete) {
+                setCheetahText(
+                    `Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+                );
+                setCompleteTrail(true);
+                if (data.narrative_status.trail1 !== 4) {
+                    await api.patch(`/user/narrative/${_userId}`, {
+                        narrative_status: {
+                            ...data.narrative_status,
+                            trail1: 3
+                        },
+                    });
+                    await finalCheetahNarrative();
+                }
+            } else {
+                if (data.ignorance > 80)
+                    setCheetahText(
+                        'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
+                    );
+                else if (data.ignorance > 40)
+                    setCheetahText(
+                        'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
+                    );
+                else
+                    setCheetahText(
+                        'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+                    );
+            }
+        } catch (error) {
+            setOnError(true);
+        }
+    };
 
-	const getQuiz = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const { data } = await api.get(`/user/${_userId}`);
-		const newQuiz = await api.get('/finalcheetahquiz');
+    const getQuiz = async () => {
+        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+            '@pionira/userId',
+        );
+        const newQuiz = await api.get('/finalcheetahquiz');
 
-		if (data.ignorance > 80) {
-			setQuiz(newQuiz.data[2]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[2].questions_id,
-				_userId as string,
-			);
+        setQuiz(newQuiz.data[0]);
 
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[2].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
-		} else if (data.ignorance > 40) {
-			setQuiz(newQuiz.data[1]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[1].questions_id,
-				_userId as string,
-			);
+        const finishQuestions = finishQuestionIncludes(
+            newQuiz.data[0].questions_id,
+            _userId as string,
+        );
 
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[1].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
-		} else {
-			setQuiz(newQuiz.data[0]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[0].questions_id,
-				_userId as string,
-			);
+        if (finishQuestions.length <= 0) {
+            setQuestions(newQuiz.data[0].questions_id);
+        } else {
+            setQuestions(finishQuestions);
+        }
+    };
 
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[0].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
-		}
-	};
+    const firstAccess = async () => {
+        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+            '@pionira/userId',
+        );
+        const res = await api.get(`/user/${_userId}`);
 
-	const firstAccess = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const res = await api.get(`/user/${_userId}`);
+        if (res.data.narrative_status.trail1 == 0) {
+            await api.patch(`/user/narrative/${_userId}`, {
+                narrative_status: {
+                    ...res.data.narrative_status,
+                    trail1: 1
+                },
+            });
 
-		if (res.data.narrative_status.trail1 == 0) {
-			await api.patch(`/user/narrative/${_userId}`, {
-				narrative_status: {
-					...res.data.narrative_status,
-					trail1: 1
-				},
-			});
+            history.go(0);
+        }
+    };
 
-			history.go(0);
-		}
-	};
+    //Lógica para verificar a progressão da narrativa e autalizar o script
+    const updateNarrative = async () => {
+        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+            '@pionira/userId',
+        );
+        const res = await api.get(`/user/${_userId}`);
 
-	//Lógica para verificar a progressão da narrativa e autalizar o script
-	const updateNarrative = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const res = await api.get(`/user/${_userId}`);
+        if (
+            res.data.narrative_status.trail1 == 1 &&
+            res.data.narrative_status.trail2 == 0
+        ) {
+            //Verifica se é a primeira vez do usuário em uma trilha
+            const newScript = await cheetahFreeLunch();
+            setScript(newScript);
+            narrativeOnOpen();
+        } else if (res.data.narrative_status.trail1 == 1) {
+            //Verifica se é a primeira vez do usuário na trilha da cheetah
+            const newScript = await cheetahBeggining();
+            setScript(newScript);
+            narrativeOnOpen();
+        }
+    };
 
-		if (
-			res.data.narrative_status.trail1 == 1 &&
-			res.data.narrative_status.trail2 == 0
-		) {
-			//Verifica se é a primeira vez do usuário em uma trilha
-			const newScript = await cheetahFreeLunch();
-			setScript(newScript);
-			narrativeOnOpen();
-		} else if (res.data.narrative_status.trail1 == 1) {
-			//Verifica se é a primeira vez do usuário na trilha da cheetah
-			const newScript = await cheetahBeggining();
-			setScript(newScript);
-			narrativeOnOpen();
-		}
-	};
+    const challengeNarrative = async () => {
+        const newChallengeScript = await cheetahFinalQuiz();
+        setChallengeScript(newChallengeScript);
+        narrativeChallengeOnOpen();
+    };
 
-	const challengeNarrative = async () => {
-		const newChallengeScript = await cheetahFinalQuiz();
-		setChallengeScript(newChallengeScript);
-		narrativeChallengeOnOpen();
-	};
+    const finalCheetahNarrative = async () => {
+        const newChallengeScript = await cheetahConclusion();
+        setFinalChallengeScript(newChallengeScript);
+        finalNarrativeChallengeOnOpen();
+    };
 
-	const finalCheetahNarrative = async () => {
-		const newChallengeScript = await cheetahConclusion();
-		setFinalChallengeScript(newChallengeScript);
-		finalNarrativeChallengeOnOpen();
-	};
+    const alertQuizConfirm = () => {
+        setAlertQuiz(
+            'Para fazer o desafio final da Cheetah são necessárias 40 joias do conhecimento! Tem certeza que deseja prosseguir?',
+        );
+        setIsAlertOpen(true);
+    };
 
-	const alertQuizConfirm = () => {
-		setAlertQuiz(
-			'Para fazer o desafio final da Cheetah são necessárias 40 joias do conhecimento! Tem certeza que deseja prosseguir?',
-		);
-		setIsAlertOpen(true);
-	};
+    const handleModal = async () => {
+        quizOnOpen();
+        modalOnClose();
+    };
 
-	const handleModal = async () => {
-		quizOnOpen();
-		modalOnClose();
-	};
+    const paxTax = async () => {
+        const value = 40;
+        setIsConfirmOpen(false);
+        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+            '@pionira/userId',
+        );
+        const user = await api.get(`/user/${_userId}`);
+        const validation = await api.get(`user/loadingQuiz/${_userId}`);
+        const userCoins = user.data.coins;
 
-	const paxTax = async () => {
-		const value = 40;
-		setIsConfirmOpen(false);
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const user = await api.get(`/user/${_userId}`);
-		const validation = await api.get(`user/loadingQuiz/${_userId}`);
-		const userCoins = user.data.coins;
+        if (userCoins >= value) {
+            const newCoins = userCoins - value;
+            try {
+                if (validation) {
+                    await api.patch(`/user/coins/${_userId}`, {
+                        coins: newCoins,
+                    });
+                }
 
-		if (userCoins >= value) {
-			const newCoins = userCoins - value;
-			try {
-				if (validation) {
-					await api.patch(`/user/coins/${_userId}`, {
-						coins: newCoins,
-					});
-				}
+                handleModal();
+            } catch (error) {
+                setOnError(true);
+            }
+        }
 
-				handleModal();
-			} catch (error) {
-				setOnError(true);
-			}
-		}
+        if (userCoins < value) {
+            setAlertCoins('Poxa! Parece que você não tem moedas suficientes!');
+            setIsAlertCoins(true);
+        }
 
-		if (userCoins < value) {
-			setAlertCoins('Poxa! Parece que você não tem moedas suficientes!');
-			setIsAlertCoins(true);
-		}
+        if (userCoins <= 0 || userCoins < value) {
+            setAlertCoins(
+                'Poxa! Parece que você não tem moedas suficientes! Se você proseguir podera ganhar o dobro de Ignorância e até ficar devendo moesdas! Escolha com sabedorias filhote.',
+            );
+            setIsCoinsCheck(true);
+        }
+    };
 
-		if (userCoins <= 0 || userCoins < value) {
-			setAlertCoins(
-				'Poxa! Parece que você não tem moedas suficientes! Se você proseguir podera ganhar o dobro de Ignorância e até ficar devendo moesdas! Escolha com sabedorias filhote.',
-			);
-			setIsCoinsCheck(true);
-		}
-	};
+    useEffect(() => {
+        getUser();
+        firstAccess();
+        updateNarrative();
+        getQuiz();
+    }, []);
 
-	useEffect(() => {
-		getUser();
-		firstAccess();
-		updateNarrative();
-		getQuiz();
-	}, []);
+    return (
+        <>
+            <Flex h='100vh' flexDirection='column' alignItems='center'>
+                <Image
+                    src={trail_bg}
+                    position='absolute'
+                    h='100vh'
+                    w='100%'
+                    zIndex='-3'
+                    left='0'
+                    top='0'
+                />
+                <Image
+                    src={ignoranceImage}
+                    position='absolute'
+                    h='100vh'
+                    w='100%'
+                    zIndex='-3'
+                    left='0'
+                    top='0'
+                />
 
-	return (
-		<>
-			<Flex h='100vh' flexDirection='column' alignItems='center'>
-				<Image
-					src={trail_bg}
-					position='absolute'
-					h='100vh'
-					w='100%'
-					zIndex='-3'
-					left='0'
-					top='0'
-				/>
-				<Image
-					src={ignoranceImage}
-					position='absolute'
-					h='100vh'
-					w='100%'
-					zIndex='-3'
-					left='0'
-					top='0'
-				/>
+                <Flex
+                    width='92.5%'
+                    justifyContent='space-between'
+                    alignItems='flex-start'
+                    margin='auto'
+                    zIndex='10'
+                    position='fixed'
+                >
+                    {narrativeIsOpen ||
+                        narrativeChallengeIsOpen ||
+                        finalNarrativeChallengeIsOpen ? null : (
+                            <NavActions logout={logout}/>
+                        )}
 
-				<Flex
-					width='92.5%'
-					justifyContent='space-between'
-					alignItems='flex-start'
-					margin='auto'
-					zIndex='10'
-					position='fixed'
-				>
-					{narrativeIsOpen ||
-						narrativeChallengeIsOpen ||
-						finalNarrativeChallengeIsOpen ? null : (
-							<NavActions logout={logout}/>
-						)}
+                    {narrativeIsOpen ||
+                            narrativeChallengeIsOpen ||
+                            finalNarrativeChallengeIsOpen ? null : (
+                        <IgnorancePremiumIcons ignorance={user.ignorance} />
+                    )}
+                </Flex>
 
-					{narrativeIsOpen ||
-							narrativeChallengeIsOpen ||
-							finalNarrativeChallengeIsOpen ? null : (
-						<IgnorancePremiumIcons ignorance={user.ignorance} />
-					)}
-				</Flex>
+                {narrativeIsOpen ||
+                    narrativeChallengeIsOpen ||
+                    finalNarrativeChallengeIsOpen ? null : (
+                    <>
+                        <Flex
+                            margin='2vw'
+                            justifyContent='space-between'
+                            zIndex='10'
+                        >
+                            <ModuleModal left='19vw' top='67vh' quizIndex={0} />
+                            <ModuleModal left='45vw'top='54vh' quizIndex={1} />
+                            <ModuleModal left='68vw' top='82vh' quizIndex={2} />
+                            <ModuleModal left='89vw'top='60vh' quizIndex={3} />
+                            <Center
+                                _hover={{
+                                    cursor: 'pointer',
+                                    transform: 'scale(1.1)',
+                                }}
+                                transition='all 0.2s ease'
+                                width='7rem'
+                                height='7rem'
+                                onClick={() => {
+                                    if (!completeTrail) {
+                                        narrativeChallengeOnOpen();
+                                        challengeNarrative();
+                                    }
+                                    modalOnOpen();
+                                }}
+                                position='absolute'
+                                top='35vh'
+                                left='70vw'
+                                zIndex='999'
+                            >
+                                <Image
+                                    src={final_cheetah_icon}
+                                    width='90%'
+                                    height='90%'
+                                />
+                            </Center>
+                        </Flex>
 
-				{narrativeIsOpen ||
-					narrativeChallengeIsOpen ||
-					finalNarrativeChallengeIsOpen ? null : (
-					<>
-						<Flex
-							margin='2vw'
-							justifyContent='space-between'
-							zIndex='10'
-						>
-							<ModuleModal left='19vw' top='67vh' quizIndex={0} />
-							<ModuleModal left='45vw'top='54vh' quizIndex={1} />
-							<ModuleModal left='68vw' top='82vh' quizIndex={2} />
-							<ModuleModal left='89vw'top='60vh' quizIndex={3} />
-							<Center
-								_hover={{
-									cursor: 'pointer',
-									transform: 'scale(1.1)',
-								}}
-								transition='all 0.2s ease'
-								width='7rem'
-								height='7rem'
-								onClick={() => {
-									if (!completeTrail) {
-										narrativeChallengeOnOpen();
-										challengeNarrative();
-									}
-									modalOnOpen();
-								}}
-								position='absolute'
-								top='35vh'
-								left='70vw'
-								zIndex='999'
-							>
-								<Image
-									src={final_cheetah_icon}
-									width='90%'
-									height='90%'
-								/>
-							</Center>
-						</Flex>
+                        <Modal
+                            isOpen={modalIsOpen}
+                            onClose={modalOnClose}
+                            size='4xl'
+                        >
+                            <ModalOverlay />
+                            <ModalContent
+                                height='34rem'
+                                fontFamily={fontTheme.fonts}
+                            >
+                                <Box
+                                    w='25%'
+                                    bg={colorPalette.primaryColor}
+                                    h='25rem'
+                                    position='absolute'
+                                    zIndex='-1'
+                                    left='0'
+                                    top='0'
+                                    borderTopStartRadius='5px'
+                                    clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+                                />
+                                {completeTrail ? (
+                                    <>
+                                        <ModalBody
+                                            d='flex'
+                                            mt='-1rem'
+                                            flexDirection='column'
+                                            alignItems='center'
+                                            justifyContent='space-between'
+                                        >
+                                            <Flex
+                                                w='65%'
+                                                h='100%'
+                                                justifyContent='space-between'
+                                                flexDirection='column'
+                                                marginBottom='0.8rem'
+                                            >
+                                                <Text
+                                                    w='100%'
+                                                    marginTop='5rem'
+                                                    fontSize='2rem'
+                                                    lineHeight='9vh'
+                                                    textAlign='center'
+                                                    fontWeight='normal'
+                                                >
+                                                    "{cheetahText}"
+                                                </Text>
+                                                <Button
+                                                    bgColor={
+                                                        colorPalette.secondaryColor
+                                                    }
+                                                    width='45%'
+                                                    alignSelf='center'
+                                                    color={
+                                                        colorPalette.buttonTextColor
+                                                    }
+                                                    height='4rem'
+                                                    fontSize='1.4rem'
+                                                    _hover={{
+                                                        transform: 'scale(1.1)',
+                                                    }}
+                                                    onClick={modalOnClose}
+                                                >
+                                                    Okay!
+                                                </Button>
+                                            </Flex>
+                                        </ModalBody>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ModalHeader
+                                            d='flex'
+                                            justifyContent='center'
+                                            mt='1.4rem'
+                                        >
+                                            <Text
+                                                ml='2.3rem'
+                                                w='75%'
+                                                fontSize='1.4rem'
+                                                textAlign='center'
+                                                fontWeight='normal'
+                                            >
+                                                {cheetahText}
+                                            </Text>
+                                            <ModalCloseButton
+                                                color={colorPalette.closeButton}
+                                                size='lg'
+                                            />
+                                        </ModalHeader>
 
-						<Modal
-							isOpen={modalIsOpen}
-							onClose={modalOnClose}
-							size='4xl'
-						>
-							<ModalOverlay />
-							<ModalContent
-								height='34rem'
-								fontFamily={fontTheme.fonts}
-							>
-								<Box
-									w='25%'
-									bg={colorPalette.primaryColor}
-									h='25rem'
-									position='absolute'
-									zIndex='-1'
-									left='0'
-									top='0'
-									borderTopStartRadius='5px'
-									clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
-								/>
-								{completeTrail ? (
-									<>
-										<ModalBody
-											d='flex'
-											mt='-1rem'
-											flexDirection='column'
-											alignItems='center'
-											justifyContent='space-between'
-										>
-											<Flex
-												w='65%'
-												h='100%'
-												justifyContent='space-between'
-												flexDirection='column'
-												marginBottom='0.8rem'
-											>
-												<Text
-													w='100%'
-													marginTop='5rem'
-													fontSize='2rem'
-													lineHeight='9vh'
-													textAlign='center'
-													fontWeight='normal'
-												>
-													"{cheetahText}"
-												</Text>
-												<Button
-													bgColor={
-														colorPalette.secondaryColor
-													}
-													width='45%'
-													alignSelf='center'
-													color={
-														colorPalette.buttonTextColor
-													}
-													height='4rem'
-													fontSize='1.4rem'
-													_hover={{
-														transform: 'scale(1.1)',
-													}}
-													onClick={modalOnClose}
-												>
-													Okay!
-												</Button>
-											</Flex>
-										</ModalBody>
-									</>
-								) : (
-									<>
-										<ModalHeader
-											d='flex'
-											justifyContent='center'
-											mt='1.4rem'
-										>
-											<Text
-												ml='2.3rem'
-												w='75%'
-												fontSize='1.4rem'
-												textAlign='center'
-												fontWeight='normal'
-											>
-												{cheetahText}
-											</Text>
-											<ModalCloseButton
-												color={colorPalette.closeButton}
-												size='lg'
-											/>
-										</ModalHeader>
+                                        <ModalBody
+                                            d='flex'
+                                            mt='-1rem'
+                                            flexDirection='column'
+                                            alignItems='center'
+                                            justifyContent='space-between'
+                                        >
+                                            <Image
+                                                src={cheetah_bg}
+                                                w='65%'
+                                                h='75%'
+                                            />
 
-										<ModalBody
-											d='flex'
-											mt='-1rem'
-											flexDirection='column'
-											alignItems='center'
-											justifyContent='space-between'
-										>
-											<Image
-												src={cheetah_bg}
-												w='65%'
-												h='75%'
-											/>
-
-											<Flex
-												w='65%'
-												justifyContent='space-between'
-												marginBottom='0.8rem'
-											>
-												<Button
-													bgColor={
-														colorPalette.confirmButton
-													}
-													width='45%'
-													height='4rem'
-													fontSize='1.2rem'
-													_hover={{
-														transform: 'scale(1.1)',
-													}}
-													onClick={() => {
-														alertQuizConfirm();
-													}}
-												>
-													Vamos nessa!
-												</Button>
-												<Button
-													bgColor={
-														colorPalette.closeButton
-													}
-													width='45%'
-													height='4rem'
-													fontSize='1.2rem'
-													_hover={{
-														transform: 'scale(1.1)',
-													}}
-													onClick={modalOnClose}
-												>
-													Ainda não estou pronto!
-												</Button>
-											</Flex>
-										</ModalBody>
-									</>
-								)}
-							</ModalContent>
-						</Modal>
-					</>
-				)}
+                                            <Flex
+                                                w='65%'
+                                                justifyContent='space-between'
+                                                marginBottom='0.8rem'
+                                            >
+                                                <Button
+                                                    bgColor={
+                                                        colorPalette.confirmButton
+                                                    }
+                                                    width='45%'
+                                                    height='4rem'
+                                                    fontSize='1.2rem'
+                                                    _hover={{
+                                                        transform: 'scale(1.1)',
+                                                    }}
+                                                    onClick={() => {
+                                                        alertQuizConfirm();
+                                                    }}
+                                                >
+                                                    Vamos nessa!
+                                                </Button>
+                                                <Button
+                                                    bgColor={
+                                                        colorPalette.closeButton
+                                                    }
+                                                    width='45%'
+                                                    height='4rem'
+                                                    fontSize='1.2rem'
+                                                    _hover={{
+                                                        transform: 'scale(1.1)',
+                                                    }}
+                                                    onClick={modalOnClose}
+                                                >
+                                                    Ainda não estou pronto!
+                                                </Button>
+                                            </Flex>
+                                        </ModalBody>
+                                    </>
+                                )}
+                            </ModalContent>
+                        </Modal>
+                    </>
+                )}
 
 
-				{script.length > 0 ? (
-					//verifica se o script possui algum conteúdo
-					<NarrativeModal
-						isOpen={narrativeIsOpen}
-						script={script}
-						onToggle={narrativeOnToggle}
-					/>
-				) : null}
-				{challengeScript.length > 0 ? (
-					//verifica se o script possui algum conteúdo
-					<NarrativeModal
-						isOpen={narrativeChallengeIsOpen}
-						script={challengeScript}
-						onToggle={narrativeChallengeOnToggle}
-					/>
-				) : null}
+                {script.length > 0 ? (
+                    //verifica se o script possui algum conteúdo
+                    <NarrativeModal
+                        isOpen={narrativeIsOpen}
+                        script={script}
+                        onToggle={narrativeOnToggle}
+                    />
+                ) : null}
+                {challengeScript.length > 0 ? (
+                    //verifica se o script possui algum conteúdo
+                    <NarrativeModal
+                        isOpen={narrativeChallengeIsOpen}
+                        script={challengeScript}
+                        onToggle={narrativeChallengeOnToggle}
+                    />
+                ) : null}
 
-				{finalChallengeScript.length > 0 ? (
-					//verifica se o script possui algum conteúdo
-					<NarrativeModal
-						isOpen={finalNarrativeChallengeIsOpen}
-						script={finalChallengeScript}
-						onToggle={finalNarrativeChallengeOnToggle}
-					/>
-				) : null}
+                {finalChallengeScript.length > 0 ? (
+                    //verifica se o script possui algum conteúdo
+                    <NarrativeModal
+                        isOpen={finalNarrativeChallengeIsOpen}
+                        script={finalChallengeScript}
+                        onToggle={finalNarrativeChallengeOnToggle}
+                    />
+                ) : null}
 
 
-				<AlertModal
-					isOpen={isConfirmOpen}
-					onClose={alertOnClose}
-					alertTitle='Logout'
-					alertBody={alertAnswer}
-					buttonBody={
-						<Button
-							ref={cancelRef}
-							color='white'
-							bg={colorPalette.primaryColor}
-							onClick={() => {
-								alertOnClose();
-								sessionStorage.clear();
-								location.reload();
-							}}
-						>
-							Sair
-						</Button>
-					}
-				/>
-			</Flex>
+                <AlertModal
+                    isOpen={isConfirmOpen}
+                    onClose={alertOnClose}
+                    alertTitle='Logout'
+                    alertBody={alertAnswer}
+                    buttonBody={
+                        <Button
+                            ref={cancelRef}
+                            color='white'
+                            bg={colorPalette.primaryColor}
+                            onClick={() => {
+                                alertOnClose();
+                                sessionStorage.clear();
+                                location.reload();
+                            }}
+                        >
+                            Sair
+                        </Button>
+                    }
+                />
+            </Flex>
 
-			{
-				isLoading && <LoadingOverlay />
-			}
-			<FinalUniversalQuiz
-				openModal={quizIsOpen}
-				closeModal={quizOnClose}
-				quiz={quiz}
-				questions={questions}
-				imgName={cheetah}
-				imgReward={insignaCheetah}
-				routeQuestions={'cheetahquestions'}
-				routeQuiz={'finalcheetahquiz'}
-				insignaName={'da Cheetah'}
-				withoutMoney={withoutMoney}
-			/>
+            {
+                isLoading && <LoadingOverlay />
+            }
+            <FinalUniversalQuiz
+                openModal={quizIsOpen}
+                closeModal={quizOnClose}
+                quiz={quiz}
+                questions={questions}
+                imgName={cheetah}
+                imgReward={insignaCheetah}
+                routeQuestions={'cheetahquestions'}
+                routeQuiz={'finalcheetahquiz'}
+                insignaName={'da Cheetah'}
+                withoutMoney={withoutMoney}
+                userIgnorance={user.ignorance}
+                trail={1}
+            />
 
-			<AlertModal
-				isOpen={isAlertOpen}
-				onClose={isAlertOnClose}
-				alertTitle='Desafio Final'
-				alertBody={alertQuiz}
-				buttonBody={
-					<Button
-						ref={cancelRef}
-						color='white'
-						bg={colorPalette.primaryColor}
-						onClick={() => {
-							paxTax();
-							isAlertOnClose();
-							modalOnClose();
-							setIsLoading(true);
-						}}
-					>
-						Pagar
-					</Button>
-				}
-			/>
+            <AlertModal
+                isOpen={isAlertOpen}
+                onClose={isAlertOnClose}
+                alertTitle='Desafio Final'
+                alertBody={alertQuiz}
+                buttonBody={
+                    <Button
+                        ref={cancelRef}
+                        color='white'
+                        bg={colorPalette.primaryColor}
+                        onClick={() => {
+                            paxTax();
+                            isAlertOnClose();
+                            modalOnClose();
+                            setIsLoading(true);
+                        }}
+                    >
+                        Pagar
+                    </Button>
+                }
+            />
 
-			<AlertModal
-				isOpen={isAlertCoins}
-				onClose={isAlertCoinsOnClose}
-				alertTitle='Moedas Insuficientes'
-				alertBody={alertCoins}
-				buttonBody={
-					<>
-						<Box
-							w='100%'
-							display='flex'
-							justifyContent='space-between'
-						>
-							{isCoinsCheck ? (
-								<Button
-									ref={cancelRef}
-									color='white'
-									bg={colorPalette.closeButton}
-									onClick={() => {
-										handleModal();
-										setWithoutMoney(true);
-										setIsCoinsCheck(false);
-									}}
-								>
-									Proseguir
-								</Button>
-							) : null}
-							<Button
-								ref={cancelRef}
-								color='white'
-								bg={colorPalette.primaryColor}
-								onClick={() => {
-									isAlertCoinsOnClose();
-									setIsLoading(false);
-								}}
-							>
-								Cancelar
-							</Button>
-						</Box>
-					</>
-				}
-			/>
+            <AlertModal
+                isOpen={isAlertCoins}
+                onClose={isAlertCoinsOnClose}
+                alertTitle='Moedas Insuficientes'
+                alertBody={alertCoins}
+                buttonBody={
+                    <>
+                        <Box
+                            w='100%'
+                            display='flex'
+                            justifyContent='space-between'
+                        >
+                            {isCoinsCheck ? (
+                                <Button
+                                    ref={cancelRef}
+                                    color='white'
+                                    bg={colorPalette.closeButton}
+                                    onClick={() => {
+                                        handleModal();
+                                        setWithoutMoney(true);
+                                        setIsCoinsCheck(false);
+                                    }}
+                                >
+                                    Proseguir
+                                </Button>
+                            ) : null}
+                            <Button
+                                ref={cancelRef}
+                                color='white'
+                                bg={colorPalette.primaryColor}
+                                onClick={() => {
+                                    isAlertCoinsOnClose();
+                                    setIsLoading(false);
+                                }}
+                            >
+                                Cancelar
+                            </Button>
+                        </Box>
+                    </>
+                }
+            />
 
-			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody={errorCases.SERVER_ERROR}
-				buttonBody={
-					<Button
-						color='white'
-						bg={colorPalette.primaryColor}
-						onClick={() => window.location.reload()}
-					>
-						Recarregar
-					</Button>
-				}
-			/>
-		</>
-	);
+            <AlertModal
+                isOpen={onError}
+                onClose={() => window.location.reload()}
+                alertTitle='Ops!'
+                alertBody={errorCases.SERVER_ERROR}
+                buttonBody={
+                    <Button
+                        color='white'
+                        bg={colorPalette.primaryColor}
+                        onClick={() => window.location.reload()}
+                    >
+                        Recarregar
+                    </Button>
+                }
+            />
+        </>
+    );
 };
 
 export default CheetahPath;

@@ -27,7 +27,6 @@ import colorPalette from "../styles/colorPalette";
 import AlertModal from '../components/modals/AlertModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
-import FinalLionQuiz from '../components/FinalLionQuiz';
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 import NavActions from '../components/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
@@ -52,6 +51,7 @@ import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
 import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
 import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
 import { errorCases } from '../utils/errors/errorsCases';
+import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 
 
 interface IQuiz {
@@ -270,45 +270,17 @@ const LionPath = () => {
 
 	const getQuiz = async () => {
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
 		const newQuiz = await api.get('/finallionquiz');
+		setQuiz(newQuiz.data[0]);
+		const finishQuestions = finishQuestionIncludes(
+			newQuiz.data[0].questions_id,
+			_userId as string,
+		);
 
-		if (data.ignorance > 80) {
-			setQuiz(newQuiz.data[2]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[2].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[2].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
-		} else if (data.ignorance > 40) {
-			setQuiz(newQuiz.data[1]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[1].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[1].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
+		if (finishQuestions.length <= 0) {
+			setQuestions(newQuiz.data[0].questions_id);
 		} else {
-			setQuiz(newQuiz.data[0]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[0].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[0].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
+			setQuestions(finishQuestions);
 		}
 	};
 
@@ -457,7 +429,7 @@ const LionPath = () => {
 					position='fixed'
 				>
 					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-							<NavActions logout={logout}/>
+						<NavActions logout={logout} />
 					)}
 
 					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
@@ -694,7 +666,7 @@ const LionPath = () => {
 				isLoading && <LoadingOverlay />
 			}
 
-			<FinalLionQuiz
+			<FinalUniversalQuiz
 				openModal={quizIsOpen}
 				closeModal={quizOnClose}
 				quiz={quiz}
@@ -705,6 +677,8 @@ const LionPath = () => {
 				routeQuiz={'finallionquiz'}
 				insignaName={'do Leão e Leoa'}
 				withoutMoney={withoutMoney}
+				userIgnorance={user.ignorance}
+				trail={2}
 			/>
 
 			<AlertModal

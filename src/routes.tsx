@@ -7,14 +7,12 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import MainPage from './pages/MainPage';
-import RewardModal from './components/modals/RewardModal';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import EditProfile from './pages/EditProfile';
 import Shop from './pages/Shop';
 import Inventory from './pages/Inventory';
 import CheetahPath from './pages/CheetahPath';
-import TutorialModal from './components/modals/TutorialModal';
 import BlackMambaPath from './pages/blackMambaPath';
 import LionPath from './pages/lionPath';
 import PaymentPage from './pages/PaymentPage';
@@ -53,10 +51,8 @@ const Routes = () => {
 					<Route path="/resetPassword/:id" component={ResetPassword} />
 					<Route path='/register' component={Register} />
 					<ProtectedRoute path='/editProfile/:id' component={EditProfile} />
-					<ProtectedRoute path='/reward' component={RewardModal} />
 					<ProtectedRoute path='/shop' component={Shop} />
 					<ProtectedRoute path='/inventory' component={Inventory} />
-					<ProtectedRoute path='/tutorial' component={TutorialModal} />
 					<ProtectedRoute path='/mainPage' component={MainPage} />
 					<ProtectedRoute path='/trilha-cheetah' component={CheetahPath} />
 					<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />

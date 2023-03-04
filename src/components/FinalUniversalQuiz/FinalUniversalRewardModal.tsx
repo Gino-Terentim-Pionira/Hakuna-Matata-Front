@@ -16,7 +16,6 @@ import {
 import api from '../../services/api';
 import { AxiosResponse } from 'axios';
 import fontTheme from '../../styles/base';
-import Certificate from '../modals/CertificateModal';
 import colorPalette from '../../styles/colorPalette';
 import RewardModal from '../modals/RewardModal';
 
@@ -24,7 +23,7 @@ import RewardModal from '../modals/RewardModal';
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
 
-interface IFinalLionRewardModal {
+interface IFinalUniversalRewardModal {
 	isOpen: boolean;
 	coins: number;
 	score: number[];
@@ -38,7 +37,6 @@ interface IFinalLionRewardModal {
 	insignaName: string;
 	ignorance: number;
 	trail: number;
-	certificateName: string;
 }
 
 interface userDataProps {
@@ -48,7 +46,7 @@ interface userDataProps {
 	ignorance: number;
 }
 
-const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
+const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	isOpen,
 	coins,
 	score,
@@ -62,7 +60,6 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 	insignaName,
 	ignorance,
 	trail,
-	certificateName,
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -70,12 +67,6 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 		isOpen: modalIsOpenCheetah,
 		onClose: modalOnCloseCheetah,
 		onOpen: modalOnOpenCheetah,
-	} = useDisclosure();
-
-	const {
-		isOpen: certificateIsOpen,
-		onOpen: certificateOnOpen,
-		onClose: certificateOnClose,
 	} = useDisclosure();
 
 	const [onError, setOnError] = useState(false);
@@ -171,7 +162,7 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 		}
 	};
 
-	const updateCheetahBadge = async () => {
+	const updateBadge = async () => {
 		try {
 			const userId = sessionStorage.getItem('@pionira/userId');
 			setIsLoading(true);
@@ -188,8 +179,7 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 			}
 			modalOnCloseCheetah();
 			setIsLoading(false);
-			// window.location.reload();
-			certificateOnOpen();
+			window.location.reload();
 		} catch (error) {
 			setOnError(true);
 		}
@@ -332,7 +322,7 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 								_hover={{
 									transform: 'scale(1.1)',
 								}}
-								onClick={updateCheetahBadge}
+								onClick={updateBadge}
 							>
 								Vamos nessa!
 							</Button>
@@ -340,16 +330,8 @@ const FinalLionRewardModal: FC<IFinalLionRewardModal> = ({
 					</ModalBody>
 				</ModalContent>
 			</Modal>
-
-			<Certificate
-				isOpen={certificateIsOpen}
-				onOpen={certificateOnOpen}
-				onClose={certificateOnClose}
-				trail={trail}
-				name={certificateName}
-			/>
 		</>
 	);
 };
 
-export default FinalLionRewardModal;
+export default FinalUniversalRewardModal;
