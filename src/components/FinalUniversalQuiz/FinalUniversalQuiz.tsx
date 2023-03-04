@@ -274,10 +274,8 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 
 	const handleQuestionDescription = () => {
 		if(userIgnorance >= 80) {
-			// ADICIONAR AQUI O ALGORITMO DE EMBARALHAMENTO DIFICIL
 			return shuffleString(questions[step]?.description, 'hard');
 		} else if (userIgnorance >= 40) {
-			// ADICIONAR AQUI O ALGORITMO DE EMBARALHAMENTO MEDIO
 			return shuffleString(questions[step]?.description, 'medium');
 		} else {
 			return questions[step]?.description
