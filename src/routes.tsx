@@ -45,7 +45,7 @@ const Routes = () => {
 					) : null
 				}
 				<Switch>
-					<Route path='/' exact component={Home} /> as
+					<Route path='/' exact component={Home} />
 					<Route path='/login' component={Login} />
 					<Route path='/forgotPassword' component={ForgotPassword} />
 					<Route path="/resetPassword/:id" component={ResetPassword} />
