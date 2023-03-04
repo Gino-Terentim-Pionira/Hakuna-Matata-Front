@@ -13,6 +13,8 @@ import './../styles/fadeEffect.css';
 import initalScreen from '../assets/Tela_de_inicio.png';
 import registerImg from '../assets/icons/registerImg.svg';
 import loginImg from '../assets/icons/loginImg.svg';
+import PioniraLogo from '../assets/PioniraLogo.png';
+import GinoLogo from '../assets/GinoLogo.png';
 
 const Home = () => {
 	const { authenticated } = useAuth();
@@ -34,17 +36,17 @@ const Home = () => {
 			}}
 		>
 			<Box w='100vw' mt='5%'>
-				<Center>
+				<Center flexDir="column">
+					<Image ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
 					<Flex
-						w='60%'
-						borderRadius='8px'
+						gap="108px"
 						flexDirection='row'
 						align='center'
-						justifyContent='space-between'
+						mt="8px"
 					>
 						<Flex
-							width='45%'
-							h='70%'
+							width='320px'
+							h='170px'
 							padding='2rem'
 							border='0.1rem  solid'
 							borderColor={colorPalette.primaryColor}
@@ -68,9 +70,9 @@ const Home = () => {
 								justifyContent='space-around'
 								alignItems='center'
 							>
-								<Image w='17%' src={loginImg} mb='1rem'/>
+								<Image w='17%' src={loginImg} mb='1rem' />
 								<Text
-									fontSize={[25, 28, 32, 36]}
+									fontSize={{ lg: '28px', md: '28px', sm: '25px' }}
 									color='#926021'
 								>
 									Entrar na Savana
@@ -78,8 +80,8 @@ const Home = () => {
 							</Flex>
 						</Flex>
 						<Flex
-							width='45%'
-							h='70%'
+							width='320px'
+							h='170px'
 							padding='2rem'
 							border='0.1rem solid'
 							background='rgba(255, 255, 255, 0.51)'
@@ -103,9 +105,9 @@ const Home = () => {
 								justifyContent='space-around'
 								alignItems='center'
 							>
-								<Image w='17%' src={registerImg} mb='1rem'/>
+								<Image w='17%' src={registerImg} mb='1rem' />
 								<Text
-									fontSize={[25, 28, 32, 36]}
+									fontSize={{ lg: '28px', md: '28px', sm: '25px' }}
 									color='#926021'
 								>
 									Criar Passaporte
@@ -114,6 +116,9 @@ const Home = () => {
 						</Flex>
 					</Flex>
 				</Center>
+				<a target="_blank" href='https://www.ginoterentim.com'>
+					<Image filter="drop-shadow(0px 4px 1px rgba(0, 0, 0, 0.14))" position="absolute" left="0" right="0" margin="auto" bottom="40px" width="125px" src={GinoLogo} alt="Logo gino" />
+				</a>
 			</Box>
 		</Flex>
 	);
