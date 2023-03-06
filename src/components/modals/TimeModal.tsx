@@ -46,7 +46,7 @@ const TimeModal: FC<ITimeModal> = ({ timeIsOpen, timeOnClose, timeOnToggle }) =>
                     <ModalBody d='flex' w='70%' flexDirection='column' justifyContent='space-evenly'>
                         <div>
                             <Text textAlign='center' color={colorPalette.closeButton} fontWeight='bold' fontFamily={fontTheme.fonts} fontSize='3rem' marginTop='2.5rem'>
-                                OPA, CALMA AI!
+                                OPA, CALMA AÍ!
                             </Text>
                             <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='1.5rem' mt='1rem'>
                                 Você deve esperar no mínimo 30 minutos para refazer um desafio!

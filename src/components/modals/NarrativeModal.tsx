@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, SetStateAction } from 'react';
-import { Flex, Box, Image, Slide, useDisclosure } from '@chakra-ui/react';
+import { Flex, Box, Image, Slide, useDisclosure, Text } from '@chakra-ui/react';
 
 // Components
 import FreeLunch from './FreeLunch';
@@ -14,8 +14,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 // Images
 import rightArrow from "../../assets/icons/rightArrow.png";
-import skip from "../../assets/icons/skip.png";
 import colorPalette from '../../styles/colorPalette';
+import fontTheme from '../../styles/base';
 
 interface IScript {
     name: string,
@@ -141,7 +141,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                         trail1: 4
                     }
                 });
-            }else if (res.data.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
+            } else if (res.data.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
                         ...res.data.narrative_status,
@@ -283,8 +283,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                         paddingTop='9px'
                         flexDirection='column'
                     >
-                        <Image 
-                            src={skip}
+                        <Text
                             mt=".5rem"
                             _hover={{
                                 cursor: 'pointer',
@@ -297,9 +296,14 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                                 updateNarrative();
                                 onToggle();
                             }}
-                            mr="1.5rem"
-                            w='2rem'
-                        />
+                            mr="32px"
+                            fontFamily={fontTheme.fonts}
+                            fontSize="26px"
+                            fontWeight="semibold"
+                            color={colorPalette.closeButton}
+                        >
+                            Pular
+                        </Text>
 
                         <motion.div
                             animate={{ scale: [1, 1.2, 1] }}

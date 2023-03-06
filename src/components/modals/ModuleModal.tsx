@@ -408,7 +408,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                             ) : (
                                 <>
                                     <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='1rem'>
-                                        Está preparado para responder o desafio desse video?
+                                        Está preparado para responder o desafio desse módulo?
                                     </Text>
                                     <Flex justifyContent='space-around'>
                                         <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => closeConfirmationModal()}>

@@ -190,7 +190,7 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick }) => {
                                             fontWeight="semibold"
                                             fontSize="2rem"
                                         >
-                                            Concluido
+                                            Concluído
                                         </Text>
                                     </Button>
                                 </Flex>
