@@ -1,21 +1,17 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React from 'react';
 import {
     Stack,
     Text,
     Flex,
     Box,
-    Image,
-    Button
+    Image
 } from "@chakra-ui/react"
+import { useUser } from '../../../hooks';
 
 // Components
 import LoadingState from '../../LoadingState';
 import IgnoranceProgress from '../../IgnoranceProgress';
-import AlertModal from '../AlertModal';
 import StatusProgressionBar from './StatusProgressionBar';
-
-// Requisitions
-import api from '../../../services/api';
 
 // Styles
 import fontTheme from '../../../styles/base';
@@ -23,60 +19,9 @@ import fontTheme from '../../../styles/base';
 // Images
 import Profile from '../../../assets/icons/profile.svg';
 import Coins from '../../../assets/icons/coinicon.svg';
-import colorPalette from '../../../styles/colorPalette';
-
-
-interface IUser {
-    _id: string;
-    userName: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    birthday_date: string;
-    is_confirmed: boolean;
-    status: number[];
-    coins: number;
-    contribution: number;
-    first_certificate: string;
-    second_certificate: string;
-    ignorance: number;
-    narrative_status: {
-        trail1: number;
-        trail2: number;
-        blackMamba: number;
-    }
-}
-
 
 const ProgressionStatusModal = () => {
-    const [userData, setUserData] = useState<IUser>({} as IUser);
-    const [userPhoto, setUserPhoto] = useState(null);
-    const [onError, setOnError] = useState(false);
-
-    const preview = useMemo(() => {
-        try {
-            return userPhoto ? URL.createObjectURL(userPhoto) : userPhoto ? userPhoto : null;
-        } catch (error) {
-            return userPhoto ? userPhoto : null
-        }
-    }, [userPhoto]);
-
-    const handleData = async () => {
-        try {
-            const userId = sessionStorage.getItem('@pionira/userId')
-            const user = await api.get(`/user/${userId}`);
-            setUserData(user.data);
-            if (user.data.profileImage !== undefined)
-                setUserPhoto(user.data.profileImage.url);
-        } catch (error) {
-            setOnError(true);
-        }
-    };
-
-    useEffect(() => {
-        handleData();
-    }, []);
+    const { userData } = useUser();
 
     return (
         <Flex h="100%" w="100%" flexDirection="column" alignItems="center" justifyContent="space-evenly">
@@ -87,21 +32,13 @@ const ProgressionStatusModal = () => {
                             <Box w="35%" align="right">
                                 <Stack w="100%">
                                     <StatusProgressionBar status={userData.status[0]} label="Agilidade (AGI)" isOnLeft isBlocked={userData.narrative_status.trail1 < 2} />
-                                    <StatusProgressionBar status={userData.status[2]} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked/>
+                                    <StatusProgressionBar status={userData.status[2]} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked />
                                     <StatusProgressionBar status={userData.status[4]} marginTop="4px" label="Estratégia (EST)" isOnLeft isBlocked />
                                 </Stack>
                             </Box>
                             <Box display='flex' flexDirection='column' alignItems='center'>
-                                {userPhoto ? (
-                                    <label id="photo"
-                                        style={{ backgroundImage: `url(${preview})`, width: "160px", height: "160px", backgroundSize: "cover", display: "flex", borderRadius: "50%", backgroundPositionX: 'center' }}
-                                    >
-                                    </label>
-                                ) : (
 
-                                    <Image src={Profile} marginBottom='1.2rem' />
-                                )
-                                }
+                                <Image src={Profile} />
                                 <Text fontSize='3.5rem' fontFamily={fontTheme.fonts} width='100%' align='center' marginBottom='-2rem'>
                                     {
                                         userData ? (
@@ -113,8 +50,8 @@ const ProgressionStatusModal = () => {
                             <Box w="35%">
                                 <Stack w="100%">
                                     <StatusProgressionBar status={userData.status[1]} label="Liderança (LID)" isBlocked={userData.narrative_status.trail2 < 2} />
-                                    <StatusProgressionBar status={userData.status[3]} isBlocked marginTop="4px" label="Gestão de mudanças (GM)"/>
-                                    <StatusProgressionBar status={userData.status[5]} isBlocked marginTop="4px" label="Gestão de projetos (GP)"/>
+                                    <StatusProgressionBar status={userData.status[3]} isBlocked marginTop="4px" label="Gestão de mudanças (GM)" />
+                                    <StatusProgressionBar status={userData.status[5]} isBlocked marginTop="4px" label="Gestão de projetos (GP)" />
                                 </Stack>
                             </Box>
                         </Flex>
@@ -130,22 +67,6 @@ const ProgressionStatusModal = () => {
                     <LoadingState />
                 )
             }
-            <AlertModal
-                isOpen={onError}
-                onClose={() => window.location.reload()}
-                alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
-
-                buttonBody={
-                    <Button
-                        color='white'
-                        bg={colorPalette.primaryColor}
-                        onClick={() => window.location.reload()}
-                    >
-                        Recarregar
-                    </Button>
-                }
-            />
         </Flex>
 
     )

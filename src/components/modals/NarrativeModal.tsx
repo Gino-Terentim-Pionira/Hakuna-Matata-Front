@@ -36,7 +36,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     script
 }) => {
 
-    const { isOpen: lunchIsOpen, onOpen: lunchOnOpen } = useDisclosure();
+    const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
 
     const [delayButton, setDelayButton] = useState(true);
 
@@ -93,7 +93,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             const user = res.data;
             if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
                 setFreeCoins(100);
-
                 lunchOnOpen();
                 await api.patch(`/user/updateFirstTime/${user._id}`, {
                     isFirstTimeAppLaunching: false,
@@ -101,7 +100,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             } else if (user.narrative_status.trail1 == 1 && user.narrative_status.trail2 == 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
                 setFreeCoins(50);
                 setFreeStatus([15, 0, 0, 0, 0, 0]);
-
                 lunchOnOpen();
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
@@ -177,7 +175,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             setScriptName(script[nextScriptIndex].name);
         } else {
             updateNarrative();
-            onToggle();
         }
     }
 
@@ -187,7 +184,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             updateScript();
         }
     }
-
 
     return (
         <Box>
@@ -294,7 +290,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                                 setScriptIndex(0);
                                 setScriptText(script[0].texts[0])
                                 updateNarrative();
-                                onToggle();
                             }}
                             mr="32px"
                             fontFamily={fontTheme.fonts}
@@ -325,6 +320,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 isOpen={lunchIsOpen}
                 coins={freeCoins}
                 score={freeStatus}
+                onClose={() => {lunchOnClose(); onToggle()}}
             />
         </Box>
     )

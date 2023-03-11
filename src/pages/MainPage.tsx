@@ -1,6 +1,8 @@
 import React, { SetStateAction, useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
+import { useUser } from '../hooks';
+import useInsignias from '../hooks/useInsignias';
 
 // Components
 import TutorialModal from '../components/modals/TutorialModal';
@@ -32,29 +34,6 @@ import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 import NavActions from '../components/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 
-interface IUser {
-	ignorance: number;
-	_id: string;
-	userName: string;
-	first_name: string;
-	last_name: string;
-	email: string;
-	password: string;
-	birthday_date: string;
-	is_confirmed: boolean;
-	status: [number];
-	coins: number;
-	contribution: number;
-	first_certificate: string;
-	second_certificate: string;
-	isFirstTimeAppLaunching: boolean;
-	narrative_status: {
-		trail1: number;
-		trail2: number;
-		mambaQuiz: number;
-	};
-}
-
 interface IScript {
 	name: string;
 	image: string;
@@ -83,7 +62,8 @@ const MainPage = () => {
 		onClose: dailyOnClose,
 	} = useDisclosure();
 
-	const [user, setUser] = useState<IUser>({} as IUser);
+	const { getNewUserInfo, setUserData, userData } = useUser();
+	const { getInsignias } = useInsignias();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const alertOnClose = () => setIsConfirmOpen(false);
@@ -92,7 +72,7 @@ const MainPage = () => {
 	const [onError, setOnError] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -104,7 +84,7 @@ const MainPage = () => {
 	//logic for checking and switching if first time is set to true
 	const tutorialFirstOnClose = async () => {
 		try {
-			if (user.isFirstTimeAppLaunching) {
+			if (userData.isFirstTimeAppLaunching) {
 				const newScript = await mainPageScript();
 				setScript(newScript);
 				narrativeOnOpen();
@@ -138,6 +118,7 @@ const MainPage = () => {
 					lastCollected: currentDate.getTime(),
 					coins: res.data.coins,
 				});
+				setUserData(res.data);
 			} catch (error) {
 				setOnError(true);
 			}
@@ -156,12 +137,18 @@ const MainPage = () => {
 	};
 
 	const getUserRequisition = async () => {
+		if (userData._id) {
+			setIgnoranceFilter(userData.ignorance, ignoranceArray);
+			return
+		};
 		try {
+			setIsLoading(true);
 			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
 				'@pionira/userId',
 			);
 			const res = await api.get(`/user/${_userId}`);
-			setUser(res.data);
+			await getInsignias();
+			setUserData(res.data);
 
 			setIgnoranceFilter(res.data.ignorance, ignoranceArray);
 
@@ -228,30 +215,31 @@ const MainPage = () => {
 	// 		setOnError(true);
 	// 	}
 	// }
-	const checkSubscription = async () => {
-		const userId = sessionStorage.getItem('@pionira/userId');
-		try {
-			const res = await api.get(`user/${userId}`);
-			const subscribeId = res.data.subscribeId;
-			if (subscribeId) {
-				const subscription = await api.get(`user/subscription/${userId}`);
-				const isSubscribed = subscription.data.response.status;
+	// const checkSubscription = async () => {
+	// 	const userId = sessionStorage.getItem('@pionira/userId');
+	// 	try {
+	// 		const res = await api.get(`user/${userId}`);
+	// 		const subscribeId = res.data.subscribeId;
+	// 		if (subscribeId) {
+	// 			const subscription = await api.get(`user/subscription/${userId}`);
+	// 			const isSubscribed = subscription.data.response.status;
 
-				if (isSubscribed === "canceled") {
-					await api.patch(`user/updateSubscription/${userId}`, {
-						isSubscribed: false
-					})
-				}
-			}
-		} catch (error) {
-			setOnError(true);
-		}
-	}
+	// 			if (isSubscribed === "canceled") {
+	// 				await api.patch(`user/updateSubscription/${userId}`, {
+	// 					isSubscribed: false
+	// 				})
+	// 				await getNewUserInfo();
+	// 			}
+	// 		}
+	// 	} catch (error) {
+	// 		setOnError(true);
+	// 	}
+	// }
 
 	useEffect(() => {
 		getUserRequisition();
 		updateImageOnTime();
-		checkSubscription();
+		getNewUserInfo();
 	}, []);
 
 	return (
@@ -294,7 +282,7 @@ const MainPage = () => {
 			>
 				<NavActions logout={logout} dontShowMap />
 				{narrativeIsOpen ? null : (
-					<IgnorancePremiumIcons ignorance={user.ignorance} />
+					<IgnorancePremiumIcons ignorance={userData.ignorance} />
 				)}
 			</Flex>
 

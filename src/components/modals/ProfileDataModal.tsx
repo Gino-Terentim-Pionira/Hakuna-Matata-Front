@@ -1,62 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text, Flex, Button, Box, Image, Center } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
+import moment from 'moment';
+import { useUser } from '../../hooks';
 
 // Components
-import AlertModal from './AlertModal';
 import LoadingState from '../LoadingState';
-
-// Requisitions
-import api from '../../services/api';
-import moment from 'moment';
 
 // Images
 import profilePlaceholder from '../../assets/icons/profile.svg';
 import colorPalette from '../../styles/colorPalette';
 import Coins from '../../assets/icons/coinicon.svg'
 import fontTheme from '../../styles/base';
-import { errorCases } from '../../utils/errors/errorsCases';
-
-interface userDataParams {
-    userName: string,
-    first_name: string,
-    last_name: string,
-    email: string,
-    birthday_date: Date,
-    contribution: string,
-    coins: string,
-}
 
 const ProfileDataModal = () => {
-    const [userData, setUserData] = useState<userDataParams>(Object);
-    const [onError, setOnError] = useState(false);
+    const { userData } = useUser();
 
     const history = useHistory();
 
-    const getUser = async () => {
-        try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get(`/user/${userId}`);
-            res.data.birthday_date = moment(res.data.birthday_date).add(1, 'days').format('DD/MM/YYYY');
-            setUserData(res.data);
-            console.log(res.data)
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
     const gotToEditProfile = async () => {
-        try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            history.push(`/editProfile/${userId}`);
-        } catch (error) {
-            setOnError(true);
-        }
+        const userId = sessionStorage.getItem('@pionira/userId');
+        history.push(`/editProfile/${userId}`);
     }
-
-    useEffect(() => {
-        getUser();
-    }, []);
 
     const renderInfo = () => {
         const infoArray = [{
@@ -70,11 +35,11 @@ const ProfileDataModal = () => {
             infoValue: userData.email,
         }, {
             infoLabel: "Data de nascimento",
-            infoValue: `${userData.birthday_date}`
+            infoValue: `${moment(userData.birthday_date).add(1, 'days').format('DD/MM/YYYY')}`
         }];
 
-        return infoArray.map(item =>
-            <Flex alignItems="center" mb="16px">
+        return infoArray.map((item, index) =>
+            <Flex key={index} alignItems="center" mb="16px">
                 <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="24px">
                     {item.infoLabel}:
                 </Text>
@@ -121,22 +86,6 @@ const ProfileDataModal = () => {
                     <LoadingState />
                 )
             }
-            <AlertModal
-                isOpen={onError}
-                onClose={() => window.location.reload()}
-                alertTitle='Ops!'
-                alertBody={errorCases.SERVER_ERROR}
-
-                buttonBody={
-                    <Button
-                        color='white'
-                        bg={colorPalette.primaryColor}
-                        onClick={() => window.location.reload()}
-                    >
-                        Recarregar
-                    </Button>
-                }
-            />
         </Box>
     )
 }

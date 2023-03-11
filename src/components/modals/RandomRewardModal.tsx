@@ -16,31 +16,31 @@ import colorPalette from "../../styles/colorPalette";
 import rewardChest from "../../assets/icons/bau.png";
 import RewardModal from './RewardModal';
 import rewardOpenChest from "../../assets/icons/bauAberto.svg";
+import { useUser } from '../../hooks';
 
 interface userDataProps {
     coins: number
 }
 
 const RandomRewardModal = () => {
+    const { userData, getNewUserInfo } = useUser();
     const [randomNumber, setRandomNumber] = useState(false);
     const [coins, setCoins] = useState(0);
     const [onError, setOnError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const { isOpen, onOpen } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const getUser = async () => {
         try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            const user = await api.get(`/user/${userId}`);
             const random = Math.floor(Math.random() * 100);
-            if (random < user.data.luck) {
+            if (random > 85) {
                 setRandomNumber(true);
-                if (user.data.ignorance <= 30) {
+                if (userData.ignorance <= 30) {
                     setCoins(120);
-                } else if (user.data.ignorance < 50) {
+                } else if (userData.ignorance < 50) {
                     setCoins(80);
-                } else if (user.data.ignorance < 80) {
+                } else if (userData.ignorance < 80) {
                     setCoins(50);
                 } else {
                     setCoins(20);
@@ -56,7 +56,9 @@ const RandomRewardModal = () => {
         try {
             setIsLoading(true);
             await addCoinsStatus(coins);
-            window.location.reload();
+            onClose();
+            setRandomNumber(false);
+            setIsLoading(false);
         } catch (error) {
             setOnError(true);
         }
@@ -71,7 +73,7 @@ const RandomRewardModal = () => {
             await api.patch<userDataProps>(`/user/coins/${_userId}`, {
                 coins: res.data.coins + value
             });
-
+            await getNewUserInfo();
         } catch (error) {
             setOnError(true);
         }

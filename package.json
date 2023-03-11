@@ -4,7 +4,7 @@
 	"private": true,
 	"engines": {
 		"node": "16"
-	  },
+	},
 	"dependencies": {
 		"@chakra-ui/react": "^1.4.2",
 		"@emotion/react": "^11",
@@ -27,6 +27,7 @@
 		"react-input-mask": "^2.0.4",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "4.0.3",
+		"recoil": "^0.7.7",
 		"typescript": "^3.9.5",
 		"web-vitals": "^0.2.2"
 	},
@@ -69,6 +70,7 @@
 		"@types/react": "^16.14.5",
 		"@types/react-icons": "^3.0.0",
 		"@types/react-router-dom": "^5.1.7",
+		"@types/recoil": "^0.0.9",
 		"@typescript-eslint/eslint-plugin": "^4.16.1",
 		"@typescript-eslint/parser": "^4.16.1",
 		"eslint-config-prettier": "^8.1.0",
