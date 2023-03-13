@@ -147,6 +147,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     }
                 });
             }
+            onToggle();
         } catch (error) {
             alert(error);
         }
@@ -320,7 +321,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 isOpen={lunchIsOpen}
                 coins={freeCoins}
                 score={freeStatus}
-                onClose={() => {lunchOnClose(); onToggle()}}
+                onClose={() => {lunchOnClose()}}
             />
         </Box>
     )

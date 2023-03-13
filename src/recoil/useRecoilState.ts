@@ -24,7 +24,6 @@ interface IUser {
     finalQuizComplete: {
         cheetahFinal: boolean
     };
-	luck: number;
 }
 
 const userState = atom({

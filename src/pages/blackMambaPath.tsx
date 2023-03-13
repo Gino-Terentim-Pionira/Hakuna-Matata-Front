@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, SetStateAction } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
 	Image,
 	Flex,
@@ -14,6 +14,8 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import { useUser } from '../hooks';
+import useInsignias from '../hooks/useInsignias';
 
 // Components
 import NarrativeModal from '../components/modals/NarrativeModal';
@@ -78,7 +80,8 @@ interface IQuestions {
 
 const BlackMambaPath = () => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
-
+	const { userData, setUserData, getNewUserInfo } = useUser();
+	const { getInsignias } = useInsignias();
 	const {
 		isOpen: quizIsOpen,
 		onClose: quizOnClose,
@@ -166,7 +169,7 @@ const BlackMambaPath = () => {
 				answer: number;
 				coins: number;
 			}) => {
-				return !data.user_id.includes(_userId as string);
+				return !data?.user_id.includes(_userId as string);
 			},
 		);
 		return res;
@@ -174,23 +177,30 @@ const BlackMambaPath = () => {
 
 	const getUser = async () => {
 		try {
-			const _userId = sessionStorage.getItem('@pionira/userId');
-			const { data } = await api.get(`/user/${_userId}`);
-			const isComplete = data.finalQuizComplete.blackMamba;
+			let userInfoData;
+			if (!userData._id) {
+				const _userId = sessionStorage.getItem('@pionira/userId');
+				const { data } = await api.get(`/user/${_userId}`);
+				await getInsignias();
+				setUserData(data);
+				userInfoData = data;
+			} else userInfoData = userData;
+
+			const isComplete = userInfoData.finalQuizComplete.blackMamba;
 			setIsLoading(false);
 			updateScript();
 
 			if (isComplete) {
 				setMambaText(
-					`Ora ora, vejo que sente mesmo minha falta... Já disse, você conseguiu vencer a ignorância por completo, não a nada mais a se fazer! Obrigado, ${data.userName}!`,
+					`Ora ora, vejo que sente mesmo minha falta... Já disse, você conseguiu vencer a ignorância por completo, não a nada mais a se fazer! Obrigado, ${userInfoData.userName}!`,
 				);
 				setCompleteTrail(true);
 			} else {
-				if (data.ignorance > 80)
+				if (userInfoData.ignorance > 80)
 					setMambaText(
 						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Mamba Negra!',
 					);
-				else if (data.ignorance > 40)
+				else if (userInfoData.ignorance > 40)
 					setMambaText(
 						'Você está definitivamente mais forte, jovem! Mas temo que a Mamba Negra é um desafio muito grande para você!',
 					);
@@ -204,42 +214,28 @@ const BlackMambaPath = () => {
 		}
 	};
 
-	const firstAccess = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const res = await api.get(`/user/${_userId}`);
-
-		if (res.data.narrative_status.blackMamba == 0) {
-			await api.patch(`/user/narrative/${_userId}`, {
-				narrative_status: {
-					...res.data.narrative_status,
-					blackMamba: 1,
-				},
-			});
-
-			history.go(0);
-		}
-	};
-
 	//Lógica para verificar a progressão da narrativa e autalizar o script
 	const updateNarrative = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-			'@pionira/userId',
-		);
-		const res = await api.get(`/user/${_userId}`);
+		let userInfoData;
+		const _userId = sessionStorage.getItem('@pionira/userId');
+		if (!userData._id) {
+			const { data } = await api.get(`/user/${_userId}`);
+			userInfoData = data;
+		} else userInfoData = userData;
 
-		if (res.data.narrative_status.blackMamba == 1) {
+		if (userInfoData.narrative_status.blackMamba == 0) {
 			//Verifica se é a primeira vez do usuário na trilha da cheetah
 			const newScript = await blackMambaBeggining();
 			setScriptMonkey(newScript);
 			narrativeMonkeyOnOpen();
 			await api.patch(`/user/narrative/${_userId}`, {
 				narrative_status: {
-					...res.data.narrative_status,
+					...userInfoData.narrative_status,
 					blackMamba: 2,
 				},
 			});
+			await getNewUserInfo();
+			history.go(0);
 		}
 	};
 
@@ -286,9 +282,8 @@ const BlackMambaPath = () => {
 		const value = 40;
 		setIsConfirmOpen(false);
 		const userId = sessionStorage.getItem('@pionira/userId');
-		const user = await api.get(`/user/${userId}`);
 		const validation = await api.get(`user/loadingQuiz/${userId}`);
-		const userCoins = user.data.coins;
+		const userCoins = userData.coins;
 		if (userCoins >= value) {
 			const newCoins = userCoins - value;
 			try {
@@ -312,7 +307,6 @@ const BlackMambaPath = () => {
 
 	useEffect(() => {
 		getUser();
-		firstAccess();
 		updateNarrative();
 		getQuiz();
 	}, []);
@@ -342,10 +336,12 @@ const BlackMambaPath = () => {
 							zIndex='11'
 							className='bush-item-container'
 							onClick={() => {
-								narrativeOnOpen();
-								onOpen();
+								if (!isLoading) {
+									narrativeOnOpen();
+									onOpen();
+								}
 							}}
-						></Flex>
+						/>
 
 						<Flex
 							width='92.5%'
