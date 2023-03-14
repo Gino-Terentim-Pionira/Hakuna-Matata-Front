@@ -14,9 +14,10 @@ import {
     ModalHeader,
     ModalCloseButton,
 } from '@chakra-ui/react';
+import { useUser } from '../hooks';
+import useInsignias from '../hooks/useInsignias';
 
 //utils
-import { useHistory } from 'react-router-dom';
 import fontTheme from '../styles/base';
 import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
 
@@ -52,7 +53,6 @@ import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
 
-
 interface IQuiz {
     _id: string;
     name: string;
@@ -84,12 +84,6 @@ interface IQuestions {
     coins: number;
 }
 
-interface IUser {
-    ignorance: number;
-    _id: string;
-    userName: string;
-}
-
 interface IScript {
     name: string;
     image: string;
@@ -97,9 +91,8 @@ interface IScript {
 }
 
 const CheetahPath = () => {
-    const history = useHistory();
-
-    const [user, setUser] = useState<IUser>({} as IUser);
+    const { userData, setUserData } = useUser();
+    const { getInsignias } = useInsignias();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [withoutMoney, setWithoutMoney] = useState(false);
     const isAlertOnClose = () => setIsAlertOpen(false);
@@ -239,35 +232,41 @@ const CheetahPath = () => {
 
     const getUser = async () => {
         try {
+            let userInfoData;
+            if (!userData._id) {
+                const _userId = sessionStorage.getItem('@pionira/userId');
+                const { data } = await api.get(`/user/${_userId}`);
+                await getInsignias();
+                setUserData(data);
+                userInfoData = data;
+            } else userInfoData = userData;
             const _userId: SetStateAction<string> | null = sessionStorage.getItem(
                 '@pionira/userId',
             );
-            const { data } = await api.get(`/user/${_userId}`);
-            setUser(data);
-            setIgnoranceFilter(data.ignorance, ignoranceArray);
-            const isComplete = data.finalQuizComplete.cheetahFinal;
+            setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
+            const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
             setIsLoading(false);
 
             if (isComplete) {
                 setCheetahText(
-                    `Você já alcançou o máximo da sua agilidade filhote... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+                    `Você já alcançou o máximo da sua agilidade filhote... digo ${userInfoData.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
                 );
                 setCompleteTrail(true);
-                if (data.narrative_status.trail1 !== 4) {
+                if (userInfoData.narrative_status.trail1 === 2) {
+                    await finalCheetahNarrative();
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
-                            ...data.narrative_status,
+                            ...userInfoData.narrative_status,
                             trail1: 3
                         },
                     });
-                    await finalCheetahNarrative();
                 }
             } else {
-                if (data.ignorance > 80)
+                if (userInfoData.ignorance > 80)
                     setCheetahText(
                         'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
                     );
-                else if (data.ignorance > 40)
+                else if (userInfoData.ignorance > 40)
                     setCheetahText(
                         'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
                     );
@@ -301,40 +300,24 @@ const CheetahPath = () => {
         }
     };
 
-    const firstAccess = async () => {
-        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-            '@pionira/userId',
-        );
-        const res = await api.get(`/user/${_userId}`);
-
-        if (res.data.narrative_status.trail1 == 0) {
-            await api.patch(`/user/narrative/${_userId}`, {
-                narrative_status: {
-                    ...res.data.narrative_status,
-                    trail1: 1
-                },
-            });
-
-            history.go(0);
-        }
-    };
-
     //Lógica para verificar a progressão da narrativa e autalizar o script
     const updateNarrative = async () => {
-        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-            '@pionira/userId',
-        );
-        const res = await api.get(`/user/${_userId}`);
+        let userInfoData;
+        const _userId = sessionStorage.getItem('@pionira/userId');
+        if (!userData._id) {
+            const { data } = await api.get(`/user/${_userId}`);
+            userInfoData = data;
+        } else userInfoData = userData;
 
         if (
-            res.data.narrative_status.trail1 == 1 &&
-            res.data.narrative_status.trail2 == 0
+            userInfoData.narrative_status.trail1 == 0 &&
+            userInfoData.narrative_status.trail2 == 0
         ) {
             //Verifica se é a primeira vez do usuário em uma trilha
             const newScript = await cheetahFreeLunch();
             setScript(newScript);
             narrativeOnOpen();
-        } else if (res.data.narrative_status.trail1 == 1) {
+        } else if (userInfoData.narrative_status.trail1 == 0) {
             //Verifica se é a primeira vez do usuário na trilha da cheetah
             const newScript = await cheetahBeggining();
             setScript(newScript);
@@ -406,7 +389,6 @@ const CheetahPath = () => {
 
     useEffect(() => {
         getUser();
-        firstAccess();
         updateNarrative();
         getQuiz();
     }, []);
@@ -444,13 +426,13 @@ const CheetahPath = () => {
                     {narrativeIsOpen ||
                         narrativeChallengeIsOpen ||
                         finalNarrativeChallengeIsOpen ? null : (
-                            <NavActions logout={logout}/>
-                        )}
+                        <NavActions logout={logout} />
+                    )}
 
                     {narrativeIsOpen ||
-                            narrativeChallengeIsOpen ||
-                            finalNarrativeChallengeIsOpen ? null : (
-                        <IgnorancePremiumIcons ignorance={user.ignorance} />
+                        narrativeChallengeIsOpen ||
+                        finalNarrativeChallengeIsOpen ? null : (
+                        <IgnorancePremiumIcons ignorance={userData.ignorance} />
                     )}
                 </Flex>
 
@@ -464,9 +446,9 @@ const CheetahPath = () => {
                             zIndex='10'
                         >
                             <ModuleModal left='19vw' top='67vh' quizIndex={0} />
-                            <ModuleModal left='45vw'top='54vh' quizIndex={1} />
+                            <ModuleModal left='45vw' top='54vh' quizIndex={1} />
                             <ModuleModal left='68vw' top='82vh' quizIndex={2} />
-                            <ModuleModal left='89vw'top='60vh' quizIndex={3} />
+                            <ModuleModal left='89vw' top='60vh' quizIndex={3} />
                             <Center
                                 _hover={{
                                     cursor: 'pointer',
@@ -649,6 +631,7 @@ const CheetahPath = () => {
                         isOpen={narrativeIsOpen}
                         script={script}
                         onToggle={narrativeOnToggle}
+                        narrative="cheetah"
                     />
                 ) : null}
                 {challengeScript.length > 0 ? (
@@ -657,6 +640,7 @@ const CheetahPath = () => {
                         isOpen={narrativeChallengeIsOpen}
                         script={challengeScript}
                         onToggle={narrativeChallengeOnToggle}
+                        narrative="lion"
                     />
                 ) : null}
 
@@ -666,6 +650,7 @@ const CheetahPath = () => {
                         isOpen={finalNarrativeChallengeIsOpen}
                         script={finalChallengeScript}
                         onToggle={finalNarrativeChallengeOnToggle}
+                        narrative="lion"
                     />
                 ) : null}
 
@@ -706,7 +691,7 @@ const CheetahPath = () => {
                 routeQuiz={'finalcheetahquiz'}
                 insignaName={'da Cheetah'}
                 withoutMoney={withoutMoney}
-                userIgnorance={user.ignorance}
+                userIgnorance={userData.ignorance}
                 trail={1}
             />
 

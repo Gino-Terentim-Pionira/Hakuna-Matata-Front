@@ -621,6 +621,7 @@ const LionPath = () => {
 						isOpen={narrativeIsOpen}
 						script={script}
 						onToggle={narrativeOnToggle}
+						narrative="lion"
 					/>
 				) : null}
 				{challengeScript.length > 0 ? (
@@ -629,7 +630,8 @@ const LionPath = () => {
 						isOpen={narrativeChallengeIsOpen}
 						script={challengeScript}
 						onToggle={narrativeChallengeOnToggle}
-					/>
+						narrative="lion"
+						/>
 				) : null}
 
 				{finalChallengeScript.length > 0 ? (
@@ -638,7 +640,8 @@ const LionPath = () => {
 						isOpen={finalNarrativeChallengeIsOpen}
 						script={finalChallengeScript}
 						onToggle={finalNarrativeChallengeOnToggle}
-					/>
+						narrative="lion"
+						/>
 				) : null}
 
 				<AlertModal
