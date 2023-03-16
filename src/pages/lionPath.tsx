@@ -255,7 +255,7 @@ const LionPath = () => {
 					);
 				else if (userInfoData.ignorance > 40)
 					setLionText(
-						'Você está definitivamente mais forte, jovem! Mas temo que a Leão e Leoa é um desafio muito grande para você!',
+						'Você está definitivamente mais forte, jovem! Mas temo que o Leão e a Leoa é um desafio muito grande para você!',
 					);
 				else
 					setLionText(
@@ -363,7 +363,7 @@ const LionPath = () => {
 
 		if (userCoins <= 0 || userCoins < value) {
 			setAlertCoins(
-				'Poxa! Parece que você não tem moedas suficientes! Se você prosseguir podera ganhar o dobro de Ignorância e até ficar devendo moedas! Escolha com sabedorias aprendiz.',
+				'Poxa! Parece que você não tem moedas suficientes! Se você prosseguir podera ganhar o dobro de Ignorância e até ficar devendo moedas! Escolha com sabedoria aprendiz.',
 			);
 			setIsCoinsCheck(true);
 		}

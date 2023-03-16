@@ -378,7 +378,7 @@ const CheetahPath = () => {
 
         if (userCoins <= 0 || userCoins < value) {
             setAlertCoins(
-                'Poxa! Parece que você não tem moedas suficientes! Se você proseguir podera ganhar o dobro de Ignorância e até ficar devendo moesdas! Escolha com sabedorias filhote.',
+                'Poxa! Parece que você não tem moedas suficientes! Se você proseguir podera ganhar o dobro de Ignorância e até ficar devendo moesdas! Escolha com sabedoria filhote.',
             );
             setIsCoinsCheck(true);
         }

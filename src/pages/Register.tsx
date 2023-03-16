@@ -134,7 +134,7 @@ const Register = () => {
         const lastname = lastIndexValidation(firstname) as string;
 
         if (firstname[0] === lastname || lastname === ' ') {
-            setValidationError("Escreva um nome válido");
+            setValidationError("Preencha com seu nome completo");
             setHasValidationError(true);
             return true;
         } else {

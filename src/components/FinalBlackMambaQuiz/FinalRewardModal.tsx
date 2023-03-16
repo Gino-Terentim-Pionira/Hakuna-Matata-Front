@@ -210,8 +210,8 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 		return {
 			title: 'Que pena!',
 			titleColor: colorPalette.closeButton,
-			subtitle: correctAnswers === 0 ? `Você não acertou nenhuma questão! Mas não desista, você pode vencer a ignorância!` :
-				`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você pode vencer a ignorância!`,
+			subtitle: correctAnswers === 0 ? `Você não acertou nenhuma questão! Mas não desista, você poderá vencer a ignorância!` :
+				`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você poderá vencer a ignorância!`,
 			icon: Cross,
 			coins,
 			status: score
