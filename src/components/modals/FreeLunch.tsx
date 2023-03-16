@@ -94,7 +94,7 @@ const FreeLunch: FC<IFreeLunch> = ({
     const rewardModalInfo = {
         title: 'Surpresa!',
         titleColor: colorPalette.inactiveButton,
-        subtitle: 'Aqui está algumas recompensas, aproveite!',
+        subtitle: 'Aqui estão algumas recompensas, aproveite!',
         icon: Cheetah,
         coins: coinsRecieved,
         status: score

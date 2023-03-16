@@ -351,7 +351,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                                             ) : (
                                                 <>
                                                     <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
-                                                        Ainda faltam joias para se conquistar!
+                                                        Ainda faltam Joias para se conquistar!
                                                     </Text>
                                                     <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.1rem' marginTop='0.2rem'>
                                                         Deseja realizar o desafio novamente?
@@ -368,7 +368,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                                             setIsFirstTimeChallenge(false);
                                             closeConfirmationModal();
                                         }}>
-                                            realizar desafio denovo!
+                                            Realizar desafio denovo!
                                         </Button>
                                         <Button h='3.5rem' w='45%' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
                                             Voltar!

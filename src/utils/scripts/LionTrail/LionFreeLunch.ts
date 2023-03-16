@@ -38,7 +38,7 @@ const LionFreeLunch = async () => {
             name: "Leão",
             image: lion,
             texts: ["Liderança! E temos como objetivo tornar um Aprendiz como você em um verdadeiro líder!",
-                "Ao longo do seu treinamento, você receberá pontos de habilidades em cada uma dessas áreas e poderá checar eles no seu passaporte. Para provar o seu valor, terá que passar pelo nosso desafio"]
+                "Ao longo do seu treinamento, você receberá pontos de habilidades em cada uma dessas áreas e poderá checá-los no seu passaporte. Para provar o seu valor, terá que passar pelo nosso desafio"]
         },
         {
             name: "Leoa",
