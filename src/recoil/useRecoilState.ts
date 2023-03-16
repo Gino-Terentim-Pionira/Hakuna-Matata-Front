@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-interface IUser {
+export interface IUser {
 	ignorance: number;
 	_id: string;
 	userName: string;
@@ -24,6 +24,8 @@ interface IUser {
     finalQuizComplete: {
         cheetahFinal: boolean
     };
+	quiz_coins: number[];
+    consecutiveDays: number;
 }
 
 const userState = atom({

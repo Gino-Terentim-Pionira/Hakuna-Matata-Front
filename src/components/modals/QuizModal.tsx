@@ -11,6 +11,8 @@ import {
     Center,
     useDisclosure
 } from '@chakra-ui/react';
+import { useUser } from '../../hooks';
+
 // Components
 import RewardModal from './RewardModal';
 
@@ -65,8 +67,8 @@ const QuizModal: FC<IQuizComponent> = ({
     userQuizCoins,
     quizIndex
 }) => {
-    const { isOpen, onOpen } = useDisclosure();
-
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { getNewUserInfo } = useUser();
     const [step, setStep] = useState(0);
     const length = quiz.questions_id.length;
     const [coins, setCoins] = useState(0);
@@ -269,7 +271,8 @@ const QuizModal: FC<IQuizComponent> = ({
             firsTimeChallenge ? validateUser() : null
 
             await updateUserQuizTime();
-            window.location.reload();
+            await getNewUserInfo();
+            onClose();
         } catch (error) {
             setOnError(true);
         }
@@ -285,7 +288,7 @@ const QuizModal: FC<IQuizComponent> = ({
                 coins: undefined,
                 score: undefined
             }
-        if(passed)
+        if (passed)
             return {
                 title: 'Você é demais!',
                 titleColor: colorPalette.inactiveButton,

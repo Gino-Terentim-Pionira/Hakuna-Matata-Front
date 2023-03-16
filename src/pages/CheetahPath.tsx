@@ -233,16 +233,13 @@ const CheetahPath = () => {
     const getUser = async () => {
         try {
             let userInfoData;
+            const _userId = sessionStorage.getItem('@pionira/userId');
             if (!userData._id) {
-                const _userId = sessionStorage.getItem('@pionira/userId');
                 const { data } = await api.get(`/user/${_userId}`);
                 await getInsignias();
                 setUserData(data);
                 userInfoData = data;
             } else userInfoData = userData;
-            const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-                '@pionira/userId',
-            );
             setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
             const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
             setIsLoading(false);
@@ -392,6 +389,10 @@ const CheetahPath = () => {
         updateNarrative();
         getQuiz();
     }, []);
+
+    if (isLoading) {
+        return <LoadingOverlay />
+    }
 
     return (
         <>
@@ -677,9 +678,6 @@ const CheetahPath = () => {
                 />
             </Flex>
 
-            {
-                isLoading && <LoadingOverlay />
-            }
             <FinalUniversalQuiz
                 openModal={quizIsOpen}
                 closeModal={quizOnClose}

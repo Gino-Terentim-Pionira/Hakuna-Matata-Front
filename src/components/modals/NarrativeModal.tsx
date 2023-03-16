@@ -39,7 +39,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     narrative
 }) => {
     const history = useHistory();
-    const { getNewUserInfo } = useUser();
+    const { userData, setUserData, getNewUserInfo } = useUser();
     const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
 
     const [delayButton, setDelayButton] = useState(true);
@@ -92,9 +92,14 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     //logic for checking and switching if first time is set to true
     const updateNarrative = async () => {
         try {
+            let user;
             const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get(`/user/${_userId}`);
-            const user = res.data;
+            if(!userData._id) {
+                const res = await api.get(`/user/${_userId}`);
+                user = res.data;
+                setUserData(res.data);
+            } else user = userData;
+
             if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
                 setFreeCoins(100);
                 lunchOnOpen();
@@ -109,7 +114,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     setFreeStatus([15, 0, 0, 0, 0, 0]);
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
-                            ...res.data.narrative_status,
+                            ...user.narrative_status,
                             trail1: 2
                         }
                     });
@@ -118,39 +123,41 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     setFreeStatus([0, 15, 0, 0, 0, 0]);
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
-                            ...res.data.narrative_status,
+                            ...user.narrative_status,
                             trail2: 2
                         }
                     });
                 }
                 await getNewUserInfo();
-            } else if (res.data.narrative_status.trail1 == 0) { //Verifica se é a primeira vez do usuário na trilha da cheetah
+            } else if (user.narrative_status.trail1 == 0) { //Verifica se é a primeira vez do usuário na trilha da cheetah
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail1: 2
                     }
                 });
                 await getNewUserInfo();
                 history.go(0);
-            } else if (res.data.narrative_status.trail2 == 0) { //Verifica se é a primeira vez do usuário na trilha da cheetah
+            } else if (user.narrative_status.trail2 == 0) { //Verifica se é a primeira vez do usuário na trilha do leao e da leoa
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail2: 2
                     }
                 });
-            } else if (res.data.narrative_status.trail1 == 3) { //Verifica se o usuário terminou o desafio da trilha
+                await getNewUserInfo();
+                history.go(0);
+            } else if (user.narrative_status.trail1 == 3) { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail1: 4
                     }
                 });
-            } else if (res.data.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
+            } else if (user.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail2: 4
                     }
                 });
@@ -296,9 +303,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                             }}
                             onClick={() => {
                                 updateNarrative();
-                                setTextIndex(0);
-                                setScriptIndex(0);
-                                setScriptText(script[0].texts[0])
                             }}
                             mr="32px"
                             fontFamily={fontTheme.fonts}

@@ -14,9 +14,9 @@ import {
 	ModalHeader,
 	ModalCloseButton,
 } from '@chakra-ui/react';
+import { useUser } from '../hooks';
 
 //utils
-import { useHistory } from 'react-router-dom';
 import fontTheme from '../styles/base';
 import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
 
@@ -52,6 +52,7 @@ import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
 import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
 import { errorCases } from '../utils/errors/errorsCases';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
+import useInsignias from '../hooks/useInsignias';
 
 
 interface IQuiz {
@@ -85,12 +86,6 @@ interface IQuestions {
 	coins: number;
 }
 
-interface IUser {
-	ignorance: number;
-	_id: string;
-	userName: string;
-}
-
 interface IScript {
 	name: string;
 	image: string;
@@ -98,9 +93,8 @@ interface IScript {
 }
 
 const LionPath = () => {
-	const history = useHistory();
-
-	const [user, setUser] = useState<IUser>({} as IUser);
+	const { userData, setUserData } = useUser();
+	const { getInsignias } = useInsignias();
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 	const [withoutMoney, setWithoutMoney] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
@@ -228,33 +222,38 @@ const LionPath = () => {
 
 	const getUser = async () => {
 		try {
-			const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-			const { data } = await api.get(`/user/${_userId}`);
-			setIgnoranceFilter(data.ignorance, ignoranceArray);
-			const isComplete = data.finalQuizComplete.lionFinal;
-			setUser(data);
+			let userInfoData;
+			const _userId = sessionStorage.getItem('@pionira/userId');
+			if (!userData._id) {
+				const { data } = await api.get(`/user/${_userId}`);
+				await getInsignias();
+				setUserData(data);
+				userInfoData = data;
+			} else userInfoData = userData;
+			setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
+			const isComplete = userInfoData.finalQuizComplete.lionFinal;
 			setIsLoading(false);
 
 			if (isComplete) {
 				setLionText(
-					`Você já alcançou o máximo da sua liderança, aprendiz... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+					`Você já alcançou o máximo da sua liderança, aprendiz... digo ${userInfoData.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
 				);
 				setCompleteTrail(true);
-				if (data.narrative_status.trail2 !== 4) {
+				if (userInfoData.narrative_status.trail2 === 2) {
 					await api.patch(`/user/narrative/${_userId}`, {
 						narrative_status: {
-							...data.narrative_status,
+							...userInfoData.narrative_status,
 							trail2: 3
 						},
 					});
 					await finalLionNarrative();
 				}
 			} else {
-				if (data.ignorance > 80)
+				if (userInfoData.ignorance > 80)
 					setLionText(
 						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
 					);
-				else if (data.ignorance > 40)
+				else if (userInfoData.ignorance > 40)
 					setLionText(
 						'Você está definitivamente mais forte, jovem! Mas temo que a Leão e Leoa é um desafio muito grande para você!',
 					);
@@ -284,50 +283,29 @@ const LionPath = () => {
 		}
 	};
 
-	const firstAccess = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const res = await api.get(`/user/${_userId}`);
-
-		if (res.data.narrative_status.trail2 == 0) {
-			await api.patch(`/user/narrative/${_userId}`, {
-				narrative_status: {
-					...res.data.narrative_status,
-					trail2: 1
-				},
-			});
-
-			history.go(0);
-		}
-	};
-
 	//Lógica para verificar a progressão da narrativa e autalizar o script
 	const updateNarrative = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const res = await api.get(`/user/${_userId}`);
-		// const { data } = await api.get(`/user/${_userId}`);
-		// const isComplete = data.finalQuizComplete.lionFinal;
+		let userInfoData;
+		const _userId = sessionStorage.getItem('@pionira/userId');
+		if (!userData._id) {
+			const { data } = await api.get(`/user/${_userId}`);
+			userInfoData = data;
+		} else userInfoData = userData;
 
 		if (
-			res.data.narrative_status.trail1 == 0 &&
-			res.data.narrative_status.trail2 == 1
+			userInfoData.narrative_status.trail1 == 0 &&
+			userInfoData.narrative_status.trail2 == 0
 		) {
 			//Verifica se é a primeira vez do usuário em uma trilha
 			const newScript = await lionFreeLunch();
 			setScript(newScript);
 			narrativeOnOpen();
-		} else if (res.data.narrative_status.trail2 == 1) {
+		} else if (userInfoData.narrative_status.trail2 == 0) {
 			//Verifica se é a primeira vez do usuário na trilha do leao
 			const newScript = await lionBeggining();
 			setScript(newScript);
 			narrativeOnOpen();
 		}
-		// else if (res.data.narrative_status.trail2 == 2 && !isComplete) {
-		// 	//Verifica se o usuário está no dia a dia da trilha
-		// 	const randomNumber = Math.floor(Math.random() * 10);
-		// 	const newScript = await trail2Teasing(randomNumber);
-		// 	setScript(newScript);
-		// 	narrativeOnOpen();
-		// }
 	};
 
 
@@ -393,10 +371,13 @@ const LionPath = () => {
 
 	useEffect(() => {
 		getUser();
-		firstAccess();
 		updateNarrative();
 		getQuiz();
 	}, []);
+
+	if (isLoading) {
+		return <LoadingOverlay />
+	}
 
 	return (
 		<>
@@ -433,7 +414,7 @@ const LionPath = () => {
 					)}
 
 					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-						<IgnorancePremiumIcons ignorance={user.ignorance} />
+						<IgnorancePremiumIcons ignorance={userData.ignorance} />
 					)}
 				</Flex>
 
@@ -631,7 +612,7 @@ const LionPath = () => {
 						script={challengeScript}
 						onToggle={narrativeChallengeOnToggle}
 						narrative="lion"
-						/>
+					/>
 				) : null}
 
 				{finalChallengeScript.length > 0 ? (
@@ -641,7 +622,7 @@ const LionPath = () => {
 						script={finalChallengeScript}
 						onToggle={finalNarrativeChallengeOnToggle}
 						narrative="lion"
-						/>
+					/>
 				) : null}
 
 				<AlertModal
@@ -665,9 +646,6 @@ const LionPath = () => {
 					}
 				/>
 			</Flex>
-			{
-				isLoading && <LoadingOverlay />
-			}
 
 			<FinalUniversalQuiz
 				openModal={quizIsOpen}
@@ -680,7 +658,7 @@ const LionPath = () => {
 				routeQuiz={'finallionquiz'}
 				insignaName={'do Leão e Leoa'}
 				withoutMoney={withoutMoney}
-				userIgnorance={user.ignorance}
+				userIgnorance={userData.ignorance}
 				trail={2}
 			/>
 

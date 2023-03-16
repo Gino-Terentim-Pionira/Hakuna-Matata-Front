@@ -13,7 +13,6 @@ import {
 	ModalCloseButton,
 	Text,
 } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
 import useInsignias from '../hooks/useInsignias';
 
@@ -100,7 +99,6 @@ const BlackMambaPath = () => {
 		onToggle: narrativeMonkeyOnToggle,
 	} = useDisclosure();
 
-	const history = useHistory();
 	const [questions, setQuestions] = useState<IQuestions[]>([
 		{
 			alternatives: [''],
@@ -224,7 +222,7 @@ const BlackMambaPath = () => {
 		} else userInfoData = userData;
 
 		if (userInfoData.narrative_status.blackMamba == 0) {
-			//Verifica se é a primeira vez do usuário na trilha da cheetah
+			//Verifica se é a primeira vez do usuário na trilha da mamba negra
 			const newScript = await blackMambaBeggining();
 			setScriptMonkey(newScript);
 			narrativeMonkeyOnOpen();
@@ -235,7 +233,6 @@ const BlackMambaPath = () => {
 				},
 			});
 			await getNewUserInfo();
-			history.go(0);
 		}
 	};
 

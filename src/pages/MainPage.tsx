@@ -242,6 +242,10 @@ const MainPage = () => {
 		getNewUserInfo();
 	}, []);
 
+	if (isLoading) {
+		return <LoadingOverlay />
+	}
+
 	return (
 		<>
 			{updateImageOnTime() ? (
@@ -352,9 +356,6 @@ const MainPage = () => {
 						/>
 					</>
 				)}
-				{
-					isLoading && <LoadingOverlay />
-				}
 			</Flex>
 
 
