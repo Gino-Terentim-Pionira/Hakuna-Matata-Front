@@ -14,6 +14,7 @@ import {
     useDisclosure,
     Image
 } from "@chakra-ui/react";
+import { useUser } from '../../hooks';
 
 // Components
 import QuizModal from './QuizModal';
@@ -35,12 +36,11 @@ import button_off from '../../assets/icons/button_off.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 
-
 interface IModuleModal {
     quizIndex: number;
     top?: string;
     bottom?: string;
-    left?: string; 
+    left?: string;
 }
 
 interface IQuizz {
@@ -66,28 +66,6 @@ interface IQuizz {
         _id: string,
     }];
     total_coins: number;
-}
-
-interface IUser {
-    _id: string;
-    userName: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    birthday_date: string;
-    is_confirmed: boolean;
-    status: [number];
-    coins: number;
-    contribution: number;
-    first_certificate: string;
-    second_certificate: string;
-    quiz_coins: {
-        module1: number,
-        module2: number,
-        module3: number,
-        module4: number
-    }
 }
 
 const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
@@ -139,18 +117,19 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
         }],
         total_coins: 0
     } as IQuizz);
-
+    const {userData} = useUser();
     const [isLoading, setIsLoading] = useState(false);
-    const [user, setUser] = useState<IUser>({} as IUser);
     const [buttonValidation, setButtonValidation] = useState(false);
     const [isFirstTimeChallenge, setIsFirstTimeChallenge] = useState(true);
     const [totalCoins, setTotalCoins] = useState(0);
     const [step, setStep] = useState(0);
-    const [userQuizCoins, setUserQuizCoins] = useState(0);
     const [onError, setOnError] = useState(false);
+
+    const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
     // Metodos
     const getQuiz = async (quizIndex: number) => {
+        setIsLoading(true);
         try {
             const res = await api.get('/quizz');
             const quiz = res.data[quizIndex];
@@ -160,24 +139,13 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
         } catch (error) {
             setOnError(true);
         }
-    }
-
-
-    const getUser = async () => {
-        try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get(`/user/${userId}`);
-            setUser(res.data);
-            setUserQuizCoins(res.data.quiz_coins[quizIndex]);
-        } catch (error) {
-            setOnError(true);
-        }
+        setIsLoading(false);
     }
 
     const updateQuiz = async (quizId: string) => {
         try {
             await api.patch(`quizz/user/${quizId}`, {
-                user_id: user._id
+                user_id: userData._id
             });
         } catch (error) {
             setOnError(true);
@@ -185,9 +153,10 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     }
 
     const confirmationValidation = async () => {
-        if (user) {
+        if (userData) {
             setIsLoading(true);
             await updateQuiz(quiz._id);
+            setIsLoading(false);
         }
         setButtonValidation(true);
     }
@@ -218,7 +187,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
 
     //UseEffects
     useEffect(() => {
-        getUser();
         getQuiz(quizIndex);
     }, []);
 
@@ -235,7 +203,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     return (
         <>
             <Image
-                src={buttonValidation || quiz.user_id?.includes(user._id) ? button_on : button_off}
+                src={buttonValidation || quiz.user_id?.includes(userData._id) ? button_on : button_off}
                 onClick={onOpen}
                 _hover={{
                     cursor: 'pointer',
@@ -273,9 +241,9 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
 
                         {
                             isLoading ? (
-                                <>
+                                <Box width="100%" h="19rem">
                                     <LoadingState />
-                                </>
+                                </Box>
                             ) : (
                                 <>
                                     <Grid gridTemplateColumns='1fr 1fr' w='90%' h='19rem' overflowY='auto'>
@@ -307,6 +275,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                                     bgColor={colorPalette.confirmButton}
                                     width="50%"
                                     height="4rem"
+                                    isLoading={isLoading}
+                                    isDisabled={isLoading}
                                     onClick={() => handleModal()}
                                 >
                                     <Text
@@ -362,7 +332,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
 
                     <ModalBody d='flex' w='80%' flexDirection='column' justifyContent='space-evenly'>
                         {
-                            buttonValidation || quiz.user_id?.includes(user._id) ? (
+                            buttonValidation || quiz.user_id?.includes(userData._id) ? (
                                 <>
                                     <div>
                                         {

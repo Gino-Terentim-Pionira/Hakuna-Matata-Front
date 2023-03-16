@@ -3,6 +3,7 @@ import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import RewardModal from './RewardModal';
 import Cheetah from '../../assets/icons/cheetahblink.svg';
+import { useUser } from '../../hooks';
 
 interface IDailyReward {
     isOpen: boolean;
@@ -17,26 +18,18 @@ interface userDataProps {
 }
 
 const DailyRewardModal: FC<IDailyReward> = ({
-    isOpen,
+    isOpen, onClose
 }) => {
-
+    const { userData, getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
     const [coins, setCoins] = useState(0);
 
-    const getUser = async () => {
-        try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            const user = await api.get(`/user/${userId}`);
-
-            if (user.data.consecutiveDays >= 10) {
-                setCoins(25);
-            } else if (user.data.consecutiveDays > 0) {
-                setCoins(10);
-            }
-
-        } catch (error) {
-            setOnError(true);
+    const getUser = () => {
+        if (userData.consecutiveDays >= 10) {
+            setCoins(25);
+        } else if (userData.consecutiveDays > 0) {
+            setCoins(10);
         }
     }
 
@@ -47,12 +40,12 @@ const DailyRewardModal: FC<IDailyReward> = ({
 
             setIsLoading(true);
             await addDailyRewardStatus(coinsRecieved);
-            window.location.reload();
-
+            await getNewUserInfo();
+            setIsLoading(false);
+            onClose();
         } catch (error) {
             setOnError(true);
         }
-
     }
 
     const addDailyRewardStatus = async (value: number) => {

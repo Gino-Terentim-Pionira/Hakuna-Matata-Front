@@ -1,5 +1,7 @@
 import React, { FC, useState, useEffect, SetStateAction } from 'react';
 import { Flex, Box, Image, Slide, useDisclosure, Text } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
+import { useUser } from '../../hooks';
 
 // Components
 import FreeLunch from './FreeLunch';
@@ -27,16 +29,18 @@ type NarrativeModalProps = {
     isOpen: boolean,
     onToggle: VoidFunction,
     script: IScript[],
-    narrative?: string
+    narrative?: 'cheetah' | 'lion' | undefined
 }
 
 const NarrativeModal: FC<NarrativeModalProps> = ({
     isOpen,
     onToggle,
-    script
+    script,
+    narrative
 }) => {
-
-    const { isOpen: lunchIsOpen, onOpen: lunchOnOpen } = useDisclosure();
+    const history = useHistory();
+    const { userData, setUserData, getNewUserInfo } = useUser();
+    const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
 
     const [delayButton, setDelayButton] = useState(true);
 
@@ -88,67 +92,77 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     //logic for checking and switching if first time is set to true
     const updateNarrative = async () => {
         try {
+            let user;
             const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get(`/user/${_userId}`);
-            const user = res.data;
+            if(!userData._id) {
+                const res = await api.get(`/user/${_userId}`);
+                user = res.data;
+                setUserData(res.data);
+            } else user = userData;
+
             if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
                 setFreeCoins(100);
-
                 lunchOnOpen();
                 await api.patch(`/user/updateFirstTime/${user._id}`, {
                     isFirstTimeAppLaunching: false,
                 });
-            } else if (user.narrative_status.trail1 == 1 && user.narrative_status.trail2 == 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
+            } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
                 setFreeCoins(50);
-                setFreeStatus([15, 0, 0, 0, 0, 0]);
-
                 lunchOnOpen();
+                if (narrative === 'cheetah') {
+                    console.log('CHAMOU A CHEETAH PATH')
+                    setFreeStatus([15, 0, 0, 0, 0, 0]);
+                    await api.patch(`/user/narrative/${_userId}`, {
+                        narrative_status: {
+                            ...user.narrative_status,
+                            trail1: 2
+                        }
+                    });
+                } else if (narrative === 'lion') {
+                    console.log('CHAMOU O LION PATH')
+                    setFreeStatus([0, 15, 0, 0, 0, 0]);
+                    await api.patch(`/user/narrative/${_userId}`, {
+                        narrative_status: {
+                            ...user.narrative_status,
+                            trail2: 2
+                        }
+                    });
+                }
+                await getNewUserInfo();
+            } else if (user.narrative_status.trail1 == 0) { //Verifica se é a primeira vez do usuário na trilha da cheetah
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail1: 2
                     }
                 });
-            } else if (user.narrative_status.trail1 == 0 && user.narrative_status.trail2 == 1) { //Verifica se é a primeira vez do uso em qualquer trilha                
-                setFreeCoins(50);
-                setFreeStatus([0, 15, 0, 0, 0, 0]);
-
-                lunchOnOpen();
+                await getNewUserInfo();
+                history.go(0);
+            } else if (user.narrative_status.trail2 == 0) { //Verifica se é a primeira vez do usuário na trilha do leao e da leoa
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail2: 2
                     }
                 });
-            } else if (res.data.narrative_status.trail1 == 1) { //Verifica se é a primeira vez do usuário na trilha da cheetah
+                await getNewUserInfo();
+                history.go(0);
+            } else if (user.narrative_status.trail1 == 3) { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
-                        trail1: 2
-                    }
-                });
-            } else if (res.data.narrative_status.trail2 == 1) { //Verifica se é a primeira vez do usuário na trilha da cheetah
-                await api.patch(`/user/narrative/${_userId}`, {
-                    narrative_status: {
-                        ...res.data.narrative_status,
-                        trail2: 2
-                    }
-                });
-            } else if (res.data.narrative_status.trail1 == 3) { //Verifica se o usuário terminou o desafio da trilha
-                await api.patch(`/user/narrative/${_userId}`, {
-                    narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail1: 4
                     }
                 });
-            } else if (res.data.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
+            } else if (user.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
-                        ...res.data.narrative_status,
+                        ...user.narrative_status,
                         trail2: 4
                     }
                 });
             }
+            onToggle();
         } catch (error) {
             alert(error);
         }
@@ -177,7 +191,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             setScriptName(script[nextScriptIndex].name);
         } else {
             updateNarrative();
-            onToggle();
         }
     }
 
@@ -187,7 +200,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             updateScript();
         }
     }
-
 
     return (
         <Box>
@@ -290,11 +302,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                                 opacity: '80%'
                             }}
                             onClick={() => {
-                                setTextIndex(0);
-                                setScriptIndex(0);
-                                setScriptText(script[0].texts[0])
                                 updateNarrative();
-                                onToggle();
                             }}
                             mr="32px"
                             fontFamily={fontTheme.fonts}
@@ -325,6 +333,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 isOpen={lunchIsOpen}
                 coins={freeCoins}
                 score={freeStatus}
+                onClose={() => { lunchOnClose() }}
             />
         </Box>
     )

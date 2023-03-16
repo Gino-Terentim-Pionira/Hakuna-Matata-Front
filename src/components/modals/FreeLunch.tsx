@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { useUser } from '../../hooks';
 
 // Components
 import RewardModal from './RewardModal';
@@ -15,6 +16,7 @@ import Cheetah from '../../assets/icons/cheetahblink.svg';
 
 interface IFreeLunch {
     isOpen: boolean;
+    onClose: VoidFunction;
     coins: number;
     score: number[];
 }
@@ -28,12 +30,13 @@ interface userDataProps {
 
 const FreeLunch: FC<IFreeLunch> = ({
     isOpen,
+    onClose,
     coins,
     score,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
-
+    const { getNewUserInfo } = useUser();
     const coinsRecieved = coins;
 
     const statusPointsRecieved = [{
@@ -69,6 +72,7 @@ const FreeLunch: FC<IFreeLunch> = ({
                 status: incrementAtStatusIndex(res)  // first parameter of this func needs to be dynamic
             });
 
+            await getNewUserInfo();
         } catch (error) {
             setOnError(true);
         }
@@ -77,11 +81,10 @@ const FreeLunch: FC<IFreeLunch> = ({
 
     const updateUserCoins = async () => {
         try {
-
             setIsLoading(true);
             await addCoinsStatus(coinsRecieved);
-            window.location.reload();
-
+            setIsLoading(false);
+            onClose();
         } catch (error) {
             setOnError(true);
         }
