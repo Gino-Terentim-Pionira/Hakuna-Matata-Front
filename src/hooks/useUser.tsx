@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect } from "react";
+import { SetStateAction } from "react";
 import { useRecoilState } from "recoil"
 import { userState } from "../recoil/useRecoilState"
 import api from "../services/api";
@@ -14,16 +14,10 @@ export const useUser = () => {
             );
             const res = await api.get(`/user/${_userId}`);
             setUserData(res.data);
-            console.log('CHAMOU');
         } catch (error) {
             console.log('');
         }
     }
-
-    useEffect(() => {
-        if (!userData._id)
-            getNewUserInfo();
-    }, []);
 
     return {
         userData,

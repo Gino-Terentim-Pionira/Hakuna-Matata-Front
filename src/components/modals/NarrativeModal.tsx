@@ -110,7 +110,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 setFreeCoins(50);
                 lunchOnOpen();
                 if (narrative === 'cheetah') {
-                    console.log('CHAMOU A CHEETAH PATH')
                     setFreeStatus([15, 0, 0, 0, 0, 0]);
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
@@ -119,7 +118,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                         }
                     });
                 } else if (narrative === 'lion') {
-                    console.log('CHAMOU O LION PATH')
                     setFreeStatus([0, 15, 0, 0, 0, 0]);
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
