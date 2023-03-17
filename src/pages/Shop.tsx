@@ -47,7 +47,9 @@ const Shop = () => {
 	}
 
 	const goBack = () => {
-		history.push('/');
+		if(!history.location.state)
+			history.push('/MainPage');
+		else history.goBack();
 	};
 
 	useEffect(() => {
@@ -134,7 +136,7 @@ const Shop = () => {
 				<LoadingState />
 			) : (
 				<>
-					<SimpleGrid zIndex='2' w='72%' columns={3} overflowY='auto' mt='2rem'>
+					<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
 						{shopItem.map(
 							({
 								_id,

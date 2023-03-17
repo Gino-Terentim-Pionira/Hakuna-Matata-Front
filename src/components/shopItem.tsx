@@ -145,8 +145,8 @@ const ShopItem: FC<ShopItemProps> = ({
 				transform={show ? `scale(1.05)` : ' '}
 				transition='150ms cubic-bezier(.38, .5, .5, 1.5)'
 			>
-				<Box 
-					maxHeight='300px' 
+				<Box
+					maxHeight='300px'
 					justifySelf='flex-start'
 					maxWidth='300px'
 				>
@@ -155,7 +155,8 @@ const ShopItem: FC<ShopItemProps> = ({
 							<Image
 								maxWidth='300px'
 								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}								
+								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+								minW="190px"
 								w='100%'
 								h='18.75rem'
 								mt='0.5rem'
@@ -171,7 +172,8 @@ const ShopItem: FC<ShopItemProps> = ({
 							<Image
 								maxWidth='300px'
 								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}								
+								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+								minW="190px"
 								w='100%'
 								h='18.75rem'
 								mt='0.5rem'
@@ -186,6 +188,7 @@ const ShopItem: FC<ShopItemProps> = ({
 								maxWidth='300px'
 								transition='50ms'
 								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+								minW="190px"
 								w='100%'
 								h='18.75rem'
 								mt='0.5rem'
@@ -238,7 +241,7 @@ const ShopItem: FC<ShopItemProps> = ({
 					</Box>
 				</Flex>
 			</Flex>
-			{show ? (
+			{show && (
 				<Slide direction='bottom' in={isOpen} style={{ zIndex: 10 }}>
 					<Box onClick={showDescription} w='100%' h='100vh' />
 					<Flex
@@ -420,7 +423,7 @@ const ShopItem: FC<ShopItemProps> = ({
 						</Flex>
 					</Flex>
 				</Slide>
-			) : null}
+			)}
 		</Box>
 	);
 };
