@@ -14,9 +14,10 @@ import { useHistory } from "react-router-dom";
 interface NavActionsInterface {
   logout: VoidFunction;
   dontShowMap?: boolean;
+  prePath: string;
 }
 
-const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
+const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
   const {
     isOpen: profileIsOpen,
     onClose: profileOnClose,
@@ -75,7 +76,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
             width='4.5rem'
             height='4.5rem'
             bg='white'
-            onClick={() => history.push('/shop')}
+            onClick={() => history.push({ pathname: '/shop', state: { prePath } })}
           >
             <Image
               src={icon_shop}

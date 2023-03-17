@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 import useInsignias from '../hooks/useInsignias';
+import { useLocation } from 'react-router-dom';
 
 // Components
 import NarrativeModal from '../components/modals/NarrativeModal';
@@ -78,6 +79,7 @@ interface IQuestions {
 }
 
 const BlackMambaPath = () => {
+	const local = useLocation();
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const { userData, setUserData, getNewUserInfo } = useUser();
 	const { getInsignias } = useInsignias();
@@ -347,7 +349,7 @@ const BlackMambaPath = () => {
 							zIndex='10'
 							position='fixed'
 						>
-							<NavActions logout={logout} />
+							<NavActions logout={logout} prePath={local.pathname} />
 						</Flex>
 
 						<Modal isOpen={isOpen} onClose={onClose} size='4xl'>
