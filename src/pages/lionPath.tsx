@@ -678,7 +678,6 @@ const LionPath = () => {
 							paxTax();
 							isAlertOnClose();
 							modalOnClose();
-							setIsLoading(true);
 						}}
 					>
 						Pagar

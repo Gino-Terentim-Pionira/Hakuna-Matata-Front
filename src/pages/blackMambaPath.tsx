@@ -523,7 +523,6 @@ const BlackMambaPath = () => {
 								paxTax();
 								isAlertOnClose();
 								onClose();
-								setIsLoading(true);
 							}}
 						>
 							Pagar

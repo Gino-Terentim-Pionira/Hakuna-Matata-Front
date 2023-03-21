@@ -709,7 +709,6 @@ const CheetahPath = () => {
                             paxTax();
                             isAlertOnClose();
                             modalOnClose();
-                            setIsLoading(true);
                         }}
                     >
                         Pagar
