@@ -32,6 +32,8 @@ const ResetPassword = () => {
 
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+    const [validationError, setValidationError] = useState('');
+	const [hasValidationError, setHasValidationError] = useState(false);
 
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const onClose = () => setIsConfirmOpen(false);
@@ -42,6 +44,21 @@ const ResetPassword = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const { authenticated } = useAuth();
+
+	const validatePassword = () => {
+        if (password.length < 6) {
+            setValidationError("Senha muito pequena");
+			setHasValidationError(true);
+        } else {
+            setValidationError('');
+			setHasValidationError(false);
+        }
+    }
+
+	const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setPassword(event.target.value);
+        validatePassword();
+    }
 
 	useEffect(() => {
 		if (authenticated) {
@@ -91,10 +108,12 @@ const ResetPassword = () => {
 					firstText='”Qual é a sua nova senha, jovem?”'
 					secondText='”Não ouvi muito bem, poderia repeti-lá?”'
 					firstChange={(e: BaseSyntheticEvent) => {
-						setPassword(e.target.value);
+						handlePasswordChanged(e);
 					}}
 					firstInputType='password'
 					firstValue={password}
+					validationError={validationError}
+					hasValidationError={hasValidationError}
 					firstPlaceholder='Nova senha'
 					secondChange={(e: BaseSyntheticEvent) => {
 						setConfirmPassword(e.target.value);
