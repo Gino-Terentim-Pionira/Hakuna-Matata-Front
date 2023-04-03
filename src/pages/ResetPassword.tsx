@@ -9,6 +9,7 @@ import {
 	Image
 } from '@chakra-ui/react';
 import { useHistory, useParams, withRouter } from 'react-router-dom';
+import { validatePassword } from '../utils/validates';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -45,19 +46,11 @@ const ResetPassword = () => {
 
 	const { authenticated } = useAuth();
 
-	const validatePassword = () => {
-        if (password.length < 6) {
-            setValidationError("Senha muito pequena");
-			setHasValidationError(true);
-        } else {
-            setValidationError('');
-			setHasValidationError(false);
-        }
-    }
-
 	const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setPassword(event.target.value);
-        validatePassword();
+        const res = validatePassword(password);
+		setValidationError(res.message);
+		setHasValidationError(res.validate);
     }
 
 	useEffect(() => {
