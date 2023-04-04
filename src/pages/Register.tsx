@@ -11,6 +11,7 @@ import {
     Image,
     Button,
 } from '@chakra-ui/react';
+import { validatePassword } from '../utils/validates';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -116,18 +117,6 @@ const Register = () => {
             }
         }
     }
-    // Declara os metodos que vai rotacionar os steps
-    const validatePassword = () => {
-        if (formPassword.length < 6) {
-            setValidationError("Senha muito pequena");
-            setHasValidationError(true);
-            return true;
-        } else {
-            setValidationError('');
-            setHasValidationError(false);
-            return false;
-        }
-    }
 
     const validateName = () => {
         const firstname = formName.split(' ');
@@ -185,13 +174,15 @@ const Register = () => {
 
     const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setFormPassword(event.target.value);
-        validatePassword();
+        const res = validatePassword(formPassword);
+        setValidationError(res.message);
+        setHasValidationError(res.validate);
     }
 
     const nextStep = async () => {
         if (step == 3) {
-            const invalidPassword = validatePassword();
-            if (formConfirmPassword && formPassword && !invalidPassword) {
+            const { validate } = validatePassword(formPassword);
+            if (formConfirmPassword && formPassword && !validate) {
                 if (formPassword === formConfirmPassword) {
                     try {
                         setIsLoading(true);

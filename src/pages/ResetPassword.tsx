@@ -9,6 +9,7 @@ import {
 	Image
 } from '@chakra-ui/react';
 import { useHistory, useParams, withRouter } from 'react-router-dom';
+import { validatePassword } from '../utils/validates';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -32,6 +33,8 @@ const ResetPassword = () => {
 
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+    const [validationError, setValidationError] = useState('');
+	const [hasValidationError, setHasValidationError] = useState(false);
 
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const onClose = () => setIsConfirmOpen(false);
@@ -42,6 +45,13 @@ const ResetPassword = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const { authenticated } = useAuth();
+
+	const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setPassword(event.target.value);
+        const res = validatePassword(password);
+		setValidationError(res.message);
+		setHasValidationError(res.validate);
+    }
 
 	useEffect(() => {
 		if (authenticated) {
@@ -91,10 +101,12 @@ const ResetPassword = () => {
 					firstText='”Qual é a sua nova senha, jovem?”'
 					secondText='”Não ouvi muito bem, poderia repeti-lá?”'
 					firstChange={(e: BaseSyntheticEvent) => {
-						setPassword(e.target.value);
+						handlePasswordChanged(e);
 					}}
 					firstInputType='password'
 					firstValue={password}
+					validationError={validationError}
+					hasValidationError={hasValidationError}
 					firstPlaceholder='Nova senha'
 					secondChange={(e: BaseSyntheticEvent) => {
 						setConfirmPassword(e.target.value);
