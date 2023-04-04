@@ -25,6 +25,7 @@ import { AxiosResponse } from 'axios';
 // Images
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
+import { validateQuestionSize } from '../../utils/validates';
 
 interface userDataProps {
     coins: number,
@@ -352,7 +353,12 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(0)}
                                     >
-                                        <Text w='90%' fontFamily={fontTheme.fonts} fontSize='1.5rem' textAlign='center'>
+                                        <Text 
+                                            w='90%' 
+                                            fontFamily={fontTheme.fonts} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[0])} 
+                                            textAlign='center'
+                                        >
                                             {quiz?.questions_id[step]?.alternatives[0]}
                                         </Text>
                                     </Center>
@@ -370,7 +376,12 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(1)}
                                     >
-                                        <Text w='90%' fontFamily={fontTheme.fonts} fontSize='1.5rem' textAlign='center'>
+                                        <Text 
+                                            w='90%' 
+                                            fontFamily={fontTheme.fonts} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[1])} 
+                                            textAlign='center'
+                                        >
                                             {quiz?.questions_id[step]?.alternatives[1]}
                                         </Text>
                                     </Center>
@@ -390,7 +401,12 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(2)}
                                     >
-                                        <Text w='90%' fontFamily={fontTheme.fonts} fontSize='1.5rem' textAlign='center'>
+                                        <Text 
+                                            w='90%' 
+                                            fontFamily={fontTheme.fonts} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[2])} 
+                                            textAlign='center'
+                                        >
                                             {quiz?.questions_id[step]?.alternatives[2]}
                                         </Text>
                                     </Center>
@@ -408,7 +424,12 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(3)}
                                     >
-                                        <Text w='90%' fontFamily={fontTheme.fonts} fontSize='1.5rem' textAlign='center'>
+                                        <Text 
+                                            w='90%' 
+                                            fontFamily={fontTheme.fonts} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[3])} 
+                                            textAlign='center'
+                                        >
                                             {quiz?.questions_id[step]?.alternatives[3]}
                                         </Text>
                                     </Center>
