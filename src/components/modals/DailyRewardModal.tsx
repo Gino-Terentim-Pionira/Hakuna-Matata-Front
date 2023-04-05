@@ -28,7 +28,7 @@ const DailyRewardModal: FC<IDailyReward> = ({
     const getUser = () => {
         if (userData.consecutiveDays >= 10) {
             setCoins(25);
-        } else if (userData.consecutiveDays > 0) {
+        } else {
             setCoins(10);
         }
     }
