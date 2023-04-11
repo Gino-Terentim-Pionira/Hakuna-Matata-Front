@@ -356,7 +356,7 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[0])} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[0]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
                                             {quiz?.questions_id[step]?.alternatives[0]}
@@ -379,7 +379,7 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[1])} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[1]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
                                             {quiz?.questions_id[step]?.alternatives[1]}
@@ -404,7 +404,7 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[2])} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[2]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
                                             {quiz?.questions_id[step]?.alternatives[2]}
@@ -427,7 +427,7 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[3])} 
+                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[3]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
                                             {quiz?.questions_id[step]?.alternatives[3]}
