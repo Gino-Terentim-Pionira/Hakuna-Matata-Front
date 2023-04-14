@@ -133,6 +133,7 @@ const BlackMambaPath = () => {
 	const cancelRef = useRef<HTMLButtonElement>(null);
 	const [onError, setOnError] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [payLoading, setPayLoading] = useState<boolean>(false);
 	const [quiz, setQuiz] = useState<IQuiz>({
 		_id: '',
 		name: '',
@@ -280,6 +281,7 @@ const BlackMambaPath = () => {
 	const paxTax = async () => {
 		const value = 40;
 		setIsConfirmOpen(false);
+		setPayLoading(true);
 		const userId = sessionStorage.getItem('@pionira/userId');
 		const validation = await api.get(`user/loadingQuiz/${userId}`);
 		const userCoins = userData.coins;
@@ -292,17 +294,26 @@ const BlackMambaPath = () => {
 					});
 				}
 
+				setPayLoading(false);
 				handleModal();
 			} catch (error) {
+				setPayLoading(false);
 				setOnError(true);
 			}
 		}
 
+		setPayLoading(false);
 		if (userCoins < value) {
 			setAlertCoins('Poxa!! Parece que você não tem moedas suficientes!');
 			setIsAlertCoins(true);
 		}
 	};
+
+	const closeAlert = () => {
+        if (!payLoading) {
+            isAlertOnClose(); 
+        }
+    }
 
 	useEffect(() => {
 		getUser();
@@ -511,7 +522,8 @@ const BlackMambaPath = () => {
 				) : null}
 				<AlertModal
 					isOpen={isAlertOpen}
-					onClose={isAlertOnClose}
+					onClose={closeAlert}
+                	onClickClose = {closeAlert}
 					alertTitle='Desafio Final'
 					alertBody={alertQuiz}
 					buttonBody={
@@ -519,11 +531,8 @@ const BlackMambaPath = () => {
 							ref={cancelRef}
 							color='white'
 							bg={colorPalette.primaryColor}
-							onClick={() => {
-								paxTax();
-								isAlertOnClose();
-								onClose();
-							}}
+							onClick={paxTax}
+							isLoading={payLoading}
 						>
 							Pagar
 						</Button>
