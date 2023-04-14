@@ -54,6 +54,7 @@ import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
 import { errorCases } from '../utils/errors/errorsCases';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 import useInsignias from '../hooks/useInsignias';
+import { Constants } from '../utils/constants';
 
 
 interface IQuiz {
@@ -325,7 +326,7 @@ const LionPath = () => {
 
 	const alertQuizConfirm = () => {
 		setAlertQuiz(
-			'Para fazer o desafio final do Leão e Leoa são necessárias 40 joias do conhecimento! Tem certeza que deseja prosseguir?',
+			`Para fazer o desafio final do Leão e Leoa são necessárias ${Constants.FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
 		);
 		setIsAlertOpen(true);
 	};
@@ -336,7 +337,7 @@ const LionPath = () => {
 	};
 
 	const paxTax = async () => {
-		const value = 40;
+		const value = Constants.FINAL_QUIZ_SINK;
 		setIsConfirmOpen(false);
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
 		const user = await api.get(`/user/${_userId}`);

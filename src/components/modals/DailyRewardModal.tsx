@@ -4,6 +4,7 @@ import colorPalette from '../../styles/colorPalette';
 import RewardModal from './RewardModal';
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import { useUser } from '../../hooks';
+import { Constants } from '../../utils/constants';
 
 interface IDailyReward {
     isOpen: boolean;
@@ -23,23 +24,15 @@ const DailyRewardModal: FC<IDailyReward> = ({
     const { userData, getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
-    const [coins, setCoins] = useState(0);
+    const coins = Constants.DAILY_SOURCE;
 
-    const getUser = () => {
-        if (userData.consecutiveDays >= 10) {
-            setCoins(25);
-        } else {
-            setCoins(10);
-        }
-    }
 
-    const coinsRecieved = coins;
 
     const updateUserDailyReward = async () => {
         try {
 
             setIsLoading(true);
-            await addDailyRewardStatus(coinsRecieved);
+            await addDailyRewardStatus(coins);
             await getNewUserInfo();
             setIsLoading(false);
             onClose();
@@ -73,10 +66,6 @@ const DailyRewardModal: FC<IDailyReward> = ({
         icon: Cheetah,
         coins: coins,
     }
-
-    useEffect(() => {
-        getUser();
-    }, []);
 
     return (
         <RewardModal

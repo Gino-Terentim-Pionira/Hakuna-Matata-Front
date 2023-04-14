@@ -18,6 +18,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import rightArrow from "../../assets/icons/rightArrow.png";
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
+import { Constants } from '../../utils/constants';
 
 interface IScript {
     name: string,
@@ -44,7 +45,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
 
     const [delayButton, setDelayButton] = useState(true);
 
-    const [freeCoins, setFreeCoins] = useState(0);
+    const freeCoins = Constants.FREE_LUNCH_SOURCE;
     const [freeStatus, setFreeStatus] = useState([0, 0, 0, 0, 0, 0, 0]);
 
     const [visibleText, setVisibleText] = useState(false);
@@ -101,13 +102,11 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             } else user = userData;
 
             if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
-                setFreeCoins(100);
                 lunchOnOpen();
                 await api.patch(`/user/updateFirstTime/${user._id}`, {
                     isFirstTimeAppLaunching: false,
                 });
             } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
-                setFreeCoins(50);
                 lunchOnOpen();
                 if (narrative === 'cheetah') {
                     setFreeStatus([15, 0, 0, 0, 0, 0]);

@@ -17,6 +17,7 @@ import rewardChest from "../../assets/icons/bau.png";
 import RewardModal from './RewardModal';
 import rewardOpenChest from "../../assets/icons/bauAberto.svg";
 import { useUser } from '../../hooks';
+import { Constants } from '../../utils/constants';
 
 interface userDataProps {
     coins: number
@@ -34,16 +35,13 @@ const RandomRewardModal = () => {
     const getUser = async () => {
         try {
             const random = Math.floor(Math.random() * 100);
-            if (random > 85) {
+            if (random < userData.luck ) {
                 setRandomNumber(true);
-                if (userData.ignorance <= 30) {
-                    setCoins(120);
-                } else if (userData.ignorance < 50) {
-                    setCoins(80);
-                } else if (userData.ignorance < 80) {
-                    setCoins(50);
+                const randomCoins = Math.floor(Math.random() * 100);
+                if (randomCoins < userData.luck) {
+                    setCoins(Constants.CHEST_LUCK_SOURCE);
                 } else {
-                    setCoins(20);
+                    setCoins(Constants.CHEST_NORMAL_SOURCE);
                 }
             }
 

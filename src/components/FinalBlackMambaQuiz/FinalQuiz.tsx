@@ -26,6 +26,7 @@ import colorPalette from '../../styles/colorPalette';
 // Images
 import blackMamba from "../../assets/sprites/blackMamba/mamba_negra.png";
 import { errorCases } from '../../utils/errors/errorsCases';
+import { Constants } from '../../utils/constants';
 
 interface IQuestions {
     alternatives: string[];
@@ -167,7 +168,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
     }
 
     const confirmClose = () => {
-        setAlertAnswer("Tem certeza que deseja sair do quiz? Você perderá as 40 joias do conhecimento que gastou!");
+        setAlertAnswer(`Tem certeza que deseja sair do quiz? Você perderá as ${Constants.FINAL_QUIZ_SINK} joias do conhecimento que gastou!`);
         setIsConfirmOpen(true);
     }
 

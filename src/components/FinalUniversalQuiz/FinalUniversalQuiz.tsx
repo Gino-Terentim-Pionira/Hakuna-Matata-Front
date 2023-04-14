@@ -20,6 +20,7 @@ import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import { shuffleString } from '../../utils/algorithms/shuffleString';
+import { Constants } from '../../utils/constants';
 
 interface IQuestions {
 	alternatives: string[];
@@ -267,7 +268,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 
 	const confirmClose = () => {
 		setAlertAnswer(
-			'Tem certeza que deseja sair do quiz? Você perderá as 40 joias do conhecimento que gastou!',
+			`Tem certeza que deseja sair do quiz? Você perderá as ${Constants.FINAL_QUIZ_SINK} joias do conhecimento que gastou!`,
 		);
 		setIsConfirmOpen(true);
 	};
