@@ -153,18 +153,20 @@ const Shop = () => {
 								description: string;
 								type: string;
 							}) => {
-								return (
-									<ShopItem
-										key={_id}
-										_id={_id}
-										current_user_id={currentUserId}
-										users_id={user_id}
-										name={name}
-										value={value}
-										description={description}
-										type={type}
-									/>
-								);
+								if (!user_id.includes(currentUserId)) {
+									return (
+										<ShopItem
+											key={_id}
+											_id={_id}
+											current_user_id={currentUserId}
+											users_id={user_id}
+											name={name}
+											value={value}
+											description={description}
+											type={type}
+										/>
+									);
+								}
 							},
 						)}
 					</SimpleGrid>
