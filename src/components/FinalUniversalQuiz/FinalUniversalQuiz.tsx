@@ -390,7 +390,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 												w='92%'
 												h='65%'
 												fontFamily={fontTheme.fonts}
-												fontSize='25px'
+												fontSize='20px'
 											>
 												{
 													questions[step]
@@ -421,7 +421,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 												w='92%'
 												h='65%'
 												fontFamily={fontTheme.fonts}
-												fontSize='25px'
+												fontSize='20px'
 											>
 												{
 													questions[step]
@@ -452,7 +452,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 												w='92%'
 												h='65%'
 												fontFamily={fontTheme.fonts}
-												fontSize='25px'
+												fontSize='20px'
 											>
 												{
 													questions[step]
@@ -483,7 +483,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 												w='92%'
 												h='65%'
 												fontFamily={fontTheme.fonts}
-												fontSize='25px'
+												fontSize='20px'
 											>
 												{
 													questions[step]

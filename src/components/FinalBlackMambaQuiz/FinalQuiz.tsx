@@ -256,7 +256,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
 
                                             onClick={() => buttonFunctions(0)}
                                         >
-                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='25px' >
+                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='20px' >
                                                 {questions[step]?.alternatives[0]}
                                             </Text>
                                         </Flex>
@@ -280,7 +280,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
 
                                             onClick={() => buttonFunctions(1)}
                                         >
-                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='25px' >
+                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='20px' >
                                                 {questions[step]?.alternatives[1]}
                                             </Text>
                                         </Flex>
@@ -304,7 +304,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
 
                                             onClick={() => buttonFunctions(2)}
                                         >
-                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='25px' >
+                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='20px' >
                                                 {questions[step]?.alternatives[2]}
                                             </Text>
                                         </Flex>
@@ -328,7 +328,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
 
                                             onClick={() => buttonFunctions(3)}
                                         >
-                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='25px' >
+                                            <Text w='92%' h='65%' fontFamily={fontTheme.fonts} fontSize='20px' >
                                                 {questions[step]?.alternatives[3]}
                                             </Text>
                                         </Flex>
