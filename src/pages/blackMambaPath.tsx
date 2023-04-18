@@ -310,9 +310,7 @@ const BlackMambaPath = () => {
 	};
 
 	const closeAlert = () => {
-        if (!payLoading) {
-            isAlertOnClose(); 
-        }
+        if (!payLoading) isAlertOnClose(); 
     }
 
 	useEffect(() => {

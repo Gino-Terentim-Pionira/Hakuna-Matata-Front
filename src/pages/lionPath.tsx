@@ -377,9 +377,7 @@ const LionPath = () => {
 	};
 
 	const closeAlert = () => {
-        if (!payLoading) {
-            isAlertOnClose(); 
-        }
+        if (!payLoading) isAlertOnClose();
     }
 
 	useEffect(() => {

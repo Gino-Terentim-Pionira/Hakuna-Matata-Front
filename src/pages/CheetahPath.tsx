@@ -392,9 +392,7 @@ const CheetahPath = () => {
     };
 
     const closeAlert = () => {
-        if (!payLoading) {
-            isAlertOnClose(); 
-        }
+        if (!payLoading) isAlertOnClose(); 
     }
 
     useEffect(() => {
