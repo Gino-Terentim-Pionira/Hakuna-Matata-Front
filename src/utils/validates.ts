@@ -11,3 +11,7 @@ export const validatePassword = (password: string) => {
         }
     }
 }
+
+export const validateQuestionSize = (question: string) => {
+    if (question.length > 140) return true; return false;
+}
