@@ -39,6 +39,7 @@ import BlackMambaBackground from '../assets/scenerys/blackMamba/blackMamba.png';
 import ModalMamba from '../assets/modal/modalMamba.png';
 import { errorCases } from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
+import { Constants } from '../utils/constants';
 
 interface IScript {
 	name: string;
@@ -267,7 +268,7 @@ const BlackMambaPath = () => {
 
 	const alertQuizConfirm = () => {
 		setAlertQuiz(
-			'Para fazer o desafio final da Mamba Negra são necessárias 40 joias do conhecimento! Tem certeza que deseja prosseguir?',
+			`Para fazer o desafio final da Mamba Negra são necessárias ${Constants.FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
 		);
 		setIsAlertOpen(true);
 	};
@@ -278,7 +279,7 @@ const BlackMambaPath = () => {
 	};
 
 	const paxTax = async () => {
-		const value = 40;
+		const value = Constants.FINAL_QUIZ_SINK;
 		setIsConfirmOpen(false);
 		const userId = sessionStorage.getItem('@pionira/userId');
 		const validation = await api.get(`user/loadingQuiz/${userId}`);

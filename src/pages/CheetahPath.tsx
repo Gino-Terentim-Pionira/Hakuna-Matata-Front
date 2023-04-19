@@ -53,6 +53,7 @@ import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
+import { Constants } from '../utils/constants';
 
 interface IQuiz {
     _id: string;
@@ -338,7 +339,7 @@ const CheetahPath = () => {
 
     const alertQuizConfirm = () => {
         setAlertQuiz(
-            'Para fazer o desafio final da Cheetah são necessárias 40 joias do conhecimento! Tem certeza que deseja prosseguir?',
+            `Para fazer o desafio final da Cheetah são necessárias ${Constants.FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
         );
         setIsAlertOpen(true);
     };
@@ -349,7 +350,7 @@ const CheetahPath = () => {
     };
 
     const paxTax = async () => {
-        const value = 40;
+        const value = Constants.FINAL_QUIZ_SINK;
         setIsConfirmOpen(false);
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
             '@pionira/userId',
