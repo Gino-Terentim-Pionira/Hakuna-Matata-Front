@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useState, FC } from 'react';
 import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import RewardModal from './RewardModal';
@@ -21,7 +21,7 @@ interface userDataProps {
 const DailyRewardModal: FC<IDailyReward> = ({
     isOpen, onClose
 }) => {
-    const { userData, getNewUserInfo } = useUser();
+    const { getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
     const coins = Constants.DAILY_SOURCE;
