@@ -59,9 +59,12 @@ const TutorialModal: FC<ITutorialModal> = ({ isOpen, onClose, onToggle }) => {
                         <YouTube 
                             opts={{
                                 width: '550',
-                                height: '300'
+                                height: '300',
+                                playerVars: {
+                                    autoplay: 1
+                                }
                             }}
-                            videoId="xpVfcZ0ZcFM"
+                            videoId="NPcGhuJ_zXk"
                         />
                     </Flex>
                 </ModalBody>

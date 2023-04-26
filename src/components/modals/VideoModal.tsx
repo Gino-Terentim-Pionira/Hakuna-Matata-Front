@@ -173,7 +173,11 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
                             {
                                 plataform === 'youtube' ?
                                     <YouTube
-                                        videoId=''
+                                        videoId={url}
+                                        opts={{
+                                            width: '600px',
+                                            height: '338px',
+                                        }}
                                     />
                                     :
                                     <Vimeo
@@ -186,7 +190,7 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
 
                         </Flex>
                         {
-                            isLoading ? null : (
+                            (
                                 <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
                                     <Button
                                         bgColor={colorPalette.confirmButton}
