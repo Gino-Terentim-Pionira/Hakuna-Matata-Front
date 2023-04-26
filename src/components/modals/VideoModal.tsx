@@ -14,6 +14,7 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import Vimeo from '@u-wave/react-vimeo';
+import YouTube from 'react-youtube';
 
 // Components
 import AlertModal from './AlertModal';
@@ -36,6 +37,7 @@ interface IVideoModal {
     usersId: string[];
     url: string;
     nick: string;
+    plataform?: 'vimeo' | 'youtube';
 }
 
 interface IUser {
@@ -54,7 +56,7 @@ interface IUser {
     second_certificate: string;
 }
 
-const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick }) => {
+const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform = 'vimeo' }) => {
     const { isOpen: videoIsOpen,
         onClose: videoOnClose,
         onOpen: videoOnOpen,
@@ -168,13 +170,20 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick }) => {
                                     <LoadingState />
                                 </Flex>
                             ) : null}
+                            {
+                                plataform === 'youtube' ?
+                                    <YouTube
+                                        videoId=''
+                                    />
+                                    :
+                                    <Vimeo
+                                        onLoaded={() => { setIsLoading(false) }}
+                                        width="625rem"
+                                        height="350rem"
+                                        video={parseVideoUrl() as string | number}
+                                    />
+                            }
 
-                            <Vimeo
-                                onLoaded={() => { setIsLoading(false) }}
-                                width="625rem"
-                                height="350rem"
-                                video={parseVideoUrl() as string | number}
-                            />
                         </Flex>
                         {
                             isLoading ? null : (
