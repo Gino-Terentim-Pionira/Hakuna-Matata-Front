@@ -27,8 +27,8 @@ import plusIcon from '../../assets/icons/plusIcon.png'
 import { errorCases } from '../../utils/errors/errorsCases';
 import Cheetah from '../../assets/icons/cheetahblink.svg'
 
-interface IRewardModal {
-    rewardModalInfo: {
+interface IGenericModal {
+    genericModalInfo: {
         title: string;
         titleColor: string;
         subtitle: string;
@@ -43,14 +43,14 @@ interface IRewardModal {
 }
 
 
-const RewardModal: FC<IRewardModal> = ({
+const GenericModal: FC<IGenericModal> = ({
     isOpen,
-    rewardModalInfo,
+    genericModalInfo,
     confirmFunction,
     loading,
     error,
 }) => {
-    const { title, titleColor, subtitle, icon, coins, status } = rewardModalInfo;
+    const { title, titleColor, subtitle, icon, coins, status } = genericModalInfo;
 
     const statusPointsRecieved = [{
         name: "Agilidade",
@@ -216,4 +216,4 @@ const RewardModal: FC<IRewardModal> = ({
     )
 }
 
-export default RewardModal;
+export default GenericModal;

@@ -14,7 +14,7 @@ import colorPalette from "../../styles/colorPalette";
 
 // Images
 import rewardChest from "../../assets/icons/bau.png";
-import RewardModal from './RewardModal';
+import RewardModal from './GenericModal';
 import rewardOpenChest from "../../assets/icons/bauAberto.svg";
 import { useUser } from '../../hooks';
 import { Constants } from '../../utils/constants';
@@ -104,7 +104,7 @@ const RandomRewardModal = () => {
                     </motion.div>
                     <RewardModal
                         isOpen={isOpen}
-                        rewardModalInfo={rewardModalInfo}
+                        genericModalInfo={rewardModalInfo}
                         confirmFunction={updateUserCoins}
                         error={onError}
                         loading={isLoading}

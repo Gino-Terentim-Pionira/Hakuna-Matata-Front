@@ -1,7 +1,7 @@
 import React, { useState, FC } from 'react';
 import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
-import RewardModal from './RewardModal';
+import RewardModal from './GenericModal';
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import { useUser } from '../../hooks';
 import { Constants } from '../../utils/constants';
@@ -70,7 +70,7 @@ const DailyRewardModal: FC<IDailyReward> = ({
     return (
         <RewardModal
             isOpen={isOpen}
-            rewardModalInfo={rewardModalInfo}
+            genericModalInfo={rewardModalInfo}
             confirmFunction={updateUserDailyReward}
             error={onError}
             loading={isLoading}

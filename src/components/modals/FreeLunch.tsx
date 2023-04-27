@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { useUser } from '../../hooks';
 
 // Components
-import RewardModal from './RewardModal';
+import RewardModal from './GenericModal';
 
 // Requisitions
 import api from '../../services/api';
@@ -103,7 +103,7 @@ const FreeLunch: FC<IFreeLunch> = ({
     return (
         <RewardModal
             isOpen={isOpen}
-            rewardModalInfo={rewardModalInfo}
+            genericModalInfo={rewardModalInfo}
             confirmFunction={updateUserCoins}
             error={onError}
             loading={isLoading}
