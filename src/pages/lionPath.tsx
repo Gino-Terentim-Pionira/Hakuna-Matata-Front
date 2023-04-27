@@ -112,6 +112,7 @@ const LionPath = () => {
 	const [onError, setOnError] = useState(false);
 	const [completeTrail, setCompleteTrail] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [payLoading, setPayLoading] = useState<boolean>(false);
 
 	const ignoranceArray = [ignorance100, ignorance75, ignorance50, ignorance25];
 
@@ -339,6 +340,7 @@ const LionPath = () => {
 	const paxTax = async () => {
 		const value = Constants.FINAL_QUIZ_SINK;
 		setIsConfirmOpen(false);
+		setPayLoading(true);
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
 		const user = await api.get(`/user/${_userId}`);
 		const validation = await api.get(`user/loadingQuiz/${_userId}`);
@@ -353,12 +355,15 @@ const LionPath = () => {
 					});
 				}
 
+				setPayLoading(false);
 				handleModal();
 			} catch (error) {
+				setPayLoading(false);
 				setOnError(true);
 			}
 		}
 
+		setPayLoading(false);
 		if (userCoins < value) {
 			setAlertCoins('Poxa! Parece que você não tem moedas suficientes!');
 			setIsAlertCoins(true);
@@ -371,6 +376,10 @@ const LionPath = () => {
 			setIsCoinsCheck(true);
 		}
 	};
+
+	const closeAlert = () => {
+        if (!payLoading) isAlertOnClose();
+    }
 
 	useEffect(() => {
 		getUser();
@@ -667,7 +676,8 @@ const LionPath = () => {
 
 			<AlertModal
 				isOpen={isAlertOpen}
-				onClose={isAlertOnClose}
+				onClose={closeAlert}
+                onClickClose = {closeAlert}
 				alertTitle='Desafio Final'
 				alertBody={alertQuiz}
 				buttonBody={
@@ -675,11 +685,8 @@ const LionPath = () => {
 						ref={cancelRef}
 						color='white'
 						bg={colorPalette.primaryColor}
-						onClick={() => {
-							paxTax();
-							isAlertOnClose();
-							modalOnClose();
-						}}
+						onClick={paxTax}
+						isLoading={payLoading}
 					>
 						Pagar
 					</Button>

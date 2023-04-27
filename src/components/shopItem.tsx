@@ -53,6 +53,7 @@ const ShopItem: FC<ShopItemProps> = ({
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const [isAlert, setIsAlert] = useState(false);
 	const [onError, setOnError] = useState(false);
+	const [loading, setLoaging] = useState(false);
 
 	const onClose = () => {
 		setIsConfirmOpen(false);
@@ -72,7 +73,7 @@ const ShopItem: FC<ShopItemProps> = ({
 	};
 
 	const buyItem = async () => {
-		setIsConfirmOpen(false);
+		setLoaging(true);
 		// then make buying logic
 		try {
 			const user = await api.get(`/user/${current_user_id}`);
@@ -92,8 +93,8 @@ const ShopItem: FC<ShopItemProps> = ({
 							coins: newCoins,
 						});
 
+						setLoaging(false);
 						setAlertAnswer('Parabéns! Seu tempo de espera foi zerado!');
-						setIsConfirmOpen(true);
 						setIsAlert(true);
 					} catch (error) {
 						setOnError(true);
@@ -109,8 +110,8 @@ const ShopItem: FC<ShopItemProps> = ({
 							coins: newCoins,
 						});
 
+						setLoaging(false);
 						setAlertAnswer('Parabéns! Seu item foi comprado com sucesso!');
-						setIsConfirmOpen(true);
 						setIsAlert(true);
 					} catch (error) {
 						setOnError(true);
@@ -362,14 +363,10 @@ const ShopItem: FC<ShopItemProps> = ({
 
 								<AlertModal
 									isOpen={isConfirmOpen}
-									onClose={onClose}
+									onClose={() => {if (!loading) onClose()}}
 									alertTitle='Loja'
 									alertBody={alertAnswer}
-									onClickClose={
-										() => {
-											history.go(0);
-										}
-									}
+									onClickClose={() => {if (!loading) history.go(0)}}
 									buttonBody={
 										isAlert ? (
 											<Button
@@ -387,6 +384,7 @@ const ShopItem: FC<ShopItemProps> = ({
 												<Button
 													ref={cancelRef}
 													onClick={onClose}
+													isDisabled={loading}
 												>
 													Cancel
 												</Button>
@@ -395,6 +393,7 @@ const ShopItem: FC<ShopItemProps> = ({
 													bg={colorPalette.primaryColor}
 													onClick={buyItem}
 													ml={3}
+													isLoading = {loading}
 												>
 													Comprar
 												</Button>
