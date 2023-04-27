@@ -23,8 +23,7 @@ import colorPalette from '../styles/colorPalette';
 import map1_bg from '../assets/scenerys/mainPage/map1_bg.png';
 import map2_bg from '../assets/scenerys/mainPage/map2_bg.png';
 import icon_cheeta from '../assets/icons/icon_cheeta.svg';
-import icon_blackMamba from '../assets/icons/icon_blackMamba.svg';
-import icon_leao from '../assets/icons/icone_leao.svg';
+import icon_block from '../assets/icons/icon_block.svg';
 import ignorance100 from '../assets/ignorance/mainPage/ignorance100.png';
 import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
@@ -33,6 +32,7 @@ import { errorCases } from '../utils/errors/errorsCases';
 import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 import NavActions from '../components/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
+import BlockedModal from '../components/modals/BlockedModal';
 
 interface IScript {
 	name: string;
@@ -73,6 +73,7 @@ const MainPage = () => {
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [openBlockedModal, setOpenBlockedModal] = useState<boolean>(false);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -163,17 +164,21 @@ const MainPage = () => {
 		}
 	};
 
-	const goToPath1 = () => {
-		history.push('/finalTrail');
-	};
+	/*
+		const goToPath1 = () => {
+			history.push('/finalTrail');
+		};
+	*/
 
 	const goToPath2 = () => {
 		history.push('/trilha-cheetah');
 	};
 
-	const goToPath3 = () => {
-		history.push('/trilha-leao');
-	};
+	/*
+		const goToPath3 = () => {
+			history.push('/trilha-leao');
+		};
+	*/
 
 	const quit = async () => {
 		alertOnClose();
@@ -328,7 +333,7 @@ const MainPage = () => {
 						/>
 
 						<Image
-							src={icon_blackMamba}
+							src={icon_block}
 							_hover={{
 								cursor: 'pointer',
 								transform: 'scale(1.1)',
@@ -338,21 +343,21 @@ const MainPage = () => {
 							width='5.74vw'
 							left='50.5vw'
 							top='57.5vh'
-							onClick={() => goToPath1()}
+							onClick={() => setOpenBlockedModal(true)}
 						/>
 
 						<Image
-							src={icon_leao}
+							src={icon_block}
 							_hover={{
 								cursor: 'pointer',
 								transform: 'scale(1.1)',
 							}}
 							transition='all 0.2s ease'
 							position='absolute'
-							width='4vw'
+							width='5.74vw'
 							right='7vw'
 							top='50vh'
-							onClick={() => goToPath3()}
+							onClick={() => setOpenBlockedModal(true)}
 						/>
 					</>
 				)}
@@ -398,6 +403,8 @@ const MainPage = () => {
 				isOpen={isSubscribedModal}
 				onFunction={() => setIsSubscribedModal(false)}
 			/>
+
+			<BlockedModal isOpen={openBlockedModal} onClose={() => {setOpenBlockedModal(false)}} />
 		</>
 	);
 };
