@@ -190,7 +190,7 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
 
                         </Flex>
                         {
-                            (
+                            isLoading ? null : (
                                 <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
                                     <Button
                                         bgColor={colorPalette.confirmButton}
