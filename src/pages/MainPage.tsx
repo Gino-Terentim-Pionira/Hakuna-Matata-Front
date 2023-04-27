@@ -73,6 +73,7 @@ const MainPage = () => {
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [delayIgnorance, setDelayIgnorance] = useState<boolean>(false);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -240,6 +241,9 @@ const MainPage = () => {
 		getUserRequisition();
 		updateImageOnTime();
 		getNewUserInfo();
+		setTimeout(() => {
+			setDelayIgnorance(true);
+		}, 3000);
 	}, []);
 
 	if (isLoading) {
@@ -269,15 +273,19 @@ const MainPage = () => {
 					top='0'
 				/>
 			)}
-			<Image
-				src={ignoranceImage}
-				position='absolute'
-				h='100vh'
-				w='100%'
-				zIndex='-3'
-				left='0'
-				top='0'
-			/>
+			{
+				delayIgnorance && (
+					<Image
+						src={ignoranceImage}
+						position='absolute'
+						h='100vh'
+						w='100%'
+						zIndex='-3'
+						left='0'
+						top='0'
+					/>
+				)
+			}
 			<Flex
 				width='92.5%'
 				justifyContent='space-between'

@@ -212,6 +212,7 @@ const LionPath = () => {
 	const [script, setScript] = useState<IScript[]>([]);
 	const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>([]);
+	const [delayIgnorance, setDelayIgnorance] = useState<boolean>(false);
 
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -376,6 +377,9 @@ const LionPath = () => {
 		getUser();
 		updateNarrative();
 		getQuiz();
+		setTimeout(() => {
+			setDelayIgnorance(true);
+		}, 3000);
 	}, []);
 
 	if (isLoading) {
@@ -394,15 +398,19 @@ const LionPath = () => {
 					left='0'
 					top='0'
 				/>
-				<Image
-					src={ignoranceImage}
-					position='absolute'
-					h='100vh'
-					w='100%'
-					zIndex='-3'
-					left='0'
-					top='0'
-				/>
+				{
+					delayIgnorance && (
+						<Image
+							src={ignoranceImage}
+							position='absolute'
+							h='100vh'
+							w='100%'
+							zIndex='-3'
+							left='0'
+							top='0'
+						/>
+					)
+				}
 
 				<Flex
 					width='92.5%'
