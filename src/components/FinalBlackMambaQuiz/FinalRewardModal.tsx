@@ -15,7 +15,7 @@ import {
 
 // Components
 import Certificate from '../modals/CertificateModal';
-import RewardModal from '../modals/RewardModal';
+import RewardModal from '../modals/GenericModal';
 
 // Requisitions
 import api from '../../services/api';
@@ -222,7 +222,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 		<>
 			<RewardModal
 				isOpen={isOpen}
-				rewardModalInfo={rewardModalInfo()}
+				genericModalInfo={rewardModalInfo()}
 				loading={isLoading}
 				error={onError}
 				confirmFunction={updateUserCoins}

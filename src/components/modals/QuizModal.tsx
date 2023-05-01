@@ -14,7 +14,7 @@ import {
 import { useUser } from '../../hooks';
 
 // Components
-import RewardModal from './RewardModal';
+import RewardModal from './GenericModal';
 
 // Styles
 import fontTheme from '../../styles/base'
@@ -443,7 +443,7 @@ const QuizModal: FC<IQuizComponent> = ({
 
             <RewardModal
                 isOpen={isOpen}
-                rewardModalInfo={rewardModalInfo()}
+                genericModalInfo={rewardModalInfo()}
                 confirmFunction={updateUserCoins}
                 loading={isLoading}
                 error={onError}

@@ -17,7 +17,7 @@ import api from '../../services/api';
 import { AxiosResponse } from 'axios';
 import fontTheme from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
-import RewardModal from '../modals/RewardModal';
+import RewardModal from '../modals/GenericModal';
 
 // Images
 import Cheetah from '../../assets/icons/cheetahblink.svg';
@@ -232,7 +232,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		<>
 			<RewardModal
 				isOpen={isOpen}
-				rewardModalInfo={rewardModalInfo()}
+				genericModalInfo={rewardModalInfo()}
 				loading={isLoading}
 				error={onError}
 				confirmFunction={updateUserCoins}
