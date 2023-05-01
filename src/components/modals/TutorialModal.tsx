@@ -10,7 +10,7 @@ import {
     Text,
     ModalHeader
 } from "@chakra-ui/react";
-import Vimeo from '@u-wave/react-vimeo';
+import YouTube from 'react-youtube';
 
 // Components
 import LoadingState from '../LoadingState';
@@ -56,10 +56,15 @@ const TutorialModal: FC<ITutorialModal> = ({ isOpen, onClose, onToggle }) => {
                                 <LoadingState />
                             </Flex>
                         }
-                        <Vimeo
-                            onLoaded={() => { setIsLoading(false) }}
-                            width="550px"
-                            video="574048331" //this id needs to be changed to the real tutorial video, when it exists
+                        <YouTube 
+                            opts={{
+                                width: '550',
+                                height: '300',
+                                playerVars: {
+                                    autoplay: 1
+                                }
+                            }}
+                            videoId="NPcGhuJ_zXk"
                         />
                     </Flex>
                 </ModalBody>

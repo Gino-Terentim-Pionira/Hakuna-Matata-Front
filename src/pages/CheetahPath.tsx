@@ -216,6 +216,7 @@ const CheetahPath = () => {
         [],
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [payLoading, setPayLoading] = useState<boolean>(false);
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -352,6 +353,7 @@ const CheetahPath = () => {
     const paxTax = async () => {
         const value = Constants.FINAL_QUIZ_SINK;
         setIsConfirmOpen(false);
+        setPayLoading(true);
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
             '@pionira/userId',
         );
@@ -368,12 +370,15 @@ const CheetahPath = () => {
                     });
                 }
 
+                setPayLoading(false);
                 handleModal();
             } catch (error) {
+                setPayLoading(false);
                 setOnError(true);
             }
         }
 
+        setPayLoading(false);
         if (userCoins < value) {
             setAlertCoins('Poxa! Parece que você não tem moedas suficientes!');
             setIsAlertCoins(true);
@@ -386,6 +391,10 @@ const CheetahPath = () => {
             setIsCoinsCheck(true);
         }
     };
+
+    const closeAlert = () => {
+        if (!payLoading) isAlertOnClose(); 
+    }
 
     useEffect(() => {
         getUser();
@@ -698,7 +707,8 @@ const CheetahPath = () => {
 
             <AlertModal
                 isOpen={isAlertOpen}
-                onClose={isAlertOnClose}
+                onClose={closeAlert}
+                onClickClose = {closeAlert}
                 alertTitle='Desafio Final'
                 alertBody={alertQuiz}
                 buttonBody={
@@ -706,11 +716,8 @@ const CheetahPath = () => {
                         ref={cancelRef}
                         color='white'
                         bg={colorPalette.primaryColor}
-                        onClick={() => {
-                            paxTax();
-                            isAlertOnClose();
-                            modalOnClose();
-                        }}
+                        onClick={paxTax}
+                        isLoading={payLoading}
                     >
                         Pagar
                     </Button>
