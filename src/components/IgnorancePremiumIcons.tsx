@@ -1,9 +1,10 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import IgnoranceProgress from "./IgnoranceProgress";
 import RandomRewardModal from "./modals/RandomRewardModal";
-// import icon_membership from '../assets/icons/icon_membership.svg';
-// import PremiumPassport from "./modals/PremiumPassport";
+import Coin from '../assets/icons/coinicon.svg'
+import { useUser } from "../hooks";
+import fontTheme from "../styles/base";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -12,11 +13,12 @@ interface IgnoracenPremiumIconsInterface {
 
 const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiumIconsInterface) => {
   // const {
-	// 	isOpen: premiumIsOpen,
-	// 	onClose: premiumOnClose,
-	// 	onOpen: premiumOnOpen,
-	// 	onToggle: premiumOnToggle,
-	// } = useDisclosure();
+  // 	isOpen: premiumIsOpen,
+  // 	onClose: premiumOnClose,
+  // 	onOpen: premiumOnOpen,
+  // 	onToggle: premiumOnToggle,
+  // } = useDisclosure();
+  const { userData } = useUser();
 
   return (
     <>
@@ -43,9 +45,13 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
         >
           {
             !dontShowIgnorance && <IgnoranceProgress
-              ignorance={ignorance} 
+              ignorance={ignorance}
             />
           }
+          <Flex mt="8px" alignItems="center" justifyContent="flex-end">
+            <Text fontFamily={fontTheme.fonts} fontSize="28px" fontWeight="400" color="#000">{userData.coins}</Text>
+            <Image ml="4px" w="50px" src={Coin} alt="icone de moeda" />
+          </Flex>
         </Flex>
         <RandomRewardModal />
       </Flex>
@@ -54,7 +60,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
         onClose={premiumOnClose}
         onToggle={premiumOnToggle}
       /> */}
-      
+
     </>
   )
 };
