@@ -10,7 +10,6 @@ import {
     Flex,
     Button,
     Text,
-    Grid,
     useDisclosure,
     Image
 } from "@chakra-ui/react";
@@ -28,6 +27,7 @@ import api from '../../services/api';
 
 // Styles
 import fontTheme from '../../styles/base';
+import styled from 'styled-components';
 
 // Images
 import button_on from '../../assets/icons/button_on.png';
@@ -67,6 +67,33 @@ interface IQuizz {
     }];
     total_coins: number;
 }
+
+const GridContainer = styled.div`
+    display: grid;
+    margin-left: 47px;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 1100px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-bottom: 116px;
+    padding-left: 8px;
+    grid-row-gap: 40px;
+    grid-column-gap: 48px;
+
+    @media (max-width: 1100px) {
+        width: 700px;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 48px;
+    }
+
+    @media (max-width: 780px) {
+        grid-template-columns: 1fr;
+
+        > .videoCardContainer {
+            margin: auto;
+        }
+    }
+`;
 
 const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     //modais
@@ -257,7 +284,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                                 </Box>
                             ) : (
                                 <>
-                                    <Grid ml="47px" rowGap="40px" gridTemplateColumns='1fr 1fr 1fr' w='75%' maxH="80vh" overflowY='auto' paddingBottom="116px" paddingLeft="8px">
+                                    <GridContainer>
                                         {
                                             quiz.videos_id.map(({ _id, user_id, name, url, nick }: {
                                                 user_id: string[],
@@ -268,6 +295,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                                             }) => {
                                                 return (
                                                     <Flex
+                                                        className='videoCardContainer'
                                                         width="297px"
                                                         height="334px"
                                                         borderRadius="8px"
@@ -303,7 +331,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                                                 )
                                             })
                                         }
-                                    </Grid>
+                                    </GridContainer>
                                 </>
                             )
                         }
