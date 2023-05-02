@@ -34,9 +34,10 @@ import { errorCases } from '../../utils/errors/errorsCases';
 interface IVideoModal {
     id: string;
     name: string;
-    usersId: string[];
     url: string;
-    nick: string;
+    videoIsOpen: boolean,
+    videoOnClose: VoidFunction,
+    videoOnToggle: VoidFunction,
     plataform?: 'vimeo' | 'youtube';
 }
 
@@ -56,14 +57,7 @@ interface IUser {
     second_certificate: string;
 }
 
-const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform = 'vimeo' }) => {
-    const { isOpen: videoIsOpen,
-        onClose: videoOnClose,
-        onOpen: videoOnOpen,
-        onToggle: videoOnToggle
-    } = useDisclosure();
-
-
+const VideoModal: FC<IVideoModal> = ({ videoIsOpen, videoOnClose, videoOnToggle, id, name, url, plataform = 'vimeo' }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState<IUser>({} as IUser);
     const [buttonValidation, setButtonValidation] = useState(false);
@@ -115,7 +109,7 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
 
     return (
         <>
-            <Flex
+            {/* <Flex
                 minH='5.5rem'
                 h='5.5rem'
                 justifyContent='center'
@@ -137,7 +131,7 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
                         {nick}
                     </Text>
                 </Flex>
-            </Flex>
+            </Flex> */}
 
             <Modal isOpen={videoIsOpen} onClose={videoOnClose} size="4xl">
                 <ModalOverlay />
@@ -189,26 +183,23 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
                             }
 
                         </Flex>
-                        {
-                            isLoading ? null : (
-                                <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
-                                    <Button
-                                        bgColor={colorPalette.confirmButton}
-                                        width="50%"
-                                        height="3rem"
-                                        onClick={() => handleModal()}
-                                    >
-                                        <Text
-                                            fontFamily={fontTheme.fonts}
-                                            fontWeight="semibold"
-                                            fontSize="2rem"
-                                        >
-                                            Concluído
-                                        </Text>
-                                    </Button>
-                                </Flex>
-                            )
-                        }
+                        <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
+                            <Button
+                                bgColor={colorPalette.confirmButton}
+                                width="50%"
+                                height="3rem"
+                                isLoading={isLoading}
+                                onClick={!isLoading ? () => handleModal() : () => console.log()}
+                            >
+                                <Text
+                                    fontFamily={fontTheme.fonts}
+                                    fontWeight="semibold"
+                                    fontSize="2rem"
+                                >
+                                    Concluído
+                                </Text>
+                            </Button>
+                        </Flex>
                     </ModalBody>
                 </ModalContent >
             </Modal >
