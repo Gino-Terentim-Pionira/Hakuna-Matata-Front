@@ -36,6 +36,7 @@ interface IVideoModal {
     videoOnClose: VoidFunction,
     videoOnToggle: VoidFunction,
     plataform?: 'vimeo' | 'youtube';
+    updateQuiz: (quizIndex: number) => Promise<void>;
 }
 
 interface IUser {
@@ -54,7 +55,16 @@ interface IUser {
     second_certificate: string;
 }
 
-const VideoModal: FC<IVideoModal> = ({ videoIsOpen, videoOnClose, videoOnToggle, id, name, url, plataform = 'vimeo' }) => {
+const VideoModal: FC<IVideoModal> = ({
+    videoIsOpen,
+    videoOnClose,
+    videoOnToggle,
+    id,
+    name,
+    url,
+    plataform = 'vimeo',
+    updateQuiz
+}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState<IUser>({} as IUser);
     const [onError, setOnError] = useState(false);
@@ -86,6 +96,7 @@ const VideoModal: FC<IVideoModal> = ({ videoIsOpen, videoOnClose, videoOnToggle,
         try {
             setButtonIsLoading(true);
             await updateVideo(id);
+            await updateQuiz();
             videoOnToggle();
             setButtonIsLoading(false);
         } catch (error) {

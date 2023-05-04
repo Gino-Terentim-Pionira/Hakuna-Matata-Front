@@ -163,14 +163,13 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
     // Metodos
-    const getQuiz = async (quizIndex: number) => {
+    const getQuiz = async () => {
         setIsLoading(true);
         try {
             const res = await api.get('/quizz');
             const quiz = res.data[quizIndex];
 
             setQuiz(quiz);
-
         } catch (error) {
             setOnError(true);
         }
@@ -227,7 +226,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
 
     //UseEffects
     useEffect(() => {
-        getQuiz(quizIndex);
+        getQuiz();
     }, []);
 
     useEffect(() => {
@@ -279,7 +278,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                     <ModalBody display="flex" flexDirection='column' alignItems='center' >
                         {
                             isLoading ? (
-                                <Box width="100%" h="19rem">
+                                <Box width="100%" h="90%">
                                     <LoadingState />
                                 </Box>
                             ) : (
@@ -486,6 +485,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                 videoIsOpen={videoIsOpen}
                 videoOnClose={videoOnClose}
                 videoOnToggle={videoOnToggle}
+                updateQuiz={getQuiz}
             />
         </>
     );

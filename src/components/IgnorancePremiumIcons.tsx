@@ -49,7 +49,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
             />
           }
           <Flex mt="8px" alignItems="center" justifyContent="flex-end">
-            <Text fontFamily={fontTheme.fonts} fontSize="28px" fontWeight="400" color="#000">{userData.coins}</Text>
+            <Text fontFamily={fontTheme.fonts} fontSize="28px" fontWeight="500" color="#000">{userData.coins}</Text>
             <Image ml="4px" w="50px" src={Coin} alt="icone de moeda" />
           </Flex>
         </Flex>
