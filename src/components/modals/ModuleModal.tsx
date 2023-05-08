@@ -10,7 +10,6 @@ import {
     Flex,
     Button,
     Text,
-    Grid,
     useDisclosure,
     Image
 } from "@chakra-ui/react";
@@ -28,13 +27,14 @@ import api from '../../services/api';
 
 // Styles
 import fontTheme from '../../styles/base';
+import styled from 'styled-components';
 
 // Images
-import Coins from '../../assets/icons/coinicon.svg';
 import button_on from '../../assets/icons/button_on.png';
 import button_off from '../../assets/icons/button_off.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
+import VideoIcon from '../../assets/icons/video.png';
 
 interface IModuleModal {
     quizIndex: number;
@@ -68,6 +68,33 @@ interface IQuizz {
     total_coins: number;
 }
 
+const GridContainer = styled.div`
+    display: grid;
+    margin-left: 47px;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 1100px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-bottom: 116px;
+    padding-left: 8px;
+    grid-row-gap: 40px;
+    grid-column-gap: 48px;
+
+    @media (max-width: 1100px) {
+        width: 700px;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 48px;
+    }
+
+    @media (max-width: 780px) {
+        grid-template-columns: 1fr;
+
+        > .videoCardContainer {
+            margin: auto;
+        }
+    }
+`;
+
 const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     //modais
     const { isOpen,
@@ -94,6 +121,13 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
         onToggle: verificationOnToggle
     } = useDisclosure();
 
+    const { isOpen: videoIsOpen,
+        onClose: videoOnClose,
+        onOpen: videoOnOpen,
+        onToggle: videoOnToggle
+    } = useDisclosure();
+
+
     // States
     const [quiz, setQuiz] = useState<IQuizz>({
         name: '',
@@ -117,25 +151,25 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
         }],
         total_coins: 0
     } as IQuizz);
-    const {userData} = useUser();
+    const { userData } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [buttonValidation, setButtonValidation] = useState(false);
     const [isFirstTimeChallenge, setIsFirstTimeChallenge] = useState(true);
     const [totalCoins, setTotalCoins] = useState(0);
     const [step, setStep] = useState(0);
     const [onError, setOnError] = useState(false);
+    const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '' });
 
     const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
     // Metodos
-    const getQuiz = async (quizIndex: number) => {
+    const getQuiz = async () => {
         setIsLoading(true);
         try {
             const res = await api.get('/quizz');
             const quiz = res.data[quizIndex];
 
             setQuiz(quiz);
-
         } catch (error) {
             setOnError(true);
         }
@@ -185,9 +219,14 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
         quizOnOpen();
     }
 
+    const handleVideoModal = (id: string, name: string, url: string) => {
+        setVideoInfo({ id, name, url });
+        videoOnOpen();
+    }
+
     //UseEffects
     useEffect(() => {
-        getQuiz(quizIndex);
+        getQuiz();
     }, []);
 
     useEffect(() => {
@@ -218,35 +257,33 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                 left={left}
             />
 
-            <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+            <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <ModalOverlay />
                 <ModalContent height="34rem" fontFamily={fontTheme.fonts}>
                     <Box
-                        w="25%"
+                        w="150px"
                         bg={colorPalette.primaryColor}
-                        h="25rem"
+                        h="100%"
                         position="absolute"
                         zIndex="-1"
                         left="0"
                         top="0"
                         borderTopStartRadius='5px'
-                        clipPath="polygon(0% 0%, 55% 0%, 0% 100%)"
                     />
                     <ModalHeader d='flex' justifyContent='center'>
-                        <Text fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{quiz.name}</Text>
+                        <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{quiz.name}</Text>
                         <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     </ModalHeader>
 
-                    <ModalBody d='flex' mt='-1rem' flexDirection='column' alignItems='center' justifyContent='space-around' >
-
+                    <ModalBody display="flex" flexDirection='column' alignItems='center' >
                         {
                             isLoading ? (
-                                <Box width="100%" h="19rem">
+                                <Box width="100%" h="90%">
                                     <LoadingState />
                                 </Box>
                             ) : (
                                 <>
-                                    <Grid gridTemplateColumns='1fr 1fr' w='90%' h='19rem' overflowY='auto'>
+                                    <GridContainer>
                                         {
                                             quiz.videos_id.map(({ _id, user_id, name, url, nick }: {
                                                 user_id: string[],
@@ -254,45 +291,76 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                                                 url: string,
                                                 nick: string
                                                 _id: string
-                                            }, index) => {
+                                            }) => {
                                                 return (
-                                                    <div key={index}>
-                                                        <VideoModal id={_id} name={name} nick={nick} usersId={user_id} url={url} />
-                                                    </div>
+                                                    <Flex
+                                                        className='videoCardContainer'
+                                                        width="297px"
+                                                        height="334px"
+                                                        borderRadius="8px"
+                                                        flexDir="column"
+                                                        boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
+                                                        bg={"#FEFEFE"}
+                                                        onClick={() => handleVideoModal(_id, name, url)}
+                                                        transition="ease 200ms"
+                                                        _hover={{
+                                                            cursor: 'pointer',
+                                                            opacity: '0.8'
+                                                        }}
+                                                        key={_id}
+                                                    >
+                                                        <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="147px" bg={colorPalette.textColor}>
+                                                            <Image height='59px' src={VideoIcon} alt="Icone de video" />
+                                                        </Flex>
+                                                        <Flex flexDir="column" paddingX="16px" marginTop="24px">
+                                                            <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
+                                                                {name}
+                                                            </Text>
+                                                            <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
+                                                                {nick}
+                                                            </Text>
+                                                            {
+                                                                user_id.includes(userData._id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
+                                                                    Já assistido
+                                                                </Text>
+                                                            }
+
+                                                        </Flex>
+                                                    </Flex>
                                                 )
                                             })
                                         }
-
-                                        <Flex opacity='0'>.</Flex>
-                                    </Grid>
+                                    </GridContainer>
                                 </>
                             )
                         }
-
-                        <Flex justifyContent="flex-end" w='100%' >
-                            <Flex justifyContent="space-between" w='65%' alignItems='center'>
-                                <Button
-                                    bgColor={colorPalette.confirmButton}
-                                    width="50%"
-                                    height="4rem"
-                                    isLoading={isLoading}
-                                    isDisabled={isLoading}
-                                    onClick={() => handleModal()}
+                        {
+                            !isLoading && <Button
+                                display="Button"
+                                justifyContent="center"
+                                alignItems="center"
+                                boxShadow="5px 5px 5px rgba(0, 0, 0, 0.25)"
+                                margin="auto"
+                                bottom="56px"
+                                position='absolute'
+                                bg={colorPalette.progressOrange}
+                                width="330px"
+                                height="65px"
+                                borderRadius="16px"
+                                _hover={{
+                                    transform: 'scale(1.05)',
+                                }}
+                                onClick={() => handleModal()}
+                            >
+                                <Text
+                                    fontFamily={fontTheme.fonts}
+                                    fontSize="30px"
+                                    color={colorPalette.textColor}
                                 >
-                                    <Text
-                                        fontFamily={fontTheme.fonts}
-                                        fontWeight="semibold"
-                                        fontSize="2rem"
-                                    >
-                                        Ir para o desafio!
-                                    </Text>
-                                </Button>
-                                <Flex mr='1rem' alignItems='center' fontWeight='bold' fontSize='1.3rem' >
-                                    <Image src={Coins} mr='0.5rem' /> {userQuizCoins}/{totalCoins}
-                                </Flex>
-                            </Flex>
-                        </Flex>
-
+                                    Ir para o desafio!
+                                </Text>
+                            </Button>
+                        }
                     </ModalBody>
                 </ModalContent >
             </Modal >
@@ -409,6 +477,15 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                         Recarregar
                     </Button>
                 }
+            />
+            <VideoModal
+                id={videoInfo.id}
+                name={videoInfo.name}
+                url={videoInfo.url}
+                videoIsOpen={videoIsOpen}
+                videoOnClose={videoOnClose}
+                videoOnToggle={videoOnToggle}
+                updateQuiz={getQuiz}
             />
         </>
     );

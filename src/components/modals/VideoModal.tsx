@@ -10,8 +10,6 @@ import {
     Flex,
     Button,
     Text,
-    Image,
-    useDisclosure,
 } from "@chakra-ui/react";
 import Vimeo from '@u-wave/react-vimeo';
 import YouTube from 'react-youtube';
@@ -28,16 +26,17 @@ import fontTheme from '../../styles/base';
 import colorPalette from "../../styles/colorPalette";
 
 // Images
-import VideoIcon from '../../assets/icons/video.png';
 import { errorCases } from '../../utils/errors/errorsCases';
 
 interface IVideoModal {
     id: string;
     name: string;
-    usersId: string[];
     url: string;
-    nick: string;
+    videoIsOpen: boolean,
+    videoOnClose: VoidFunction,
+    videoOnToggle: VoidFunction,
     plataform?: 'vimeo' | 'youtube';
+    updateQuiz: (quizIndex: number) => Promise<void>;
 }
 
 interface IUser {
@@ -56,18 +55,20 @@ interface IUser {
     second_certificate: string;
 }
 
-const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform = 'vimeo' }) => {
-    const { isOpen: videoIsOpen,
-        onClose: videoOnClose,
-        onOpen: videoOnOpen,
-        onToggle: videoOnToggle
-    } = useDisclosure();
-
-
+const VideoModal: FC<IVideoModal> = ({
+    videoIsOpen,
+    videoOnClose,
+    videoOnToggle,
+    id,
+    name,
+    url,
+    plataform = 'vimeo',
+    updateQuiz
+}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState<IUser>({} as IUser);
-    const [buttonValidation, setButtonValidation] = useState(false);
     const [onError, setOnError] = useState(false);
+    const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
     // Pega as informações do usuário logado
     const getUser = async () => {
@@ -93,12 +94,14 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
     // Verifica qual modal abrir
     const handleModal = async () => {
         try {
-            setIsLoading(true);
+            setButtonIsLoading(true);
             await updateVideo(id);
+            await updateQuiz();
             videoOnToggle();
-            setButtonValidation(true);
+            setButtonIsLoading(false);
         } catch (error) {
             setOnError(true);
+            setButtonIsLoading(false);
         }
     }
 
@@ -115,30 +118,6 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
 
     return (
         <>
-            <Flex
-                minH='5.5rem'
-                h='5.5rem'
-                justifyContent='center'
-                alignItems='center'
-                mb='2rem'
-                _hover={{
-                    cursor: 'pointer'
-                }}
-                onClick={videoOnOpen}>
-                <Flex bg={buttonValidation || usersId.includes(user._id) ? "#E48A0A" : "#F6F6F6"} boxShadow='6px 6px 4px rgba(0,0,0,0.25)' w='85%' h='100%' borderRadius='5' justifyContent='space-between' alignItems='center'>
-                    <Image src={VideoIcon} ml='2rem' h='59' />
-                    <Text
-                        fontFamily={fontTheme.fonts}
-                        mr='2rem'
-                        fontWeight='semibold'
-                        fontSize='1.5rem'
-                        color={buttonValidation || usersId.includes(user._id) ? "#FFFFFF" : "black"}
-                    >
-                        {nick}
-                    </Text>
-                </Flex>
-            </Flex>
-
             <Modal isOpen={videoIsOpen} onClose={videoOnClose} size="4xl">
                 <ModalOverlay />
                 <ModalContent height="34rem">
@@ -189,25 +168,25 @@ const VideoModal: FC<IVideoModal> = ({ id, name, usersId, url, nick, plataform =
                             }
 
                         </Flex>
+
                         {
-                            isLoading ? null : (
-                                <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
-                                    <Button
-                                        bgColor={colorPalette.confirmButton}
-                                        width="50%"
-                                        height="3rem"
-                                        onClick={() => handleModal()}
+                            !isLoading && <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
+                                <Button
+                                    bgColor={colorPalette.confirmButton}
+                                    width="50%"
+                                    height="3rem"
+                                    isLoading={buttonIsLoading}
+                                    onClick={!buttonIsLoading ? () => handleModal() : () => console.log()}
+                                >
+                                    <Text
+                                        fontFamily={fontTheme.fonts}
+                                        fontWeight="semibold"
+                                        fontSize="2rem"
                                     >
-                                        <Text
-                                            fontFamily={fontTheme.fonts}
-                                            fontWeight="semibold"
-                                            fontSize="2rem"
-                                        >
-                                            Concluído
-                                        </Text>
-                                    </Button>
-                                </Flex>
-                            )
+                                        Concluído
+                                    </Text>
+                                </Button>
+                            </Flex>
                         }
                     </ModalBody>
                 </ModalContent >
