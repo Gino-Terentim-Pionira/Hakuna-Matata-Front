@@ -122,7 +122,7 @@ const VideoModal: FC<IVideoModal> = ({
                 <ModalOverlay />
                 <ModalContent height="34rem">
                     <ModalHeader display="flex" justifyContent="center" paddingBottom="0px">
-                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="3.7rem">
+                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold"  color={colorPalette.textColor} fontSize="3.7rem">
                             {name}
                         </Text>
                     </ModalHeader>
