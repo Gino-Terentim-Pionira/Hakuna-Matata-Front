@@ -404,7 +404,11 @@ const MainPage = () => {
 				onFunction={() => setIsSubscribedModal(false)}
 			/>
 
-			<BlockedModal isOpen={openBlockedModal} onClose={() => {setOpenBlockedModal(false)}} />
+			<BlockedModal 
+				isOpen={openBlockedModal} 
+				onClose={() => {setOpenBlockedModal(false)}} 
+				subtitle = "Esse horizonte ainda não pode se explorado, por enquanto..."
+			/>
 		</>
 	);
 };

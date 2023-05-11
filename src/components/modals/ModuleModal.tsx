@@ -32,15 +32,18 @@ import styled from 'styled-components';
 // Images
 import button_on from '../../assets/icons/button_on.png';
 import button_off from '../../assets/icons/button_off.png';
+import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
+import BlockedModal from './BlockedModal';
 
 interface IModuleModal {
     quizIndex: number;
     top?: string;
     bottom?: string;
     left?: string;
+    isBlocked?: boolean;
 }
 
 interface IQuizz {
@@ -95,7 +98,7 @@ const GridContainer = styled.div`
     }
 `;
 
-const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
+const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked }) => {
     //modais
     const { isOpen,
         onClose,
@@ -159,6 +162,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     const [step, setStep] = useState(0);
     const [onError, setOnError] = useState(false);
     const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '' });
+    const [isBlockedOpen, setIsBlockedOpen] = useState(false);
 
     const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
@@ -242,8 +246,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     return (
         <>
             <Image
-                src={buttonValidation || quiz.user_id?.includes(userData._id) ? button_on : button_off}
-                onClick={onOpen}
+                src={isBlocked ? button_blocked : (buttonValidation || quiz.user_id?.includes(userData._id) ? button_on : button_off)}
+                onClick={isBlocked ? ()=> {setIsBlockedOpen(true)} : onOpen}
                 _hover={{
                     cursor: 'pointer',
                     transform: 'scale(1.1)',
@@ -486,6 +490,11 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
                 videoOnClose={videoOnClose}
                 videoOnToggle={videoOnToggle}
                 updateQuiz={getQuiz}
+            />
+            <BlockedModal 
+                isOpen={isBlockedOpen} 
+                onClose={() => { setIsBlockedOpen(false)}} 
+                subtitle = "Esse treinamento ainda não está disponível!"
             />
         </>
     );
