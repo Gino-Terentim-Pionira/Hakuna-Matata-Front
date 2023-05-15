@@ -54,6 +54,7 @@ import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
 import { Constants } from '../utils/constants';
+import BlockedModal from '../components/modals/BlockedModal';
 
 interface IQuiz {
     _id: string;
@@ -109,6 +110,7 @@ const CheetahPath = () => {
     const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
     const [onError, setOnError] = useState(false);
     const [completeTrail, setCompleteTrail] = useState(false);
+    const [isBlockedOpen, setIsBlockedOpen] = useState(false);
 
     const ignoranceArray = [
         ignorance100,
@@ -461,7 +463,7 @@ const CheetahPath = () => {
                             <ModuleModal left='19vw' top='67vh' quizIndex={0} />
                             <ModuleModal left='45vw' top='54vh' quizIndex={1} />
                             <ModuleModal left='68vw' top='82vh' quizIndex={2} />
-                            <ModuleModal left='89vw' top='60vh' quizIndex={0} isBlocked={true} />
+                            <ModuleModal left='89vw' top='60vh' quizIndex={0} isBlocked={true} blockedFunction={() => setIsBlockedOpen(true)} />
                             <Center
                                 _hover={{
                                     cursor: 'pointer',
@@ -780,6 +782,12 @@ const CheetahPath = () => {
                         Recarregar
                     </Button>
                 }
+            />
+
+            <BlockedModal 
+                isOpen={isBlockedOpen} 
+                onClose={() => { setIsBlockedOpen(false)}} 
+                subtitle = "Esse treinamento ainda não está disponível!"
             />
         </>
     );

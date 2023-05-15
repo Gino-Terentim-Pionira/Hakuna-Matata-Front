@@ -36,7 +36,6 @@ import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
-import BlockedModal from './BlockedModal';
 
 interface IModuleModal {
     quizIndex: number;
@@ -44,6 +43,7 @@ interface IModuleModal {
     bottom?: string;
     left?: string;
     isBlocked?: boolean;
+    blockedFunction?: VoidFunction;
 }
 
 interface IQuizz {
@@ -98,7 +98,7 @@ const GridContainer = styled.div`
     }
 `;
 
-const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked }) => {
+const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked, blockedFunction }) => {
     //modais
     const { isOpen,
         onClose,
@@ -162,7 +162,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [step, setStep] = useState(0);
     const [onError, setOnError] = useState(false);
     const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '' });
-    const [isBlockedOpen, setIsBlockedOpen] = useState(false);
 
     const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
@@ -247,7 +246,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         <>
             <Image
                 src={isBlocked ? button_blocked : (buttonValidation || quiz.user_id?.includes(userData._id) ? button_on : button_off)}
-                onClick={isBlocked ? ()=> {setIsBlockedOpen(true)} : onOpen}
+                onClick={isBlocked ? blockedFunction : onOpen}
                 _hover={{
                     cursor: 'pointer',
                     transform: 'scale(1.1)',
@@ -490,11 +489,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 videoOnClose={videoOnClose}
                 videoOnToggle={videoOnToggle}
                 updateQuiz={getQuiz}
-            />
-            <BlockedModal 
-                isOpen={isBlockedOpen} 
-                onClose={() => { setIsBlockedOpen(false)}} 
-                subtitle = "Esse treinamento ainda não está disponível!"
             />
         </>
     );
