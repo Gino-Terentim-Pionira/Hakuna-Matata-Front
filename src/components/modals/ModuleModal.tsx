@@ -32,6 +32,7 @@ import styled from 'styled-components';
 // Images
 import button_on from '../../assets/icons/button_on.png';
 import button_off from '../../assets/icons/button_off.png';
+import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
@@ -41,6 +42,8 @@ interface IModuleModal {
     top?: string;
     bottom?: string;
     left?: string;
+    isBlocked?: boolean;
+    blockedFunction?: VoidFunction;
 }
 
 interface IQuizz {
@@ -95,7 +98,7 @@ const GridContainer = styled.div`
     }
 `;
 
-const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
+const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked, blockedFunction }) => {
     //modais
     const { isOpen,
         onClose,
@@ -242,8 +245,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left }) => {
     return (
         <>
             <Image
-                src={buttonValidation || quiz.user_id?.includes(userData._id) ? button_on : button_off}
-                onClick={onOpen}
+                src={isBlocked ? button_blocked : (buttonValidation || quiz.user_id?.includes(userData._id) ? button_on : button_off)}
+                onClick={isBlocked ? blockedFunction : onOpen}
                 _hover={{
                     cursor: 'pointer',
                     transform: 'scale(1.1)',
