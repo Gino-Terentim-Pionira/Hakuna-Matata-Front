@@ -57,6 +57,12 @@ const ShopItem: FC<ShopItemProps> = ({
 		window.open(idLink);
 	}
 
+	const itemType: {[key:string] : string} = {
+		"item1": "E-books",
+		"item2": "Utilitários",
+		"item3": "Especiais"
+	}
+
 	return (
 		<>
 			{users_id.includes(current_user_id) ? (
@@ -133,7 +139,7 @@ const ShopItem: FC<ShopItemProps> = ({
 								color={colorPalette.infoTextColor}
 								mb='0.3rem'
 							>
-								Tipo: {type}
+								Tipo: {itemType[type]}
 							</Text>
 						</Flex>
 					</Flex>
@@ -185,7 +191,7 @@ const ShopItem: FC<ShopItemProps> = ({
 									marginLeft='1.5rem'
 									justifyContent='space-between'
 								>
-									<Flex flexDirection='column' w='60%'>
+									<Flex flexDirection='column' w='80%'>
 										<Text
 											fontSize={[
 												'0.5rem',
@@ -195,7 +201,7 @@ const ShopItem: FC<ShopItemProps> = ({
 											w='60%'
 											fontWeight='semibold'
 											textAlign='left'
-											mb='0.5rem'
+											mb='8px'
 										>
 											{name}
 										</Text>
@@ -207,13 +213,15 @@ const ShopItem: FC<ShopItemProps> = ({
 											]}
 											fontWeight='regular'
 											textAlign='left'
+											overflow="auto"
+											maxH="160px"
 										>
 											{description}
 										</Text>
 									</Flex>
 									<Flex
 										flexDirection='column'
-										alignSelf='flex-end'
+										alignSelf='flex-start'
 									>
 										<Button
 											width='100%'
