@@ -42,7 +42,9 @@ const ShopItem: FC<ShopItemProps> = ({
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
-	const idLink = `https://docs.google.com/uc?export=download&id=${id_link}`;
+	// NAO REMOVER, ESSE LINK É MUITO UTIL
+	// const idLink = `https://docs.google.com/uc?export=download&id=${id_link}`;
+	const idLink = `https://drive.google.com/file/d/${id_link}/view`
 
 	const changeShow = () => {
 		setShow(!show);
