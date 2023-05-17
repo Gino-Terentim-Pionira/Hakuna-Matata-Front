@@ -114,8 +114,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
     const { isOpen: timeIsOpen,
         onClose: timeOnClose,
-        onOpen: timeOnOpen,
-        onToggle: timeOnToggle
+        onOpen: timeOnOpen
     } = useDisclosure();
 
     const { isOpen: verificationIsOpen,
@@ -381,7 +380,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 /> : null
             }
 
-            <TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} timeOnToggle={timeOnToggle} />
+            <TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} />
 
             <Modal isOpen={verificationIsOpen} onClose={verificatioOnClose} size='3xl' >
                 <ModalOverlay />
