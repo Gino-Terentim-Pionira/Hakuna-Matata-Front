@@ -72,6 +72,12 @@ const ShopItem: FC<ShopItemProps> = ({
 		onToggle();
 	};
 
+	const itemType: {[key:string] : string} = {
+		"item1": "E-books",
+		"item2": "Utilitários",
+		"item3": "Especiais"
+	}
+
 	const buyItem = async () => {
 		setLoaging(true);
 		// then make buying logic
@@ -223,7 +229,7 @@ const ShopItem: FC<ShopItemProps> = ({
 						color={colorPalette.infoTextColor}
 						mb='0.3rem'
 					>
-						Tipo: {type}
+						Tipo: {itemType[type as string]} 
 					</Text>
 					<Box display='flex' flexDirection='row'>
 						<Text
@@ -286,13 +292,13 @@ const ShopItem: FC<ShopItemProps> = ({
 							marginLeft='1.5rem'
 							justifyContent='space-between'
 						>
-							<Flex flexDirection='column' w='60%'>
+							<Flex flexDirection='column' w='80%'>
 								<Text
 									fontSize={['0.5rem', '1.2rem', '1.5rem']}
 									w='60%'
 									fontWeight='semibold'
 									textAlign='left'
-									mb='0.5rem'
+									mb='8px'
 								>
 									{name}
 								</Text>
@@ -300,11 +306,13 @@ const ShopItem: FC<ShopItemProps> = ({
 									fontSize={['0.3rem', '0.8rem', '1rem']}
 									fontWeight='regular'
 									textAlign='left'
+									overflow="auto"
+									maxH="160px"
 								>
 									{description}
 								</Text>
 							</Flex>
-							<Flex flexDirection='column' alignSelf='flex-end'>
+							<Flex flexDirection='column' alignSelf='flex-start'>
 								<Box display='flex' flexDirection='row'>
 									<Text
 										fontFamily={fontTheme.fonts}
