@@ -201,7 +201,7 @@ const EditProfile = () => {
 			const last_name = lastIndexValidation(firstName) as string;
 			const first_name = firstName[0];
 			setLoading(true);
-			await api.patch(`/user/${userId}`, {
+			await api.patch(`/user/edit/${userId}`, {
 				userName,
 				first_name,
 				last_name,
