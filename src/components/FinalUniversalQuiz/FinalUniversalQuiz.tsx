@@ -357,7 +357,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 										<Text
 											w='92%'
 											fontFamily={fontTheme.fonts}
-											fontSize={{xl: '18px', lg: '16px', md: '14px', sm: '14px'}}
+											fontSize={{xl: '20px', lg: '18px', md: '16px', sm: '14px'}}
 										>
 											{handleQuestionDescription()}
 										</Text>

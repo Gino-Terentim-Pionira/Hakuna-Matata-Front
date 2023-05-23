@@ -331,7 +331,7 @@ const QuizModal: FC<IQuizComponent> = ({
                             <Flex w='100%' flexDirection='column'>
                                 <Text marginTop='0.5rem' fontFamily={fontTheme.fonts} fontSize='30' fontWeight='bold' color={colorPalette.secondaryColor} >Q {step + 1}/{length}</Text>
                                 <Flex marginTop='0.5rem' bg='white' boxShadow='4px 4px 4px rgba(0, 0, 0, 0.25)' borderRadius='8' h='29vh' justifyContent='center' alignItems='center' >
-                                    <Text w='92%' h='77%' fontFamily={fontTheme.fonts} fontSize='18px' >
+                                    <Text w='92%' h='77%' fontFamily={fontTheme.fonts} fontSize='25px' >
                                         {quiz?.questions_id[step]?.description}
                                     </Text>
                                 </Flex>
