@@ -21,14 +21,13 @@ import cardicon from '../assets/icons/shop2.svg';
 //import api from '../services/api';
 
 type ShopItemProps = {
-	current_user_id: string;
-	users_id: Array<string>;
 	_id: string;
 	name: string;
 	value: number;
 	description: string;
 	type: string;
 	id_link: string;
+	itens_id: string[];
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -36,9 +35,8 @@ const ShopItem: FC<ShopItemProps> = ({
 	name,
 	description,
 	type,
-	users_id,
-	current_user_id,
-	id_link
+	id_link,
+	itens_id
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -67,7 +65,7 @@ const ShopItem: FC<ShopItemProps> = ({
 
 	return (
 		<>
-			{users_id.includes(current_user_id) ? (
+			{itens_id.includes(_id) ? (
 				<Box>
 					<Flex
 						_hover={{

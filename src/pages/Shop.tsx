@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
 import { Button, Center, Image, SimpleGrid } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import { useUser } from '../hooks';
 
 // Components
 import LoadingState from '../components/LoadingState';
@@ -21,6 +22,7 @@ import icon_inventory from '../assets/icons/icon_inventory.svg';
 import { errorCases } from '../utils/errors/errorsCases';
 
 const Shop = () => {
+	const { getNewUserInfo, userData } = useUser();
 	const [shopItem, setShopItem] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
 	const [onError, setOnError] = useState(false);
@@ -30,6 +32,9 @@ const Shop = () => {
 
 	const getShopItens = async () => {
 		try {
+			if (!userData)
+				getNewUserInfo();
+
 			const res = await api.get('/shopItem/');
 			const userId = sessionStorage.getItem('@pionira/userId');
 			const userIdString = '' + userId;
@@ -47,7 +52,7 @@ const Shop = () => {
 	}
 
 	const goBack = () => {
-		if(!history.location.state)
+		if (!history.location.state)
 			history.push('/MainPage');
 		else history.goBack();
 	};
@@ -144,22 +149,20 @@ const Shop = () => {
 								value,
 								description,
 								type,
-								user_id,
 							}: {
-								user_id: Array<string>;
 								_id: string;
 								name: string;
 								value: number;
 								description: string;
 								type: string;
 							}) => {
-								if (!user_id.includes(currentUserId)) {
+								if (!userData?.itens_id?.includes(_id)) {
 									return (
 										<ShopItem
 											key={_id}
 											_id={_id}
 											current_user_id={currentUserId}
-											users_id={user_id}
+											itens_id={userData.itens_id}
 											name={name}
 											value={value}
 											description={description}

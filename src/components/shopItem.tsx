@@ -30,12 +30,12 @@ import { errorCases } from '../utils/errors/errorsCases';
 
 type ShopItemProps = {
 	current_user_id: string;
-	users_id: Array<string>;
 	_id: string;
 	name: string;
 	value: number;
 	description: string;
 	type: string;
+	itens_id: string[];
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -44,8 +44,8 @@ const ShopItem: FC<ShopItemProps> = ({
 	value,
 	description,
 	type,
-	users_id,
 	current_user_id,
+	itens_id
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -82,10 +82,9 @@ const ShopItem: FC<ShopItemProps> = ({
 		setLoaging(true);
 		// then make buying logic
 		try {
-			const user = await api.get(`/user/${current_user_id}`);
+			const user = await api.get(`/user/${current_user_id}`); // Ver com sabanai se devo utilizar o userData ou passar o objeto de user para o componente
 			const userCoins = user.data.coins;
-			if (!users_id.includes(current_user_id) && userCoins >= value) {
-				users_id.push(current_user_id);
+			if (!itens_id.includes(_id) && userCoins >= value) {
 				const newCoins = userCoins - value;
 
 				if (type === "item3") {
@@ -108,8 +107,8 @@ const ShopItem: FC<ShopItemProps> = ({
 				} else {
 					try {
 
-						await api.patch(`/shopitem/${_id}`, {
-							user_id: users_id,
+						await api.patch(`/user/addIten/${current_user_id}`, {
+							iten_id: _id,
 						});
 
 						await api.patch(`/user/coins/${current_user_id}`, {
@@ -329,7 +328,7 @@ const ShopItem: FC<ShopItemProps> = ({
 										ml='0.3rem'
 									/>
 								</Box>
-								{users_id.includes(current_user_id) ? (
+								{itens_id.includes(_id) ? (
 									<>
 										<Box
 											width='100%'

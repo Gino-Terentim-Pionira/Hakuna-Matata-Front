@@ -27,6 +27,7 @@ export interface IUser {
 	quiz_coins: number[];
     consecutiveDays: number;
 	luck: number;
+	itens_id: string[];
 }
 
 const userState = atom({
