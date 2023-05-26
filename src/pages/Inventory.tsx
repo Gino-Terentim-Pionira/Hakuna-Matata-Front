@@ -31,6 +31,9 @@ const Shop = () => {
 
 	const getShopItens = async () => {
 		try {
+			if (Object.keys(userData).length == 0)
+				getNewUserInfo();
+			
 			const res = await api.get('/shopItem/');
 			setShopItem(res.data);
 			setIsLoading(false);
@@ -48,7 +51,6 @@ const Shop = () => {
 	};
 
 	useEffect(() => {
-		getNewUserInfo();
 		getShopItens();
 	}, []);
 	return (
@@ -129,7 +131,7 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{userData.itens_id.length > 0 ? (
+			{userData?.itens_id?.length > 0 ? (
 				<>
 					<SimpleGrid
 						zIndex='2'

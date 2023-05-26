@@ -32,9 +32,8 @@ const Shop = () => {
 
 	const getShopItens = async () => {
 		try {
-			if (!userData)
+			if (Object.keys(userData).length == 0)
 				getNewUserInfo();
-
 			const res = await api.get('/shopItem/');
 			const userId = sessionStorage.getItem('@pionira/userId');
 			const userIdString = '' + userId;
