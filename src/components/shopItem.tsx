@@ -107,7 +107,7 @@ const ShopItem: FC<ShopItemProps> = ({
 				} else {
 					try {
 
-						await api.patch(`/user/addIten/${current_user_id}`, {
+						await api.patch(`/user/additem/${current_user_id}`, {
 							iten_id: _id,
 						});
 
