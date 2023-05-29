@@ -35,7 +35,7 @@ type ShopItemProps = {
 	value: number;
 	description: string;
 	type: string;
-	itens_id: string[];
+	items_id: string[];
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -45,7 +45,7 @@ const ShopItem: FC<ShopItemProps> = ({
 	description,
 	type,
 	current_user_id,
-	itens_id
+	items_id
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -84,7 +84,7 @@ const ShopItem: FC<ShopItemProps> = ({
 		try {
 			const user = await api.get(`/user/${current_user_id}`); // Ver com sabanai se devo utilizar o userData ou passar o objeto de user para o componente
 			const userCoins = user.data.coins;
-			if (!itens_id.includes(_id) && userCoins >= value) {
+			if (!items_id.includes(_id) && userCoins >= value) {
 				const newCoins = userCoins - value;
 
 				if (type === "item3") {
@@ -108,7 +108,7 @@ const ShopItem: FC<ShopItemProps> = ({
 					try {
 
 						await api.patch(`/user/additem/${current_user_id}`, {
-							iten_id: _id,
+							item_id: _id,
 						});
 
 						await api.patch(`/user/coins/${current_user_id}`, {
@@ -328,7 +328,7 @@ const ShopItem: FC<ShopItemProps> = ({
 										ml='0.3rem'
 									/>
 								</Box>
-								{itens_id.includes(_id) ? (
+								{items_id.includes(_id) ? (
 									<>
 										<Box
 											width='100%'

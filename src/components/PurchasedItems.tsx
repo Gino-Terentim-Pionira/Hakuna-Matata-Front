@@ -27,7 +27,7 @@ type ShopItemProps = {
 	description: string;
 	type: string;
 	id_link: string;
-	itens_id: string[];
+	items_id: string[];
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -36,7 +36,7 @@ const ShopItem: FC<ShopItemProps> = ({
 	description,
 	type,
 	id_link,
-	itens_id
+	items_id
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -65,7 +65,7 @@ const ShopItem: FC<ShopItemProps> = ({
 
 	return (
 		<>
-			{itens_id.includes(_id) ? (
+			{items_id.includes(_id) ? (
 				<Box>
 					<Flex
 						_hover={{

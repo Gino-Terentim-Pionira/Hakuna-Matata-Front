@@ -131,7 +131,7 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{userData?.itens_id?.length > 0 ? (
+			{userData?.items_id?.length > 0 ? (
 				<>
 					<SimpleGrid
 						zIndex='2'
@@ -160,7 +160,7 @@ const Shop = () => {
 									<PurchasedItems
 										key={_id}
 										_id={_id}
-										itens_id={userData.itens_id}
+										items_id={userData.items_id}
 										name={name}
 										value={value}
 										description={description}

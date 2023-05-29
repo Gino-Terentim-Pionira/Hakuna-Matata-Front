@@ -155,13 +155,13 @@ const Shop = () => {
 								description: string;
 								type: string;
 							}) => {
-								if (!userData?.itens_id?.includes(_id)) {
+								if (!userData?.items_id?.includes(_id)) {
 									return (
 										<ShopItem
 											key={_id}
 											_id={_id}
 											current_user_id={currentUserId}
-											itens_id={userData.itens_id}
+											items_id={userData.items_id}
 											name={name}
 											value={value}
 											description={description}
