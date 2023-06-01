@@ -36,6 +36,7 @@ type ShopItemProps = {
 	description: string;
 	type: string;
 	items_id: string[];
+	userCoins: number;
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -45,7 +46,8 @@ const ShopItem: FC<ShopItemProps> = ({
 	description,
 	type,
 	current_user_id,
-	items_id
+	items_id,
+	userCoins
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -82,8 +84,6 @@ const ShopItem: FC<ShopItemProps> = ({
 		setLoaging(true);
 		// then make buying logic
 		try {
-			const user = await api.get(`/user/${current_user_id}`); // Ver com sabanai se devo utilizar o userData ou passar o objeto de user para o componente
-			const userCoins = user.data.coins;
 			if (!items_id.includes(_id) && userCoins >= value) {
 				const newCoins = userCoins - value;
 

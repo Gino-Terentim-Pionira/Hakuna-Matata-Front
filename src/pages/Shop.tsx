@@ -162,6 +162,7 @@ const Shop = () => {
 											_id={_id}
 											current_user_id={currentUserId}
 											items_id={userData.items_id}
+											userCoins={userData.coins}
 											name={name}
 											value={value}
 											description={description}

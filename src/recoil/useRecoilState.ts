@@ -21,26 +21,26 @@ export interface IUser {
 		trail2: number;
 		mambaQuiz: number;
 	};
-    finalQuizComplete: {
-        cheetahFinal: boolean
-    };
+	finalQuizComplete: {
+		cheetahFinal: boolean
+	};
 	quiz_coins: number[];
-    consecutiveDays: number;
+	consecutiveDays: number;
 	luck: number;
 	items_id: string[];
 }
 
 const userState = atom({
-    key: "useInfo",
-    default: {} as IUser
+	key: "useInfo",
+	default: {} as IUser
 });
 
 const insigniaState = atom({
-    key: "insigniaState",
-    default: []
+	key: "insigniaState",
+	default: []
 });
 
 export {
-    userState,
-    insigniaState
+	userState,
+	insigniaState
 };
