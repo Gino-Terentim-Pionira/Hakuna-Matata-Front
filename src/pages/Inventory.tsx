@@ -9,6 +9,7 @@ import PurchasedItems from '../components/PurchasedItems';
 
 // Requisitions
 import api from '../services/api';
+import { useUser } from '../hooks';
 
 // Styles
 import fontTheme from '../styles/base';
@@ -22,23 +23,19 @@ import LoadingOverlay from '../components/LoadingOverlay';
 
 
 const Shop = () => {
+	const { getNewUserInfo, userData } = useUser();
 	const [shopItem, setShopItem] = useState([]);
-	const [currentUserId, setCurrentUserId] = useState('');
-	const [validation, setValidation] = useState(false);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const getShopItens = async () => {
 		try {
+			if (Object.keys(userData).length == 0)
+				getNewUserInfo();
+			
 			const res = await api.get('/shopItem/');
-			const userId = sessionStorage.getItem('@pionira/userId');
-			const userIdString = '' + userId;
 			setShopItem(res.data);
-			setCurrentUserId(userIdString);
-			res.data.map(({ user_id }: { user_id: [string] }) => {
-				user_id.includes(userId as string) ? setValidation(true) : null;
-			});
 			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
@@ -134,7 +131,7 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{validation ? (
+			{userData?.items_id?.length > 0 ? (
 				<>
 					<SimpleGrid
 						zIndex='2'
@@ -150,10 +147,8 @@ const Shop = () => {
 								value,
 								description,
 								type,
-								user_id,
 								id_link,
 							}: {
-								user_id: Array<string>;
 								_id: string;
 								name: string;
 								value: number;
@@ -165,8 +160,7 @@ const Shop = () => {
 									<PurchasedItems
 										key={_id}
 										_id={_id}
-										current_user_id={currentUserId}
-										users_id={user_id}
+										items_id={userData.items_id}
 										name={name}
 										value={value}
 										description={description}

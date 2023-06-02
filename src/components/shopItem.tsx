@@ -30,12 +30,13 @@ import { errorCases } from '../utils/errors/errorsCases';
 
 type ShopItemProps = {
 	current_user_id: string;
-	users_id: Array<string>;
 	_id: string;
 	name: string;
 	value: number;
 	description: string;
 	type: string;
+	items_id: string[];
+	userCoins: number;
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -44,8 +45,9 @@ const ShopItem: FC<ShopItemProps> = ({
 	value,
 	description,
 	type,
-	users_id,
 	current_user_id,
+	items_id,
+	userCoins
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -82,10 +84,7 @@ const ShopItem: FC<ShopItemProps> = ({
 		setLoaging(true);
 		// then make buying logic
 		try {
-			const user = await api.get(`/user/${current_user_id}`);
-			const userCoins = user.data.coins;
-			if (!users_id.includes(current_user_id) && userCoins >= value) {
-				users_id.push(current_user_id);
+			if (!items_id.includes(_id) && userCoins >= value) {
 				const newCoins = userCoins - value;
 
 				if (type === "item3") {
@@ -108,8 +107,8 @@ const ShopItem: FC<ShopItemProps> = ({
 				} else {
 					try {
 
-						await api.patch(`/shopitem/${_id}`, {
-							user_id: users_id,
+						await api.patch(`/user/additem/${current_user_id}`, {
+							item_id: _id,
 						});
 
 						await api.patch(`/user/coins/${current_user_id}`, {
@@ -329,7 +328,7 @@ const ShopItem: FC<ShopItemProps> = ({
 										ml='0.3rem'
 									/>
 								</Box>
-								{users_id.includes(current_user_id) ? (
+								{items_id.includes(_id) ? (
 									<>
 										<Box
 											width='100%'
