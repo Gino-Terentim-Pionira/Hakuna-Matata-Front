@@ -8,6 +8,7 @@ import icon_shop from '../assets/icons/icon_shop.svg';
 import icon_map from '../assets/icons/icon_map.svg';
 import icon_map_opened from '../assets/icons/icon_map_opened.svg';
 import icon_logout from '../assets/icons/icon_logout.svg';
+import inventory_icon from '../assets/icons/inventory.png';
 import ProfileModal from "./modals/ProfileModal";
 import { useHistory } from "react-router-dom";
 
@@ -50,7 +51,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
               transform: 'scale(1.1)',
             }}
             transition='all 0.2s ease'
-            mb='.75rem'
+            mb='8px'
             border='2px solid black'
             borderRadius='4.5rem'
             width='4.5rem'
@@ -70,7 +71,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
               transform: 'scale(1.1)',
             }}
             transition='all 0.2s ease'
-            mb='.75rem'
+            mb='8px'
             border='2px solid black'
             borderRadius='4.5rem'
             width='4.5rem'
@@ -83,14 +84,32 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
               marginBottom='.1rem'
             />
           </Center>
-
           <Center
             _hover={{
               cursor: 'pointer',
               transform: 'scale(1.1)',
             }}
             transition='all 0.2s ease'
-            mb='.75rem'
+            mb='8px'
+            border='2px solid black'
+            borderRadius='4.5rem'
+            width='4.5rem'
+            height='4.5rem'
+            bg='white'
+            onClick={() => history.push({ pathname: '/inventory', state: { prePath } })}
+          >
+            <Image
+              src={inventory_icon}
+              width="50px"
+            />
+          </Center>
+          <Center
+            _hover={{
+              cursor: 'pointer',
+              transform: 'scale(1.1)',
+            }}
+            transition='all 0.2s ease'
+            mb='8px'
             border='2px solid black'
             borderRadius='4.5rem'
             width='3.75rem'
@@ -107,7 +126,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
               transform: 'scale(1.1)',
             }}
             transition='all 0.2s ease'
-            mb='.75rem'
+            mb='8px'
             border='2px solid black'
             borderRadius='4.5rem'
             width='3.75rem'

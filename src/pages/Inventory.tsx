@@ -47,7 +47,9 @@ const Shop = () => {
 	};
 
 	const goBack = () => {
-		history.goBack();
+		if (!history.location.state)
+			history.push('/MainPage');
+		else history.goBack();
 	};
 
 	useEffect(() => {
