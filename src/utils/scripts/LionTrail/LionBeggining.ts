@@ -25,10 +25,8 @@ const LionBeggining = async () => {
         {
             name: "Leão",
             image: lion,
-            texts: ["Para combater a Ignorância, é super importante conseguir inspirar os outros a nos ajudar na nossa luta, liberando-os da corrupção da alienação",
-                "Fico me perguntando se um Aprendiz que nem você conseguirá chegar nesse nível",
-                "Nós somos os responsáveis pela área da Liderança e temos como objetivo tornar um Aprendiz como você em um verdadeiro líder!",
-                "Ao longo do seu treinamento, você receberá pontos de habilidades em cada uma dessas áreas e poderá checá-los no seu passaporte. Para provar o seu valor, terá que passar pelo nosso desafio"]
+            texts: ["Para combater a Ignorância, é super importante conseguir inspirar os outros a nos ajudar na nossa luta, liberando-os da corrupção da alienação. Fico me perguntando se um Aprendiz que nem você conseguirá chegar nesse nível",
+                "Nós somos os responsáveis pela área da Liderança e temos como objetivo tornar um Aprendiz como você em um verdadeiro líder! Ao longo do seu treinamento, você receberá pontos de habilidades em cada uma dessas áreas e poderá checá-los no seu passaporte. Para provar o seu valor, terá que passar pelo nosso desafio"]
         },
         {
             name: "Leoa",
