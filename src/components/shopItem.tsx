@@ -74,7 +74,7 @@ const ShopItem: FC<ShopItemProps> = ({
 		onToggle();
 	};
 
-	const itemType: {[key:string] : string} = {
+	const itemType: { [key: string]: string } = {
 		"item1": "E-books",
 		"item2": "Utilitários",
 		"item3": "Especiais"
@@ -174,38 +174,38 @@ const ShopItem: FC<ShopItemProps> = ({
 							/>
 						</Box>
 					) : (
-						type === 'item2' ? (
-							<Image
-								maxWidth='300px'
-								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
-								minW="190px"
-								w='100%'
-								h='18.75rem'
-								mt='0.5rem'
-								src={bookicon}
-								alt='bookicon'
-								padding='5rem 3.5rem'
-								mb='1rem'
-								borderRadius='7.5%'
-							/>
-						) : (
-							<Image
-								maxWidth='300px'
-								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
-								minW="190px"
-								w='100%'
-								h='18.75rem'
-								mt='0.5rem'
-								src={cardicon}
-								alt='cardicon'
-								padding='5rem 5rem'
-								mb='1rem'
-								borderRadius='7.5%'
-							/>
-						)
-					)}
+							type === 'item2' ? (
+								<Image
+									maxWidth='300px'
+									transition='50ms'
+									bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+									minW="190px"
+									w='100%'
+									h='18.75rem'
+									mt='0.5rem'
+									src={bookicon}
+									alt='bookicon'
+									padding='5rem 3.5rem'
+									mb='1rem'
+									borderRadius='7.5%'
+								/>
+							) : (
+									<Image
+										maxWidth='300px'
+										transition='50ms'
+										bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+										minW="190px"
+										w='100%'
+										h='18.75rem'
+										mt='0.5rem'
+										src={cardicon}
+										alt='cardicon'
+										padding='5rem 5rem'
+										mb='1rem'
+										borderRadius='7.5%'
+									/>
+								)
+						)}
 				</Box>
 				<Flex
 					flexDirection='column'
@@ -228,7 +228,7 @@ const ShopItem: FC<ShopItemProps> = ({
 						color={colorPalette.infoTextColor}
 						mb='0.3rem'
 					>
-						Tipo: {itemType[type as string]} 
+						Tipo: {itemType[type as string]}
 					</Text>
 					<Box display='flex' flexDirection='row'>
 						<Text
@@ -311,18 +311,34 @@ const ShopItem: FC<ShopItemProps> = ({
 									{description}
 								</Text>
 							</Flex>
-							<Flex flexDirection='column' alignSelf='flex-start'>
-								<Box display='flex' flexDirection='row'>
+							<Flex flexDirection='column' alignSelf='flex-end'>
+								<Box display='flex' flexDirection='row' marginBottom="4px">
 									<Text
 										fontFamily={fontTheme.fonts}
-										fontSize='1.5rem'
+										fontSize="24px"
+										fontWeight="semibold"
+										color={colorPalette.secundaryGrey}
+									>
+										Suas joias: {userCoins}
+									</Text>
+									<Image
+										w='20px'
+										src={coinicon}
+										alt='coinicon'
+										ml='4px'
+									/>
+								</Box>
+								<Box display='flex' flexDirection='row' marginBottom="16px">
+									<Text
+										fontFamily={fontTheme.fonts}
+										fontSize='28px'
 										fontWeight='semibold'
-										color={colorPalette.infoTextColor}
+										color={colorPalette.closeButton}
 									>
 										Valor: {value}
 									</Text>
 									<Image
-										w='15%'
+										w='32px'
 										src={coinicon}
 										alt='coinicon'
 										ml='0.3rem'
@@ -331,7 +347,7 @@ const ShopItem: FC<ShopItemProps> = ({
 								{items_id.includes(_id) ? (
 									<>
 										<Box
-											width='100%'
+											width='180px'
 											height='3.5rem'
 											background={colorPalette.secondaryColor}
 											color={colorPalette.buttonTextColor}
@@ -340,7 +356,7 @@ const ShopItem: FC<ShopItemProps> = ({
 											borderRadius='8px'
 											justifyContent='center'
 											alignItems='center'
-											mt='2rem'
+											marginBottom="24px"
 										>
 											<Image
 												src={confirmicon}
@@ -349,31 +365,31 @@ const ShopItem: FC<ShopItemProps> = ({
 										</Box>
 									</>
 								) : (
-									<Button
-										mt='2rem'
-										width='100%'
-										height='3.5rem'
-										background={colorPalette.primaryColor}
-										color={colorPalette.buttonTextColor}
-										fontSize='1.5rem'
-										borderRadius='8px'
-										onClick={() => {
-											setIsConfirmOpen(true);
-											setAlertAnswer(
-												'Ei, viajante! Você tem certeza que deseja comprar esse item?',
-											);
-										}}
-									>
-										Comprar
-									</Button>
-								)}
+										<Button
+											width='180px'
+											height='3.5rem'
+											background={colorPalette.primaryColor}
+											color={colorPalette.buttonTextColor}
+											marginBottom="24px"
+											fontSize='1.5rem'
+											borderRadius='8px'
+											onClick={() => {
+												setIsConfirmOpen(true);
+												setAlertAnswer(
+													'Ei, viajante! Você tem certeza que deseja comprar esse item?',
+												);
+											}}
+										>
+											Comprar
+										</Button>
+									)}
 
 								<AlertModal
 									isOpen={isConfirmOpen}
-									onClose={() => {if (!loading) onClose()}}
+									onClose={() => { if (!loading) onClose() }}
 									alertTitle='Loja'
 									alertBody={alertAnswer}
-									onClickClose={() => {if (!loading) history.go(0)}}
+									onClickClose={() => { if (!loading) history.go(0) }}
 									buttonBody={
 										isAlert ? (
 											<Button
@@ -387,25 +403,25 @@ const ShopItem: FC<ShopItemProps> = ({
 												Continuar
 											</Button>
 										) : (
-											<>
-												<Button
-													ref={cancelRef}
-													onClick={onClose}
-													isDisabled={loading}
-												>
-													Cancel
+												<>
+													<Button
+														ref={cancelRef}
+														onClick={onClose}
+														isDisabled={loading}
+													>
+														Cancel
 												</Button>
-												<Button
-													color='white'
-													bg={colorPalette.primaryColor}
-													onClick={buyItem}
-													ml={3}
-													isLoading = {loading}
-												>
-													Comprar
+													<Button
+														color='white'
+														bg={colorPalette.primaryColor}
+														onClick={buyItem}
+														ml={3}
+														isLoading={loading}
+													>
+														Comprar
 												</Button>
-											</>
-										)
+												</>
+											)
 									}
 								/>
 
