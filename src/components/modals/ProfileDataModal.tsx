@@ -18,7 +18,11 @@ import AlertModal from './AlertModal';
 
 const ProfileDataModal = () => {
     const { userData, setUserData } = useUser();
-    const [fullName, setFullName] = useState(`${userData.first_name} ${userData.last_name}`);
+    const [userDataMirror, setUserDataMirror] = useState({
+        userName: userData.userName,
+        fullName:`${userData.first_name} ${userData.last_name}`,
+        birthday_date: userData.birthday_date
+    });
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [alertModalInfo, setAlertModalInfo] = useState({
@@ -126,8 +130,8 @@ const ProfileDataModal = () => {
     const editButton = async () => {
         if (isEditMode) {
             try {
-                const { userName, birthday_date } = userData;
-                const name = fullName.split(' ');
+                const { userName, birthday_date } = userDataMirror;
+                const name = userDataMirror.fullName.split(' ');
                 let lastName = name[1];
 
                 if (name.length > 2) {
@@ -137,6 +141,13 @@ const ProfileDataModal = () => {
                 }
                 setIsLoading(true);
                 await api.patch(`/user/edit/${userData._id}`, {
+                    userName,
+                    birthday_date,
+                    first_name: name[0],
+                    last_name: lastName
+                });
+                setUserData({
+                    ...userData,
                     userName,
                     birthday_date,
                     first_name: name[0],
@@ -152,25 +163,29 @@ const ProfileDataModal = () => {
             setIsEditMode(true);
         }
     }
-    const handleEditInfo = (e: BaseSyntheticEvent, value: 'userName' | 'birthday_date' | 'name') => {
-        if (value === 'name') {
-            setFullName(e.target.value);
-        } else
-            setUserData({
-                ...userData,
-                [value]: e.target.value
-            })
+    const handleEditInfo = (e: BaseSyntheticEvent, value: 'userName' | 'birthday_date' | 'fullName') => {
+        setUserDataMirror({
+            ...userDataMirror,
+            [value]: e.target.value
+        })
+        // if (value === 'fullName') {
+        //     setFullName(e.target.value);
+        // } else
+        //     setUserData({
+        //         ...userData,
+        //         [value]: e.target.value
+        //     })
     }
     const renderInfo = () => {
-        const birthday_date = userData.birthday_date.split("T")[0];
+        const birthday_date = userDataMirror.birthday_date.split("T")[0];
         const infoArray = [{
             infoLabel: "Nome de usuário",
-            infoValue: userData.userName,
+            infoValue: userDataMirror.userName,
             onChange: (e: BaseSyntheticEvent) => handleEditInfo(e, 'userName'),
         }, {
             infoLabel: "Nome completo",
-            infoValue: fullName,
-            onChange: (e: BaseSyntheticEvent) => handleEditInfo(e, 'name')
+            infoValue: userDataMirror.fullName,
+            onChange: (e: BaseSyntheticEvent) => handleEditInfo(e, 'fullName')
         }, {
             infoLabel: "E-mail",
             infoValue: userData.email,
