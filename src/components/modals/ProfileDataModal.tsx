@@ -20,7 +20,7 @@ const ProfileDataModal = () => {
     const { userData, setUserData } = useUser();
     const [userDataMirror, setUserDataMirror] = useState({
         userName: userData.userName,
-        fullName:`${userData.first_name} ${userData.last_name}`,
+        fullName: `${userData.first_name} ${userData.last_name}`,
         birthday_date: userData.birthday_date
     });
     const [isEditMode, setIsEditMode] = useState(false);
@@ -156,6 +156,11 @@ const ProfileDataModal = () => {
                 verifyErrorType('SUCCES_CASE_EDIT');
             } catch (error) {
                 verifyErrorType(error.response.data.message);
+                setUserDataMirror({
+                    userName: userData.userName,
+                    fullName: `${userData.first_name} ${userData.last_name}`,
+                    birthday_date: userData.birthday_date
+                })
             }
             setIsLoading(false);
             setIsEditMode(false);
