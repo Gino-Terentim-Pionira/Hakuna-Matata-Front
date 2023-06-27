@@ -77,7 +77,11 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
             width='4.5rem'
             height='4.5rem'
             bg='white'
-            onClick={() => history.push({ pathname: '/shop', state: { prePath } })}
+            onClick={() => {
+              sessionStorage.setItem('@pionira/prepath', prePath);
+              history.push({ pathname: '/shop' });
+            }
+            } 
           >
             <Image
               src={icon_shop}

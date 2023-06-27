@@ -47,9 +47,10 @@ const Shop = () => {
 	};
 
 	const goBack = () => {
-		if (!history.location.state)
-			history.push('/MainPage');
-		else history.goBack();
+		const prepath = sessionStorage.getItem('@pionira/prepath');
+		if (prepath)
+			history.push(prepath);
+		else history.push('/MainPage');
 	};
 
 	useEffect(() => {
