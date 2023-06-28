@@ -13,7 +13,7 @@ import {
     useDisclosure,
     Image
 } from "@chakra-ui/react";
-import { useUser } from '../../hooks';
+import { useUser, useQuiz } from '../../hooks';
 
 // Components
 import QuizModal from './QuizModal';
@@ -44,31 +44,6 @@ interface IModuleModal {
     left?: string;
     isBlocked?: boolean;
     blockedFunction?: VoidFunction;
-}
-
-interface IQuizz {
-    user_id: string;
-    _id: string
-    name: string;
-    questions_id: [{
-        _id: string,
-        description: string,
-        alternatives: string[],
-        answer: number,
-        coins: number,
-        score: number[],
-        user_id: string[]
-    }];
-    category: string;
-    dificulty: string;
-    videos_id: [{
-        user_id: string[],
-        name: string,
-        url: string,
-        nick: string,
-        _id: string,
-    }];
-    total_coins: number;
 }
 
 const GridContainer = styled.div`
@@ -131,28 +106,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
 
     // States
-    const [quiz, setQuiz] = useState<IQuizz>({
-        name: '',
-        questions_id: [{
-            _id: '',
-            description: '',
-            alternatives: ['', '', '', ''],
-            answer: 0,
-            coins: 0,
-            score: [0, 0, 0, 0, 0, 0],
-            user_id: ['']
-        }],
-        category: '',
-        dificulty: '',
-        videos_id: [{
-            user_id: [''],
-            name: '',
-            url: '',
-            nick: '',
-            _id: ''
-        }],
-        total_coins: 0
-    } as IQuizz);
+    const { quizData, getNewQuizInfo } = useQuiz();
+    const quiz = quizData[quizIndex];
     const { userData } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [buttonValidation, setButtonValidation] = useState(false);
@@ -165,24 +120,12 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
     // Metodos
-    const getQuiz = async () => {
-        setIsLoading(true);
-        try {
-            const res = await api.get('/quizz');
-            const quiz = res.data[quizIndex];
-
-            setQuiz(quiz);
-        } catch (error) {
-            setOnError(true);
-        }
-        setIsLoading(false);
-    }
-
-    const updateQuiz = async (quizId: string) => {
+    const addUserIdToQuiz = async (quizId: string) => {
         try {
             await api.patch(`quizz/user/${quizId}`, {
                 user_id: userData._id
             });
+            await getNewQuizInfo();
         } catch (error) {
             setOnError(true);
         }
@@ -191,7 +134,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const confirmationValidation = async () => {
         if (userData) {
             setIsLoading(true);
-            await updateQuiz(quiz._id);
+            await addUserIdToQuiz(quiz._id);
             setIsLoading(false);
         }
         setButtonValidation(true);
@@ -225,11 +168,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         setVideoInfo({ id, name, url });
         videoOnOpen();
     }
-
-    //UseEffects
-    useEffect(() => {
-        getQuiz();
-    }, []);
 
     useEffect(() => {
         const userId = sessionStorage.getItem('@pionira/userId');
@@ -487,7 +425,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 videoIsOpen={videoIsOpen}
                 videoOnClose={videoOnClose}
                 videoOnToggle={videoOnToggle}
-                updateQuiz={getQuiz}
+                updateQuiz={getNewQuizInfo}
             />
         </>
     );
