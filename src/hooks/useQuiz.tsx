@@ -12,7 +12,6 @@ export const useQuiz = () => {
             const res = await api.get('/quizz');
 
             setQuizData(res.data);
-            console.log(res.data);
         } catch (error) {
             console.log('');
         }
