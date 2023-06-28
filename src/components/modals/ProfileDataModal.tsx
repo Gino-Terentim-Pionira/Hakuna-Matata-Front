@@ -1,8 +1,9 @@
-import React from 'react';
-import { Text, Flex, Button, Box, Image, Center } from '@chakra-ui/react';
+import React, { useState, BaseSyntheticEvent } from 'react';
+import { Text, Flex, Button, Box, Image, Center, Input } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 import moment from 'moment';
 import { useUser } from '../../hooks';
+import api from '../../services/api';
 
 // Components
 import LoadingState from '../LoadingState';
@@ -12,40 +13,217 @@ import profilePlaceholder from '../../assets/icons/profile.svg';
 import colorPalette from '../../styles/colorPalette';
 import Coins from '../../assets/icons/coinicon.svg'
 import fontTheme from '../../styles/base';
+import { editProfileErrorCases, errorCases } from '../../utils/errors/errorsCases';
+import AlertModal from './AlertModal';
 
 const ProfileDataModal = () => {
-    const { userData } = useUser();
+    const { userData, setUserData } = useUser();
+    const [userDataMirror, setUserDataMirror] = useState({
+        userName: userData.userName,
+        fullName: `${userData.first_name} ${userData.last_name}`,
+        birthday_date: userData.birthday_date
+    });
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [alertModalInfo, setAlertModalInfo] = useState({
+        isOpen: false,
+        onClose: () => console.log(),
+        alertTitle: '',
+        alertBody: '',
+        buttonOnClick: () => console.log(),
+        buttonLabel: '',
+    });
+
+    const onClose = () => {
+        setAlertModalInfo({
+            ...alertModalInfo,
+            isOpen: false
+        });
+    };
 
     const history = useHistory();
 
-    const gotToEditProfile = async () => {
-        const userId = sessionStorage.getItem('@pionira/userId');
-        history.push(`/editProfile/${userId}`);
+    const verifyErrorType = (erroType: string) => {
+        const ERROR_TYPES: {
+            [key: string]: {
+                onClose: VoidFunction,
+                alertTitle: string,
+                alertBody: string,
+                buttonOnClick: VoidFunction,
+                buttonLabel: string,
+            }
+        } = {
+            'SUCCES_CASE_EDIT': {
+                alertTitle: 'Editar perfil',
+                alertBody: editProfileErrorCases.SUCCES_CASE_EDIT,
+                buttonOnClick: onClose,
+                onClose: () => history.push('/mainPage'),
+                buttonLabel: 'Continuar'
+            },
+            'IMAGE_FORMAT_ERROR': {
+                alertTitle: 'Editar perfil - Ops!',
+                alertBody: editProfileErrorCases.IMAGE_FORMAT_ERROR,
+                buttonOnClick: onClose,
+                onClose: onClose,
+                buttonLabel: 'Tentar novamente'
+            },
+            'SERVER_SENDING_IMAGE_ERROR': {
+                alertTitle: 'Editar perfil - Ops!',
+                alertBody: editProfileErrorCases.SERVER_SENDING_IMAGE_ERROR,
+                buttonOnClick: onClose,
+                onClose: onClose,
+                buttonLabel: 'Tentar novamente'
+            },
+            'SERVER_EDIT_ERRORS': {
+                alertTitle: 'Editar perfil - Ops!',
+                alertBody: editProfileErrorCases[erroType],
+                buttonOnClick: onClose,
+                onClose: onClose,
+                buttonLabel: 'Tentar novamente'
+            },
+            'SERVER_ERROR': {
+                alertTitle: 'Ops!',
+                alertBody: errorCases.SERVER_ERROR,
+                buttonOnClick: () => window.location.reload(),
+                onClose: () => window.location.reload(),
+                buttonLabel: 'Recarregar',
+            }
+        };
+        switch (erroType) {
+            case 'SUCCES_CASE_EDIT':
+                handleAlertModal(ERROR_TYPES[erroType]);
+                return
+            case 'IMAGE_FORMAT_ERROR':
+                handleAlertModal(ERROR_TYPES[erroType]);
+                return
+            case 'SERVER_SENDING_IMAGE_ERROR':
+                handleAlertModal(ERROR_TYPES[erroType]);
+                return
+            case 'SERVER_ERROR':
+                handleAlertModal(ERROR_TYPES[erroType]);
+                return
+            default:
+                handleAlertModal(ERROR_TYPES['SERVER_EDIT_ERRORS']);
+                return
+        }
+    };
+
+    const handleAlertModal = (errorObject: {
+        onClose: VoidFunction,
+        alertTitle: string,
+        alertBody: string,
+        buttonOnClick: VoidFunction,
+        buttonLabel: string,
+    }) => {
+        const { alertTitle, alertBody, onClose, buttonLabel, buttonOnClick } = errorObject
+        setAlertModalInfo({
+            ...alertModalInfo,
+            isOpen: !alertModalInfo.isOpen,
+            alertTitle,
+            alertBody,
+            onClose,
+            buttonLabel,
+            buttonOnClick
+        })
     }
 
+    const editButton = async () => {
+        if (isEditMode) {
+            try {
+                const { userName, birthday_date } = userDataMirror;
+                const name = userDataMirror.fullName.split(' ');
+                let lastName = name[1];
+
+                if (name.length > 2) {
+                    for (let i = 2; i < name.length; i++) {
+                        lastName = lastName + " " + name[i];
+                    }
+                }
+                setIsLoading(true);
+                await api.patch(`/user/edit/${userData._id}`, {
+                    userName,
+                    birthday_date,
+                    first_name: name[0],
+                    last_name: lastName
+                });
+                setUserData({
+                    ...userData,
+                    userName,
+                    birthday_date,
+                    first_name: name[0],
+                    last_name: lastName
+                });
+                verifyErrorType('SUCCES_CASE_EDIT');
+            } catch (error) {
+                verifyErrorType(error.response.data.message);
+                setUserDataMirror({
+                    userName: userData.userName,
+                    fullName: `${userData.first_name} ${userData.last_name}`,
+                    birthday_date: userData.birthday_date
+                })
+            }
+            setIsLoading(false);
+            setIsEditMode(false);
+        } else {
+            setIsEditMode(true);
+        }
+    }
+    const handleEditInfo = (e: BaseSyntheticEvent, value: 'userName' | 'birthday_date' | 'fullName') => {
+        setUserDataMirror({
+            ...userDataMirror,
+            [value]: e.target.value
+        })
+        // if (value === 'fullName') {
+        //     setFullName(e.target.value);
+        // } else
+        //     setUserData({
+        //         ...userData,
+        //         [value]: e.target.value
+        //     })
+    }
     const renderInfo = () => {
+        const birthday_date = userDataMirror.birthday_date.split("T")[0];
         const infoArray = [{
             infoLabel: "Nome de usuário",
-            infoValue: userData.userName,
+            infoValue: userDataMirror.userName,
+            onChange: (e: BaseSyntheticEvent) => handleEditInfo(e, 'userName'),
         }, {
             infoLabel: "Nome completo",
-            infoValue: `${userData.first_name} ${userData.last_name}`,
+            infoValue: userDataMirror.fullName,
+            onChange: (e: BaseSyntheticEvent) => handleEditInfo(e, 'fullName')
         }, {
             infoLabel: "E-mail",
             infoValue: userData.email,
         }, {
             infoLabel: "Data de nascimento",
-            infoValue: `${moment(userData.birthday_date).add(1, 'days').format('DD/MM/YYYY')}`
+            infoValue: isEditMode ? birthday_date : `${moment(birthday_date).format('DD/MM/YYYY')}`,
+            onChange: (e: BaseSyntheticEvent) => handleEditInfo(e, 'birthday_date'),
+            type: 'date'
         }];
 
         return infoArray.map((item, index) =>
             <Flex key={index} alignItems="center" mb="16px">
-                <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="24px">
+                <Text color={colorPalette.textColor} fontWeight="semibold" fontSize={{ xl: "24px", lg: "24px", md: "18px", sm: "18px" }}>
                     {item.infoLabel}:
                 </Text>
-                <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
-                    {item.infoValue}
-                </Text>
+                {
+                    isEditMode && item.onChange ?
+                        <Input
+                            width="fit-content"
+                            ml="8px"
+                            minWidth="200px"
+                            height="32px"
+                            color={colorPalette.textColor}
+                            borderColor={colorPalette.secundaryGrey}
+                            placeholder={item.infoValue}
+                            value={item.infoValue}
+                            onChange={item.onChange}
+                            type={item.type || "text"}
+                        /> :
+                        <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
+                            {item.infoValue}
+                        </Text>
+                }
             </Flex>
         )
     }
@@ -60,9 +238,9 @@ const ProfileDataModal = () => {
                                 <Center borderRadius="4px" bg="#FFFEEE">
                                     <Image width="180px" src={profilePlaceholder} />
                                 </Center>
-                                <Button bg='white' onClick={() => gotToEditProfile()} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
-                                    <Text fontSize='1.3rem'>
-                                        Editar
+                                <Button bg='white' isLoading={isLoading} onClick={editButton} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
+                                    <Text color={colorPalette.textColor} fontSize='1.3rem'>
+                                        {isEditMode ? "Salvar" : "Editar"}
                                     </Text>
                                 </Button>
                             </Flex>
@@ -83,9 +261,25 @@ const ProfileDataModal = () => {
                         </Flex>
                     </>
                 ) : (
-                    <LoadingState />
-                )
+                        <LoadingState />
+                    )
             }
+            <AlertModal
+                isOpen={alertModalInfo.isOpen}
+                onClose={alertModalInfo.onClose}
+                alertTitle={alertModalInfo.alertTitle}
+                alertBody={alertModalInfo.alertBody}
+
+                buttonBody={
+                    <Button
+                        color='white'
+                        bg={colorPalette.primaryColor}
+                        onClick={alertModalInfo.buttonOnClick}
+                    >
+                        {alertModalInfo.buttonLabel}
+                    </Button>
+                }
+            />
         </Box>
     )
 }
