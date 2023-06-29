@@ -36,7 +36,7 @@ interface IVideoModal {
     videoOnClose: VoidFunction,
     videoOnToggle: VoidFunction,
     plataform?: 'vimeo' | 'youtube';
-    updateQuiz: (quizIndex: number) => Promise<void>;
+    updateQuiz: VoidFunction;
 }
 
 interface IUser {

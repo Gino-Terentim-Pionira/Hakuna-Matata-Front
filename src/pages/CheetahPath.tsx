@@ -21,6 +21,7 @@ import { useLocation } from 'react-router-dom';
 //utils
 import fontTheme from '../styles/base';
 import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
+import { useQuiz } from '../hooks';
 
 //styles
 import colorPalette from '../styles/colorPalette';
@@ -96,6 +97,7 @@ interface IScript {
 const CheetahPath = () => {
     const local = useLocation();
     const { userData, setUserData } = useUser();
+    const { getNewQuizInfo, quizData } = useQuiz();
     const { getInsignias } = useInsignias();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [withoutMoney, setWithoutMoney] = useState(false);
@@ -240,6 +242,10 @@ const CheetahPath = () => {
         try {
             let userInfoData;
             const _userId = sessionStorage.getItem('@pionira/userId');
+            if (quizData.length === 0) {
+                await getNewQuizInfo();
+            }
+
             if (!userData._id) {
                 const { data } = await api.get(`/user/${_userId}`);
                 await getInsignias();
@@ -283,7 +289,7 @@ const CheetahPath = () => {
         }
     };
 
-    const getQuiz = async () => {
+    const getFinalQuiz = async () => {
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
             '@pionira/userId',
         );
@@ -302,7 +308,6 @@ const CheetahPath = () => {
             setQuestions(finishQuestions);
         }
     };
-
     //Lógica para verificar a progressão da narrativa e autalizar o script
     const updateNarrative = async () => {
         let userInfoData;
@@ -395,13 +400,13 @@ const CheetahPath = () => {
     };
 
     const closeAlert = () => {
-        if (!payLoading) isAlertOnClose(); 
+        if (!payLoading) isAlertOnClose();
     }
 
     useEffect(() => {
         getUser();
         updateNarrative();
-        getQuiz();
+        getFinalQuiz();
     }, []);
 
     if (isLoading) {
@@ -441,203 +446,203 @@ const CheetahPath = () => {
                     {narrativeIsOpen ||
                         narrativeChallengeIsOpen ||
                         finalNarrativeChallengeIsOpen ? null : (
-                        <NavActions logout={logout} prePath={local.pathname} />
-                    )}
+                            <NavActions logout={logout} prePath={local.pathname} />
+                        )}
 
                     {narrativeIsOpen ||
                         narrativeChallengeIsOpen ||
                         finalNarrativeChallengeIsOpen ? null : (
-                        <IgnorancePremiumIcons ignorance={userData.ignorance} />
-                    )}
+                            <IgnorancePremiumIcons ignorance={userData.ignorance} />
+                        )}
                 </Flex>
 
                 {narrativeIsOpen ||
                     narrativeChallengeIsOpen ||
                     finalNarrativeChallengeIsOpen ? null : (
-                    <>
-                        <Flex
-                            margin='2vw'
-                            justifyContent='space-between'
-                            zIndex='10'
-                        >
-                            <ModuleModal left='19vw' top='67vh' quizIndex={0} />
-                            <ModuleModal left='45vw' top='54vh' quizIndex={1} />
-                            <ModuleModal left='68vw' top='82vh' quizIndex={2} />
-                            <ModuleModal left='89vw' top='60vh' quizIndex={0} isBlocked={true} blockedFunction={() => setIsBlockedOpen(true)} />
-                            <Center
-                                _hover={{
-                                    cursor: 'pointer',
-                                    transform: 'scale(1.1)',
-                                }}
-                                transition='all 0.2s ease'
-                                width='7rem'
-                                height='7rem'
-                                onClick={() => {
-                                    if (!completeTrail) {
-                                        narrativeChallengeOnOpen();
-                                        challengeNarrative();
-                                    }
-                                    modalOnOpen();
-                                }}
-                                position='absolute'
-                                top='35vh'
-                                left='70vw'
-                                zIndex='999'
+                        <>
+                            <Flex
+                                margin='2vw'
+                                justifyContent='space-between'
+                                zIndex='10'
                             >
-                                <Image
-                                    src={final_cheetah_icon}
-                                    width='90%'
-                                    height='90%'
-                                />
-                            </Center>
-                        </Flex>
-
-                        <Modal
-                            isOpen={modalIsOpen}
-                            onClose={modalOnClose}
-                            size='4xl'
-                        >
-                            <ModalOverlay />
-                            <ModalContent
-                                height='34rem'
-                                fontFamily={fontTheme.fonts}
-                            >
-                                <Box
-                                    w='25%'
-                                    bg={colorPalette.primaryColor}
-                                    h='25rem'
+                                <ModuleModal left='19vw' top='67vh' quizIndex={0} />
+                                <ModuleModal left='45vw' top='54vh' quizIndex={1} />
+                                <ModuleModal left='68vw' top='82vh' quizIndex={2} />
+                                <ModuleModal left='89vw' top='60vh' quizIndex={0} isBlocked={true} blockedFunction={() => setIsBlockedOpen(true)} />
+                                <Center
+                                    _hover={{
+                                        cursor: 'pointer',
+                                        transform: 'scale(1.1)',
+                                    }}
+                                    transition='all 0.2s ease'
+                                    width='7rem'
+                                    height='7rem'
+                                    onClick={() => {
+                                        if (!completeTrail) {
+                                            narrativeChallengeOnOpen();
+                                            challengeNarrative();
+                                        }
+                                        modalOnOpen();
+                                    }}
                                     position='absolute'
-                                    zIndex='-1'
-                                    left='0'
-                                    top='0'
-                                    borderTopStartRadius='5px'
-                                    clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
-                                />
-                                {completeTrail ? (
-                                    <>
-                                        <ModalBody
-                                            d='flex'
-                                            mt='-1rem'
-                                            flexDirection='column'
-                                            alignItems='center'
-                                            justifyContent='space-between'
-                                        >
-                                            <Flex
-                                                w='65%'
-                                                h='100%'
-                                                justifyContent='space-between'
+                                    top='35vh'
+                                    left='70vw'
+                                    zIndex='999'
+                                >
+                                    <Image
+                                        src={final_cheetah_icon}
+                                        width='90%'
+                                        height='90%'
+                                    />
+                                </Center>
+                            </Flex>
+
+                            <Modal
+                                isOpen={modalIsOpen}
+                                onClose={modalOnClose}
+                                size='4xl'
+                            >
+                                <ModalOverlay />
+                                <ModalContent
+                                    height='34rem'
+                                    fontFamily={fontTheme.fonts}
+                                >
+                                    <Box
+                                        w='25%'
+                                        bg={colorPalette.primaryColor}
+                                        h='25rem'
+                                        position='absolute'
+                                        zIndex='-1'
+                                        left='0'
+                                        top='0'
+                                        borderTopStartRadius='5px'
+                                        clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+                                    />
+                                    {completeTrail ? (
+                                        <>
+                                            <ModalBody
+                                                d='flex'
+                                                mt='-1rem'
                                                 flexDirection='column'
-                                                marginBottom='0.8rem'
-                                            >
-                                                <Text
-                                                    w='100%'
-                                                    marginTop='5rem'
-                                                    fontSize='2rem'
-                                                    lineHeight='9vh'
-                                                    textAlign='center'
-                                                    fontWeight='normal'
-                                                >
-                                                    "{cheetahText}"
-                                                </Text>
-                                                <Button
-                                                    bgColor={
-                                                        colorPalette.secondaryColor
-                                                    }
-                                                    width='45%'
-                                                    alignSelf='center'
-                                                    color={
-                                                        colorPalette.buttonTextColor
-                                                    }
-                                                    height='4rem'
-                                                    fontSize='1.4rem'
-                                                    _hover={{
-                                                        transform: 'scale(1.1)',
-                                                    }}
-                                                    onClick={modalOnClose}
-                                                >
-                                                    Okay!
-                                                </Button>
-                                            </Flex>
-                                        </ModalBody>
-                                    </>
-                                ) : (
-                                    <>
-                                        <ModalHeader
-                                            d='flex'
-                                            justifyContent='center'
-                                            mt='1.4rem'
-                                        >
-                                            <Text
-                                                ml='2.3rem'
-                                                w='75%'
-                                                fontSize='1.4rem'
-                                                textAlign='center'
-                                                fontWeight='normal'
-                                            >
-                                                {cheetahText}
-                                            </Text>
-                                            <ModalCloseButton
-                                                color={colorPalette.closeButton}
-                                                size='lg'
-                                            />
-                                        </ModalHeader>
-
-                                        <ModalBody
-                                            d='flex'
-                                            mt='-1rem'
-                                            flexDirection='column'
-                                            alignItems='center'
-                                            justifyContent='space-between'
-                                        >
-                                            <Image
-                                                src={cheetah_bg}
-                                                w='65%'
-                                                h='75%'
-                                            />
-
-                                            <Flex
-                                                w='65%'
+                                                alignItems='center'
                                                 justifyContent='space-between'
-                                                marginBottom='0.8rem'
                                             >
-                                                <Button
-                                                    bgColor={
-                                                        colorPalette.confirmButton
-                                                    }
-                                                    width='45%'
-                                                    height='4rem'
-                                                    fontSize='1.2rem'
-                                                    _hover={{
-                                                        transform: 'scale(1.1)',
-                                                    }}
-                                                    onClick={() => {
-                                                        alertQuizConfirm();
-                                                    }}
+                                                <Flex
+                                                    w='65%'
+                                                    h='100%'
+                                                    justifyContent='space-between'
+                                                    flexDirection='column'
+                                                    marginBottom='0.8rem'
                                                 >
-                                                    Vamos nessa!
+                                                    <Text
+                                                        w='100%'
+                                                        marginTop='5rem'
+                                                        fontSize='2rem'
+                                                        lineHeight='9vh'
+                                                        textAlign='center'
+                                                        fontWeight='normal'
+                                                    >
+                                                        "{cheetahText}"
+                                                </Text>
+                                                    <Button
+                                                        bgColor={
+                                                            colorPalette.secondaryColor
+                                                        }
+                                                        width='45%'
+                                                        alignSelf='center'
+                                                        color={
+                                                            colorPalette.buttonTextColor
+                                                        }
+                                                        height='4rem'
+                                                        fontSize='1.4rem'
+                                                        _hover={{
+                                                            transform: 'scale(1.1)',
+                                                        }}
+                                                        onClick={modalOnClose}
+                                                    >
+                                                        Okay!
                                                 </Button>
-                                                <Button
-                                                    bgColor={
-                                                        colorPalette.closeButton
-                                                    }
-                                                    width='45%'
-                                                    height='4rem'
-                                                    fontSize='1.2rem'
-                                                    _hover={{
-                                                        transform: 'scale(1.1)',
-                                                    }}
-                                                    onClick={modalOnClose}
+                                                </Flex>
+                                            </ModalBody>
+                                        </>
+                                    ) : (
+                                            <>
+                                                <ModalHeader
+                                                    d='flex'
+                                                    justifyContent='center'
+                                                    mt='1.4rem'
                                                 >
-                                                    Ainda não estou pronto!
+                                                    <Text
+                                                        ml='2.3rem'
+                                                        w='75%'
+                                                        fontSize='1.4rem'
+                                                        textAlign='center'
+                                                        fontWeight='normal'
+                                                    >
+                                                        {cheetahText}
+                                                    </Text>
+                                                    <ModalCloseButton
+                                                        color={colorPalette.closeButton}
+                                                        size='lg'
+                                                    />
+                                                </ModalHeader>
+
+                                                <ModalBody
+                                                    d='flex'
+                                                    mt='-1rem'
+                                                    flexDirection='column'
+                                                    alignItems='center'
+                                                    justifyContent='space-between'
+                                                >
+                                                    <Image
+                                                        src={cheetah_bg}
+                                                        w='65%'
+                                                        h='75%'
+                                                    />
+
+                                                    <Flex
+                                                        w='65%'
+                                                        justifyContent='space-between'
+                                                        marginBottom='0.8rem'
+                                                    >
+                                                        <Button
+                                                            bgColor={
+                                                                colorPalette.confirmButton
+                                                            }
+                                                            width='45%'
+                                                            height='4rem'
+                                                            fontSize='1.2rem'
+                                                            _hover={{
+                                                                transform: 'scale(1.1)',
+                                                            }}
+                                                            onClick={() => {
+                                                                alertQuizConfirm();
+                                                            }}
+                                                        >
+                                                            Vamos nessa!
                                                 </Button>
-                                            </Flex>
-                                        </ModalBody>
-                                    </>
-                                )}
-                            </ModalContent>
-                        </Modal>
-                    </>
-                )}
+                                                        <Button
+                                                            bgColor={
+                                                                colorPalette.closeButton
+                                                            }
+                                                            width='45%'
+                                                            height='4rem'
+                                                            fontSize='1.2rem'
+                                                            _hover={{
+                                                                transform: 'scale(1.1)',
+                                                            }}
+                                                            onClick={modalOnClose}
+                                                        >
+                                                            Ainda não estou pronto!
+                                                </Button>
+                                                    </Flex>
+                                                </ModalBody>
+                                            </>
+                                        )}
+                                </ModalContent>
+                            </Modal>
+                        </>
+                    )}
 
 
                 {script.length > 0 ? (
@@ -710,7 +715,7 @@ const CheetahPath = () => {
             <AlertModal
                 isOpen={isAlertOpen}
                 onClose={closeAlert}
-                onClickClose = {closeAlert}
+                onClickClose={closeAlert}
                 alertTitle='Desafio Final'
                 alertBody={alertQuiz}
                 buttonBody={
@@ -784,10 +789,10 @@ const CheetahPath = () => {
                 }
             />
 
-            <BlockedModal 
-                isOpen={isBlockedOpen} 
-                onClose={() => { setIsBlockedOpen(false)}} 
-                subtitle = "Esse treinamento ainda não está disponível!"
+            <BlockedModal
+                isOpen={isBlockedOpen}
+                onClose={() => { setIsBlockedOpen(false) }}
+                subtitle="Esse treinamento ainda não está disponível!"
             />
         </>
     );
