@@ -39,22 +39,6 @@ interface IVideoModal {
     updateQuiz: VoidFunction;
 }
 
-interface IUser {
-    _id: string;
-    userName: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    birthday_date: string;
-    is_confirmed: boolean;
-    status: [number];
-    coins: number;
-    contribution: number;
-    first_certificate: string;
-    second_certificate: string;
-}
-
 const VideoModal: FC<IVideoModal> = ({
     videoIsOpen,
     videoOnClose,
@@ -66,7 +50,7 @@ const VideoModal: FC<IVideoModal> = ({
     updateQuiz
 }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [user, setUser] = useState<IUser>({} as IUser);
+    const [user, setUser] = useState<string | null >();
     const [onError, setOnError] = useState(false);
     const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
@@ -74,8 +58,7 @@ const VideoModal: FC<IVideoModal> = ({
     const getUser = async () => {
         try {
             const userId = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get(`/user/${userId}`);
-            setUser(res.data);
+            setUser(userId);
         } catch (error) {
             setOnError(true);
         }
@@ -84,7 +67,7 @@ const VideoModal: FC<IVideoModal> = ({
     const updateVideo = async (videoId: string) => {
         try {
             await api.patch(`video/${videoId}`, {
-                user_id: user._id
+                user_id: user
             });
         } catch (error) {
             setOnError(true);

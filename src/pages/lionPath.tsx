@@ -342,9 +342,8 @@ const LionPath = () => {
 		setIsConfirmOpen(false);
 		setPayLoading(true);
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const user = await api.get(`/user/${_userId}`);
 		const validation = await api.get(`user/loadingQuiz/${_userId}`);
-		const userCoins = user.data.coins;
+		const userCoins = userData.coins;
 
 		if (userCoins >= value) {
 			const newCoins = userCoins - value;
