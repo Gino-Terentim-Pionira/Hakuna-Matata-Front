@@ -1,20 +1,8 @@
 import monkey from "../../../assets/sprites/monkey/monkey.png";
-import api from '../../../services/api';
 
 
+const mainPageScript = (userName: string) => {
 
-const getUser = async () => {
-    const _userId = sessionStorage.getItem('@pionira/userId');
-    const res = await api.get(`/user/${_userId}`);
-
-    return res.data.userName;
-
-}
-
-
-const mainPageScript = async () => {
-
-    const userName = await getUser();
     const script = [
         {
             name: "Babuíno",

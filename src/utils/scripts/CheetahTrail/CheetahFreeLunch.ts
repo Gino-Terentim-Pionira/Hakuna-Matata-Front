@@ -1,18 +1,8 @@
 import cheetah from "../../../assets/sprites/cheetah/cheetah.png";
-import api from '../../../services/api';
-
-const getUser = async () => {
-    const _userId = sessionStorage.getItem('@pionira/userId');
-    const res = await api.get(`/user/${_userId}`);
-
-    return res.data.userName;
-
-}
 
 
-const cheetahFreeLunch = async () => {
+const cheetahFreeLunch = (userName: string) => {
 
-    const userName = await getUser();
     const script = [
         {
             name: "Cheetah",

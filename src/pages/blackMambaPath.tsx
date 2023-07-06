@@ -40,6 +40,7 @@ import ModalMamba from '../assets/modal/modalMamba.png';
 import { errorCases } from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { Constants } from '../utils/constants';
+import { IUser } from '../recoil/useRecoilState';
 
 interface IScript {
 	name: string;
@@ -190,7 +191,7 @@ const BlackMambaPath = () => {
 
 			const isComplete = userInfoData.finalQuizComplete.blackMamba;
 			setIsLoading(false);
-			updateScript();
+			updateScript(userInfoData);
 
 			if (isComplete) {
 				setMambaText(
@@ -257,8 +258,8 @@ const BlackMambaPath = () => {
 		}
 	};
 
-	const updateScript = async () => {
-		const newScript = await blackMambaScript();
+	const updateScript = async (user: IUser) => {
+		const newScript = await blackMambaScript(user);
 		setScript(newScript);
 	};
 

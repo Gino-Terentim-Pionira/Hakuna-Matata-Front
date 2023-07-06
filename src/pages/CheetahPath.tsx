@@ -262,7 +262,7 @@ const CheetahPath = () => {
                 );
                 setCompleteTrail(true);
                 if (userInfoData.narrative_status.trail1 === 2) {
-                    await finalCheetahNarrative();
+                    finalCheetahNarrative(userInfoData.userName);
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
                             ...userInfoData.narrative_status,
@@ -322,12 +322,12 @@ const CheetahPath = () => {
             userInfoData.narrative_status.trail2 == 0
         ) {
             //Verifica se é a primeira vez do usuário em uma trilha
-            const newScript = await cheetahFreeLunch();
+            const newScript = cheetahFreeLunch(userInfoData.userName);
             setScript(newScript);
             narrativeOnOpen();
         } else if (userInfoData.narrative_status.trail1 == 0) {
             //Verifica se é a primeira vez do usuário na trilha da cheetah
-            const newScript = await cheetahBeggining();
+            const newScript = cheetahBeggining(userInfoData.userName);
             setScript(newScript);
             narrativeOnOpen();
         }
@@ -339,8 +339,8 @@ const CheetahPath = () => {
         narrativeChallengeOnOpen();
     };
 
-    const finalCheetahNarrative = async () => {
-        const newChallengeScript = await cheetahConclusion();
+    const finalCheetahNarrative = (userName: string) => {
+        const newChallengeScript = cheetahConclusion(userName);
         setFinalChallengeScript(newChallengeScript);
         finalNarrativeChallengeOnOpen();
     };
