@@ -50,15 +50,15 @@ const VideoModal: FC<IVideoModal> = ({
     updateQuiz
 }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [user, setUser] = useState<string | null >();
+    const [userId, setUserId] = useState<string | null >();
     const [onError, setOnError] = useState(false);
     const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
     // Pega as informações do usuário logado
     const getUser = async () => {
         try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            setUser(userId);
+            const id = sessionStorage.getItem('@pionira/userId');
+            setUserId(id);
         } catch (error) {
             setOnError(true);
         }
@@ -67,7 +67,7 @@ const VideoModal: FC<IVideoModal> = ({
     const updateVideo = async (videoId: string) => {
         try {
             await api.patch(`video/${videoId}`, {
-                user_id: user
+                user_id: userId
             });
         } catch (error) {
             setOnError(true);
