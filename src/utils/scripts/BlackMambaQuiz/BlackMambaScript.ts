@@ -1,18 +1,8 @@
 import blackMamba from "../../../assets/sprites/blackMamba/mamba_negra.png";
 import mamba_negra_happy from "../../../assets/sprites/blackMamba/mamba_negra_happy.png";
+import { IUser } from "../../../recoil/useRecoilState";
 
 import api from '../../../services/api';
-
-const getUser = async () => {
-    try {
-        const _userId = sessionStorage.getItem('@pionira/userId');
-        const res = await api.get(`/user/${_userId}`);
-
-        return res.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 const checkScript = async (index: number) => {
     try {
@@ -29,9 +19,8 @@ const checkScript = async (index: number) => {
     }
 }
 
-const blackMambaScript = async () => {
+const blackMambaScript = async (user: IUser) => {
 
-    const user = await getUser();
     const wisdom = 100 - user.ignorance;
 
     const script = user.finalQuizComplete.blackMamba ? [

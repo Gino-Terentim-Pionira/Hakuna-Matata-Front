@@ -1,19 +1,8 @@
 import cheetah_happy from "../../../assets/sprites/cheetah/cheetah_happy.png";
 
-import api from '../../../services/api';
 
-const getUser = async () => {
-    const _userId = sessionStorage.getItem('@pionira/userId');
-    const res = await api.get(`/user/${_userId}`);
+const cheetahConclusion = (userName: string) => {
 
-    return res.data.userName;
-
-}
-
-
-const cheetahConclusion = async () => {
-
-    const userName = await getUser();
     const script = [
         {
             name: "Cheetah",

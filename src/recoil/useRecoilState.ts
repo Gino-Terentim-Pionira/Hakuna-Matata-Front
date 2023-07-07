@@ -22,7 +22,8 @@ export interface IUser {
 		mambaQuiz: number;
 	};
 	finalQuizComplete: {
-		cheetahFinal: boolean
+		cheetahFinal: boolean;
+		blackMamba: boolean;
 	};
 	quiz_coins: number[];
 	consecutiveDays: number;

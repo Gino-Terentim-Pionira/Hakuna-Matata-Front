@@ -83,10 +83,10 @@ const MainPage = () => {
 	];
 
 	//logic for checking and switching if first time is set to true
-	const tutorialFirstOnClose = async () => {
+	const tutorialFirstOnClose = () => {
 		try {
 			if (userData.isFirstTimeAppLaunching) {
-				const newScript = await mainPageScript();
+				const newScript = mainPageScript(userData.userName);
 				setScript(newScript);
 				narrativeOnOpen();
 			}

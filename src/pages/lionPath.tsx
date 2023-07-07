@@ -250,7 +250,7 @@ const LionPath = () => {
 							trail2: 3
 						},
 					});
-					await finalLionNarrative();
+					finalLionNarrative(userInfoData.userName);
 				}
 			} else {
 				if (userInfoData.ignorance > 80)
@@ -319,8 +319,8 @@ const LionPath = () => {
 		narrativeChallengeOnOpen();
 	};
 
-	const finalLionNarrative = async () => {
-		const newChallengeScript = await lionConclusion();
+	const finalLionNarrative = (userName: string) => {
+		const newChallengeScript = lionConclusion(userName);
 		setFinalChallengeScript(newChallengeScript);
 		finalNarrativeChallengeOnOpen();
 	};

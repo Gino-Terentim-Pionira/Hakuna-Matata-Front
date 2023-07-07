@@ -2,20 +2,9 @@ import lion_happy from "../../../assets/sprites/lion/happy_lion.png";
 import lion from "../../../assets/sprites/lion/lion.png";
 import lioness_happy from "../../../assets/sprites/lion/happy_lioness.png";
 
-import api from '../../../services/api';
 
-const getUser = async () => {
-    const _userId = sessionStorage.getItem('@pionira/userId');
-    const res = await api.get(`/user/${_userId}`);
+const lionConclusion = (userName: string) => {
 
-    return res.data.userName;
-
-}
-
-
-const lionConclusion = async () => {
-
-    const userName = await getUser();
     const script = [
         {
             name: "Leoa",
