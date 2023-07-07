@@ -9,7 +9,6 @@ import Register from './pages/Register';
 import MainPage from './pages/MainPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import EditProfile from './pages/EditProfile';
 import Shop from './pages/Shop';
 import Inventory from './pages/Inventory';
 import CheetahPath from './pages/CheetahPath';
@@ -51,7 +50,6 @@ const Routes = () => {
 						<Route path='/forgotPassword' component={ForgotPassword} />
 						<Route path="/resetPassword/:id" component={ResetPassword} />
 						<Route path='/register' component={Register} />
-						<ProtectedRoute path='/editProfile/:id' component={EditProfile} />
 						<ProtectedRoute path='/shop' component={Shop} />
 						<ProtectedRoute path='/inventory' component={Inventory} />
 						<ProtectedRoute path='/mainPage' component={MainPage} />

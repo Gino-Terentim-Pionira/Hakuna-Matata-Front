@@ -97,7 +97,7 @@ const MainPage = () => {
 		}
 	};
 
-	const checkCanCollectDaily = async (value: number) => {
+	const checkCanCollectDaily = async (value: number, coins: number) => {
 		const lastDate = new Date(value);
 		const currentDate = new Date();
 
@@ -112,14 +112,12 @@ const MainPage = () => {
 				const _userId: SetStateAction<string> | null = sessionStorage.getItem(
 					'@pionira/userId',
 				);
-				const res = await api.get(`/user/${_userId}`);
-
 				await api.patch(`/user/lastCollected/${_userId}`, {
 					consecutiveDays: 0,
 					lastCollected: currentDate.getTime(),
-					coins: res.data.coins,
+					coins: coins,
 				});
-				setUserData(res.data);
+				await getNewUserInfo();
 			} catch (error) {
 				setOnError(true);
 			}
@@ -157,7 +155,7 @@ const MainPage = () => {
 				tutorialOnOpen();
 			}
 
-			await checkCanCollectDaily(res.data.lastCollected);
+			await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
 			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
