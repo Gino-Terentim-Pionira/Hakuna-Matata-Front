@@ -13,7 +13,7 @@ import {
     useDisclosure,
     Image
 } from "@chakra-ui/react";
-import { useUser, useQuiz } from '../../hooks';
+import { useUser, useModule } from '../../hooks';
 
 // Components
 import QuizModal from './QuizModal';
@@ -106,9 +106,9 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
 
     // States
-    const { quizData, getNewQuizInfo } = useQuiz();
-    const quiz = quizData[quizIndex];
-    const { userData } = useUser();
+    const { moduleData, getNewModuleInfo } = useModule();
+    const moduleInfo = moduleData[quizIndex];
+    const { userData, getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [buttonValidation, setButtonValidation] = useState(false);
     const [isFirstTimeChallenge, setIsFirstTimeChallenge] = useState(true);
@@ -120,12 +120,13 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
     // Metodos
-    const addUserIdToQuiz = async (quizId: string) => {
+    const addUserIdToModule = async () => {
         try {
-            await api.patch(`quizz/user/${quizId}`, {
-                user_id: userData._id
+            const userId = sessionStorage.getItem('@pionira/userId');
+            await api.patch(`user/addmodule/${userId}`, {
+                module_id: moduleInfo._id
             });
-            await getNewQuizInfo();
+            await getNewModuleInfo();
         } catch (error) {
             setOnError(true);
         }
@@ -134,7 +135,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const confirmationValidation = async () => {
         if (userData) {
             setIsLoading(true);
-            await addUserIdToQuiz(quiz._id);
+            await addUserIdToModule();
             setIsLoading(false);
         }
         setButtonValidation(true);
@@ -170,19 +171,17 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     }
 
     useEffect(() => {
-        const userId = sessionStorage.getItem('@pionira/userId');
-
-        setTotalCoins(quiz.total_coins);
-
-        if (quiz.questions_id[0].user_id.includes(userId as string)) {
+        setTotalCoins(moduleInfo.total_coins);
+        if(userData.question_id.includes(moduleInfo.questions_id[0]._id)) {
             setStep(step + 1);
-        }
-    }, [quiz])
+
+        };
+    }, [moduleInfo])
 
     return (
         <>
             <Image
-                src={isBlocked ? button_blocked : (buttonValidation || quiz.user_id?.includes(userData._id) ? button_on : button_off)}
+                src={isBlocked ? button_blocked : (buttonValidation || userData.module_id?.includes(moduleInfo._id) ? button_on : button_off)}
                 onClick={isBlocked ? blockedFunction : onOpen}
                 _hover={{
                     cursor: 'pointer',
@@ -211,7 +210,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                         borderTopStartRadius='5px'
                     />
                     <ModalHeader d='flex' justifyContent='center'>
-                        <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{quiz.name}</Text>
+                        <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{moduleInfo.module_name}</Text>
                         <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     </ModalHeader>
 
@@ -222,57 +221,56 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                     <LoadingState />
                                 </Box>
                             ) : (
-                                <>
-                                    <GridContainer>
-                                        {
-                                            quiz.videos_id.map(({ _id, user_id, name, url, nick }: {
-                                                user_id: string[],
-                                                name: string,
-                                                url: string,
-                                                nick: string
-                                                _id: string
-                                            }) => {
-                                                return (
-                                                    <Flex
-                                                        className='videoCardContainer'
-                                                        width="297px"
-                                                        height="334px"
-                                                        borderRadius="8px"
-                                                        flexDir="column"
-                                                        boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
-                                                        bg={"#FEFEFE"}
-                                                        onClick={() => handleVideoModal(_id, name, url)}
-                                                        transition="ease 200ms"
-                                                        _hover={{
-                                                            cursor: 'pointer',
-                                                            opacity: '0.8'
-                                                        }}
-                                                        key={_id}
-                                                    >
-                                                        <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="147px" bg={colorPalette.textColor}>
-                                                            <Image height='59px' src={VideoIcon} alt="Icone de video" />
-                                                        </Flex>
-                                                        <Flex flexDir="column" paddingX="16px" marginTop="24px">
-                                                            <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
-                                                                {name}
-                                                            </Text>
-                                                            <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
-                                                                {nick}
-                                                            </Text>
-                                                            {
-                                                                user_id.includes(userData._id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
-                                                                    Já assistido
+                                    <>
+                                        <GridContainer>
+                                            {
+                                                moduleInfo.videos_id.map(({ _id, name, url, nick }: {
+                                                    name: string,
+                                                    url: string,
+                                                    nick: string
+                                                    _id: string
+                                                }) => {
+                                                    return (
+                                                        <Flex
+                                                            className='videoCardContainer'
+                                                            width="297px"
+                                                            height="334px"
+                                                            borderRadius="8px"
+                                                            flexDir="column"
+                                                            boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
+                                                            bg={"#FEFEFE"}
+                                                            onClick={() => handleVideoModal(_id, name, url)}
+                                                            transition="ease 200ms"
+                                                            _hover={{
+                                                                cursor: 'pointer',
+                                                                opacity: '0.8'
+                                                            }}
+                                                            key={_id}
+                                                        >
+                                                            <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="147px" bg={colorPalette.textColor}>
+                                                                <Image height='59px' src={VideoIcon} alt="Icone de video" />
+                                                            </Flex>
+                                                            <Flex flexDir="column" paddingX="16px" marginTop="24px">
+                                                                <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
+                                                                    {name}
                                                                 </Text>
-                                                            }
+                                                                <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
+                                                                    {nick}
+                                                                </Text>
+                                                                {
+                                                                    userData?.video_id.includes(_id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
+                                                                        Já assistido
+                                                                    </Text>
+                                                                }
 
+                                                            </Flex>
                                                         </Flex>
-                                                    </Flex>
-                                                )
-                                            })
-                                        }
-                                    </GridContainer>
-                                </>
-                            )
+                                                    )
+                                                })
+                                            }
+                                        </GridContainer>
+                                    </>
+                                )
                         }
                         {
                             !isLoading && <Button
@@ -306,10 +304,10 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             </Modal >
 
             {
-                quiz ? <QuizModal
+                moduleInfo ? <QuizModal
                     openModal={quizIsOpen}
                     closeModal={quizOnClose}
-                    quiz={quiz}
+                    moduleInfo={moduleInfo}
                     onToggle={quizToggle}
                     firsTimeChallenge={isFirstTimeChallenge}
                     validateUser={confirmationValidation}
@@ -340,7 +338,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
                     <ModalBody d='flex' w='80%' flexDirection='column' justifyContent='space-evenly'>
                         {
-                            buttonValidation || quiz.user_id?.includes(userData._id) ? (
+                            buttonValidation || userData.module_id?.includes(moduleInfo._id) ? (
                                 <>
                                     <div>
                                         {
@@ -357,18 +355,18 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                     </Text>
                                                 </>
                                             ) : (
-                                                <>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
-                                                        Ainda faltam Joias para se conquistar!
+                                                    <>
+                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
+                                                            Ainda faltam Joias para se conquistar!
                                                     </Text>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.1rem' marginTop='0.2rem'>
-                                                        Deseja realizar o desafio novamente?
+                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.1rem' marginTop='0.2rem'>
+                                                            Deseja realizar o desafio novamente?
                                                     </Text>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
-                                                        Joias restantes {totalCoins - userQuizCoins}
-                                                    </Text>
-                                                </>
-                                            )
+                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
+                                                            Joias restantes {totalCoins - userQuizCoins}
+                                                        </Text>
+                                                    </>
+                                                )
                                         }
                                     </div>
                                     <Flex justifyContent='space-around'>
@@ -384,20 +382,20 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                     </Flex>
                                 </>
                             ) : (
-                                <>
-                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='1rem'>
-                                        Está preparado para responder o desafio desse módulo?
+                                    <>
+                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='1rem'>
+                                            Está preparado para responder o desafio desse módulo?
                                     </Text>
-                                    <Flex justifyContent='space-around'>
-                                        <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => closeConfirmationModal()}>
-                                            Sim, estou pronto!
+                                        <Flex justifyContent='space-around'>
+                                            <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => closeConfirmationModal()}>
+                                                Sim, estou pronto!
                                         </Button>
-                                        <Button h='3.5rem' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
-                                            Não, não estou pronto!
+                                            <Button h='3.5rem' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
+                                                Não, não estou pronto!
                                         </Button>
-                                    </Flex>
-                                </>
-                            )
+                                        </Flex>
+                                    </>
+                                )
                         }
                     </ModalBody>
                 </ModalContent>
@@ -425,7 +423,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 videoIsOpen={videoIsOpen}
                 videoOnClose={videoOnClose}
                 videoOnToggle={videoOnToggle}
-                updateQuiz={getNewQuizInfo}
+                updateQuiz={getNewUserInfo}
             />
         </>
     );

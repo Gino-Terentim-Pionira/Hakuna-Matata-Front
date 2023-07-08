@@ -29,6 +29,9 @@ export interface IUser {
 	consecutiveDays: number;
 	luck: number;
 	items_id: string[];
+	question_id: string[];
+    video_id: string[];
+	module_id: string[];
 }
 
 const userState = atom({

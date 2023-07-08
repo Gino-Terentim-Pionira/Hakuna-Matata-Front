@@ -262,16 +262,16 @@ const MainPage = () => {
 					top='0'
 				/>
 			) : (
-				<Image
-					src={map2_bg}
-					position='absolute'
-					h='100vh'
-					w='100%'
-					zIndex='-3'
-					left='0'
-					top='0'
-				/>
-			)}
+					<Image
+						src={map2_bg}
+						position='absolute'
+						h='100vh'
+						w='100%'
+						zIndex='-3'
+						left='0'
+						top='0'
+					/>
+				)}
 			<Image
 				src={ignoranceImage}
 				position='absolute'
@@ -402,10 +402,10 @@ const MainPage = () => {
 				onFunction={() => setIsSubscribedModal(false)}
 			/>
 
-			<BlockedModal 
-				isOpen={openBlockedModal} 
-				onClose={() => {setOpenBlockedModal(false)}} 
-				subtitle = "Esse horizonte ainda não pode se explorado, por enquanto..."
+			<BlockedModal
+				isOpen={openBlockedModal}
+				onClose={() => { setOpenBlockedModal(false) }}
+				subtitle="Esse horizonte ainda não pode se explorado, por enquanto..."
 			/>
 		</>
 	);

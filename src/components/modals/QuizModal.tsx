@@ -38,15 +38,14 @@ interface IQuizComponent {
     openModal: boolean;
     closeModal: VoidFunction;
     onToggle: VoidFunction;
-    quiz: {
+    moduleInfo: {
         questions_id: [{
             _id: string,
             description: string,
             alternatives: string[],
             answer: number,
             coins: number,
-            score: number[],
-            user_id: string[]
+            score_points: number[],
         }];
         dificulty: string;
         total_coins: number;
@@ -61,7 +60,7 @@ interface IQuizComponent {
 const QuizModal: FC<IQuizComponent> = ({
     openModal,
     closeModal,
-    quiz,
+    moduleInfo,
     onToggle,
     validateUser,
     firsTimeChallenge,
@@ -69,9 +68,9 @@ const QuizModal: FC<IQuizComponent> = ({
     quizIndex
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { getNewUserInfo } = useUser();
+    const { getNewUserInfo, userData } = useUser();
     const [step, setStep] = useState(0);
-    const length = quiz.questions_id.length;
+    const length = moduleInfo.questions_id.length;
     const [coins, setCoins] = useState(0);
     const [status, setStatus] = useState([0, 0, 0, 0, 0, 0]);
     const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -84,17 +83,16 @@ const QuizModal: FC<IQuizComponent> = ({
     const [onError, setOnError] = useState(false);
 
     const isCorretAnswer = (index: number) => {
-        const userId = sessionStorage.getItem('@pionira/userId');
-        const correctAnswer = quiz.questions_id[step].answer;
-        const questionsCoins = quiz.questions_id[step].coins;
-        const questionStatus = quiz.questions_id[step].score;
-        const questionId = quiz.questions_id[step]._id;
-        const questionUsersId = quiz.questions_id[step].user_id;
-        const quizDificulty = quiz.dificulty;
+        const correctAnswer = moduleInfo.questions_id[step].answer;
+        const questionsCoins = moduleInfo.questions_id[step].coins;
+        const questionStatus = moduleInfo.questions_id[step].score_points;
+        const questionId = moduleInfo.questions_id[step]._id;
+        const questionUserId = userData.question_id
+        const quizDificulty = moduleInfo.dificulty;
 
         if (index === correctAnswer) {
 
-            if (questionUsersId.includes(userId as string)) {
+            if (questionUserId.includes(moduleInfo.questions_id[step]._id)) {
                 setCorrectAnswers(correctAnswers + 1);
             } else {
                 setCoins(coins + questionsCoins);
@@ -225,7 +223,7 @@ const QuizModal: FC<IQuizComponent> = ({
             const _userId = sessionStorage.getItem('@pionira/userId');
             const res = await api.get<userDataProps>(`/user/${_userId}`);
 
-            if (userQuizCoins < quiz.total_coins)
+            if (userQuizCoins < moduleInfo.total_coins)
                 await api.patch<userDataProps>(`/user/coins/${_userId}`, {
                     coins: res.data.coins + value
                 });
@@ -264,8 +262,8 @@ const QuizModal: FC<IQuizComponent> = ({
                 const userId = sessionStorage.getItem('@pionira/userId');
                 const length = questionsId.length;
                 for (let i = 0; i < length; i++) {
-                    await api.patch(`/questions/${questionsId[i]}`, {
-                        user_id: userId
+                    await api.patch(`/user/addquestion/${userId}`, {
+                        question_id: questionsId[i]
                     });
                 }
             }
@@ -280,7 +278,7 @@ const QuizModal: FC<IQuizComponent> = ({
     }
 
     const rewardModalInfo = () => {
-        if (userQuizCoins >= quiz.total_coins)
+        if (userQuizCoins >= moduleInfo.total_coins)
             return {
                 title: 'Arrasou!',
                 titleColor: colorPalette.inactiveButton,
@@ -332,7 +330,7 @@ const QuizModal: FC<IQuizComponent> = ({
                                 <Text marginTop='0.5rem' fontFamily={fontTheme.fonts} fontSize='30' fontWeight='bold' color={colorPalette.secondaryColor} >Q {step + 1}/{length}</Text>
                                 <Flex marginTop='0.5rem' bg='white' boxShadow='4px 4px 4px rgba(0, 0, 0, 0.25)' borderRadius='8' h='29vh' justifyContent='center' alignItems='center' >
                                     <Text w='92%' h='77%' fontFamily={fontTheme.fonts} fontSize='25px' >
-                                        {quiz?.questions_id[step]?.description}
+                                        {moduleInfo?.questions_id[step]?.description}
                                     </Text>
                                 </Flex>
                             </Flex>
@@ -356,10 +354,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[0]) ? '18px' : '24px'} 
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[0]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
-                                            {quiz?.questions_id[step]?.alternatives[0]}
+                                            {moduleInfo?.questions_id[step]?.alternatives[0]}
                                         </Text>
                                     </Center>
                                     <Center
@@ -379,10 +377,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[1]) ? '18px' : '24px'} 
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[1]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
-                                            {quiz?.questions_id[step]?.alternatives[1]}
+                                            {moduleInfo?.questions_id[step]?.alternatives[1]}
                                         </Text>
                                     </Center>
                                 </Flex>
@@ -404,10 +402,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[2]) ? '18px' : '24px'} 
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[2]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
-                                            {quiz?.questions_id[step]?.alternatives[2]}
+                                            {moduleInfo?.questions_id[step]?.alternatives[2]}
                                         </Text>
                                     </Center>
                                     <Center
@@ -427,10 +425,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text 
                                             w='90%' 
                                             fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(quiz?.questions_id[step]?.alternatives[3]) ? '18px' : '24px'} 
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[3]) ? '18px' : '24px'} 
                                             textAlign='center'
                                         >
-                                            {quiz?.questions_id[step]?.alternatives[3]}
+                                            {moduleInfo?.questions_id[step]?.alternatives[3]}
                                         </Text>
                                     </Center>
                                 </Flex>

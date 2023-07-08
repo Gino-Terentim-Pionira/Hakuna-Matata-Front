@@ -2,24 +2,25 @@ import { atom } from "recoil";
 interface IQuiz {
     user_id: string;
     _id: string
-    name: string;
+    module_name: string;
     questions_id: [{
         _id: string,
+        module_name: string,
         description: string,
         alternatives: string[],
         answer: number,
         coins: number,
-        score: number[],
-        user_id: string[]
+        score_points: number[],
     }];
     category: string;
     dificulty: string;
     videos_id: [{
-        user_id: string[],
+        _id: string,
+        index: number,
+        module_name: string,
         name: string,
         url: string,
         nick: string,
-        _id: string,
     }];
     total_coins: number;
 }
