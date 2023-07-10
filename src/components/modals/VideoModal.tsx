@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
     Modal,
     ModalContent,
@@ -50,24 +50,14 @@ const VideoModal: FC<IVideoModal> = ({
     updateQuiz
 }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [userId, setUserId] = useState<string | null >();
     const [onError, setOnError] = useState(false);
     const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
-    // Pega as informações do usuário logado
-    const getUser = async () => {
+    const updateVideo = async () => {
         try {
-            const id = sessionStorage.getItem('@pionira/userId');
-            setUserId(id);
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
-    const updateVideo = async (videoId: string) => {
-        try {
-            await api.patch(`video/${videoId}`, {
-                user_id: userId
+            const userId = sessionStorage.getItem('@pionira/userId');
+            await api.patch(`user/addvideo/${userId}`, {
+                video_id: id
             });
         } catch (error) {
             setOnError(true);
@@ -78,8 +68,8 @@ const VideoModal: FC<IVideoModal> = ({
     const handleModal = async () => {
         try {
             setButtonIsLoading(true);
-            await updateVideo(id);
-            await updateQuiz();
+            await updateVideo();
+            updateQuiz();
             videoOnToggle();
             setButtonIsLoading(false);
         } catch (error) {
@@ -93,11 +83,6 @@ const VideoModal: FC<IVideoModal> = ({
         if (url)
             return url.split("//")[1].split("/")[1];
     }
-
-    useEffect(() => {
-        getUser();
-    }, []);
-
 
     return (
         <>

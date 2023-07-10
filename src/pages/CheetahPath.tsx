@@ -21,7 +21,7 @@ import { useLocation } from 'react-router-dom';
 //utils
 import fontTheme from '../styles/base';
 import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
-import { useQuiz } from '../hooks';
+import { useModule } from '../hooks';
 
 //styles
 import colorPalette from '../styles/colorPalette';
@@ -97,7 +97,7 @@ interface IScript {
 const CheetahPath = () => {
     const local = useLocation();
     const { userData, setUserData } = useUser();
-    const { getNewQuizInfo, quizData } = useQuiz();
+    const { getNewModuleInfo, moduleData } = useModule();
     const { getInsignias } = useInsignias();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [withoutMoney, setWithoutMoney] = useState(false);
@@ -242,8 +242,8 @@ const CheetahPath = () => {
         try {
             let userInfoData;
             const _userId = sessionStorage.getItem('@pionira/userId');
-            if (quizData.length === 0) {
-                await getNewQuizInfo();
+            if (moduleData.length === 0) {
+                await getNewModuleInfo();
             }
 
             if (!userData._id) {
