@@ -39,7 +39,7 @@ const InsigniaCertificate = () => {
                                     <Box w='100%' h='100%' overflowY='auto'>
                                         <Grid templateColumns='25% 25% 25%' columnGap='12.5%' width='95%' mt='1rem' h='95%' >
                                             {
-                                                insigniasData.map(({ _id, trail, user_id, name, description }: {
+                                                insigniasData.map(({ _id, trail, name, description }: {
                                                     user_id: Array<string>
                                                     _id: string,
                                                     name: string,
@@ -49,7 +49,7 @@ const InsigniaCertificate = () => {
                                                     imageSillouete: string,
                                                 }) => {
                                                     return (
-                                                        user_id.includes(userData._id) ? (
+                                                        userData.insignias_id.includes(_id) ? (
                                                             <Insignia key={_id} _id={_id} trail={trail} name={name} description={description} />
                                                         ) : (
                                                             <Box

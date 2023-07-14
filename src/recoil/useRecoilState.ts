@@ -32,6 +32,7 @@ export interface IUser {
 	question_id: string[];
     video_id: string[];
 	module_id: string[];
+	insignias_id: string[];
 }
 
 const userState = atom({
