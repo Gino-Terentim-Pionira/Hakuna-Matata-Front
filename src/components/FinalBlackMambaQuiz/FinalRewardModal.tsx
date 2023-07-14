@@ -162,8 +162,8 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 
 			if (!userBadges.includes(userId)) {
 				userBadges.push(userId);
-				await api.patch(`/insignias/${badgeId}`, {
-					user_id: userBadges,
+				await api.patch(`user/addinsignia/${userId}`, {
+					insignias_id: badgeId,
 				});
 			}
 			finalModalOnClose();
