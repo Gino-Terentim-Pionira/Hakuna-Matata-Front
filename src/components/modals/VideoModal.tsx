@@ -11,12 +11,10 @@ import {
     Button,
     Text,
 } from "@chakra-ui/react";
-import Vimeo from '@u-wave/react-vimeo';
-import YouTube from 'react-youtube';
+import ReactPlayer from 'react-player';
 
 // Components
 import AlertModal from './AlertModal';
-import LoadingState from '../LoadingState';
 
 // Requisitions
 import api from '../../services/api';
@@ -49,7 +47,6 @@ const VideoModal: FC<IVideoModal> = ({
     plataform = 'vimeo',
     updateQuiz
 }) => {
-    const [isLoading, setIsLoading] = useState(true);
     const [onError, setOnError] = useState(false);
     const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
@@ -90,7 +87,7 @@ const VideoModal: FC<IVideoModal> = ({
                 <ModalOverlay />
                 <ModalContent height="34rem">
                     <ModalHeader display="flex" justifyContent="center" paddingBottom="0px">
-                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold"  color={colorPalette.textColor} fontSize="3.7rem">
+                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" color={colorPalette.textColor} fontSize="3.7rem">
                             {name}
                         </Text>
                     </ModalHeader>
@@ -107,55 +104,35 @@ const VideoModal: FC<IVideoModal> = ({
                     />
                     <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={() => {
                         videoOnToggle();
-                        setIsLoading(true);
                     }} />
                     <ModalBody>
                         <Flex direction="column" alignItems="center" paddingTop="0px">
-
-                            {isLoading ? (
-                                <Flex position="absolute" zIndex="-1" width="100%" height="50vh" justifyContent="center">
-                                    <LoadingState />
-                                </Flex>
-                            ) : null}
-                            {
-                                plataform === 'youtube' ?
-                                    <YouTube
-                                        videoId={url}
-                                        opts={{
-                                            width: '600px',
-                                            height: '338px',
-                                        }}
-                                    />
-                                    :
-                                    <Vimeo
-                                        onLoaded={() => { setIsLoading(false) }}
-                                        width="625rem"
-                                        height="350rem"
-                                        video={parseVideoUrl() as string | number}
-                                    />
-                            }
-
+                            <ReactPlayer
+                                url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
+                                controls={true}
+                                style={{
+                                    marginTop: '-16px'
+                                }}
+                            />
                         </Flex>
 
-                        {
-                            !isLoading && <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
-                                <Button
-                                    bgColor={colorPalette.confirmButton}
-                                    width="50%"
-                                    height="3rem"
-                                    isLoading={buttonIsLoading}
-                                    onClick={!buttonIsLoading ? () => handleModal() : () => console.log()}
+                        <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
+                            <Button
+                                bgColor={colorPalette.confirmButton}
+                                width="50%"
+                                height="3rem"
+                                isLoading={buttonIsLoading}
+                                onClick={!buttonIsLoading ? () => handleModal() : () => console.log()}
+                            >
+                                <Text
+                                    fontFamily={fontTheme.fonts}
+                                    fontWeight="semibold"
+                                    fontSize="2rem"
                                 >
-                                    <Text
-                                        fontFamily={fontTheme.fonts}
-                                        fontWeight="semibold"
-                                        fontSize="2rem"
-                                    >
-                                        Concluído
+                                    Concluído
                                     </Text>
-                                </Button>
-                            </Flex>
-                        }
+                            </Button>
+                        </Flex>
                     </ModalBody>
                 </ModalContent >
             </Modal >
