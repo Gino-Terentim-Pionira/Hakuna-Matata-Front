@@ -12,6 +12,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import ReactPlayer from 'react-player';
+import { useUser } from '../../hooks';
 
 // Components
 import AlertModal from './AlertModal';
@@ -35,12 +36,14 @@ interface IVideoModal {
     videoOnToggle: VoidFunction,
     plataform?: 'vimeo' | 'youtube';
     updateQuiz: VoidFunction;
+    coins: number;
 }
 
 const VideoModal: FC<IVideoModal> = ({
     videoIsOpen,
     videoOnClose,
     videoOnToggle,
+    coins,
     id,
     name,
     url,
@@ -49,12 +52,17 @@ const VideoModal: FC<IVideoModal> = ({
 }) => {
     const [onError, setOnError] = useState(false);
     const [buttonIsLoading, setButtonIsLoading] = useState(false);
+    const { userData } = useUser();
 
     const updateVideo = async () => {
         try {
             const userId = sessionStorage.getItem('@pionira/userId');
+            if (userData.video_id.includes(id)) return;
             await api.patch(`user/addvideo/${userId}`, {
                 video_id: id
+            });
+            await api.patch(`/user/coins/${userId}`, {
+                coins: userData.coins + coins,
             });
         } catch (error) {
             setOnError(true);

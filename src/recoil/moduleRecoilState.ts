@@ -21,11 +21,12 @@ interface IQuiz {
         name: string,
         url: string,
         nick: string,
+        coins: number
     }];
     total_coins: number;
 }
 
-const cheetahQuizState = atom({
+const moduleState = atom({
     key: "videoInfo",
     default: [] as IQuiz[],
 });
@@ -33,5 +34,5 @@ const cheetahQuizState = atom({
 // Criar outros quizes
 
 export {
-    cheetahQuizState,
+ moduleState,
 }
