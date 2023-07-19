@@ -30,7 +30,6 @@ import { validateQuestionSize } from '../../utils/validates';
 interface userDataProps {
     coins: number,
     status: number[],
-    quiz_coins: number[],
     ignorance: number
 }
 
@@ -53,7 +52,6 @@ interface IQuizComponent {
     validateUser: VoidFunction;
     firsTimeChallenge: boolean;
     userQuizCoins: number;
-    quizIndex: number;
 }
 
 
@@ -64,8 +62,7 @@ const QuizModal: FC<IQuizComponent> = ({
     onToggle,
     validateUser,
     firsTimeChallenge,
-    userQuizCoins,
-    quizIndex
+    userQuizCoins
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { getNewUserInfo, userData } = useUser();
@@ -207,17 +204,6 @@ const QuizModal: FC<IQuizComponent> = ({
         return res.data.status;
     }
 
-    const incrementQuizCoins = (res: AxiosResponse<userDataProps>) => {
-        const length = res.data.quiz_coins.length
-
-        for (let i = 0; i < length; i++) {
-            if (i === quizIndex) {
-                res.data.quiz_coins[i] = res.data.quiz_coins[i] + coins;
-            }
-        }
-        return res.data.quiz_coins;
-    }
-
     const addCoinsStatus = async (value: number) => {
         try {
             const _userId = sessionStorage.getItem('@pionira/userId');
@@ -227,10 +213,6 @@ const QuizModal: FC<IQuizComponent> = ({
                 await api.patch<userDataProps>(`/user/coins/${_userId}`, {
                     coins: res.data.coins + value
                 });
-
-            await api.patch<userDataProps>(`/user/quizCoins/${_userId}`, {
-                quiz_coins: incrementQuizCoins(res)
-            });
             await api.patch<userDataProps>(`/user/status/${_userId}`, {
                 status: incrementAtStatusIndex(res)  // first parameter of this func needs to be dynamic
             });

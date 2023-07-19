@@ -25,7 +25,6 @@ export interface IUser {
 		cheetahFinal: boolean;
 		blackMamba: boolean;
 	};
-	quiz_coins: number[];
 	consecutiveDays: number;
 	luck: number;
 	items_id: string[];

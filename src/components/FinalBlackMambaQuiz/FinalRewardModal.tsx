@@ -45,7 +45,6 @@ interface IFinalRewardModal {
 interface userDataProps {
 	coins: number;
 	status: number[];
-	quiz_coins: number[];
 	ignorance: number;
 }
 
