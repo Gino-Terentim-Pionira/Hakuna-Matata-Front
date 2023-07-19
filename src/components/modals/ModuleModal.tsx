@@ -116,9 +116,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [step, setStep] = useState(0);
     const [onError, setOnError] = useState(false);
     const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0 });
-
-    const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
-
+    const [remainingCoins, setRemainingCoins] = useState(0);
     // Metodos
     const addUserIdToModule = async () => {
         try {
@@ -146,12 +144,17 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             setIsLoading(true);
             const userId = sessionStorage.getItem('@pionira/userId');
             const validation = await api.get(`user/loadingQuiz/${userId}`);
-            setIsLoading(false);
+            
 
             if (!validation.data) {
+                setIsLoading(false);
                 timeOnOpen();
             }
-            else {
+            else { // Fazer requisição de moedas faltantes aqui
+                const module_name = encodeURI(moduleInfo.module_name);
+                const coins = await api.get(`module/remainingCoins/${module_name}`);
+                setRemainingCoins(coins.data);
+                setIsLoading(false);
                 verificationOnOpen();
             }
         } catch (error) {
@@ -312,8 +315,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                     onToggle={quizToggle}
                     firsTimeChallenge={isFirstTimeChallenge}
                     validateUser={confirmationValidation}
-                    userQuizCoins={userQuizCoins}
-                    quizIndex={quizIndex}
+                    userQuizCoins={totalCoins - remainingCoins}
                 /> : null
             }
 
@@ -343,7 +345,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                 <>
                                     <div>
                                         {
-                                            userQuizCoins === totalCoins ? (
+                                            remainingCoins == 0 ? ( // Mudar essa comparação já que o usuário não terá mais esse atributo
                                                 <>
                                                     <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
                                                         Voce já provou por completo seu valor nesse desafio!
@@ -364,7 +366,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                             Deseja realizar o desafio novamente?
                                                     </Text>
                                                         <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
-                                                            Joias restantes {totalCoins - userQuizCoins}
+                                                            Joias restantes {remainingCoins}
                                                         </Text>
                                                     </>
                                                 )
