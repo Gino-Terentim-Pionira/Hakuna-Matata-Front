@@ -115,7 +115,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [totalCoins, setTotalCoins] = useState(0);
     const [step, setStep] = useState(0);
     const [onError, setOnError] = useState(false);
-    const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '' });
+    const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0 });
 
     const userQuizCoins = userData?.quiz_coins[quizIndex] as number;
 
@@ -165,8 +165,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         quizOnOpen();
     }
 
-    const handleVideoModal = (id: string, name: string, url: string) => {
-        setVideoInfo({ id, name, url });
+    const handleVideoModal = (id: string, name: string, url: string, coins: number) => {
+        setVideoInfo({ id, name, url, coins });
         videoOnOpen();
     }
 
@@ -224,11 +224,12 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                     <>
                                         <GridContainer>
                                             {
-                                                moduleInfo.videos_id.map(({ _id, name, url, nick }: {
+                                                moduleInfo.videos_id.map(({ _id, name, url, nick, coins }: {
                                                     name: string,
                                                     url: string,
-                                                    nick: string
-                                                    _id: string
+                                                    nick: string,
+                                                    _id: string,
+                                                    coins: number
                                                 }) => {
                                                     return (
                                                         <Flex
@@ -239,7 +240,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                             flexDir="column"
                                                             boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
                                                             bg={"#FEFEFE"}
-                                                            onClick={() => handleVideoModal(_id, name, url)}
+                                                            onClick={() => handleVideoModal(_id, name, url, coins)}
                                                             transition="ease 200ms"
                                                             _hover={{
                                                                 cursor: 'pointer',
@@ -420,6 +421,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 id={videoInfo.id}
                 name={videoInfo.name}
                 url={videoInfo.url}
+                coins={videoInfo.coins}
                 videoIsOpen={videoIsOpen}
                 videoOnClose={videoOnClose}
                 videoOnToggle={videoOnToggle}

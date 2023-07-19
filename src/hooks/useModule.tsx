@@ -1,9 +1,9 @@
 import { useRecoilState } from "recoil"
-import { cheetahQuizState } from "../recoil/quizRecoilState"
+import { moduleState } from "../recoil/moduleRecoilState"
 import api from "../services/api";
 
 export const useModule = () => {
-    const [moduleData, setModuleData] = useRecoilState(cheetahQuizState);
+    const [moduleData, setModuleData] = useRecoilState(moduleState);
 
     // Criar outros quizes
 
