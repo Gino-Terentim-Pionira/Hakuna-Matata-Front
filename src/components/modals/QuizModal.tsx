@@ -85,7 +85,6 @@ const QuizModal: FC<IQuizComponent> = ({
         const questionStatus = moduleInfo.questions_id[step].score_points;
         const questionId = moduleInfo.questions_id[step]._id;
         const questionUserId = userData.question_id
-        const quizDificulty = moduleInfo.dificulty;
 
         if (index === correctAnswer) {
 
@@ -103,17 +102,7 @@ const QuizModal: FC<IQuizComponent> = ({
                     status[5] + questionStatus[5],
                 ]);
 
-                switch (quizDificulty) {
-                    case 'easy':
-                        setIgnorance(ignorance + 0.625);
-                        break;
-                    case 'normal':
-                        setIgnorance(ignorance + 1);
-                        break;
-                    case 'hard':
-                        setIgnorance(ignorance + 2);
-                        break;
-                }
+                setIgnorance(ignorance + 1.5);
                 setQuestionsId([...questionsId, questionId]);
             }
 
@@ -146,17 +135,7 @@ const QuizModal: FC<IQuizComponent> = ({
                     setBorderStyle(['none', 'none', 'none', `3px solid ${colorPalette.incorrectAnswer}`]);
                     break;
             }
-            switch (quizDificulty) {
-                case 'easy':
-                    setIgnorance(ignorance - 0.5);
-                    break;
-                case 'normal':
-                    setIgnorance(ignorance - 0.75);
-                    break;
-                case 'hard':
-                    setIgnorance(ignorance - 1.5);
-                    break;
-            }
+            setIgnorance(ignorance - 0.75);
         }
     }
 
@@ -218,7 +197,7 @@ const QuizModal: FC<IQuizComponent> = ({
             });
             await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
                 ignorance: (res.data.ignorance - ignorance > 0) ? res.data.ignorance - ignorance : 0,
-            })
+            });
         } catch (error) {
             console.log(error);
             setOnError(true);
@@ -333,10 +312,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(0)}
                                     >
-                                        <Text 
-                                            w='90%' 
-                                            fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[0]) ? '18px' : '24px'} 
+                                        <Text
+                                            w='90%'
+                                            fontFamily={fontTheme.fonts}
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[0]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
                                             {moduleInfo?.questions_id[step]?.alternatives[0]}
@@ -356,10 +335,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(1)}
                                     >
-                                        <Text 
-                                            w='90%' 
-                                            fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[1]) ? '18px' : '24px'} 
+                                        <Text
+                                            w='90%'
+                                            fontFamily={fontTheme.fonts}
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[1]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
                                             {moduleInfo?.questions_id[step]?.alternatives[1]}
@@ -381,10 +360,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(2)}
                                     >
-                                        <Text 
-                                            w='90%' 
-                                            fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[2]) ? '18px' : '24px'} 
+                                        <Text
+                                            w='90%'
+                                            fontFamily={fontTheme.fonts}
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[2]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
                                             {moduleInfo?.questions_id[step]?.alternatives[2]}
@@ -404,10 +383,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         }}
                                         onClick={() => buttonFunctions(3)}
                                     >
-                                        <Text 
-                                            w='90%' 
-                                            fontFamily={fontTheme.fonts} 
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[3]) ? '18px' : '24px'} 
+                                        <Text
+                                            w='90%'
+                                            fontFamily={fontTheme.fonts}
+                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[3]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
                                             {moduleInfo?.questions_id[step]?.alternatives[3]}
