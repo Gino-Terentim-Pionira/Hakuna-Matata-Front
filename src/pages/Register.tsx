@@ -173,8 +173,9 @@ const Register = () => {
     }
 
     const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setFormPassword(event.target.value);
-        const res = validatePassword(formPassword);
+        const currentPassword = event.target.value as string;
+        setFormPassword(currentPassword);
+        const res = validatePassword(currentPassword);
         setValidationError(res.message);
         setHasValidationError(res.validate);
     }
