@@ -659,7 +659,7 @@ const CheetahPath = () => {
                         isOpen={narrativeChallengeIsOpen}
                         script={challengeScript}
                         onToggle={narrativeChallengeOnToggle}
-                        narrative="lion"
+                        narrative="cheetah"
                     />
                 ) : null}
 
@@ -669,7 +669,7 @@ const CheetahPath = () => {
                         isOpen={finalNarrativeChallengeIsOpen}
                         script={finalChallengeScript}
                         onToggle={finalNarrativeChallengeOnToggle}
-                        narrative="lion"
+                        narrative="cheetah"
                     />
                 ) : null}
 
