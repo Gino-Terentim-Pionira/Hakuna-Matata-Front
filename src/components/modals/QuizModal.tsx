@@ -196,7 +196,7 @@ const QuizModal: FC<IQuizComponent> = ({
                 status: incrementAtStatusIndex(res)  // first parameter of this func needs to be dynamic
             });
             await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
-                ignorance: (res.data.ignorance - ignorance > 0) ? res.data.ignorance - ignorance : 0,
+                ignorance: res.data.ignorance - ignorance,
             });
         } catch (error) {
             console.log(error);
