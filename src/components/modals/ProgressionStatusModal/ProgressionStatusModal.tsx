@@ -31,7 +31,7 @@ const ProgressionStatusModal = () => {
                         <Flex w="95%" flexDirection="row" marginTop='1.2rem' alignItems="flex-end" justifyContent="space-between">
                             <Box w="35%" align='right'>
                                 <Stack w="100%">
-                                    <StatusProgressionBar status={userData.status[0]} label="Agilidade (AGI)" isBlocked={userData.narrative_status.trail1 < 2} />
+                                    <StatusProgressionBar status={userData.status[0]} label="Agilidade (AGI)" isOnLeft isBlocked={userData.narrative_status.trail1 < 2} />
                                     <StatusProgressionBar status={userData.status[2]} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked />
                                     <StatusProgressionBar status={userData.status[4]} marginTop="4px" label="Estratégia (EST)" isOnLeft isBlocked />
                                 </Stack>
