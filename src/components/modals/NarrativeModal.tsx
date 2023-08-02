@@ -126,7 +126,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     });
                 }
                 await getNewUserInfo();
-            } else if (user.narrative_status.trail1 == 0) { //Verifica se é a primeira vez do usuário na trilha da cheetah
+            } else if (user.narrative_status.trail1 == 0 && narrative == 'cheetah') { //Verifica se é a primeira vez do usuário na trilha da cheetah
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
                         ...user.narrative_status,
@@ -135,7 +135,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 });
                 await getNewUserInfo();
                 history.go(0);
-            } else if (user.narrative_status.trail2 == 0) { //Verifica se é a primeira vez do usuário na trilha do leao e da leoa
+            } else if (user.narrative_status.trail2 == 0 && narrative == 'lion') { //Verifica se é a primeira vez do usuário na trilha do leao e da leoa
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
                         ...user.narrative_status,
@@ -144,14 +144,14 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 });
                 await getNewUserInfo();
                 history.go(0);
-            } else if (user.narrative_status.trail1 == 3) { //Verifica se o usuário terminou o desafio da trilha
+            } else if (user.narrative_status.trail1 == 3 && narrative == 'cheetah') { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
                         ...user.narrative_status,
                         trail1: 4
                     }
                 });
-            } else if (user.narrative_status.trail2 == 3) { //Verifica se o usuário terminou o desafio da trilha
+            } else if (user.narrative_status.trail2 == 3 && narrative == 'lion') { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
                         ...user.narrative_status,
