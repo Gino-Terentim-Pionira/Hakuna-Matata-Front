@@ -118,6 +118,7 @@ const VideoModal: FC<IVideoModal> = ({
                             <ReactPlayer
                                 url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
                                 controls={true}
+                                onEnded={handleModal}
                                 style={{
                                     marginTop: '-16px'
                                 }}
