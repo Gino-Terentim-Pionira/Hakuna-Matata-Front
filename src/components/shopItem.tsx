@@ -386,7 +386,7 @@ const ShopItem: FC<ShopItemProps> = ({
 
 								<AlertModal
 									isOpen={isConfirmOpen}
-									onClose={() => { if (!loading) onClose() }}
+									onClose={() => { if (!loading) history.go(0) }}
 									alertTitle='Loja'
 									alertBody={alertAnswer}
 									onClickClose={() => { if (!loading) history.go(0) }}
