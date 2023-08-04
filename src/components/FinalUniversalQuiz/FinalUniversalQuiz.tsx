@@ -120,7 +120,6 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 		const questionsCoins = questions[step].coins;
 		const questionStatus = questions[step].score;
 		const questionId = questions[step]._id;
-		const quizDificulty = quiz.dificulty;
 
 		if (index === newCorrectAnswer) {
 			setCoins(coins + questionsCoins);
@@ -134,17 +133,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 				status[5] + questionStatus[5],
 			]);
 
-			switch (quizDificulty) {
-				case 'easy':
-					setIgnorance(ignorance + 1);
-					break;
-				case 'normal':
-					setIgnorance(ignorance + 2.5);
-					break;
-				case 'hard':
-					setIgnorance(ignorance + 5);
-					break;
-			}
+			setIgnorance(ignorance + 2.5);
 			setQuestionsId([...questionsId, questionId]);
 
 			switch (index) {
@@ -217,29 +206,9 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 					break;
 			}
 			if (withoutMoney) {
-				switch (quizDificulty) {
-					case 'easy':
-						setIgnorance(ignorance - 2);
-						break;
-					case 'normal':
-						setIgnorance(ignorance - 4);
-						break;
-					case 'hard':
-						setIgnorance(ignorance - 6);
-						break;
-				}
+				setIgnorance(ignorance - 4);
 			} else {
-				switch (quizDificulty) {
-					case 'easy':
-						setIgnorance(ignorance - 1);
-						break;
-					case 'normal':
-						setIgnorance(ignorance - 2);
-						break;
-					case 'hard':
-						setIgnorance(ignorance - 4);
-						break;
-				}
+				setIgnorance(ignorance - 2);
 			}
 		}
 

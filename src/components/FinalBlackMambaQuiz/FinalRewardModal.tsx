@@ -187,6 +187,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 			});
 
 			await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
+				// TODO - refatorar isso
 				ignorance: (res.data.ignorance - 20 > 0) ? res.data.ignorance - 20 : 0,
 			});
 

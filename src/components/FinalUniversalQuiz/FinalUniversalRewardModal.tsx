@@ -197,7 +197,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			});
 
 			await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
-				ignorance: (res.data.ignorance - ignorance > 0) ? res.data.ignorance - ignorance : 0,
+				ignorance: res.data.ignorance - ignorance,
 			});
 
 			validateUser();
