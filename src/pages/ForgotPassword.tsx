@@ -43,7 +43,7 @@ const ForgotPassword = () => {
 		try {
 			setIsLoading(true);
 			await api.post('/user/forgotPassword', { email });
-			setAlertAnswer('Para recuperar sua senha, olhe esse tal de "email". Um passarinho me contou que é bem famoso no lugar que você veio.');
+			setAlertAnswer('Para recuperar sua senha, olhe esse tal de "e-mail". Um passarinho me contou que isso é bem famoso no lugar de onde você veio.');
 			setIsLoading(false);
 		} catch (error) {
 			setAlertAnswer('Parece que esse email não existe na Savana!');
@@ -61,7 +61,7 @@ const ForgotPassword = () => {
 	>
 		<Center width='100%'>
 			<LoginRegister
-				mainText='Pelo visto, você não consegue mais lembrar sua senha, tem como me passar o e-mail que usou para criar o passaporte? Não sei o que é um e-mail, são as vozes da Savana que me pediram isso.'
+				mainText='Pelo visto você não consegue mais lembrar sua senha. Você pode me passar o e-mail que usou para criar o passaporte? Não sei o que é um e-mail, foram as vozes da Savana que me pediram isso.'
 				firstText='”Qual é o seu e-mail, jovem?”'
 				firstPlaceholder='E-mail'
 				firstValue={email}
