@@ -365,7 +365,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 													marginBottom='0.7rem'
 													marginRight='1.3rem'
 													transition='all 200ms ease'
-													border={borderStyle[0]}
+													border={borderStyle[index]}
 													_hover={{
 														cursor: 'pointer',
 														transform: 'scale(1.05)',
