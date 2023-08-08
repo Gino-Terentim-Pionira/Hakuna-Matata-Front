@@ -281,7 +281,7 @@ const Register = () => {
                     <LoginRegister
                         mainText='Agora preciso de outras informações adicionais. Não sei o que é isso, mas a sabedoria da Savana está me pedindo o seu e-mail.'
                         firstText="”Qual é o seu e-mail, jovem?”"
-                        secondText="”Queria saber também, qual a sua data de nascimento?”"
+                        secondText="”Queria saber também qual a sua data de nascimento?”"
                         firstPlaceholder="Endereço de e-mail"
                         secondPlaceholder="Data de Nascimento"
                         nextStep={() => nextStep()}
@@ -301,7 +301,7 @@ const Register = () => {
                     <LoginRegister
                         mainText='Por último, precisamos definir uma senha para permitir a sua entrada na Savana. Lembre-se que não pode ser uma senha fácil de adivinhar, não queremos invasores na Savana.'
                         firstText="”Qual é a sua senha, jovem?”"
-                        secondText="”Não ouvi muito bem, poderia repeti-lá?”"
+                        secondText="”Não entendi muito bem, poderia repeti-la?”"
                         firstPlaceholder="Senha"
                         secondPlaceholder="Confirmar senha"
                         nextStep={() => nextStep()}
