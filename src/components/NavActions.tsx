@@ -1,4 +1,4 @@
-import { Flex, Center, Image, useDisclosure } from "@chakra-ui/react";
+import { Flex, useDisclosure } from "@chakra-ui/react";
 import React from "react";
 import TutorialModal from "./modals/TutorialModal";
 
@@ -6,10 +6,10 @@ import icon_profile from '../assets/icons/icon_profile.svg';
 import icon_tutorial from '../assets/icons/icon_tutorial.svg';
 import icon_shop from '../assets/icons/icon_shop.svg';
 import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
 import icon_logout from '../assets/icons/icon_logout.svg';
 import inventory_icon from '../assets/icons/inventory.png';
 import ProfileModal from "./modals/ProfileModal";
+import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
 
 interface NavActionsInterface {
@@ -34,6 +34,16 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
 
   const history = useHistory();
 
+  const handleStore = () => {
+    sessionStorage.setItem('@pionira/prepath', prePath);
+    history.push({ pathname: '/shop' });
+  }
+
+  const handleInventory = () => {
+    sessionStorage.setItem('@pionira/prepath', prePath);
+    history.push({ pathname: '/inventory' });
+  }
+
   return (
     <>
       <Flex
@@ -45,127 +55,50 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
         h='85.5vh'
       >
         <Flex flexDirection='column' align='center'>
-          <Center
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-            }}
-            transition='all 0.2s ease'
-            mb='8px'
-            border='2px solid black'
-            borderRadius='4.5rem'
-            width='4.5rem'
-            height='4.5rem'
-            bg='white'
-            onClick={profileOnOpen}
-          >
-            <Image
-              src={icon_profile}
-              marginBottom='.5rem'
-            />
-          </Center>
+          <NavIcon 
+            image={icon_profile} 
+            onClick={profileOnOpen} 
+            size='normal'
+            isMap={false}
+          />
 
-          <Center
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-            }}
-            transition='all 0.2s ease'
-            mb='8px'
-            border='2px solid black'
-            borderRadius='4.5rem'
-            width='4.5rem'
-            height='4.5rem'
-            bg='white'
-            onClick={() => {
-              sessionStorage.setItem('@pionira/prepath', prePath);
-              history.push({ pathname: '/shop' });
-            }
-            } 
-          >
-            <Image
-              src={icon_shop}
-              marginBottom='.1rem'
-            />
-          </Center>
-          <Center
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-            }}
-            transition='all 0.2s ease'
-            mb='8px'
-            border='2px solid black'
-            borderRadius='4.5rem'
-            width='4.5rem'
-            height='4.5rem'
-            bg='white'
-            onClick={() => history.push({ pathname: '/inventory', state: { prePath } })}
-          >
-            <Image
-              src={inventory_icon}
-              width="50px"
-            />
-          </Center>
-          <Center
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-            }}
-            transition='all 0.2s ease'
-            mb='8px'
-            border='2px solid black'
-            borderRadius='4.5rem'
-            width='3.75rem'
-            height='3.75rem'
-            bg='white'
-            onClick={tutorialOnOpen}
-          >
-            <Image src={icon_tutorial} />
-          </Center>
+          <NavIcon 
+            image={icon_shop} 
+            onClick={handleStore} 
+            size='normal'
+            isMap={false}
+          />
 
-          <Center
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-            }}
-            transition='all 0.2s ease'
-            mb='8px'
-            border='2px solid black'
-            borderRadius='4.5rem'
-            width='3.75rem'
-            height='3.75rem'
-            bg='white'
-            onClick={logout}
-          >
-            <Image src={icon_logout} />
-          </Center>
+          <NavIcon 
+            image={inventory_icon} 
+            onClick={handleInventory} 
+            size='normal'
+            isMap={false}
+          />
+
+          <NavIcon 
+            image={icon_tutorial} 
+            onClick={tutorialOnOpen} 
+            size='small'
+            isMap={false}
+          />
+
+          <NavIcon 
+            image={icon_logout} 
+            onClick={logout} 
+            size='small'
+            isMap={false}
+          />
         </Flex>
 
         {
-          !dontShowMap && <Center
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-            }}
-            transition='all 0.2s ease'
-            border='2px solid black'
-            borderRadius='4.5rem'
-            width='6.55rem'
-            height='6.55rem'
-            bg='white'
+          !dontShowMap &&
+          <NavIcon
+            image={icon_map}
             onClick={() => history.push('/mainPage')}
-          >
-            <Image
-              src={icon_map}
-              onMouseOverCapture={(e) =>
-                (e.currentTarget.src = icon_map_opened)
-              }
-              onMouseOut={(e) =>
-                (e.currentTarget.src = icon_map)
-              }
-            />
-          </Center>
+            size='big'
+            isMap={true}
+           />
         }
       </Flex>
 
