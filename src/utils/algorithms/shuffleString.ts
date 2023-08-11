@@ -18,3 +18,28 @@ export const shuffleString = (string: string, difficulty: 'medium' | 'hard') => 
 
     return text;
 }
+
+export const shiftCharacters = (string: string, difficulty: 'medium' | 'hard') => {
+    // Função que substitui letras do alfabeto por outro alfabeto que siga alguma regra
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    let shiftedAlphabet: string;
+
+    switch (difficulty) {
+        case 'medium':
+            shiftedAlphabet = 'bcdefghijklmnopqrstuvwxyza'; // Regra de dificuldade média: Substitui por uma letra depois no alfabeto
+            break;
+
+        case 'hard':
+            shiftedAlphabet = 'qwertyuiopasdfghjklzxcvbnm'; // Regra de dificuldade difícil: Substitui pela ordem das letras do teclado
+            break;
+    }
+
+    const shiftedString = string.replace(/[a-z]/gi, (match) => {
+        const index = alphabet.indexOf(match.toLowerCase());
+        const shiftedChar = shiftedAlphabet[index];
+
+        return shiftedChar;
+    });
+
+    return shiftedString;
+}

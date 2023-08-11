@@ -19,7 +19,7 @@ import AlertModal from '../modals/AlertModal';
 import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
-import { shuffleString } from '../../utils/algorithms/shuffleString';
+import { shiftCharacters, shuffleString } from '../../utils/algorithms/shuffleString';
 import { Constants } from '../../utils/constants';
 
 interface IQuestions {
@@ -245,12 +245,23 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	const handleQuestionDescription = () => {
 		if(userIgnorance >= 80) {
 			return shuffleString(questions[step]?.description, 'hard');
-		} else if (userIgnorance >= 40) {
+		} else if (userIgnorance >= 50) {
 			return shuffleString(questions[step]?.description, 'medium');
 		} else {
 			return questions[step]?.description
 		}
 		
+	}
+
+
+	const handleAlternative = (string: string) => {
+		if(userIgnorance >= 80) {
+			return shiftCharacters(string, 'hard');
+		} else if (userIgnorance >= 50) {
+			return shiftCharacters(string, 'medium');
+		} else {
+			return string;
+		}
 	}
 
 	useEffect(() => {
@@ -339,128 +350,42 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 										alignItems='center'
 										marginTop='0.5rem'
 									>
-										<Flex
-											justifyContent='center'
-											alignItems='center'
-											w='90%'
-											h='29%'
-											boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-											bg='white'
-											borderRadius='0.5rem'
-											marginRight='1.3rem'
-											transition='all 200ms ease'
-											border={borderStyle[0]}
-											_hover={{
-												cursor: 'pointer',
-												transform: 'scale(1.05)',
-											}}
-											onClick={() => buttonFunctions(0)}
-										>
-											<Text
-												w='92%'
-												h='65%'
-												fontFamily={fontTheme.fonts}
-												fontSize='20px'
-											>
-												{
-													questions[step]
-														?.alternatives[0]
-												}
-											</Text>
-										</Flex>
-
-										<Flex
-											justifyContent='center'
-											alignItems='center'
-											w='90%'
-											h='29%'
-											boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-											bg='white'
-											borderRadius='0.5rem'
-											marginTop='0.7rem'
-											marginRight='1.3rem'
-											transition='all 200ms ease'
-											border={borderStyle[1]}
-											_hover={{
-												cursor: 'pointer',
-												transform: 'scale(1.05)',
-											}}
-											onClick={() => buttonFunctions(1)}
-										>
-											<Text
-												w='92%'
-												h='65%'
-												fontFamily={fontTheme.fonts}
-												fontSize='20px'
-											>
-												{
-													questions[step]
-														?.alternatives[1]
-												}
-											</Text>
-										</Flex>
-
-										<Flex
-											justifyContent='center'
-											alignItems='center'
-											w='90%'
-											h='29%'
-											boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-											bg='white'
-											borderRadius='0.5rem'
-											marginTop='0.7rem'
-											marginRight='1.3rem'
-											transition='all 200ms ease'
-											border={borderStyle[2]}
-											_hover={{
-												cursor: 'pointer',
-												transform: 'scale(1.05)',
-											}}
-											onClick={() => buttonFunctions(2)}
-										>
-											<Text
-												w='92%'
-												h='65%'
-												fontFamily={fontTheme.fonts}
-												fontSize='20px'
-											>
-												{
-													questions[step]
-														?.alternatives[2]
-												}
-											</Text>
-										</Flex>
-
-										<Flex
-											justifyContent='center'
-											alignItems='center'
-											w='90%'
-											h='29%'
-											boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-											bg='white'
-											borderRadius='0.5rem'
-											marginTop='0.7rem'
-											marginRight='1.3rem'
-											transition='all 200ms ease'
-											border={borderStyle[3]}
-											_hover={{
-												cursor: 'pointer',
-												transform: 'scale(1.05)',
-											}}
-											onClick={() => buttonFunctions(3)}
-										>
-											<Text
-												w='92%'
-												h='65%'
-												fontFamily={fontTheme.fonts}
-												fontSize='20px'
-											>
-												{
-													questions[step]
-														?.alternatives[3]
-												}
-											</Text>
-										</Flex>
+										{
+											questions[step].alternatives.map( (item, index) => {
+												return (
+													<Flex
+													key={index}
+													justifyContent='center'
+													alignItems='center'
+													w='90%'
+													h='29%'
+													boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
+													bg='white'
+													borderRadius='0.5rem'
+													marginBottom='0.7rem'
+													marginRight='1.3rem'
+													transition='all 200ms ease'
+													border={borderStyle[index]}
+													_hover={{
+														cursor: 'pointer',
+														transform: 'scale(1.05)',
+													}}
+													onClick={() => buttonFunctions(index)}
+													>
+														<Text
+															w='92%'
+															h='65%'
+															fontFamily={fontTheme.fonts}
+															fontSize='20px'
+														>
+															{
+																handleAlternative(item)
+															}
+														</Text>
+													</Flex>
+												)
+											} )
+										}
 									</Flex>
 								</Flex>
 							</Flex>
