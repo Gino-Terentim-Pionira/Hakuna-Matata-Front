@@ -1,4 +1,4 @@
-import { Center, Image } from '@chakra-ui/react';
+import { Center, Image, Tooltip } from '@chakra-ui/react';
 import React, { FC } from 'react';
 
 import icon_map from '../assets/icons/icon_map.svg';
@@ -7,15 +7,17 @@ import icon_map_opened from '../assets/icons/icon_map_opened.svg';
 type NavIconProps = {
     image: string;
     onClick: VoidFunction;
-    size: 'big' | 'normal' | 'small'
-    isMap: boolean
+    size: 'big' | 'normal' | 'small';
+    isMap: boolean;
+    mouseOver: string;
 }
 
 const NavIcon: FC<NavIconProps> = ({
     image, 
     onClick, 
     size,
-    isMap
+    isMap,
+    mouseOver
 }) => {
 
     const defineSize = () => {
@@ -34,7 +36,13 @@ const NavIcon: FC<NavIconProps> = ({
     }
 
     return (
-        <Center
+        <Tooltip
+            hasArrow
+            placement='right'
+            gutter={14}
+            label={mouseOver}
+        >
+            <Center
             _hover={{
               cursor: 'pointer',
               transform: 'scale(1.1)',
@@ -66,6 +74,7 @@ const NavIcon: FC<NavIconProps> = ({
                 }
             />
           </Center>
+        </Tooltip>
     )
 }
 

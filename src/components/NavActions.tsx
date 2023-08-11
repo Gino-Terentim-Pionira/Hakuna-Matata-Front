@@ -11,6 +11,7 @@ import inventory_icon from '../assets/icons/inventory.png';
 import ProfileModal from "./modals/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
+import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP } from "../utils/constants/constants";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -60,6 +61,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
             onClick={profileOnOpen} 
             size='normal'
             isMap={false}
+            mouseOver={USER_PROFILE}
           />
 
           <NavIcon 
@@ -67,6 +69,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
             onClick={handleStore} 
             size='normal'
             isMap={false}
+            mouseOver={STORE}
           />
 
           <NavIcon 
@@ -74,6 +77,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
             onClick={handleInventory} 
             size='normal'
             isMap={false}
+            mouseOver={INVENTORY}
           />
 
           <NavIcon 
@@ -81,6 +85,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
             onClick={tutorialOnOpen} 
             size='small'
             isMap={false}
+            mouseOver={TUTORIAL}
           />
 
           <NavIcon 
@@ -88,6 +93,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
             onClick={logout} 
             size='small'
             isMap={false}
+            mouseOver={LOG_OUT}
           />
         </Flex>
 
@@ -98,6 +104,7 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
             onClick={() => history.push('/mainPage')}
             size='big'
             isMap={true}
+            mouseOver={MAP}
            />
         }
       </Flex>

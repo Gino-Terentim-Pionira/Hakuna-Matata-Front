@@ -1,10 +1,9 @@
-import { Flex, Image, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React from "react";
 import IgnoranceProgress from "./IgnoranceProgress";
 import RandomRewardModal from "./modals/RandomRewardModal";
-import Coin from '../assets/icons/coinicon.svg'
 import { useUser } from "../hooks";
-import fontTheme from "../styles/base";
+import CoinsDisplay from "./CoinsDisplay";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -42,16 +41,18 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
         <Flex
           flexDirection='column'
           mt='10px'
+          alignItems='flex-end'
         >
           {
             !dontShowIgnorance && <IgnoranceProgress
+              position='bottom'
               ignorance={ignorance}
             />
           }
-          <Flex mt="8px" alignItems="center" justifyContent="flex-end">
-            <Text fontFamily={fontTheme.fonts} fontSize="28px" fontWeight="500" color="#000">{userData.coins}</Text>
-            <Image ml="4px" w="50px" src={Coin} alt="icone de moeda" />
-          </Flex>
+          <CoinsDisplay
+            value={userData.coins}
+            position='bottom'
+          />
         </Flex>
         <RandomRewardModal />
       </Flex>

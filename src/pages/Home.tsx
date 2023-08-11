@@ -15,6 +15,7 @@ import loginImg from '../assets/icons/loginImg.svg';
 import PioniraLogo from '../assets/PioniraLogo.png';
 import GinoLogo from '../assets/GinoLogo.png';
 import HomeButton from '../components/HomeButton';
+import { LOGIN, REGISTER } from '../utils/constants/constants';
 
 const Home = () => {
 	const { authenticated } = useAuth();
@@ -48,11 +49,13 @@ const Home = () => {
 						text='Entrar na Savana'
 						image={loginImg}
 						onClick={() => history.push('/login')}
+						mouseOver={LOGIN}
 						/>
 						<HomeButton 
 						text='Criar Passaporte'
 						image={registerImg}
 						onClick={() => history.push('/register')}
+						mouseOver={REGISTER}
 						/>
 					</Flex>
 				</Center>

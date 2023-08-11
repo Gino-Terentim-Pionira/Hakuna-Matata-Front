@@ -1,4 +1,4 @@
-import { Flex, Image, Text } from '@chakra-ui/react';
+import { Flex, Image, Text, Tooltip } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import colorPalette from '../styles/colorPalette';
 
@@ -6,11 +6,16 @@ type HomeButtonProps = {
     text: string;
     image: string;
     onClick: VoidFunction;
+    mouseOver: string;
 }
 
-const HomeButton: FC<HomeButtonProps> = ({text, image, onClick}) => {
+const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver}) => {
     return (
-        <Flex
+        <Tooltip 
+            label={mouseOver} 
+            hasArrow
+        >
+            <Flex
             width='320px'
             h='170px'
             padding='2rem'
@@ -28,23 +33,24 @@ const HomeButton: FC<HomeButtonProps> = ({text, image, onClick}) => {
                     '0 10px 20px rgba(0, 0, 0, 0.25), 10px 10px 10px rgba(0, 0, 0, 0.22)',
             }}
             onClick={onClick}
-        >
-            <Flex
-                flexDirection='column'
-                width='100%'
-                h='80%'
-                justifyContent='space-around'
-                alignItems='center'
             >
-                <Image w='17%' src={image} mb='1rem' />
-                <Text
-                    fontSize={{ lg: '28px', md: '28px', sm: '25px' }}
-                    color='#926021'
+                <Flex
+                    flexDirection='column'
+                    width='100%'
+                    h='80%'
+                    justifyContent='space-around'
+                    alignItems='center'
                 >
-                    {text}
-                </Text>
+                    <Image w='17%' src={image} mb='1rem' />
+                    <Text
+                        fontSize={{ lg: '28px', md: '28px', sm: '25px' }}
+                        color='#926021'
+                    >
+                        {text}
+                    </Text>
+                </Flex>
             </Flex>
-        </Flex>
+        </Tooltip>
     )
 }
 

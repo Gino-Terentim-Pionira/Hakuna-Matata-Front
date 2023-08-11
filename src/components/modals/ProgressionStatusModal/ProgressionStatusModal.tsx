@@ -18,7 +18,7 @@ import fontTheme from '../../../styles/base';
 
 // Images
 import Profile from '../../../assets/icons/profile.svg';
-import Coins from '../../../assets/icons/coinicon.svg';
+import CoinsDisplay from '../../CoinsDisplay';
 
 const ProgressionStatusModal = () => {
     const { userData } = useUser();
@@ -56,11 +56,14 @@ const ProgressionStatusModal = () => {
                             </Box>
                         </Flex>
                         <Flex w="90%" h="25%" flexDirection="row" justifyContent="space-between" alignItems="flex-end" marginBottom='1rem' >
-                            <IgnoranceProgress ignorance={userData.ignorance} />
-                            <Flex align="center">
-                                <Text fontSize="1.8rem" fontWeight="normal" fontFamily={fontTheme.fonts} marginRight="8px">{userData.coins}</Text>
-                                <Image src={Coins} />
-                            </Flex>
+                            <IgnoranceProgress 
+                                ignorance={userData.ignorance}
+                                position='top'
+                            />
+                            <CoinsDisplay 
+                                value={userData.coins}
+                                position='top'
+                            />
                         </Flex>
                     </>
                 ) : (
