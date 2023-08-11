@@ -254,7 +254,9 @@ const CheetahPath = () => {
             } else userInfoData = userData;
             setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
             const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
-            setIsLoading(false);
+            setTimeout(() => {
+				setIsLoading(false);
+			}, 1000)
 
             if (isComplete) {
                 setCheetahText(

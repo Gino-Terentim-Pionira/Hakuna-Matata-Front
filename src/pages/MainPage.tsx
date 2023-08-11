@@ -72,7 +72,7 @@ const MainPage = () => {
 	const [onError, setOnError] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [openBlockedModal, setOpenBlockedModal] = useState<boolean>(false);
 
 	const ignoranceArray = [
@@ -138,6 +138,9 @@ const MainPage = () => {
 	const getUserRequisition = async () => {
 		if (userData._id) {
 			setIgnoranceFilter(userData.ignorance, ignoranceArray);
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 500)
 			return
 		};
 		try {
@@ -156,7 +159,9 @@ const MainPage = () => {
 			}
 
 			await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
-			setIsLoading(false);
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 1000)
 		} catch (error) {
 			setOnError(true);
 		}
