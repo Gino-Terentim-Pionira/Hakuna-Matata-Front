@@ -5,9 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
 
 // Components
-import LoadingState from '../components/LoadingState';
 import ShopItem from '../components/shopItem';
 import AlertModal from '../components/modals/AlertModal';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
 import api from '../services/api';
@@ -138,7 +138,7 @@ const Shop = () => {
 				</Box>
 			</Flex>
 			{isLoading ? (
-				<LoadingState />
+				<LoadingOverlay />
 			) : (
 				<>
 					<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
