@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { Flex, Text, Image, Tooltip } from '@chakra-ui/react';
-import fontTheme from '../styles/base';
-import Coins from '../assets/icons/coinicon.svg';
-import { COINS } from '../utils/constants/constants';
+import fontTheme from '../../styles/base';
+import Coins from '../../assets/icons/coinicon.svg';
+import { COINS } from '../../utils/constants/constants';
 
 type CoinsDisplayProps = {
     value: number;
@@ -24,7 +24,8 @@ const CoinsDisplay: FC<CoinsDisplayProps> = ({
                     fontFamily={fontTheme.fonts} 
                     fontSize="28px" fontWeight="500" 
                     color="#000"
-                >{value}
+                >
+                    {value}
                 </Text>
                 <Image 
                     ml="4px" 

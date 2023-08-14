@@ -1,17 +1,17 @@
 import { Flex, useDisclosure } from "@chakra-ui/react";
 import React from "react";
-import TutorialModal from "./modals/TutorialModal";
+import TutorialModal from "../modals/TutorialModal";
 
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
-import inventory_icon from '../assets/icons/inventory.png';
-import ProfileModal from "./modals/ProfileModal";
+import icon_profile from '../../assets/icons/icon_profile.svg';
+import icon_tutorial from '../../assets/icons/icon_tutorial.svg';
+import icon_shop from '../../assets/icons/icon_shop.svg';
+import icon_map from '../../assets/icons/icon_map.svg';
+import icon_logout from '../../assets/icons/icon_logout.svg';
+import inventory_icon from '../../assets/icons/inventory.png';
+import ProfileModal from "../modals/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
-import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP } from "../utils/constants/constants";
+import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP } from "../../utils/constants/constants";
 
 interface NavActionsInterface {
   logout: VoidFunction;

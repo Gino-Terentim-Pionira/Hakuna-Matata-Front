@@ -1,8 +1,8 @@
 import { Center, Image, Tooltip } from '@chakra-ui/react';
 import React, { FC } from 'react';
 
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
+import icon_map from '../../assets/icons/icon_map.svg';
+import icon_map_opened from '../../assets/icons/icon_map_opened.svg';
 
 type NavIconProps = {
     image: string;

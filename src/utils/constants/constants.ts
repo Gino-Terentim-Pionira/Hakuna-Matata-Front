@@ -36,3 +36,6 @@ export const CHEETAH_FINAL = 'Desafio Final da Cheetah';
 
 export const BACK_BUTTON = 'Voltar';
 
+export const BADGE_DESCRIPTION = 'Visualizar descrição da insígnia';
+
+export const LOCKED_BADGE = 'Domine um desafio para merecer esta insígnia';

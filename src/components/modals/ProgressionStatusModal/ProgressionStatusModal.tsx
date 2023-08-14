@@ -10,7 +10,7 @@ import { useUser } from '../../../hooks';
 
 // Components
 import LoadingState from '../../LoadingState';
-import IgnoranceProgress from '../../IgnoranceProgress';
+import IgnoranceProgress from '../../IgnoranceCoinsDisplay/IgnoranceProgress';
 import StatusProgressionBar from './StatusProgressionBar';
 
 // Styles
@@ -18,7 +18,7 @@ import fontTheme from '../../../styles/base';
 
 // Images
 import Profile from '../../../assets/icons/profile.svg';
-import CoinsDisplay from '../../CoinsDisplay';
+import CoinsDisplay from '../../IgnoranceCoinsDisplay/CoinsDisplay';
 
 const ProgressionStatusModal = () => {
     const { userData } = useUser();

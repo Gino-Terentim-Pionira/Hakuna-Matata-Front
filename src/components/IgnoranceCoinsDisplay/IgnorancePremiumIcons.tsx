@@ -1,8 +1,8 @@
 import { Flex } from "@chakra-ui/react";
 import React from "react";
 import IgnoranceProgress from "./IgnoranceProgress";
-import RandomRewardModal from "./modals/RandomRewardModal";
-import { useUser } from "../hooks";
+import RandomRewardModal from "../modals/RandomRewardModal";
+import { useUser } from "../../hooks";
 import CoinsDisplay from "./CoinsDisplay";
 
 interface IgnoracenPremiumIconsInterface {

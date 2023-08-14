@@ -2,9 +2,9 @@ import React from 'react';
 import { Box, Text, Tooltip } from '@chakra-ui/react';
 
 // Styles
-import font from '../styles/base';
-import colorPalette from '../styles/colorPalette';
-import { WISDOM } from '../utils/constants/constants';
+import font from '../../styles/base';
+import colorPalette from '../../styles/colorPalette';
+import { WISDOM } from '../../utils/constants/constants';
 
 
 const IgnoranceProgress = ({ ignorance, position }: {

@@ -28,8 +28,8 @@ import colorPalette from "../styles/colorPalette";
 import AlertModal from '../components/modals/AlertModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
-import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
-import NavActions from '../components/NavActions';
+import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
+import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions

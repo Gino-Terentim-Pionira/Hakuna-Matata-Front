@@ -21,7 +21,7 @@ import { useLocation } from 'react-router-dom';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import FinalQuizModal from '../components/FinalBlackMambaQuiz/FinalQuiz';
 import AlertModal from '../components/modals/AlertModal';
-import NavActions from '../components/NavActions';
+import NavActions from '../components/NavigationComponents/NavActions';
 
 // Requisitions
 import api from '../services/api';
