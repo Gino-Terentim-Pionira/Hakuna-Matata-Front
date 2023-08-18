@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 // Components
-import InsigniaCertificate from '../InsigniaCertificate';
+import InsigniaCertificate from '../BadgeComponents/InsigniaCertificate';
 import ProfileDataModal from './ProfileDataModal';
 import PerfilModalButton from '../PerfilModalButton';
 import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusModal';

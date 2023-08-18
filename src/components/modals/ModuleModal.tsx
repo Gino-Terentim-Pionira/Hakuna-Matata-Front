@@ -11,7 +11,8 @@ import {
     Button,
     Text,
     useDisclosure,
-    Image
+    Image,
+    Tooltip
 } from "@chakra-ui/react";
 import { useUser, useModule } from '../../hooks';
 
@@ -36,6 +37,7 @@ import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
+import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/constants';
 
 interface IModuleModal {
     quizIndex: number;
@@ -173,6 +175,16 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         videoOnOpen();
     }
 
+    const defineLabel = () => {
+        if (isBlocked) {
+            return BLOCKED_MODULE;
+        } else if (userData.module_id?.includes(moduleInfo._id)) {
+            return COMPLETE_MODULE(moduleInfo.module_name);
+        } else {
+            return INCOMPLETE_MODULE(moduleInfo.module_name);
+        }
+    }
+
     useEffect(() => {
         setTotalCoins(moduleInfo.total_coins);
         if(userData.question_id.includes(moduleInfo.questions_id[0]._id)) {
@@ -183,21 +195,28 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
     return (
         <>
-            <Image
-                src={isBlocked ? button_blocked : (buttonValidation || userData.module_id?.includes(moduleInfo._id) ? button_on : button_off)}
-                onClick={isBlocked ? blockedFunction : onOpen}
-                _hover={{
-                    cursor: 'pointer',
-                    transform: 'scale(1.1)',
-                }}
-                position="absolute"
-                transition='all 0.2s ease'
-                width={[116, null, null, null, null, 180]}
-                height={[70, null, null, null, null, 110]}
-                top={top}
-                bottom={bottom}
-                left={left}
-            />
+            <Tooltip 
+                hasArrow
+                placement='top'
+                gutter={12}
+                label={defineLabel()}
+            >
+                <Image
+                    src={isBlocked ? button_blocked : (buttonValidation || userData.module_id?.includes(moduleInfo._id) ? button_on : button_off)}
+                    onClick={isBlocked ? blockedFunction : onOpen}
+                    _hover={{
+                        cursor: 'pointer',
+                        transform: 'scale(1.1)',
+                    }}
+                    position="absolute"
+                    transition='all 0.2s ease'
+                    width={[116, null, null, null, null, 180]}
+                    height={[70, null, null, null, null, 110]}
+                    top={top}
+                    bottom={bottom}
+                    left={left}
+                />
+            </Tooltip>
 
             <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <ModalOverlay />

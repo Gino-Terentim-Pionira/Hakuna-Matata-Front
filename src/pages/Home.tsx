@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Center, Flex, Image } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 
 //styles
-import colorPalette from '../styles/colorPalette';
 import './../styles/fadeEffect.css';
 
 // Images
@@ -15,6 +14,8 @@ import registerImg from '../assets/icons/registerImg.svg';
 import loginImg from '../assets/icons/loginImg.svg';
 import PioniraLogo from '../assets/PioniraLogo.png';
 import GinoLogo from '../assets/GinoLogo.png';
+import HomeButton from '../components/HomeButton';
+import { LOGIN, REGISTER } from '../utils/constants/constants';
 
 const Home = () => {
 	const { authenticated } = useAuth();
@@ -44,76 +45,18 @@ const Home = () => {
 						align='center'
 						mt="8px"
 					>
-						<Flex
-							width='320px'
-							h='170px'
-							padding='2rem'
-							border='0.1rem  solid'
-							borderColor={colorPalette.primaryColor}
-							background='rgba(255, 255, 255, 0.51)'
-							borderRadius='8px'
-							flexDirection='column'
-							justifyContent='flex-end'
-							alignItems='center'
-							transition='all 0.3s'
-							_hover={{
-								cursor: 'pointer',
-								boxShadow:
-									'0 10px 20px rgba(0, 0, 0, 0.25), 10px 10px 10px rgba(0, 0, 0, 0.22)',
-							}}
-							onClick={() => history.push('/login')}
-						>
-							<Flex
-								flexDirection='column'
-								width='100%'
-								h='80%'
-								justifyContent='space-around'
-								alignItems='center'
-							>
-								<Image w='17%' src={loginImg} mb='1rem' />
-								<Text
-									fontSize={{ lg: '28px', md: '28px', sm: '25px' }}
-									color='#926021'
-								>
-									Entrar na Savana
-								</Text>
-							</Flex>
-						</Flex>
-						<Flex
-							width='320px'
-							h='170px'
-							padding='2rem'
-							border='0.1rem solid'
-							background='rgba(255, 255, 255, 0.51)'
-							borderColor={colorPalette.primaryColor}
-							borderRadius='8px'
-							flexDirection='column'
-							justifyContent='flex-end'
-							alignItems='center'
-							transition='all 0.3s'
-							_hover={{
-								cursor: 'pointer',
-								boxShadow:
-									'0 10px 20px rgba(0, 0, 0, 0.25), 10px 10px 10px rgba(0, 0, 0, 0.22)',
-							}}
-							onClick={() => history.push('/register')}
-						>
-							<Flex
-								flexDirection='column'
-								width='100%'
-								h='80%'
-								justifyContent='space-around'
-								alignItems='center'
-							>
-								<Image w='17%' src={registerImg} mb='1rem' />
-								<Text
-									fontSize={{ lg: '28px', md: '28px', sm: '25px' }}
-									color='#926021'
-								>
-									Criar Passaporte
-								</Text>
-							</Flex>
-						</Flex>
+						<HomeButton 
+						text='Entrar na Savana'
+						image={loginImg}
+						onClick={() => history.push('/login')}
+						mouseOver={LOGIN}
+						/>
+						<HomeButton 
+						text='Criar Passaporte'
+						image={registerImg}
+						onClick={() => history.push('/register')}
+						mouseOver={REGISTER}
+						/>
 					</Flex>
 				</Center>
 				<a target="_blank" href='https://www.ginoterentim.com'>

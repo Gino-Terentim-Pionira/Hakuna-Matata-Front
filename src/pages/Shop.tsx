@@ -17,9 +17,9 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import sidearrow from '../assets/icons/sidearrow.png';
 import icon_inventory from '../assets/icons/icon_inventory.svg';
 import { errorCases } from '../utils/errors/errorsCases';
+import BackButton from '../components/BackButton';
 
 const Shop = () => {
 	const { getNewUserInfo, userData } = useUser();
@@ -85,18 +85,8 @@ const Shop = () => {
 				alignItems='center'
 				justifyContent='center'
 			>
-				<Image
-					w='3rem'
-					transition='all 150ms ease'
-					_hover={{
-						cursor: 'pointer',
-						transform: 'scale(1.2)'
-					}}
+				<BackButton 
 					onClick={goBack}
-					src={sidearrow}
-					alt='sidearrow'
-					zIndex='2'
-					ml='2rem'
 				/>
 				<Spacer />
 				<Text

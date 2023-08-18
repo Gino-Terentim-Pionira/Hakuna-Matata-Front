@@ -16,10 +16,10 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import sidearrow from '../assets/icons/sidearrow.png';
 import icon_shop from '../assets/icons/icon_shop.svg';
 import { errorCases } from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
+import BackButton from '../components/BackButton';
 
 
 const Shop = () => {
@@ -81,16 +81,8 @@ const Shop = () => {
 				alignItems='center'
 				justifyContent='flex-start'
 			>
-				<Image
-					w='3rem'
-					_hover={{
-						cursor: 'pointer',
-					}}
+				<BackButton 
 					onClick={goBack}
-					src={sidearrow}
-					alt='sidearrow'
-					zIndex='2'
-					ml='2rem'
 				/>
 				<Spacer />
 				<Text

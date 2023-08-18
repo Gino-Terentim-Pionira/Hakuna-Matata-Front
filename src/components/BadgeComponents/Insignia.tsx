@@ -1,12 +1,13 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Flex, Box, Image, Text, Slide, useDisclosure } from '@chakra-ui/react';
+import { Flex, Box, Image, Text, Slide, useDisclosure, Tooltip } from '@chakra-ui/react';
 
 // Images
-import insigniaImg from '../assets/icons/insignia/insignia.png';
-import cheetaTrailInsignia from '../assets/icons/insignia/cheetaTrailInsignia.png';
-import mambaTrailInsignia from '../assets/icons/insignia/mambaTrailInsignia.png';
-import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.png';
-import colorPalette from '../styles/colorPalette';
+import insigniaImg from '../../assets/icons/insignia/insignia.png';
+import cheetaTrailInsignia from '../../assets/icons/insignia/cheetaTrailInsignia.png';
+import mambaTrailInsignia from '../../assets/icons/insignia/mambaTrailInsignia.png';
+import lionTrailInsignia from '../../assets/icons/insignia/lionTrailInsignia.png';
+import colorPalette from '../../styles/colorPalette';
+import { BADGE_DESCRIPTION } from '../../utils/constants/constants';
 
 type InsigniaProps = {
     _id: string;
@@ -51,30 +52,37 @@ const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
 
     return (
         <>
-            <Box
-                marginTop='1rem'
-                maxW='14rem'
-                h='11rem'
-                display='flex'
-                flexDirection='column'
-                justifyContent='space-between'
-                alignItems='center'
-                key={_id}
-                _hover={{
-                    cursor: 'pointer',
-                }}
-                onClick={showDescription}
+            <Tooltip
+                hasArrow
+                placement='top'
+                gutter={10}
+                label={BADGE_DESCRIPTION}
             >
-                <Image
-                    boxSize='7.5rem'
-                    src={trailImage}
-                />
-                <Text
-                    textDecoration='underline'
-                    fontWeight='bold'
-                    marginBottom='1rem'
-                >{name}</Text>
-            </ Box>
+                <Box
+                    marginTop='1rem'
+                    maxW='14rem'
+                    h='11rem'
+                    display='flex'
+                    flexDirection='column'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    key={_id}
+                    _hover={{
+                        cursor: 'pointer',
+                    }}
+                    onClick={showDescription}
+                >
+                    <Image
+                        boxSize='7.5rem'
+                        src={trailImage}
+                    />
+                    <Text
+                        textDecoration='underline'
+                        fontWeight='bold'
+                        marginBottom='1rem'
+                    >{name}</Text>
+                </ Box>
+            </Tooltip>
             {
                 show ? (
                     <Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }}>
