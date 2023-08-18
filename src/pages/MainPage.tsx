@@ -33,6 +33,7 @@ import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
 import NavActions from '../components/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import BlockedModal from '../components/modals/BlockedModal';
+import IgnoranceFilter from '../components/IgnoranceFilter';
 
 interface IScript {
 	name: string;
@@ -277,14 +278,8 @@ const MainPage = () => {
 						top='0'
 					/>
 				)}
-			<Image
-				src={ignoranceImage}
-				position='absolute'
-				h='100vh'
-				w='100%'
-				zIndex='-3'
-				left='0'
-				top='0'
+			<IgnoranceFilter
+				ignoranceImage={ignoranceImage}
 			/>
 			<Flex
 				width='92.5%'
