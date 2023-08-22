@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Stack,
-    Text,
     Flex,
     Box,
     Image
@@ -12,9 +11,6 @@ import { useUser } from '../../../hooks';
 import LoadingState from '../../LoadingState';
 import IgnoranceProgress from '../../IgnoranceCoinsDisplay/IgnoranceProgress';
 import StatusProgressionBar from './StatusProgressionBar';
-
-// Styles
-import fontTheme from '../../../styles/base';
 
 // Images
 import Profile from '../../../assets/icons/profile.svg';
@@ -39,13 +35,6 @@ const ProgressionStatusModal = () => {
                             <Box display='flex' flexDirection='column' alignItems='center'>
 
                                 <Image src={Profile} />
-                                <Text fontSize='3.5rem' fontFamily={fontTheme.fonts} width='100%' align='center' marginBottom='-2rem'>
-                                    {
-                                        userData ? (
-                                            Math.ceil((userData.status[0] + userData.status[1] + userData.status[2] + userData.status[3] + userData.status[4] + userData.status[5]) / 6)
-                                        ) : null
-                                    }
-                                </Text>
                             </Box>
                             <Box w="35%">
                                 <Stack w="100%">
