@@ -15,6 +15,7 @@ import Coins from '../../assets/icons/coinicon.svg'
 import fontTheme from '../../styles/base';
 import { editProfileErrorCases, errorCases } from '../../utils/errors/errorsCases';
 import AlertModal from './AlertModal';
+import { GENERIC_MODAL_TEXT } from '../../utils/constants/constants';
 
 const ProfileDataModal = () => {
     const { userData, setUserData } = useUser();
@@ -58,7 +59,7 @@ const ProfileDataModal = () => {
                 alertBody: editProfileErrorCases.SUCCES_CASE_EDIT,
                 buttonOnClick: onClose,
                 onClose: () => history.push('/mainPage'),
-                buttonLabel: 'Continuar'
+                buttonLabel: GENERIC_MODAL_TEXT
             },
             'IMAGE_FORMAT_ERROR': {
                 alertTitle: 'Editar perfil - Ops!',

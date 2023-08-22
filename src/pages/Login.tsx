@@ -20,6 +20,7 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/constants';
 
 const Login = () => {
 	const [email, setEmail] = useState<string>('');
@@ -160,7 +161,7 @@ const Login = () => {
 						bg={colorPalette.primaryColor}
 						onClick={alertModal.action}
 					>
-						Continuar
+						{GENERIC_MODAL_TEXT}
 					</Button>
 				}
 			/>

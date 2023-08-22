@@ -23,6 +23,7 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
 import axios from 'axios';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/constants';
 
 const Register = () => {
 
@@ -335,7 +336,7 @@ const Register = () => {
                                 bg={colorPalette.primaryColor}
                                 onClick={alertModal.action}
                             >
-                                Continuar
+                                {GENERIC_MODAL_TEXT}
                             </Button>
                         }
                     />
@@ -354,7 +355,7 @@ const Register = () => {
                                 bg={colorPalette.primaryColor}
                                 onClick={alertModal.action}
                             >
-                                Continuar
+                                {GENERIC_MODAL_TEXT}
                             </Button>
                         }
                     />
