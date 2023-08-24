@@ -51,13 +51,13 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
         >
           {
             !dontShowIgnorance && <IgnoranceProgress
-              position='left'
+              position='bottom'
               ignorance={ignorance}
             />
           }
           <CoinsDisplay
             value={userData.coins}
-            position='left'
+            position='bottom'
           />
           <NavIcon
             image={isIgnoranceFilterOn ? GlassesOn : Glasses}
@@ -65,6 +65,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
             onClick={handleIgnoranceFilter}
             size="normal"
             isMap={false}
+            position="bottom"
           />
         </Flex>
         <RandomRewardModal />

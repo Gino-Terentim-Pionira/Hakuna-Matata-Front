@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 import icon_map from '../../assets/icons/icon_map.svg';
 import icon_map_opened from '../../assets/icons/icon_map_opened.svg';
 import colorPalette from '../../styles/colorPalette';
+import { PositionProps } from '../../utils/props';
 
 type NavIconProps = {
     image: string;
@@ -12,6 +13,7 @@ type NavIconProps = {
     isMap?: boolean;
     mouseOver: string;
     marginTop?:string;
+    position?: PositionProps
 }
 
 const NavIcon: FC<NavIconProps> = ({
@@ -20,7 +22,8 @@ const NavIcon: FC<NavIconProps> = ({
     size,
     isMap,
     mouseOver,
-    marginTop
+    marginTop,
+    position
 }) => {
 
     const defineSize = () => {
@@ -41,7 +44,7 @@ const NavIcon: FC<NavIconProps> = ({
     return (
         <Tooltip
             hasArrow
-            placement='right'
+            placement={position || 'right'}
             gutter={14}
             label={mouseOver}
         >
