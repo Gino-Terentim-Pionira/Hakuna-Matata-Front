@@ -11,6 +11,7 @@ type NavIconProps = {
     size: 'big' | 'normal' | 'small';
     isMap?: boolean;
     mouseOver: string;
+    marginTop?:string;
 }
 
 const NavIcon: FC<NavIconProps> = ({
@@ -18,7 +19,8 @@ const NavIcon: FC<NavIconProps> = ({
     onClick, 
     size,
     isMap,
-    mouseOver
+    mouseOver,
+    marginTop
 }) => {
 
     const defineSize = () => {
@@ -49,7 +51,7 @@ const NavIcon: FC<NavIconProps> = ({
               transform: 'scale(1.1)',
             }}
             transition='all 0.2s ease'
-            mb='8px'
+            mt={marginTop || '8px'}
             border={`2px solid ${colorPalette.blackBorder}`}
             borderRadius='4.5rem'
             width= {defineSize()}
