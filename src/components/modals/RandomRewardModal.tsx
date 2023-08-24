@@ -92,15 +92,15 @@ const RandomRewardModal = () => {
     }, []);
 
     return (
-        <Tooltip 
-            hasArrow
-            placement='top'
-            label={SURPRISE_CHEST}
-        >
-            <Box width="18%" >
-                {
-                    randomNumber &&
-                    <>
+        <>
+            <Tooltip 
+                hasArrow
+                placement='top'
+                label={SURPRISE_CHEST}
+            >
+                <Box width="18%" >
+                    {
+                        randomNumber &&
                         <motion.div
                             animate={{ scale: [0.8, 1, 0.8] }}
                             transition={{ loop: Infinity }}
@@ -109,17 +109,17 @@ const RandomRewardModal = () => {
                                 cursor: 'pointer',
                             }} onClick={() => { onOpen(); }} src={rewardChest} width='32rem' />
                         </motion.div>
-                        <RewardModal
-                            isOpen={isOpen}
-                            genericModalInfo={rewardModalInfo}
-                            confirmFunction={updateUserCoins}
-                            error={onError}
-                            loading={isLoading}
-                        />
-                    </>
-                }
-            </Box>
-        </Tooltip>
+                    }
+                </Box>
+            </Tooltip>
+            <RewardModal
+            isOpen={isOpen}
+            genericModalInfo={rewardModalInfo}
+            confirmFunction={updateUserCoins}
+            error={onError}
+            loading={isLoading}
+            />
+        </>
     );
 }
 
