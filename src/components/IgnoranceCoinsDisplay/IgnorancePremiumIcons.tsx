@@ -1,14 +1,13 @@
-import { Flex, Image, Text, Center } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React from "react";
 import IgnoranceProgress from "./IgnoranceProgress";
-import RandomRewardModal from "./modals/RandomRewardModal";
-import Coin from '../assets/icons/coinicon.svg'
-import Glasses from '../assets/icons/double-glasses.png';
-import GlassesOn from '../assets/icons/double-glasses-on.png';
-import { useUser } from "../hooks/";
-import useIgnoranceFilter from '../hooks/useIgnoranceFilter';
-import fontTheme from "../styles/base";
+import RandomRewardModal from "../modals/RandomRewardModal";
+import Glasses from '../../assets/icons/double-glasses.png';
+import GlassesOn from '../../assets/icons/double-glasses-on.png';
+import { useUser } from "../../hooks";
+import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
+import NavIcon from "../NavigationComponents/NavIcon";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -55,34 +54,16 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
               ignorance={ignorance}
             />
           }
-          <Flex mt="8px" alignItems="center" justifyContent="flex-end">
-            <Text fontFamily={fontTheme.fonts} fontSize="28px" fontWeight="500" color="#000">{userData.coins}</Text>
-            <Image ml="4px" w="50px" src={Coin} alt="icone de moeda" />
-          </Flex>
-          <Center
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-            }}
-            mt="16px"
-            alignSelf="flex-end"
-            transition='all 0.2s ease'
-            border='2px solid #4a4a4a'
-            borderRadius='4.5rem'
-            width='4.5rem'
-            height='4.5rem'
-            bg='white'
-            onClick={handleIgnoranceFilter}
-          >
-            <Image
-              src={isIgnoranceFilterOn ? GlassesOn : Glasses}
-              width="54px"
-              height="54px"
-            />
-          </Center>
           <CoinsDisplay
             value={userData.coins}
             position='bottom'
+          />
+          <NavIcon
+            image={isIgnoranceFilterOn ? GlassesOn : Glasses}
+            mouseOver="Óculos da ignorância"
+            onClick={handleIgnoranceFilter}
+            size="normal"
+            isMap={false}
           />
         </Flex>
         <RandomRewardModal />

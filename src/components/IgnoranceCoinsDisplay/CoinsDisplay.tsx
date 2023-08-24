@@ -19,7 +19,7 @@ const CoinsDisplay: FC<CoinsDisplayProps> = ({
             placement={position}
             label={COINS}
         >
-            <Flex mt="8px" alignItems="center" w='fit-content'>
+            <Flex mt="4px" alignItems="center" w='fit-content'>
                 <Text 
                     fontFamily={fontTheme.fonts} 
                     fontSize="28px" fontWeight="500" 

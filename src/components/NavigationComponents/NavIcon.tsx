@@ -3,12 +3,13 @@ import React, { FC } from 'react';
 
 import icon_map from '../../assets/icons/icon_map.svg';
 import icon_map_opened from '../../assets/icons/icon_map_opened.svg';
+import colorPalette from '../../styles/colorPalette';
 
 type NavIconProps = {
     image: string;
     onClick: VoidFunction;
     size: 'big' | 'normal' | 'small';
-    isMap: boolean;
+    isMap?: boolean;
     mouseOver: string;
 }
 
@@ -49,7 +50,7 @@ const NavIcon: FC<NavIconProps> = ({
             }}
             transition='all 0.2s ease'
             mb='8px'
-            border='2px solid black'
+            border={`2px solid ${colorPalette.blackBorder}`}
             borderRadius='4.5rem'
             width= {defineSize()}
             height= {defineSize()}
