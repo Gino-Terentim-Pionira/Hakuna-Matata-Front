@@ -42,8 +42,6 @@ export const LOCKED_BADGE = 'Domine um desafio para merecer esta insígnia';
 
 // BUTTON TEXTS
 
-export const SUPRISE_CHEST_TEXT = 'Coletar Joias';
-
 export const GENERIC_MODAL_TEXT = 'Voltar';
 
 export const REWARD_MODAL_TEXT = 'Coletar Recompensas';
