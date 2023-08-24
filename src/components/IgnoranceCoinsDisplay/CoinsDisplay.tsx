@@ -3,10 +3,11 @@ import { Flex, Text, Image, Tooltip } from '@chakra-ui/react';
 import fontTheme from '../../styles/base';
 import Coins from '../../assets/icons/coinicon.svg';
 import { COINS } from '../../utils/constants/constants';
+import { PositionProps } from '../../utils/props';
 
 type CoinsDisplayProps = {
     value: number;
-    position: 'top' | 'bottom';
+    position: PositionProps;
 }
 
 const CoinsDisplay: FC<CoinsDisplayProps> = ({
@@ -19,7 +20,7 @@ const CoinsDisplay: FC<CoinsDisplayProps> = ({
             placement={position}
             label={COINS}
         >
-            <Flex mt="8px" alignItems="center" w='fit-content'>
+            <Flex mt="4px" alignItems="center" w='fit-content'>
                 <Text 
                     fontFamily={fontTheme.fonts} 
                     fontSize="28px" fontWeight="500" 

@@ -33,6 +33,7 @@ import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/Ignorance
 import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import BlockedModal from '../components/modals/BlockedModal';
+import IgnoranceFilter from '../components/IgnoranceFilter';
 import TrailIcon from '../components/TrailIcon';
 import { CHEETAH_TRAIL, BLOCKED_TRAIL } from '../utils/constants/constants';
 
@@ -279,14 +280,8 @@ const MainPage = () => {
 						top='0'
 					/>
 				)}
-			<Image
-				src={ignoranceImage}
-				position='absolute'
-				h='100vh'
-				w='100%'
-				zIndex='-3'
-				left='0'
-				top='0'
+			<IgnoranceFilter
+				ignoranceImage={ignoranceImage}
 			/>
 			<Flex
 				width='92.5%'

@@ -36,6 +36,7 @@ import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQ
 import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
 import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
+import IgnoranceFilter from '../components/IgnoranceFilter';
 
 // Requisitions
 import api from '../services/api';
@@ -428,15 +429,9 @@ const CheetahPath = () => {
                     left='0'
                     top='0'
                 />
-                <Image
-                    src={ignoranceImage}
-                    position='absolute'
-                    h='100vh'
-                    w='100%'
-                    zIndex='-3'
-                    left='0'
-                    top='0'
-                />
+			<IgnoranceFilter
+				ignoranceImage={ignoranceImage}
+			/>
 
                 <Flex
                     width='92.5%'
