@@ -13,6 +13,7 @@ import {
     Text,
     ModalHeader,
     ModalCloseButton,
+    Tooltip,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 import useInsignias from '../hooks/useInsignias';
@@ -32,8 +33,8 @@ import AlertModal from '../components/modals/AlertModal';
 import NarrativeModal from '../components/modals/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
-import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
-import NavActions from '../components/NavActions';
+import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
+import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import IgnoranceFilter from '../components/IgnoranceFilter';
 
@@ -57,6 +58,7 @@ import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
 import { Constants } from '../utils/constants';
 import BlockedModal from '../components/modals/BlockedModal';
+import { CHEETAH_FINAL } from '../utils/constants/constants';
 
 interface IQuiz {
     _id: string;
@@ -485,11 +487,18 @@ const CheetahPath = () => {
                                     left='70vw'
                                     zIndex='999'
                                 >
-                                    <Image
-                                        src={final_cheetah_icon}
-                                        width='90%'
-                                        height='90%'
-                                    />
+                                    <Tooltip
+                                        hasArrow
+                                        placement='top'
+                                        gutter={12}
+                                        label={CHEETAH_FINAL}
+                                    >
+                                        <Image
+                                            src={final_cheetah_icon}
+                                            width='90%'
+                                            height='90%'
+                                        />
+                                    </Tooltip>
                                 </Center>
                             </Flex>
 

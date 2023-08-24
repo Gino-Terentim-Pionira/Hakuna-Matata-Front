@@ -11,15 +11,15 @@ import {
 } from '@chakra-ui/react';
 
 // Images
-import certificateImg from '../assets/icons/certificate/certificate.svg';
-import colorPalette from '../styles/colorPalette';
+import certificateImg from '../../assets/icons/certificate/certificate.svg';
+import colorPalette from '../../styles/colorPalette';
 
-import api from '../services/api';
-import AlertModal from './modals/AlertModal';
+import api from '../../services/api';
+import AlertModal from '../modals/AlertModal';
 
 // Utils
 import { useHistory } from 'react-router-dom';
-import { errorCases } from '../utils/errors/errorsCases';
+import { errorCases } from '../../utils/errors/errorsCases';
 
 type CertifiacteProps = {
 	_id: string;

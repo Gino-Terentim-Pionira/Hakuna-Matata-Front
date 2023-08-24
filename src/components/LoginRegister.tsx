@@ -15,7 +15,7 @@ type LoginRegisterProps = {
     secondValue?: string;
     firstChange: ChangeEventHandler;
     secondChange?: ChangeEventHandler;
-    nextStep: VoidFunction | ((e: never) => void);
+    nextStep: VoidFunction;
     previousStep: VoidFunction;
     buttonText: string;
     forgetPassword?: string;
@@ -46,6 +46,14 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     hasValidationError,
     loading
 }) => {
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const inputElement = event.target as HTMLInputElement;
+            inputElement.blur();
+            nextStep();
+        }
+    }
     return (
         <Flex
             width="55%"
@@ -96,6 +104,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         value={firstValue}
                         onChange={firstChange}
                         disabled={loading}
+                        onKeyDown={handleKeyPress}
                     />
                     <Text color="red" fontSize="15"> {validationError} </Text>
 
@@ -120,6 +129,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                                 value={secondValue}
                                 onChange={secondChange}
                                 disabled={loading}
+                                onKeyDown={handleKeyPress}
                             />
                         </>
                     ) : (null)}

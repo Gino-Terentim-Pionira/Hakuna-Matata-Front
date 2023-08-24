@@ -64,8 +64,7 @@ const ResetPassword = () => {
 		history.push('/login');
 	};
 
-	const submitChange = async (e: BaseSyntheticEvent) => {
-		e.preventDefault();
+	const submitChange = async () => {
 		if (password === confirmPassword) {
 			try {
 				setIsLoading(true);
@@ -115,8 +114,8 @@ const ResetPassword = () => {
 					secondInputType="password"
 					secondValue={confirmPassword}
 					secondPlaceholder="Confirmar nova senha"
-					nextStep={(e: never) => {
-						submitChange(e);
+					nextStep={() => {
+						submitChange();
 					}}
 					previousStep={() => goToLogin()}
 					buttonText='Enviar'

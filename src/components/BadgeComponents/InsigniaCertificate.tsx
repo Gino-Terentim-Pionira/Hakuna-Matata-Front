@@ -1,16 +1,17 @@
 import React from 'react';
-import { Flex, Box, Tabs, TabPanels, TabPanel, Image, Grid, Text } from '@chakra-ui/react';
-import { useUser } from '../hooks';
+import { Flex, Box, Tabs, TabPanels, TabPanel, Image, Grid, Text, Tooltip } from '@chakra-ui/react';
+import { useUser } from '../../hooks';
 
 // Components
-import Insignia from '../components/Insignia';
-import LoadingState from './LoadingState';
+import Insignia from './Insignia';
+import LoadingState from '../LoadingState';
 
 // Images
-import insigniaCheetahSillouete from '../assets/icons/insignia/cheetaInsigniaSillouete.png';
-import insigniaMambaSillouete from '../assets/icons/insignia/mambaInsigniaSillouete.png';
-import insigniaLionSillouete from '../assets/icons/insignia/lionInsigniaSillouete.png';
-import useInsignias from '../hooks/useInsignias';
+import insigniaCheetahSillouete from '../../assets/icons/insignia/cheetaInsigniaSillouete.png';
+import insigniaMambaSillouete from '../../assets/icons/insignia/mambaInsigniaSillouete.png';
+import insigniaLionSillouete from '../../assets/icons/insignia/lionInsigniaSillouete.png';
+import useInsignias from '../../hooks/useInsignias';
+import { LOCKED_BADGE } from '../../utils/constants/constants';
 
 const InsigniaCertificate = () => {
     const { insigniasData } = useInsignias();
@@ -65,14 +66,21 @@ const InsigniaCertificate = () => {
                                                                     cursor: 'help'
                                                                 }}
                                                             >
-                                                                <Image
-                                                                    boxSize='8rem'
-                                                                    src={
-                                                                        trail === 'Trilha 1' ? insigniaCheetahSillouete : (
-                                                                            trail === 'Trilha 3' ? insigniaMambaSillouete : insigniaLionSillouete
-                                                                        )
-                                                                    }
-                                                                />
+                                                                <Tooltip
+                                                                    hasArrow
+                                                                    placement='top'
+                                                                    gutter={10}
+                                                                    label={LOCKED_BADGE}
+                                                                >
+                                                                    <Image
+                                                                        boxSize='8rem'
+                                                                        src={
+                                                                            trail === 'Trilha 1' ? insigniaCheetahSillouete : (
+                                                                                trail === 'Trilha 3' ? insigniaMambaSillouete : insigniaLionSillouete
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                </Tooltip>
                                                                 <Text
                                                                     fontSize='1.2rem'
                                                                     fontWeight='bold'

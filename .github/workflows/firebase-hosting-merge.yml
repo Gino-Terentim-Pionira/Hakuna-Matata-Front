@@ -20,4 +20,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_HAKUNA_MATATA_FIRE }}'
           channelId: live
-          projectId: hakuna-matata-fire
+          projectId: pionira-backend-e09bd

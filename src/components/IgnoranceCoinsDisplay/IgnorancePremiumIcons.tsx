@@ -8,6 +8,7 @@ import GlassesOn from '../assets/icons/double-glasses-on.png';
 import { useUser } from "../hooks/";
 import useIgnoranceFilter from '../hooks/useIgnoranceFilter';
 import fontTheme from "../styles/base";
+import CoinsDisplay from "./CoinsDisplay";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -46,9 +47,11 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
         <Flex
           flexDirection='column'
           mt='10px'
+          alignItems='flex-end'
         >
           {
             !dontShowIgnorance && <IgnoranceProgress
+              position='bottom'
               ignorance={ignorance}
             />
           }
@@ -77,6 +80,10 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
               height="54px"
             />
           </Center>
+          <CoinsDisplay
+            value={userData.coins}
+            position='bottom'
+          />
         </Flex>
         <RandomRewardModal />
       </Flex>

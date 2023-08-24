@@ -3,6 +3,7 @@ import {
     useDisclosure,
     Box,
     Image,
+    Tooltip,
 } from '@chakra-ui/react';
 
 // Requisitions
@@ -18,6 +19,7 @@ import RewardModal from './GenericModal';
 import rewardOpenChest from "../../assets/icons/bauAberto.svg";
 import { useUser } from '../../hooks';
 import { Constants } from '../../utils/constants';
+import { SURPRISE_CHEST } from '../../utils/constants/constants';
 
 interface userDataProps {
     coins: number
@@ -90,28 +92,34 @@ const RandomRewardModal = () => {
     }, []);
 
     return (
-        <Box width="18%" >
-            {
-                randomNumber &&
-                <>
-                    <motion.div
-                        animate={{ scale: [0.8, 1, 0.8] }}
-                        transition={{ loop: Infinity }}
-                    >
-                        <Image _hover={{
-                            cursor: 'pointer',
-                        }} onClick={() => { onOpen(); }} src={rewardChest} width='32rem' />
-                    </motion.div>
-                    <RewardModal
-                        isOpen={isOpen}
-                        genericModalInfo={rewardModalInfo}
-                        confirmFunction={updateUserCoins}
-                        error={onError}
-                        loading={isLoading}
-                    />
-                </>
-            }
-        </Box>
+        <Tooltip 
+            hasArrow
+            placement='top'
+            label={SURPRISE_CHEST}
+        >
+            <Box width="18%" >
+                {
+                    randomNumber &&
+                    <>
+                        <motion.div
+                            animate={{ scale: [0.8, 1, 0.8] }}
+                            transition={{ loop: Infinity }}
+                        >
+                            <Image _hover={{
+                                cursor: 'pointer',
+                            }} onClick={() => { onOpen(); }} src={rewardChest} width='32rem' />
+                        </motion.div>
+                        <RewardModal
+                            isOpen={isOpen}
+                            genericModalInfo={rewardModalInfo}
+                            confirmFunction={updateUserCoins}
+                            error={onError}
+                            loading={isLoading}
+                        />
+                    </>
+                }
+            </Box>
+        </Tooltip>
     );
 }
 

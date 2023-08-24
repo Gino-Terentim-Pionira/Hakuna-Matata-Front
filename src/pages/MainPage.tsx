@@ -29,11 +29,13 @@ import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
 import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
-import IgnorancePremiumIcons from '../components/IgnorancePremiumIcons';
-import NavActions from '../components/NavActions';
+import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
+import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import BlockedModal from '../components/modals/BlockedModal';
 import IgnoranceFilter from '../components/IgnoranceFilter';
+import TrailIcon from '../components/TrailIcon';
+import { CHEETAH_TRAIL, BLOCKED_TRAIL } from '../utils/constants/constants';
 
 interface IScript {
 	name: string;
@@ -316,47 +318,42 @@ const MainPage = () => {
 			<Flex margin='2vw' justifyContent='space-between'>
 				{narrativeIsOpen ? null : (
 					<>
-						<Image
-							src={icon_cheeta}
-							_hover={{
-								cursor: 'pointer',
-								transform: 'scale(1.1)',
-							}}
-							transition='all 0.2s ease'
+						<Flex
 							position='absolute'
-							width='5.74vw'
 							left='15.75vw'
 							top='49.5vh'
-							onClick={() => goToPath2()}
-						/>
+						>
+							<TrailIcon 
+								image={icon_cheeta}
+								onClick={goToPath2}
+								mouseOver={CHEETAH_TRAIL}
+							/>
+						</Flex>
 
-						<Image
-							src={icon_block}
-							_hover={{
-								cursor: 'pointer',
-								transform: 'scale(1.1)',
-							}}
-							transition='all 0.2s ease'
+						<Flex
 							position='absolute'
-							width='5.74vw'
 							left='50.5vw'
 							top='57.5vh'
-							onClick={() => setOpenBlockedModal(true)}
-						/>
+						>
+							<TrailIcon 
+								image={icon_block}
+								onClick={() => setOpenBlockedModal(true)}
+								mouseOver={BLOCKED_TRAIL}
+							/>
+						</Flex>
 
-						<Image
-							src={icon_block}
-							_hover={{
-								cursor: 'pointer',
-								transform: 'scale(1.1)',
-							}}
-							transition='all 0.2s ease'
+						<Flex
 							position='absolute'
-							width='5.74vw'
 							right='7vw'
 							top='50vh'
-							onClick={() => setOpenBlockedModal(true)}
-						/>
+						>
+							<TrailIcon 
+								image={icon_block}
+								onClick={() => setOpenBlockedModal(true)}
+								mouseOver={BLOCKED_TRAIL}
+							/>
+						</Flex>
+
 					</>
 				)}
 			</Flex>
