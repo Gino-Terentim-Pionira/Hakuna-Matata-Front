@@ -226,6 +226,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 				loading={isLoading}
 				error={onError}
 				confirmFunction={updateUserCoins}
+				closeFunction={updateUserCoins}
 			/>
 
 			<Modal

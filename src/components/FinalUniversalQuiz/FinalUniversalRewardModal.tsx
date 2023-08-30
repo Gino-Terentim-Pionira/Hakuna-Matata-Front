@@ -235,6 +235,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 				loading={isLoading}
 				error={onError}
 				confirmFunction={updateUserCoins}
+				closeFunction={updateUserCoins}
 			/>
 
 			{/* Modal de Reward */}

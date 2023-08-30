@@ -47,3 +47,7 @@ export const IGNORANCE_GLASS = "Óculos da ignorância";
 export const GENERIC_MODAL_TEXT = 'Voltar';
 
 export const REWARD_MODAL_TEXT = 'Coletar Recompensas';
+
+export const BUY_HOUR_GLASS = 'Comprar ampulheta';
+
+export const REWATCH_VIDEOS = 'Assistir videos novamente'

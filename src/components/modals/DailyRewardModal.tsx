@@ -72,6 +72,7 @@ const DailyRewardModal: FC<IDailyReward> = ({
             isOpen={isOpen}
             genericModalInfo={rewardModalInfo}
             confirmFunction={updateUserDailyReward}
+            closeFunction={updateUserDailyReward}
             error={onError}
             loading={isLoading}
         />

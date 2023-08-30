@@ -36,9 +36,13 @@ interface IGenericModal {
         icon: string;
         coins?: number;
         status?: number[];
+        firstButton?: string;
+        secondButton?: string;
     },
     isOpen: boolean;
     confirmFunction: VoidFunction;
+    secondFunction?: VoidFunction;
+    closeFunction: VoidFunction;
     loading: boolean;
     error: boolean;
 }
@@ -48,6 +52,8 @@ const GenericModal: FC<IGenericModal> = ({
     isOpen,
     genericModalInfo,
     confirmFunction,
+    secondFunction,
+    closeFunction,
     loading,
     error,
 }) => {
@@ -65,9 +71,20 @@ const GenericModal: FC<IGenericModal> = ({
     const coinsValidation = coins && coins !== 0;
     const statusValidation = statusPointsRecieved[0].points && statusPointsRecieved[0].points !== 0;
 
+    const defineButtonText = () => {
+        const costumizedText = genericModalInfo.firstButton;
+        if (costumizedText) {
+            return costumizedText;
+        } else if (coinsValidation || statusValidation) {
+            return REWARD_MODAL_TEXT;
+        } else {
+            return GENERIC_MODAL_TEXT;
+        }
+    }
+
     return (
         <>
-            <Modal isOpen={isOpen} onClose={confirmFunction}>
+            <Modal isOpen={isOpen} onClose={closeFunction}>
                 <ModalOverlay />
                 <ModalContent fontSize={fontTheme.fonts} minHeight="437px" h='fit-content' w='418px'  >
                     <ModalCloseButton color={colorPalette.closeButton} size='lg' />
@@ -124,6 +141,7 @@ const GenericModal: FC<IGenericModal> = ({
                                         <Center
                                             flexDirection='column'
                                             marginTop='26px'
+                                            minHeight='70px'
                                         >
                                             {
                                                 statusValidation ? (statusPointsRecieved.map((status, index) => {
@@ -183,16 +201,35 @@ const GenericModal: FC<IGenericModal> = ({
                                         height='50px'
                                         background={colorPalette.primaryColor}
                                         color={colorPalette.buttonTextColor}
-                                        fontSize='28px'
+                                        fontSize='24px'
                                         fontFamily={fontTheme.fonts}
                                         onClick={confirmFunction}
                                         loadingText="Enviando"
                                         spinnerPlacement='end'
                                     >
                                         {
-                                            coins ? (REWARD_MODAL_TEXT) : (GENERIC_MODAL_TEXT)
+                                            defineButtonText()
                                         }
                                     </Button>
+                                    {
+                                        genericModalInfo.secondButton &&
+                                            <Button
+                                                width='300px'
+                                                height='50px'
+                                                marginTop='25px'
+                                                background={colorPalette.inactiveButton}
+                                                color={colorPalette.buttonTextColor}
+                                                fontSize='24px'
+                                                fontFamily={fontTheme.fonts}
+                                                onClick={secondFunction}
+                                                loadingText="Enviando"
+                                                spinnerPlacement='end'
+                                            >
+                                                {
+                                                    genericModalInfo.secondButton
+                                                }
+                                            </Button>
+                                    }
                                 </ModalBody>
                             )
                     }

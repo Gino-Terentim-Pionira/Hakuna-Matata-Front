@@ -116,6 +116,7 @@ const RandomRewardModal = () => {
             isOpen={isOpen}
             genericModalInfo={rewardModalInfo}
             confirmFunction={updateUserCoins}
+            closeFunction={updateUserCoins}
             error={onError}
             loading={isLoading}
             />
