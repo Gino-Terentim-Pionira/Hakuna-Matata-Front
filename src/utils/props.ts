@@ -1,0 +1,1 @@
+export type PositionProps = 'top' | 'bottom' | 'right' | 'left';

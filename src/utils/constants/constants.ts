@@ -40,6 +40,8 @@ export const BADGE_DESCRIPTION = 'Visualizar descrição da insígnia';
 
 export const LOCKED_BADGE = 'Domine um desafio para merecer esta insígnia';
 
+export const IGNORANCE_GLASS = "Óculos da ignorância";
+
 // BUTTON TEXTS
 
 export const GENERIC_MODAL_TEXT = 'Voltar';

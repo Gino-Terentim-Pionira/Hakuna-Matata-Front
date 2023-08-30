@@ -5,11 +5,12 @@ import { Box, Text, Tooltip } from '@chakra-ui/react';
 import font from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 import { WISDOM } from '../../utils/constants/constants';
+import { PositionProps } from '../../utils/props';
 
 
 const IgnoranceProgress = ({ ignorance, position }: {
     ignorance: number,
-    position: 'top' | 'bottom'
+    position: PositionProps
 }) => {
     const progressBar = 100 - ignorance;
     return (

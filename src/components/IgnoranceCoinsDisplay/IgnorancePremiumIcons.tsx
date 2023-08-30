@@ -2,8 +2,13 @@ import { Flex } from "@chakra-ui/react";
 import React from "react";
 import IgnoranceProgress from "./IgnoranceProgress";
 import RandomRewardModal from "../modals/RandomRewardModal";
+import Glasses from '../../assets/icons/double-glasses.png';
+import GlassesOn from '../../assets/icons/double-glasses-on.png';
 import { useUser } from "../../hooks";
+import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
+import NavIcon from "../NavigationComponents/NavIcon";
+import { IGNORANCE_GLASS } from "../../utils/constants/constants";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -18,6 +23,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
   // 	onToggle: premiumOnToggle,
   // } = useDisclosure();
   const { userData } = useUser();
+  const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
 
   return (
     <>
@@ -52,6 +58,14 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
           <CoinsDisplay
             value={userData.coins}
             position='bottom'
+          />
+          <NavIcon
+            image={isIgnoranceFilterOn ? GlassesOn : Glasses}
+            mouseOver={IGNORANCE_GLASS}
+            onClick={handleIgnoranceFilter}
+            size="normal"
+            isMap={false}
+            position="bottom"
           />
         </Flex>
         <RandomRewardModal />
