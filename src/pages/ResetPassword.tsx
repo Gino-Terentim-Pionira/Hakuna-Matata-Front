@@ -22,6 +22,7 @@ import api from '../services/api';
 import { useAuth } from '../contexts/authContext';
 import LoginRegister from '../components/LoginRegister';
 import axios from 'axios';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/constants';
 
 interface IUser {
 	id: string;
@@ -140,7 +141,7 @@ const ResetPassword = () => {
 								}
 							}}
 						>
-							Continuar
+							{GENERIC_MODAL_TEXT}
 						</Button>
 					}
 				/>

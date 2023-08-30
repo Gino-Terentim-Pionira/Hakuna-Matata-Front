@@ -26,6 +26,7 @@ import Coins from '../../assets/icons/coinicon.svg'
 import plusIcon from '../../assets/icons/plusIcon.png'
 import { errorCases } from '../../utils/errors/errorsCases';
 import Cheetah from '../../assets/icons/cheetahblink.svg'
+import { REWARD_MODAL_TEXT, GENERIC_MODAL_TEXT } from '../../utils/constants/constants';
 
 interface IGenericModal {
     genericModalInfo: {
@@ -188,7 +189,9 @@ const GenericModal: FC<IGenericModal> = ({
                                         loadingText="Enviando"
                                         spinnerPlacement='end'
                                     >
-                                        Continuar
+                                        {
+                                            coins ? (REWARD_MODAL_TEXT) : (GENERIC_MODAL_TEXT)
+                                        }
                                     </Button>
                                 </ModalBody>
                             )

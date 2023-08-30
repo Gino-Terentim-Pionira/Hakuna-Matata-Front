@@ -16,6 +16,7 @@ import colorPalette from "../styles/colorPalette";
 
 // Images
 import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/constants';
 
 const ForgotPassword = () => {
 	const history = useHistory();
@@ -91,7 +92,7 @@ const ForgotPassword = () => {
 							onClose();
 						}}
 					>
-						Continuar
+						{GENERIC_MODAL_TEXT}
 					</Button>
 				}
 			/>
