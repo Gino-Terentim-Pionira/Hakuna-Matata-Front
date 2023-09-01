@@ -16,6 +16,7 @@ import {
     Tooltip,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
+import usePath from '../hooks/usePath';
 import useInsignias from '../hooks/useInsignias';
 import { useLocation } from 'react-router-dom';
 
@@ -99,6 +100,7 @@ interface IScript {
 
 const CheetahPath = () => {
     const local = useLocation();
+    const { handlePath } = usePath();
     const { userData, setUserData } = useUser();
     const { getNewModuleInfo, moduleData } = useModule();
     const { getInsignias } = useInsignias();
@@ -411,6 +413,7 @@ const CheetahPath = () => {
         getUser();
         updateNarrative();
         getFinalQuiz();
+        handlePath(local.pathname);
     }, []);
 
     if (isLoading) {
@@ -444,7 +447,7 @@ const CheetahPath = () => {
                     {narrativeIsOpen ||
                         narrativeChallengeIsOpen ||
                         finalNarrativeChallengeIsOpen ? null : (
-                            <NavActions logout={logout} prePath={local.pathname} />
+                            <NavActions logout={logout} />
                         )}
 
                     {narrativeIsOpen ||

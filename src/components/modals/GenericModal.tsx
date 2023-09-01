@@ -26,7 +26,7 @@ import Coins from '../../assets/icons/coinicon.svg'
 import plusIcon from '../../assets/icons/plusIcon.png'
 import { errorCases } from '../../utils/errors/errorsCases';
 import Cheetah from '../../assets/icons/cheetahblink.svg'
-import { REWARD_MODAL_TEXT, GENERIC_MODAL_TEXT } from '../../utils/constants/constants';
+import { REWARD_MODAL_TEXT, GENERIC_MODAL_TEXT, LOAD_BUTTON } from '../../utils/constants/constants';
 
 interface IGenericModal {
     genericModalInfo: {
@@ -42,7 +42,7 @@ interface IGenericModal {
     isOpen: boolean;
     confirmFunction: VoidFunction;
     secondFunction?: VoidFunction;
-    closeFunction: VoidFunction;
+    closeFunction?: VoidFunction;
     loading: boolean;
     error: boolean;
 }
@@ -84,7 +84,7 @@ const GenericModal: FC<IGenericModal> = ({
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={closeFunction}>
+            <Modal isOpen={isOpen} onClose={closeFunction || confirmFunction}>
                 <ModalOverlay />
                 <ModalContent fontSize={fontTheme.fonts} minHeight="437px" h='fit-content' w='418px'  >
                     <ModalCloseButton color={colorPalette.closeButton} size='lg' />
@@ -204,7 +204,7 @@ const GenericModal: FC<IGenericModal> = ({
                                         fontSize='24px'
                                         fontFamily={fontTheme.fonts}
                                         onClick={confirmFunction}
-                                        loadingText="Enviando"
+                                        loadingText={LOAD_BUTTON}
                                         spinnerPlacement='end'
                                     >
                                         {
@@ -222,7 +222,7 @@ const GenericModal: FC<IGenericModal> = ({
                                                 fontSize='24px'
                                                 fontFamily={fontTheme.fonts}
                                                 onClick={secondFunction}
-                                                loadingText="Enviando"
+                                                loadingText={LOAD_BUTTON}
                                                 spinnerPlacement='end'
                                             >
                                                 {

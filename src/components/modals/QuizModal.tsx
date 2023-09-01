@@ -404,7 +404,6 @@ const QuizModal: FC<IQuizComponent> = ({
                 isOpen={isOpen}
                 genericModalInfo={rewardModalInfo()}
                 confirmFunction={updateUserCoins}
-                closeFunction={updateUserCoins}
                 loading={isLoading}
                 error={onError}
             />

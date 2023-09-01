@@ -16,10 +16,9 @@ import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP } from "../../ut
 interface NavActionsInterface {
   logout: VoidFunction;
   dontShowMap?: boolean;
-  prePath: string;
 }
 
-const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
+const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const {
     isOpen: profileIsOpen,
     onClose: profileOnClose,
@@ -36,12 +35,10 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
   const history = useHistory();
 
   const handleStore = () => {
-    sessionStorage.setItem('@pionira/prepath', prePath);
     history.push({ pathname: '/shop' });
   }
 
   const handleInventory = () => {
-    sessionStorage.setItem('@pionira/prepath', prePath);
     history.push({ pathname: '/inventory' });
   }
 

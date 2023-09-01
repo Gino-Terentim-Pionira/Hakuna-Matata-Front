@@ -1,8 +1,9 @@
 import React, { SetStateAction, useEffect, useState, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 import useInsignias from '../hooks/useInsignias';
+import usePath from '../hooks/usePath';
 
 // Components
 import TutorialModal from '../components/modals/TutorialModal';
@@ -45,6 +46,8 @@ interface IScript {
 
 const MainPage = () => {
 	const history = useHistory();
+	const local = useLocation();
+	const { handlePath } = usePath();
 	const {
 		isOpen: tutorialIsOpen,
 		onClose: tutorialOnClose,
@@ -251,6 +254,7 @@ const MainPage = () => {
 		getUserRequisition();
 		updateImageOnTime();
 		getNewUserInfo();
+		handlePath(local.pathname);
 	}, []);
 
 	if (isLoading) {
@@ -289,7 +293,7 @@ const MainPage = () => {
 				alignItems='flex-start'
 				margin='auto'
 			>
-				<NavActions logout={logout} dontShowMap prePath={history.location.pathname} />
+				<NavActions logout={logout} dontShowMap />
 				{narrativeIsOpen ? null : (
 					<IgnorancePremiumIcons ignorance={userData.ignorance} />
 				)}
