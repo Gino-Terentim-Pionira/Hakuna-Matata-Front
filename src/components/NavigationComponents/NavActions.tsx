@@ -12,13 +12,16 @@ import ProfileModal from "../modals/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
 import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP } from "../../utils/constants/constants";
+import usePath from "../../hooks/usePath";
 
 interface NavActionsInterface {
   logout: VoidFunction;
   dontShowMap?: boolean;
+  prePath: string
 }
 
-const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
+const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
+  const { handlePath } = usePath();
   const {
     isOpen: profileIsOpen,
     onClose: profileOnClose,
@@ -35,10 +38,12 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const history = useHistory();
 
   const handleStore = () => {
+    handlePath(prePath);
     history.push({ pathname: '/shop' });
   }
 
   const handleInventory = () => {
+    handlePath(prePath);
     history.push({ pathname: '/inventory' });
   }
 
