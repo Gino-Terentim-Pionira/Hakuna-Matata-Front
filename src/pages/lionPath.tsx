@@ -15,7 +15,6 @@ import {
 	ModalCloseButton,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
-import { useLocation } from 'react-router-dom';
 
 //utils
 import fontTheme from '../styles/base';
@@ -95,7 +94,6 @@ interface IScript {
 }
 
 const LionPath = () => {
-	const local = useLocation();
 	const { userData, setUserData } = useUser();
 	const { getInsignias } = useInsignias();
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -421,7 +419,7 @@ const LionPath = () => {
 					position='fixed'
 				>
 					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-						<NavActions logout={logout} prePath={local.pathname} />
+						<NavActions logout={logout} />
 					)}
 
 					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (

@@ -25,7 +25,7 @@ import BackButton from '../components/BackButton';
 
 const Shop = () => {
 	const { getNewUserInfo, userData } = useUser();
-	const { path } = usePath();
+	const { handleBack } = usePath();
 	const [shopItem, setShopItem] = useState([]);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
@@ -49,7 +49,7 @@ const Shop = () => {
 	};
 
 	const goBack = () => {
-		history.push(path);
+		handleBack();
 	};
 
 	useEffect(() => {

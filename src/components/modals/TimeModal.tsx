@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { useUser } from '../../hooks';
 import { Constants } from '../../utils/constants';
-import { useHistory, useLocation } from "react-router-dom";
 import GenericModal from './GenericModal';
 import { BUY_HOUR_GLASS, REWATCH_VIDEOS } from '../../utils/constants/constants';
 
@@ -9,6 +8,7 @@ import { BUY_HOUR_GLASS, REWATCH_VIDEOS } from '../../utils/constants/constants'
 
 import hourglass from '../../assets/icons/hourglass_icon.png';
 import colorPalette from '../../styles/colorPalette';
+import usePath from '../../hooks/usePath';
 
 interface ITimeModal {
     timeIsOpen: boolean,
@@ -17,13 +17,10 @@ interface ITimeModal {
 
 const TimeModal: FC<ITimeModal> = ({ timeIsOpen, timeOnClose }) => {
     const { userData } = useUser();
-    const history = useHistory();
-    const local = useLocation();
+    const { handlePath } = usePath();
 
     const handleStore = () => {
-        const prePath = local.pathname;
-        sessionStorage.setItem('@pionira/prepath', prePath);
-        history.push({ pathname: '/shop' });
+        handlePath('/shop');
     }
     return (
         <GenericModal 

@@ -1,5 +1,5 @@
 import React, { SetStateAction, useEffect, useState, useRef } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 import useInsignias from '../hooks/useInsignias';
@@ -45,7 +45,6 @@ interface IScript {
 
 const MainPage = () => {
 	const history = useHistory();
-	const local = useLocation();
 	const {
 		isOpen: tutorialIsOpen,
 		onClose: tutorialOnClose,
@@ -290,7 +289,7 @@ const MainPage = () => {
 				alignItems='flex-start'
 				margin='auto'
 			>
-				<NavActions logout={logout} prePath={local.pathname} dontShowMap />
+				<NavActions logout={logout} dontShowMap />
 				{narrativeIsOpen ? null : (
 					<IgnorancePremiumIcons ignorance={userData.ignorance} />
 				)}

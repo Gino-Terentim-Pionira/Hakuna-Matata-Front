@@ -17,10 +17,9 @@ import usePath from "../../hooks/usePath";
 interface NavActionsInterface {
   logout: VoidFunction;
   dontShowMap?: boolean;
-  prePath: string
 }
 
-const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
+const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const { handlePath } = usePath();
   const {
     isOpen: profileIsOpen,
@@ -38,13 +37,11 @@ const NavActions = ({ logout, dontShowMap, prePath }: NavActionsInterface) => {
   const history = useHistory();
 
   const handleStore = () => {
-    handlePath(prePath);
-    history.push({ pathname: '/shop' });
+    handlePath('/shop');
   }
 
   const handleInventory = () => {
-    handlePath(prePath);
-    history.push({ pathname: '/inventory' });
+    handlePath('/inventory');
   }
 
   return (

@@ -23,7 +23,7 @@ import { errorCases } from '../utils/errors/errorsCases';
 import BackButton from '../components/BackButton';
 
 const Shop = () => {
-	const { path } = usePath();
+	const { handleBack } = usePath();
 	const { getNewUserInfo, userData } = useUser();
 	const [shopItem, setShopItem] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
@@ -53,7 +53,7 @@ const Shop = () => {
 	}
 
 	const goBack = () => {
-		history.push(path);
+		handleBack();
 	};
 
 	useEffect(() => {
