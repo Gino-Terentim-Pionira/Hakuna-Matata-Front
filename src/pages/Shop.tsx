@@ -3,6 +3,7 @@ import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
 import { Button, Center, Image, SimpleGrid } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
+import usePath from '../hooks/usePath';
 
 // Components
 import ShopItem from '../components/shopItem';
@@ -22,6 +23,7 @@ import { errorCases } from '../utils/errors/errorsCases';
 import BackButton from '../components/BackButton';
 
 const Shop = () => {
+	const { handleBack } = usePath();
 	const { getNewUserInfo, userData } = useUser();
 	const [shopItem, setShopItem] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
@@ -51,10 +53,7 @@ const Shop = () => {
 	}
 
 	const goBack = () => {
-		const prepath = sessionStorage.getItem('@pionira/prepath');
-		if (prepath)
-			history.push(prepath);
-		else history.push('/MainPage');
+		handleBack();
 	};
 
 	useEffect(() => {

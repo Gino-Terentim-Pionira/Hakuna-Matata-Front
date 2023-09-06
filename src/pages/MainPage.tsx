@@ -289,7 +289,7 @@ const MainPage = () => {
 				alignItems='flex-start'
 				margin='auto'
 			>
-				<NavActions logout={logout} dontShowMap prePath={history.location.pathname} />
+				<NavActions logout={logout} dontShowMap />
 				{narrativeIsOpen ? null : (
 					<IgnorancePremiumIcons ignorance={userData.ignorance} />
 				)}

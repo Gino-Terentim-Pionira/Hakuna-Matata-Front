@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 import { useUser } from '../../hooks';
 import { Constants } from '../../utils/constants';
+import GenericModal from './GenericModal';
+import { BUY_HOUR_GLASS, REWATCH_VIDEOS } from '../../utils/constants/constants';
 
 // Styles
 
 import hourglass from '../../assets/icons/hourglass_icon.png';
 import colorPalette from '../../styles/colorPalette';
-import GenericModal from './GenericModal';
+import usePath from '../../hooks/usePath';
 
 interface ITimeModal {
     timeIsOpen: boolean,
@@ -15,10 +17,17 @@ interface ITimeModal {
 
 const TimeModal: FC<ITimeModal> = ({ timeIsOpen, timeOnClose }) => {
     const { userData } = useUser();
+    const { handlePath } = usePath();
+
+    const handleStore = () => {
+        handlePath('/shop');
+    }
     return (
         <GenericModal 
             isOpen={timeIsOpen}
-            confirmFunction={timeOnClose}
+            confirmFunction={handleStore}
+            secondFunction={timeOnClose}
+            closeFunction={timeOnClose}
             loading={false}
             error={false}
             genericModalInfo={
@@ -28,7 +37,9 @@ const TimeModal: FC<ITimeModal> = ({ timeIsOpen, timeOnClose }) => {
                     subtitle: userData.coins >= Constants.HOURGLASS_SINK 
                         ? 'Você deve esperar no mínimo 30 minutos para refazer um desafio ou vá na loja e compre a ampulheta do ancião!'
                         : 'Você deve esperar no mínimo 30 minutos para refazer um desafio ou junte moedas para comprar a ampulheta do ancião!',
-                    icon: hourglass
+                    icon: hourglass,
+                    firstButton: BUY_HOUR_GLASS,
+                    secondButton: REWATCH_VIDEOS
                 }
             }
         />

@@ -17,7 +17,6 @@ import {
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 import useInsignias from '../hooks/useInsignias';
-import { useLocation } from 'react-router-dom';
 
 //utils
 import fontTheme from '../styles/base';
@@ -98,7 +97,6 @@ interface IScript {
 }
 
 const CheetahPath = () => {
-    const local = useLocation();
     const { userData, setUserData } = useUser();
     const { getNewModuleInfo, moduleData } = useModule();
     const { getInsignias } = useInsignias();
@@ -444,7 +442,7 @@ const CheetahPath = () => {
                     {narrativeIsOpen ||
                         narrativeChallengeIsOpen ||
                         finalNarrativeChallengeIsOpen ? null : (
-                            <NavActions logout={logout} prePath={local.pathname} />
+                            <NavActions logout={logout} />
                         )}
 
                     {narrativeIsOpen ||
