@@ -9,13 +9,18 @@ import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
 import NavIcon from "../NavigationComponents/NavIcon";
 import { IGNORANCE_GLASS } from "../../utils/constants/constants";
+import StatusProgress from "./StatusProgress";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
   dontShowIgnorance?: boolean;
+  showStatus?: boolean;
+  statusText?: string;
+  statusPoints?: number;
+  statusColor?: string;
 }
 
-const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiumIconsInterface) => {
+const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statusText, statusPoints, statusColor }: IgnoracenPremiumIconsInterface) => {
   // const {
   // 	isOpen: premiumIsOpen,
   // 	onClose: premiumOnClose,
@@ -50,10 +55,25 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance }: IgnoracenPremiu
           alignItems='flex-end'
         >
           {
-            !dontShowIgnorance && <IgnoranceProgress
-              position='bottom'
-              ignorance={ignorance}
-            />
+            !dontShowIgnorance && <Flex
+              flexDirection='column'
+              alignItems='flex-end'
+            >
+              <IgnoranceProgress
+                position='bottom'
+                ignorance={ignorance}
+                ignoranceFilter={isIgnoranceFilterOn}
+              />
+              {
+                showStatus && <StatusProgress 
+                  status={statusPoints || 0} 
+                  position='bottom'
+                  labelText={statusText || ""} 
+                  color={statusColor || ""}
+                  ignoranceFilter={isIgnoranceFilterOn}
+                />
+              }
+            </Flex>
           }
           <CoinsDisplay
             value={userData.coins}

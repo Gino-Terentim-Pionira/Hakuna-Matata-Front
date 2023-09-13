@@ -1,64 +1,66 @@
 import React from 'react';
 import { Box, Text, Tooltip } from '@chakra-ui/react';
+import { STATUS } from '../../utils/constants/constants';
+import { PositionProps } from '../../utils/props';
 
 // Styles
 import font from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
-import { WISDOM } from '../../utils/constants/constants';
-import { PositionProps } from '../../utils/props';
 
 
-const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
-    ignorance: number,
+const StatusProgress = ({ status, position, labelText, color, ignoranceFilter }: {
+    status: number,
     position: PositionProps,
+    labelText: string,
+    color: string,
     ignoranceFilter: boolean
 }) => {
-    const progressBar = Math.floor(100 - ignorance);
     return (
         <Tooltip
             hasArrow
             placement={position}
-            label={WISDOM}
+            label={STATUS}
         >
             <Box
-                height='32px'
-                width='392px'
+                height='28px'
+                width='261px'
+                marginTop='8px'
                 backgroundColor={colorPalette.darkGrey}
                 borderWidth='3px'
                 borderColor={colorPalette.blackBorder}
-                borderRadius='100'
+                borderRadius='8px'
                 overflow='hidden'
                 boxShadow='0px 4px 5px rgba(0, 0, 0, 0.14)'
             >
                 <Box
                     position='relative'
-                    width={`${progressBar}%`}
+                    width={`${status}%`}
                     height='100%'
-                    backgroundColor={colorPalette.progressOrange}
+                    backgroundColor={color}
                 >
                     <Text
                         position='absolute'
                         marginLeft='17px'
                         whiteSpace='nowrap'
                         top='5%'
-                        color={colorPalette.blackBorder}
+                        color={colorPalette.whiteText}
                         fontFamily={font.fonts}
                         fontWeight='bold'
-                        fontSize='16px'
+                        fontSize='14px'
                     >
-                        Nível de sabedoria
+                        {labelText}
                     </Text>
                     {
                         ignoranceFilter && <Text
                         position='absolute'
                         top='5%'
-                        left='340px'
+                        left='210px'
                         fontFamily={font.fonts}
                         color={colorPalette.whiteText}
                         fontWeight='bold'
-                        fontSize='16px'
+                        fontSize='14px'
                         >
-                            {progressBar + '%'}
+                            {Math.floor(status) + '%'}
                         </Text>
                     }
                 </Box>
@@ -67,4 +69,4 @@ const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
     );
 }
 
-export default IgnoranceProgress;
+export default StatusProgress;

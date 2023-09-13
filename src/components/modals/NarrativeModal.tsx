@@ -19,6 +19,12 @@ import rightArrow from "../../assets/icons/rightArrow.png";
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
 import { Constants } from '../../utils/constants';
+import { AGILITY, LEADERSHIP } from '../../utils/constants/constants';
+
+interface IStatus {
+    name: string,
+    points: number
+}
 
 interface IScript {
     name: string,
@@ -46,7 +52,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     const [delayButton, setDelayButton] = useState(true);
 
     const freeCoins = Constants.FREE_LUNCH_SOURCE;
-    const [freeStatus, setFreeStatus] = useState([0, 0, 0, 0, 0, 0, 0]);
+    const [freeStatus, setFreeStatus] = useState<IStatus>();
 
     const [visibleText, setVisibleText] = useState(false);
     const [visibleName, setVisibleName] = useState(false);
@@ -109,7 +115,10 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
                 lunchOnOpen();
                 if (narrative === 'cheetah') {
-                    setFreeStatus([15, 0, 0, 0, 0, 0]);
+                    setFreeStatus({
+                        name: AGILITY,
+                        points: 20
+                    });
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
                             ...user.narrative_status,
@@ -117,7 +126,10 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                         }
                     });
                 } else if (narrative === 'lion') {
-                    setFreeStatus([0, 15, 0, 0, 0, 0]);
+                    setFreeStatus({
+                        name: LEADERSHIP,
+                        points: 20
+                    });
                     await api.patch(`/user/narrative/${_userId}`, {
                         narrative_status: {
                             ...user.narrative_status,

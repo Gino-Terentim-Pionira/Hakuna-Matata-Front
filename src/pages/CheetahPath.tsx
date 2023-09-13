@@ -36,6 +36,8 @@ import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/Ignorance
 import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import IgnoranceFilter from '../components/IgnoranceFilter';
+import { CHEETAH_FINAL, STATUS_LEVEL, AGILITY } from '../utils/constants/constants';
+import { getStatusPoints } from '../utils/statusUtils';
 
 // Requisitions
 import api from '../services/api';
@@ -57,7 +59,6 @@ import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
 import { Constants } from '../utils/constants';
 import BlockedModal from '../components/modals/BlockedModal';
-import { CHEETAH_FINAL } from '../utils/constants/constants';
 
 interface IQuiz {
     _id: string;
@@ -448,7 +449,13 @@ const CheetahPath = () => {
                     {narrativeIsOpen ||
                         narrativeChallengeIsOpen ||
                         finalNarrativeChallengeIsOpen ? null : (
-                            <IgnorancePremiumIcons ignorance={userData.ignorance} />
+                            <IgnorancePremiumIcons 
+                                ignorance={userData.ignorance} 
+                                showStatus={true}
+                                statusText={STATUS_LEVEL(AGILITY)}
+                                statusPoints={getStatusPoints(userData, AGILITY)}
+                                statusColor={colorPalette.primaryColor}
+                            />
                         )}
                 </Flex>
 
@@ -711,7 +718,7 @@ const CheetahPath = () => {
                 routeQuiz={'finalcheetahquiz'}
                 insignaName={'da Cheetah'}
                 withoutMoney={withoutMoney}
-                userIgnorance={userData.ignorance}
+                userStatus={getStatusPoints(userData, AGILITY)}
                 trail={1}
             />
 

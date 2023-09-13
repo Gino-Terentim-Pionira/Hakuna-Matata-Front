@@ -42,7 +42,9 @@ export const LOCKED_BADGE = 'Domine um desafio para merecer esta insígnia';
 
 export const IGNORANCE_GLASS = "Óculos da ignorância";
 
-// BUTTON TEXTS
+export const STATUS = 'Seu progresso na trilha';
+
+// Button Texts
 
 export const GENERIC_MODAL_TEXT = 'Voltar';
 
@@ -53,3 +55,13 @@ export const BUY_HOUR_GLASS = 'Comprar ampulheta';
 export const REWATCH_VIDEOS = 'Assistir videos novamente';
 
 export const LOAD_BUTTON = 'Viajando';
+
+// Status Text
+
+export const AGILITY = 'agilidade';
+
+export const LEADERSHIP = 'liderança';
+
+// Status Progress Text
+
+export const STATUS_LEVEL = (name: string) => `Nível de ${name}`;

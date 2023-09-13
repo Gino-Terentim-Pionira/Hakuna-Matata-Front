@@ -54,6 +54,8 @@ import { errorCases } from '../utils/errors/errorsCases';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 import useInsignias from '../hooks/useInsignias';
 import { Constants } from '../utils/constants';
+import { getStatusPoints } from '../utils/statusUtils';
+import { LEADERSHIP } from '../utils/constants/constants';
 
 
 interface IQuiz {
@@ -667,7 +669,7 @@ const LionPath = () => {
 				routeQuiz={'finallionquiz'}
 				insignaName={'do Leão e Leoa'}
 				withoutMoney={withoutMoney}
-				userIgnorance={userData.ignorance}
+				userStatus={getStatusPoints(userData, LEADERSHIP)}
 				trail={2}
 			/>
 

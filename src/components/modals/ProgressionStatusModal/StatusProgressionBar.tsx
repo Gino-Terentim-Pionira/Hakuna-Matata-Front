@@ -4,9 +4,10 @@ import fontTheme from '../../../styles/base';
 import colorPalette from '../../../styles/colorPalette';
 import icon_lock from '../../../assets/icons/icon_lock.svg'
 
-const StatusProgressionBar = ({ status, label, isBlocked = false, isOnLeft, marginTop }: {
+const StatusProgressionBar = ({ status, label, isBlocked = false, isOnLeft, marginTop, color }: {
   status: number,
   label: string,
+  color?: string,
   isBlocked?: boolean,
   isOnLeft?: boolean
   marginTop?: string
@@ -36,7 +37,7 @@ const StatusProgressionBar = ({ status, label, isBlocked = false, isOnLeft, marg
           </Flex>
           :
           <Center borderRadius="md" padding="0 8px" mt="4px" width="100%" height={{xl:"32px", lg: "30px", md: "28px", sm:"24px"}} border="1px" borderColor="rgba(0, 0, 0, 0.31)">
-            <Progress hasStripe colorScheme="blue" width="100%" height="16px" value={status} max={1200} />
+            <Progress hasStripe colorScheme={color || "blue"} width="100%" height="16px" value={status} max={1200} />
           </Center>
 
       }

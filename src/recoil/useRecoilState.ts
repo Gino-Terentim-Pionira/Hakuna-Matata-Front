@@ -10,7 +10,10 @@ export interface IUser {
 	password: string;
 	birthday_date: string;
 	is_confirmed: boolean;
-	status: number[];
+	status: [{
+        name: string;
+        points: number;
+    }];
 	coins: number;
 	contribution: number;
 	first_certificate: string;

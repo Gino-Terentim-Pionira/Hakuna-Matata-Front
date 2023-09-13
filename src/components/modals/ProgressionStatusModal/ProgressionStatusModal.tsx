@@ -11,10 +11,13 @@ import { useUser } from '../../../hooks';
 import LoadingState from '../../LoadingState';
 import IgnoranceProgress from '../../IgnoranceCoinsDisplay/IgnoranceProgress';
 import StatusProgressionBar from './StatusProgressionBar';
+import { AGILITY, LEADERSHIP } from '../../../utils/constants/constants';
+import { getStatusPoints } from '../../../utils/statusUtils';
 
 // Images
 import Profile from '../../../assets/icons/profile.svg';
 import CoinsDisplay from '../../IgnoranceCoinsDisplay/CoinsDisplay';
+
 
 const ProgressionStatusModal = () => {
     const { userData } = useUser();
@@ -27,9 +30,9 @@ const ProgressionStatusModal = () => {
                         <Flex w="95%" flexDirection="row" marginTop='1.2rem' alignItems="flex-end" justifyContent="space-between">
                             <Box w="35%" align='right'>
                                 <Stack w="100%">
-                                    <StatusProgressionBar status={userData.status[0]} label="Agilidade (AGI)" isOnLeft isBlocked={userData.narrative_status.trail1 < 2} />
-                                    <StatusProgressionBar status={userData.status[2]} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked />
-                                    <StatusProgressionBar status={userData.status[4]} marginTop="4px" label="Estratégia (EST)" isOnLeft isBlocked />
+                                    <StatusProgressionBar color="orange" status={getStatusPoints(userData, AGILITY)} label="Agilidade (AGI)" isOnLeft isBlocked={userData.narrative_status.trail1 < 2} />
+                                    <StatusProgressionBar status={0} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked />
+                                    <StatusProgressionBar status={0} marginTop="4px" label="Estratégia (EST)" isOnLeft isBlocked />
                                 </Stack>
                             </Box>
                             <Box display='flex' flexDirection='column' alignItems='center'>
@@ -38,9 +41,9 @@ const ProgressionStatusModal = () => {
                             </Box>
                             <Box w="35%">
                                 <Stack w="100%">
-                                    <StatusProgressionBar status={userData.status[1]} isBlocked label="Liderança (LID)" />
-                                    <StatusProgressionBar status={userData.status[3]} isBlocked marginTop="4px" label="Gestão de mudanças (GM)" />
-                                    <StatusProgressionBar status={userData.status[5]} isBlocked marginTop="4px" label="Gestão de projetos (GP)" />
+                                    <StatusProgressionBar status={getStatusPoints(userData, LEADERSHIP)} isBlocked label="Liderança (LID)" />
+                                    <StatusProgressionBar status={0} isBlocked marginTop="4px" label="Gestão de mudanças (GM)" />
+                                    <StatusProgressionBar status={0} isBlocked marginTop="4px" label="Gestão de projetos (GP)" />
                                 </Stack>
                             </Box>
                         </Flex>
@@ -48,6 +51,7 @@ const ProgressionStatusModal = () => {
                             <IgnoranceProgress 
                                 ignorance={userData.ignorance}
                                 position='top'
+                                ignoranceFilter={true}
                             />
                             <CoinsDisplay 
                                 value={userData.coins}
