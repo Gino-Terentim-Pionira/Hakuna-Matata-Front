@@ -8,15 +8,18 @@ import icon_shop from '../../assets/icons/icon_shop.svg';
 import icon_map from '../../assets/icons/icon_map.svg';
 import icon_logout from '../../assets/icons/icon_logout.svg';
 import inventory_icon from '../../assets/icons/inventory.png';
+import chat from '../../assets/icons/chat.png'
 import ProfileModal from "../modals/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
-import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP } from "../../utils/constants/constants";
+import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "../../utils/constants/constants";
 import usePath from "../../hooks/usePath";
+import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 
 interface NavActionsInterface {
   logout: VoidFunction;
   dontShowMap?: boolean;
+
 }
 
 const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
@@ -26,6 +29,8 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     onClose: profileOnClose,
     onOpen: profileOnOpen
   } = useDisclosure();
+
+  const { isIgnoranceFilterOn } = useIgnoranceFilter();
 
   const {
     isOpen: tutorialIsOpen,
@@ -44,6 +49,10 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     handlePath('/inventory');
   }
 
+  const handleChat = () => {
+    //Logica de abrir narrativa
+  }
+
   return (
     <>
       <Flex
@@ -55,41 +64,49 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         h='85.5vh'
       >
         <Flex flexDirection='column' align='center'>
-          <NavIcon 
-            image={icon_profile} 
-            onClick={profileOnOpen} 
+          <NavIcon
+            image={icon_profile}
+            onClick={profileOnOpen}
             size='normal'
             isMap={false}
             mouseOver={USER_PROFILE}
           />
 
-          <NavIcon 
-            image={icon_shop} 
-            onClick={handleStore} 
+          {!isIgnoranceFilterOn && <NavIcon
+            image={icon_shop}
+            onClick={handleStore}
             size='normal'
             isMap={false}
             mouseOver={STORE}
-          />
+          />}
 
-          <NavIcon 
-            image={inventory_icon} 
-            onClick={handleInventory} 
+          {!isIgnoranceFilterOn && <NavIcon
+            image={inventory_icon}
+            onClick={handleInventory}
             size='normal'
             isMap={false}
             mouseOver={INVENTORY}
-          />
+          />}
+          
+          {isIgnoranceFilterOn && <NavIcon
+            image={chat}
+            onClick={tutorialOnOpen}
+            size='normal'
+            isMap={false}
+            mouseOver={CHAT}
+          />}
 
-          <NavIcon 
-            image={icon_tutorial} 
-            onClick={tutorialOnOpen} 
+          <NavIcon
+            image={icon_tutorial}
+            onClick={tutorialOnOpen}
             size='small'
             isMap={false}
             mouseOver={TUTORIAL}
           />
 
-          <NavIcon 
-            image={icon_logout} 
-            onClick={logout} 
+          <NavIcon
+            image={icon_logout}
+            onClick={logout}
             size='small'
             isMap={false}
             mouseOver={LOG_OUT}
@@ -104,7 +121,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
             size='big'
             isMap={true}
             mouseOver={MAP}
-           />
+          />
         }
       </Flex>
 
