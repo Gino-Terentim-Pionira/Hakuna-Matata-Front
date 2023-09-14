@@ -1,5 +1,5 @@
-import React, { FC, useState, useEffect, SetStateAction } from 'react';
-import { Flex, Box, Image, Slide, useDisclosure, Text } from '@chakra-ui/react';
+import React, { FC, useState, SetStateAction } from 'react';
+import { useDisclosure  } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { useUser } from '../../../hooks';
 
@@ -9,15 +9,6 @@ import FreeLunch from '../FreeLunch';
 // Requisitions
 import api from '../../../services/api';
 
-// Styles
-import { SplitText } from '../../../utils/animations/SplitText';
-import { SplitTitle } from '../../../utils/animations/SplitTitle';
-import { AnimatePresence, motion } from 'framer-motion';
-
-// Images
-import rightArrow from "../../assets/icons/rightArrow.png";
-import colorPalette from '../../../styles/colorPalette';
-import fontTheme from '../../../styles/base';
 import { Constants } from '../../../utils/constants';
 import DefaultNarrativeModal from './DefaultNarrativeModal';
 
