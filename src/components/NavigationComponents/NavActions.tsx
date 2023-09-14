@@ -1,6 +1,9 @@
 import { Flex, useDisclosure } from "@chakra-ui/react";
 import React from "react";
+
 import TutorialModal from "../modals/TutorialModal";
+import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
+import { useUser } from '../../hooks';
 
 import icon_profile from '../../assets/icons/icon_profile.svg';
 import icon_tutorial from '../../assets/icons/icon_tutorial.svg';
@@ -15,22 +18,31 @@ import { useHistory } from "react-router-dom";
 import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "../../utils/constants/constants";
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
+import chatScript from '../../utils/scripts/Baboon/chatScript';
 
 interface NavActionsInterface {
   logout: VoidFunction;
   dontShowMap?: boolean;
-
 }
 
 const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
+  const { userData } = useUser();
   const { handlePath } = usePath();
+  const { isIgnoranceFilterOn } = useIgnoranceFilter();
+  const scriptChat = () => chatScript(userData.ignorance)
+
   const {
     isOpen: profileIsOpen,
     onClose: profileOnClose,
     onOpen: profileOnOpen
   } = useDisclosure();
 
-  const { isIgnoranceFilterOn } = useIgnoranceFilter();
+  const {
+    isOpen: narrativeIsOpen,
+    onOpen: narrativeOnOpen,
+    onToggle: narrativeOnToggle,
+  } = useDisclosure();
+
 
   const {
     isOpen: tutorialIsOpen,
@@ -50,7 +62,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   }
 
   const handleChat = () => {
-    //Logica de abrir narrativa
+    narrativeOnOpen();
   }
 
   return (
@@ -87,10 +99,10 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
             isMap={false}
             mouseOver={INVENTORY}
           />}
-          
+
           {isIgnoranceFilterOn && <NavIcon
             image={chat}
-            onClick={tutorialOnOpen}
+            onClick={handleChat}
             size='normal'
             isMap={false}
             mouseOver={CHAT}
@@ -131,6 +143,11 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         isOpen={tutorialIsOpen}
         onClose={tutorialOnClose}
         onToggle={tutorialOnToggle}
+      />
+      <DefaultNarrativeModal
+        isOpen={narrativeIsOpen}
+        onToggle={narrativeOnToggle}
+        script={scriptChat()}
       />
     </>
   )
