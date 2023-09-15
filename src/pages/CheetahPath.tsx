@@ -367,17 +367,14 @@ const CheetahPath = () => {
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
             '@pionira/userId',
         );
-        const validation = await api.get(`user/loadingQuiz/${_userId}`);
         const userCoins = userData.coins;
 
         if (userCoins >= value) {
             const newCoins = userCoins - value;
             try {
-                if (validation) {
-                    await api.patch(`/user/coins/${_userId}`, {
-                        coins: newCoins,
-                    });
-                }
+                await api.patch(`/user/coins/${_userId}`, {
+                    coins: newCoins,
+                });
 
                 setPayLoading(false);
                 handleModal();

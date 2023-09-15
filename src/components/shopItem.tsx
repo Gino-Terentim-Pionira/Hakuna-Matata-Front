@@ -15,6 +15,7 @@ import AlertModal from './modals/AlertModal';
 
 // Requisitions
 import api from '../services/api';
+import { resetAllCooldown } from '../services/moduleCooldown';
 
 // Styles
 import fontTheme from '../styles/base';
@@ -91,9 +92,7 @@ const ShopItem: FC<ShopItemProps> = ({
 				if (type === "item3") {
 					try {
 
-						await api.patch(`/user/loadingQuiz/${current_user_id}`, {
-							quiz_loading: "",
-						});
+						await resetAllCooldown(current_user_id);
 
 						await api.patch(`/user/coins/${current_user_id}`, {
 							coins: newCoins,
