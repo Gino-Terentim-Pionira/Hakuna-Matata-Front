@@ -6,19 +6,22 @@ interface IgnoranceFilter {
     ignoranceImage: string;
 }
 
-const IgnoranceFilter = ({ignoranceImage}: IgnoranceFilter) => {
-	const { isIgnoranceFilterOn } = useIgnoranceFilter()
+const IgnoranceFilter = ({ ignoranceImage }: IgnoranceFilter) => {
+    const { isIgnoranceFilterOn } = useIgnoranceFilter()
     return (
         <>
-            {isIgnoranceFilterOn && <Image
-                src={ignoranceImage}
-                position='absolute'
-                h='100vh'
-                w='100%'
-                zIndex='-3'
-                left='0'
-                top='0'
-            />}
+            {isIgnoranceFilterOn &&
+                <Image
+                    src={ignoranceImage}
+                    position='absolute'
+                    h='100vh'
+                    w='100%'
+                    zIndex='-3'
+                    left='0'
+                    top='0'
+                    background=" rgba(77, 77, 77, 0.35);"
+                />
+            }
         </>
     )
 }
