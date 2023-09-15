@@ -17,7 +17,7 @@ import { useUser } from '../hooks';
 import useInsignias from '../hooks/useInsignias';
 
 // Components
-import NarrativeModal from '../components/modals/NarrativeModal';
+import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
 import FinalQuizModal from '../components/FinalBlackMambaQuiz/FinalQuiz';
 import AlertModal from '../components/modals/AlertModal';
 import NavActions from '../components/NavigationComponents/NavActions';

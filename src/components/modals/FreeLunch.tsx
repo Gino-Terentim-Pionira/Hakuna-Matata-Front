@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useUser } from '../../hooks';
+import { useHistory } from 'react-router-dom';
 
 // Components
 import RewardModal from './GenericModal';
@@ -43,6 +44,7 @@ const FreeLunch: FC<IFreeLunch> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
     const { getNewUserInfo, userData } = useUser();
+    const history = useHistory();
     const coinsRecieved = coins;
 
 
@@ -66,6 +68,7 @@ const FreeLunch: FC<IFreeLunch> = ({
 
             incrementStatus(_userId as string);
 
+            history.go(0);
             await getNewUserInfo();
         } catch (error) {
             setOnError(true);

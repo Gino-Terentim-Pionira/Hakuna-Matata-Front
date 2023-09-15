@@ -44,6 +44,8 @@ export const IGNORANCE_GLASS = "Óculos da ignorância";
 
 export const STATUS = 'Seu progresso na trilha';
 
+export const CHAT = "Sabedoria do Babuíno";
+
 // Button Texts
 
 export const GENERIC_MODAL_TEXT = 'Voltar';

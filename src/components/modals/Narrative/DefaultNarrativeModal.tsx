@@ -1,30 +1,11 @@
-import React, { FC, useState, useEffect, SetStateAction } from 'react';
-import { Flex, Box, Image, Slide, useDisclosure, Text } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
-import { useUser } from '../../hooks';
-
-// Components
-import FreeLunch from './FreeLunch';
-
-// Requisitions
-import api from '../../services/api';
-
-// Styles
-import { SplitText } from '../../utils/animations/SplitText';
-import { SplitTitle } from '../../utils/animations/SplitTitle';
-import { AnimatePresence, motion } from 'framer-motion';
-
-// Images
-import rightArrow from "../../assets/icons/rightArrow.png";
-import colorPalette from '../../styles/colorPalette';
-import fontTheme from '../../styles/base';
-import { Constants } from '../../utils/constants';
-import { AGILITY, LEADERSHIP } from '../../utils/constants/constants';
-
-interface IStatus {
-    name: string,
-    points: number
-}
+import { Box, Slide, Flex, Image, Text } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import colorPalette from "../../../styles/colorPalette";
+import { SplitTitle } from "../../../utils/animations/SplitTitle";
+import { SplitText } from "../../../utils/animations/SplitText";
+import fontTheme from "../../../styles/base";
+import rightArrow from "../../../assets/icons/rightArrow.png";
 
 interface IScript {
     name: string,
@@ -36,23 +17,17 @@ type NarrativeModalProps = {
     isOpen: boolean,
     onToggle: VoidFunction,
     script: IScript[],
-    narrative?: 'cheetah' | 'lion' | undefined
+    endScriptFunction?: VoidFunction,
 }
 
-const NarrativeModal: FC<NarrativeModalProps> = ({
+const DefaultNarrativeModal = ({
     isOpen,
     onToggle,
     script,
-    narrative
-}) => {
-    const history = useHistory();
-    const { userData, setUserData, getNewUserInfo } = useUser();
-    const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
+    endScriptFunction
+}: NarrativeModalProps) => {
 
     const [delayButton, setDelayButton] = useState(true);
-
-    const freeCoins = Constants.FREE_LUNCH_SOURCE;
-    const [freeStatus, setFreeStatus] = useState<IStatus>();
 
     const [visibleText, setVisibleText] = useState(false);
     const [visibleName, setVisibleName] = useState(false);
@@ -65,6 +40,38 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     const [textIndex, setTextIndex] = useState(0);
     const [scriptIndex, setScriptIndex] = useState(0);
 
+    const updateScript = () => {
+
+        let nextTextIndex = textIndex + 1;
+
+        if (nextTextIndex < script[scriptIndex].texts.length) {
+
+            setTextIndex(nextTextIndex);
+
+            setScriptText(script[scriptIndex].texts[nextTextIndex]);
+        } else if (scriptIndex < script.length - 1) {
+            const nextScriptIndex = scriptIndex + 1;
+            nextTextIndex = 0;
+
+            setTextIndex(nextTextIndex);
+            setScriptIndex(nextScriptIndex);
+
+            setScriptText(script[nextScriptIndex].texts[nextTextIndex]);
+
+            setScriptImage(script[nextScriptIndex].image);
+
+            setScriptName(script[nextScriptIndex].name);
+        } else {
+            endScriptFunction ? endScriptFunction() :  onToggle();
+        }
+    }
+
+    const buttonFunctions = () => {
+        if (delayButton) {
+            setDelayButton(!delayButton);
+            updateScript();
+        }
+    }
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -96,122 +103,8 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
         }
     }, [delayButton]);
 
-    //logic for checking and switching if first time is set to true
-    const updateNarrative = async () => {
-        try {
-            let user;
-            const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-            if(!userData._id) {
-                const res = await api.get(`/user/${_userId}`);
-                user = res.data;
-                setUserData(res.data);
-            } else user = userData;
-
-            if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
-                lunchOnOpen();
-                await api.patch(`/user/updateFirstTime/${user._id}`, {
-                    isFirstTimeAppLaunching: false,
-                });
-            } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
-                lunchOnOpen();
-                if (narrative === 'cheetah') {
-                    setFreeStatus({
-                        name: AGILITY,
-                        points: 20
-                    });
-                    await api.patch(`/user/narrative/${_userId}`, {
-                        narrative_status: {
-                            ...user.narrative_status,
-                            trail1: 2
-                        }
-                    });
-                } else if (narrative === 'lion') {
-                    setFreeStatus({
-                        name: LEADERSHIP,
-                        points: 20
-                    });
-                    await api.patch(`/user/narrative/${_userId}`, {
-                        narrative_status: {
-                            ...user.narrative_status,
-                            trail2: 2
-                        }
-                    });
-                }
-                await getNewUserInfo();
-            } else if (user.narrative_status.trail1 == 0 && narrative == 'cheetah') { //Verifica se é a primeira vez do usuário na trilha da cheetah
-                await api.patch(`/user/narrative/${_userId}`, {
-                    narrative_status: {
-                        ...user.narrative_status,
-                        trail1: 2
-                    }
-                });
-                await getNewUserInfo();
-                history.go(0);
-            } else if (user.narrative_status.trail2 == 0 && narrative == 'lion') { //Verifica se é a primeira vez do usuário na trilha do leao e da leoa
-                await api.patch(`/user/narrative/${_userId}`, {
-                    narrative_status: {
-                        ...user.narrative_status,
-                        trail2: 2
-                    }
-                });
-                await getNewUserInfo();
-                history.go(0);
-            } else if (user.narrative_status.trail1 == 3 && narrative == 'cheetah') { //Verifica se o usuário terminou o desafio da trilha
-                await api.patch(`/user/narrative/${_userId}`, {
-                    narrative_status: {
-                        ...user.narrative_status,
-                        trail1: 4
-                    }
-                });
-            } else if (user.narrative_status.trail2 == 3 && narrative == 'lion') { //Verifica se o usuário terminou o desafio da trilha
-                await api.patch(`/user/narrative/${_userId}`, {
-                    narrative_status: {
-                        ...user.narrative_status,
-                        trail2: 4
-                    }
-                });
-            }
-            onToggle();
-        } catch (error) {
-            alert(error);
-        }
-    }
-
-    const updateScript = () => {
-
-        let nextTextIndex = textIndex + 1;
-
-        if (nextTextIndex < script[scriptIndex].texts.length) {
-
-            setTextIndex(nextTextIndex);
-
-            setScriptText(script[scriptIndex].texts[nextTextIndex]);
-        } else if (scriptIndex < script.length - 1) {
-            const nextScriptIndex = scriptIndex + 1;
-            nextTextIndex = 0;
-
-            setTextIndex(nextTextIndex);
-            setScriptIndex(nextScriptIndex);
-
-            setScriptText(script[nextScriptIndex].texts[nextTextIndex]);
-
-            setScriptImage(script[nextScriptIndex].image);
-
-            setScriptName(script[nextScriptIndex].name);
-        } else {
-            updateNarrative();
-        }
-    }
-
-    const buttonFunctions = () => {
-        if (delayButton) {
-            setDelayButton(!delayButton);
-            updateScript();
-        }
-    }
-
     return (
-        <Box>
+        <Box zIndex={10000}>
             <Slide direction="bottom" in={isOpen} >
                 <Box onClick={buttonFunctions} w='100%' zIndex="5" h='100vh' />
                 <Flex w="100%" justifyContent="flex-end" >
@@ -311,7 +204,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                                 opacity: '80%'
                             }}
                             onClick={() => {
-                                updateNarrative();
+                                endScriptFunction ? endScriptFunction() :  onToggle();
                             }}
                             mr="32px"
                             fontFamily={fontTheme.fonts}
@@ -338,14 +231,8 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     </Flex>
                 </Flex>
             </Slide>
-            <FreeLunch
-                isOpen={lunchIsOpen}
-                coins={freeCoins}
-                score={freeStatus}
-                onClose={() => { lunchOnClose() }}
-            />
         </Box>
     )
 }
 
-export default NarrativeModal;
+export default DefaultNarrativeModal;

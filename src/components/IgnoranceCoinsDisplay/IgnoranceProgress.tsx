@@ -6,6 +6,7 @@ import font from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 import { WISDOM } from '../../utils/constants/constants';
 import { PositionProps } from '../../utils/props';
+import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 
 
 const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
@@ -14,6 +15,7 @@ const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
     ignoranceFilter: boolean
 }) => {
     const progressBar = Math.floor(100 - ignorance);
+    const {isIgnoranceFilterOn} = useIgnoranceFilter();
     return (
         <Tooltip
             hasArrow
@@ -21,6 +23,7 @@ const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
             label={WISDOM}
         >
             <Box
+                position='relative'
                 height='32px'
                 width='392px'
                 backgroundColor={colorPalette.darkGrey}
@@ -62,6 +65,17 @@ const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
                         </Text>
                     }
                 </Box>
+                {isIgnoranceFilterOn && <Text
+                    position="absolute"
+                    top="5%"
+                    right="16px"
+                    color={colorPalette.backgroundColor}
+                    fontFamily={font.fonts}
+                    fontWeight='bold'
+                    fontSize='16px'
+                >
+                    {progressBar}%
+                </Text>}
             </Box>
         </Tooltip>
     );

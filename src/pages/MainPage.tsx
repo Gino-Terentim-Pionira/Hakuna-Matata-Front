@@ -6,14 +6,14 @@ import useInsignias from '../hooks/useInsignias';
 
 // Components
 import TutorialModal from '../components/modals/TutorialModal';
-import NarrativeModal from '../components/modals/NarrativeModal';
+import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
 import AlertModal from '../components/modals/AlertModal';
 import DailyReward from '../components/modals/DailyRewardModal';
 import SubscribedModal from '../components/modals/SubscribedModal';
 
 // Requisitions
 import api from '../services/api';
-import mainPageScript from '../utils/scripts/MainPage/MainPageScript';
+import mainPageScript from '../utils/scripts/Baboon/MainPageScript';
 
 //Utils
 import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';

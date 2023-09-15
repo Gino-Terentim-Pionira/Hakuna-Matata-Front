@@ -29,7 +29,7 @@ import './../styles/fadeEffect.css';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import NarrativeModal from '../components/modals/NarrativeModal';
+import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';

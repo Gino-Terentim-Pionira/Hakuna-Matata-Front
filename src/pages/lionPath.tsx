@@ -25,7 +25,7 @@ import colorPalette from "../styles/colorPalette";
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import NarrativeModal from '../components/modals/NarrativeModal';
+import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
 import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
 import NavActions from '../components/NavigationComponents/NavActions';
