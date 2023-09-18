@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -58,6 +58,7 @@ const GenericModal: FC<IGenericModal> = ({
     error,
 }) => {
     const { title, titleColor, subtitle, icon, coins, status } = genericModalInfo;
+    const [ isDisabled, setIsDisabled] = useState(false);
 
     const statusPointsRecieved = [{
         name: "Agilidade",
@@ -82,9 +83,29 @@ const GenericModal: FC<IGenericModal> = ({
         }
     }
 
+    const handleClose = () => {
+        if (!isDisabled) {
+            setIsDisabled(true);
+            if (closeFunction) {
+                closeFunction();
+            } else {
+                confirmFunction();
+            }
+        }
+    }
+
+    const handleButtonClick = (action: VoidFunction | undefined) => {
+        if (!isDisabled) {
+            setIsDisabled(true);
+            if (action) {
+                action();
+            }
+        }
+    }
+
     return (
         <>
-            <Modal isOpen={isOpen} onClose={closeFunction || confirmFunction}>
+            <Modal isOpen={isOpen} onClose={handleClose}>
                 <ModalOverlay />
                 <ModalContent fontSize={fontTheme.fonts} minHeight="437px" h='fit-content' w='418px'  >
                     <ModalCloseButton color={colorPalette.closeButton} size='lg' />
@@ -203,7 +224,7 @@ const GenericModal: FC<IGenericModal> = ({
                                         color={colorPalette.buttonTextColor}
                                         fontSize='24px'
                                         fontFamily={fontTheme.fonts}
-                                        onClick={confirmFunction}
+                                        onClick={() => handleButtonClick(confirmFunction)}
                                         loadingText={LOAD_BUTTON}
                                         spinnerPlacement='end'
                                     >
@@ -221,7 +242,7 @@ const GenericModal: FC<IGenericModal> = ({
                                                 color={colorPalette.buttonTextColor}
                                                 fontSize='24px'
                                                 fontFamily={fontTheme.fonts}
-                                                onClick={secondFunction}
+                                                onClick={() => handleButtonClick(secondFunction)}
                                                 loadingText={LOAD_BUTTON}
                                                 spinnerPlacement='end'
                                             >

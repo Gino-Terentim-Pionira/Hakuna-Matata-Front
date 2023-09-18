@@ -240,7 +240,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			{/* Modal de Reward */}
 			<Modal
 				isOpen={modalIsOpenCheetah}
-				onClose={modalOnCloseCheetah}
+				onClose={updateBadge}
 				size='4xl'
 			>
 				<ModalOverlay />
