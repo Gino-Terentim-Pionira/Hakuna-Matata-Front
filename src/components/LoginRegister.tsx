@@ -1,7 +1,9 @@
-import { Flex, Center, Box, Text, Input, Button, Link } from '@chakra-ui/react';
-import React, { ChangeEventHandler, FC } from 'react';
+import { Flex, Center, Box, Text, Input, Button, Link, Image } from '@chakra-ui/react';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
+import closed_eye from '../assets/icons/closed-eye.png';
+import eye from '../assets/icons/eye.png'
 
 type LoginRegisterProps = {
     mainText: string;
@@ -46,6 +48,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     hasValidationError,
     loading
 }) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -54,6 +57,39 @@ const LoginRegister: FC<LoginRegisterProps> = ({
             nextStep();
         }
     }
+
+    const renderPassword = (placeholder: string, type: string, value: string, onChange: VoidFunction, loading: boolean, onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void) => (
+        <Box w="60%" minWidth="250px" position="relative">
+            <Input
+                width="100%"
+                minWidth="250px"
+                height="60px"
+                borderColor={colorPalette.secundaryGrey}
+                marginTop='4px'
+                placeholder={placeholder}
+                type={isPasswordVisible ? undefined : type}
+                value={value}
+                onChange={onChange}
+                disabled={loading}
+                onKeyDown={onKeyDown}
+            />
+            {
+                type === 'password' && <Image
+                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                    zIndex={100000}
+                    _hover={{ cursor: 'pointer' }}
+                    width="28px"
+                    src={isPasswordVisible ? eye : closed_eye}
+                    alt="Mostrar senha"
+                    position="absolute"
+                    top="32%"
+                    right="16px"
+                />
+            }
+
+        </Box>
+    )
+
     return (
         <Flex
             width="55%"
@@ -90,22 +126,14 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     >
                         {firstText}
                     </Text>
-                    <Input
-                        width="60%"
-                        minWidth="250px"
-                        height="60px"
-                        borderColor={colorPalette.secundaryGrey}
-                        marginTop='4px'
-                        isInvalid={hasValidationError}
-                        focusBorderColor={hasValidationError ? "#red" : "#4161ed"}
-                        color={colorPalette.textColor}
-                        placeholder={firstPlaceholder}
-                        type={firstInputType}
-                        value={firstValue}
-                        onChange={firstChange}
-                        disabled={loading}
-                        onKeyDown={handleKeyPress}
-                    />
+                    {renderPassword(
+                        firstPlaceholder as string,
+                        firstInputType as string,
+                        firstValue as string,
+                        firstChange as VoidFunction,
+                        loading,
+                        handleKeyPress
+                    )}
                     <Text color="red" fontSize="15"> {validationError} </Text>
 
                 </Box>
@@ -118,19 +146,14 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                             >
                                 {secondText}
                             </Text>
-                            <Input
-                                width="60%"
-                                minWidth="250px"
-                                height="60px"
-                                borderColor={colorPalette.secundaryGrey}
-                                marginTop='4px'
-                                placeholder={secondPlaceholder}
-                                type={secondInputType}
-                                value={secondValue}
-                                onChange={secondChange}
-                                disabled={loading}
-                                onKeyDown={handleKeyPress}
-                            />
+                            {renderPassword(
+                                secondPlaceholder as string,
+                                secondInputType as string,
+                                secondValue as string,
+                                secondChange as VoidFunction,
+                                loading,
+                                handleKeyPress
+                            )}
                         </>
                     ) : (null)}
 
@@ -146,11 +169,11 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                                 Esqueci minha senha
                             </Link>
                         </Box>) : (
-                        null
-                    )}
+                            null
+                        )}
                 </Box>
             </Flex>
-            
+
             <Box w='70%' h='fit-content'>
                 <Center marginTop='1rem'>
                     <Button
