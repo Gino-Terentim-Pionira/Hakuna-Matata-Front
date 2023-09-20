@@ -230,7 +230,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 
 			<Modal
 				isOpen={finalModalIsOpen}
-				onClose={() => updateBlackMambaBadge()}
+				onClose={updateBlackMambaBadge}
 				size='4xl'
 			>
 				<ModalOverlay />

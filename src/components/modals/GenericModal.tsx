@@ -86,20 +86,14 @@ const GenericModal: FC<IGenericModal> = ({
     const handleClose = () => {
         if (!isDisabled) {
             setIsDisabled(true);
-            if (closeFunction) {
-                closeFunction();
-            } else {
-                confirmFunction();
-            }
+            closeFunction ? closeFunction() : confirmFunction();
         }
     }
 
     const handleButtonClick = (action: VoidFunction | undefined) => {
         if (!isDisabled) {
             setIsDisabled(true);
-            if (action) {
-                action();
-            }
+            action && action();
         }
     }
 
