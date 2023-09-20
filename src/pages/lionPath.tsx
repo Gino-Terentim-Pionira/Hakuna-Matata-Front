@@ -55,7 +55,7 @@ import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQ
 import useInsignias from '../hooks/useInsignias';
 import { Constants } from '../utils/constants';
 import { getStatusPoints } from '../utils/statusUtils';
-import { LEADERSHIP } from '../utils/constants/constants';
+import { LEADERSHIP } from '../utils/constants/statusConstants';
 
 
 interface IQuiz {

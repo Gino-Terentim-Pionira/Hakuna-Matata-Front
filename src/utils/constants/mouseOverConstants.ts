@@ -45,25 +45,3 @@ export const IGNORANCE_GLASS = "Óculos da ignorância";
 export const STATUS = 'Seu progresso na trilha';
 
 export const CHAT = "Sabedoria do Babuíno";
-
-// Button Texts
-
-export const GENERIC_MODAL_TEXT = 'Voltar';
-
-export const REWARD_MODAL_TEXT = 'Coletar Recompensas';
-
-export const BUY_HOUR_GLASS = 'Comprar ampulheta';
-
-export const REWATCH_VIDEOS = 'Assistir videos novamente';
-
-export const LOAD_BUTTON = 'Viajando';
-
-// Status Text
-
-export const AGILITY = 'agilidade';
-
-export const LEADERSHIP = 'liderança';
-
-// Status Progress Text
-
-export const STATUS_LEVEL = (name: string) => `Nível de ${name}`;

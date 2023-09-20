@@ -11,7 +11,7 @@ import insigniaCheetahSillouete from '../../assets/icons/insignia/cheetaInsignia
 import insigniaMambaSillouete from '../../assets/icons/insignia/mambaInsigniaSillouete.png';
 import insigniaLionSillouete from '../../assets/icons/insignia/lionInsigniaSillouete.png';
 import useInsignias from '../../hooks/useInsignias';
-import { LOCKED_BADGE } from '../../utils/constants/constants';
+import { LOCKED_BADGE } from '../../utils/constants/mouseOverConstants';
 
 const InsigniaCertificate = () => {
     const { insigniasData } = useInsignias();

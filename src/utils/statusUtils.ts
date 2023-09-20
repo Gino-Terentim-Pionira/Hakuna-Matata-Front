@@ -1,5 +1,5 @@
 import { IUser } from "../recoil/useRecoilState";
-import { AGILITY, LEADERSHIP } from "./constants/constants";
+import { AGILITY, LEADERSHIP } from "./constants/statusConstants";
 
 export const getStatusPoints = (userData: IUser, statusName: string) => {
     const status = userData.status.find((item) => item.name == statusName);

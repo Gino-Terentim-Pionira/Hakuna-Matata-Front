@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text, Tooltip } from '@chakra-ui/react';
-import { STATUS } from '../../utils/constants/constants';
+import { STATUS } from '../../utils/constants/mouseOverConstants';
 import { PositionProps } from '../../utils/props';
 
 // Styles
@@ -30,6 +30,7 @@ const StatusProgress = ({ status, position, labelText, color, ignoranceFilter }:
                 borderColor={colorPalette.blackBorder}
                 borderRadius='8px'
                 overflow='hidden'
+                position='relative'
                 boxShadow='0px 4px 5px rgba(0, 0, 0, 0.14)'
             >
                 <Box
@@ -50,20 +51,20 @@ const StatusProgress = ({ status, position, labelText, color, ignoranceFilter }:
                     >
                         {labelText}
                     </Text>
-                    {
+                </Box>
+                {
                         ignoranceFilter && <Text
                         position='absolute'
                         top='5%'
-                        left='210px'
+                        right='16px'
                         fontFamily={font.fonts}
                         color={colorPalette.whiteText}
                         fontWeight='bold'
                         fontSize='14px'
                         >
-                            {Math.floor(status) + '%'}
+                            {`${Math.floor(status)}%`}
                         </Text>
                     }
-                </Box>
             </Box>
         </Tooltip>
     );

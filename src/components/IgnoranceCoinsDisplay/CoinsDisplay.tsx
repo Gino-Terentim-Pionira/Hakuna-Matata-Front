@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Flex, Text, Image, Tooltip } from '@chakra-ui/react';
 import fontTheme from '../../styles/base';
 import Coins from '../../assets/icons/coinicon.svg';
-import { COINS } from '../../utils/constants/constants';
+import { COINS } from '../../utils/constants/mouseOverConstants';
 import { PositionProps } from '../../utils/props';
 
 type CoinsDisplayProps = {

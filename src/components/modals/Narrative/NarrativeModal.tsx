@@ -11,7 +11,7 @@ import api from '../../../services/api';
 
 import { Constants } from '../../../utils/constants';
 import DefaultNarrativeModal from './DefaultNarrativeModal';
-import { AGILITY, LEADERSHIP } from '../../../utils/constants/constants';
+import { AGILITY, LEADERSHIP } from '../../../utils/constants/statusConstants';
 
 interface IScript {
     name: string,

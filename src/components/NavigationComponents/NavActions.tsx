@@ -15,7 +15,7 @@ import chat from '../../assets/icons/chat.png'
 import ProfileModal from "../modals/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
-import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "../../utils/constants/constants";
+import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "../../utils/constants/mouseOverConstants";
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';

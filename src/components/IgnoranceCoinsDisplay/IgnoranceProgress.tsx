@@ -4,15 +4,14 @@ import { Box, Text, Tooltip } from '@chakra-ui/react';
 // Styles
 import font from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
-import { WISDOM } from '../../utils/constants/constants';
+import { WISDOM } from '../../utils/constants/mouseOverConstants';
 import { PositionProps } from '../../utils/props';
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 
 
-const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
+const IgnoranceProgress = ({ ignorance, position }: {
     ignorance: number,
-    position: PositionProps,
-    ignoranceFilter: boolean
+    position: PositionProps
 }) => {
     const progressBar = Math.floor(100 - ignorance);
     const {isIgnoranceFilterOn} = useIgnoranceFilter();
@@ -26,7 +25,7 @@ const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
                 position='relative'
                 height='32px'
                 width='392px'
-                backgroundColor={colorPalette.darkGrey}
+                backgroundColor={colorPalette.grayBackground}
                 borderWidth='3px'
                 borderColor={colorPalette.blackBorder}
                 borderRadius='100'
@@ -51,19 +50,6 @@ const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
                     >
                         Nível de sabedoria
                     </Text>
-                    {
-                        ignoranceFilter && <Text
-                        position='absolute'
-                        top='5%'
-                        left='340px'
-                        fontFamily={font.fonts}
-                        color={colorPalette.whiteText}
-                        fontWeight='bold'
-                        fontSize='16px'
-                        >
-                            {progressBar + '%'}
-                        </Text>
-                    }
                 </Box>
                 {isIgnoranceFilterOn && <Text
                     position="absolute"
@@ -74,7 +60,7 @@ const IgnoranceProgress = ({ ignorance, position, ignoranceFilter }: {
                     fontWeight='bold'
                     fontSize='16px'
                 >
-                    {progressBar}%
+                    {`${progressBar}%`}
                 </Text>}
             </Box>
         </Tooltip>

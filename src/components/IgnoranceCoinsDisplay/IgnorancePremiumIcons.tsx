@@ -8,7 +8,7 @@ import { useUser } from "../../hooks";
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
 import NavIcon from "../NavigationComponents/NavIcon";
-import { IGNORANCE_GLASS } from "../../utils/constants/constants";
+import { IGNORANCE_GLASS } from "../../utils/constants/mouseOverConstants";
 import StatusProgress from "./StatusProgress";
 
 interface IgnoracenPremiumIconsInterface {
@@ -62,7 +62,6 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
               <IgnoranceProgress
                 position='bottom'
                 ignorance={ignorance}
-                ignoranceFilter={isIgnoranceFilterOn}
               />
               {
                 showStatus && <StatusProgress 

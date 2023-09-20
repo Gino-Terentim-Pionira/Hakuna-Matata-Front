@@ -11,7 +11,7 @@ import { useUser } from '../../../hooks';
 import LoadingState from '../../LoadingState';
 import IgnoranceProgress from '../../IgnoranceCoinsDisplay/IgnoranceProgress';
 import StatusProgressionBar from './StatusProgressionBar';
-import { AGILITY, LEADERSHIP } from '../../../utils/constants/constants';
+import { AGILITY, LEADERSHIP } from '../../../utils/constants/statusConstants';
 import { getStatusPoints } from '../../../utils/statusUtils';
 
 // Images
@@ -51,7 +51,6 @@ const ProgressionStatusModal = () => {
                             <IgnoranceProgress 
                                 ignorance={userData.ignorance}
                                 position='top'
-                                ignoranceFilter={true}
                             />
                             <CoinsDisplay 
                                 value={userData.coins}

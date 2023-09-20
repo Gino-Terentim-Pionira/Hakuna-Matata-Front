@@ -36,7 +36,8 @@ import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/Ignorance
 import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import IgnoranceFilter from '../components/IgnoranceFilter';
-import { CHEETAH_FINAL, STATUS_LEVEL, AGILITY } from '../utils/constants/constants';
+import { CHEETAH_FINAL } from '../utils/constants/mouseOverConstants';
+import { STATUS_LEVEL, AGILITY } from '../utils/constants/statusConstants';
 import { getStatusPoints } from '../utils/statusUtils';
 
 // Requisitions
