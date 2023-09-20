@@ -12,6 +12,8 @@ import {
     useDisclosure
 } from '@chakra-ui/react';
 import { useUser } from '../../hooks';
+import { validateQuestionSize } from '../../utils/validates';
+import { updateModuleCooldown } from '../../services/moduleCooldown';
 
 // Components
 import RewardModal from './GenericModal';
@@ -26,7 +28,6 @@ import api from '../../services/api';
 // Images
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
-import { validateQuestionSize } from '../../utils/validates';
 
 interface IStatus {
     name: string,
@@ -55,6 +56,7 @@ interface IQuizComponent {
         dificulty: string;
         total_coins: number;
         trail: string;
+        _id: string;
     };
     validateUser: VoidFunction;
     firsTimeChallenge: boolean;
@@ -211,9 +213,7 @@ const QuizModal: FC<IQuizComponent> = ({
     const updateUserQuizTime = async () => {
         try {
             const userId = sessionStorage.getItem('@pionira/userId');
-            await api.patch(`user/loadingQuiz/${userId}`, {
-                quiz_loading: Date.now() - 10800000
-            });
+            await updateModuleCooldown(userId as string, moduleInfo._id);
         } catch (error) {
             setOnError(true);
         }

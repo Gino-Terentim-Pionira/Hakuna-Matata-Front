@@ -283,16 +283,13 @@ const BlackMambaPath = () => {
 		setIsConfirmOpen(false);
 		setPayLoading(true);
 		const userId = sessionStorage.getItem('@pionira/userId');
-		const validation = await api.get(`user/loadingQuiz/${userId}`);
 		const userCoins = userData.coins;
 		if (userCoins >= value) {
 			const newCoins = userCoins - value;
 			try {
-				if (validation) {
-					await api.patch(`/user/coins/${userId}`, {
-						coins: newCoins,
-					});
-				}
+				await api.patch(`/user/coins/${userId}`, {
+					coins: newCoins,
+				});
 
 				setPayLoading(false);
 				handleModal();
