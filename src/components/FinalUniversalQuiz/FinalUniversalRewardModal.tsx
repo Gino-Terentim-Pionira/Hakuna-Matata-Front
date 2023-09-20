@@ -107,17 +107,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		return res.data.status;
 	};
 
-	const updateUserQuizTime = async () => {
-		try {
-			const userId = sessionStorage.getItem('@pionira/userId');
-			await api.patch(`user/loadingQuiz/${userId}`, {
-				quiz_loading: Date.now() - 10800000,
-			});
-		} catch (error) {
-			setOnError(true);
-		}
-	};
-
 	const updateUserCoins = async () => {
 		try {
 			const userId = sessionStorage.getItem('@pionira/userId');
@@ -155,7 +144,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			} else {
 				window.location.reload();
 			}
-			await updateUserQuizTime();
 		} catch (error) {
 			setOnError(true);
 		}
