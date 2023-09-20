@@ -58,37 +58,46 @@ const LoginRegister: FC<LoginRegisterProps> = ({
         }
     }
 
-    const renderPassword = (placeholder: string, type: string, value: string, onChange: VoidFunction, loading: boolean, onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void) => (
-        <Box w="60%" minWidth="250px" position="relative">
-            <Input
-                width="100%"
-                minWidth="250px"
-                height="60px"
-                borderColor={colorPalette.secundaryGrey}
-                marginTop='4px'
-                placeholder={placeholder}
-                type={isPasswordVisible ? undefined : type}
-                value={value}
-                onChange={onChange}
-                disabled={loading}
-                onKeyDown={onKeyDown}
-            />
-            {
-                type === 'password' && <Image
-                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                    zIndex={100000}
-                    _hover={{ cursor: 'pointer' }}
-                    width="28px"
-                    src={isPasswordVisible ? eye : closed_eye}
-                    alt="Mostrar senha"
-                    position="absolute"
-                    top="32%"
-                    right="16px"
+    const renderPassword = (
+        placeholder: string,
+        type: string,
+        value: string,
+        onChange: VoidFunction,
+        loading: boolean,
+        onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void,
+        isFirstInput?: boolean
+    ) => (
+            <Box w="60%" minWidth="250px" position="relative">
+                <Input
+                    width="100%"
+                    minWidth="250px"
+                    height="60px"
+                    borderColor={colorPalette.secundaryGrey}
+                    marginTop='4px'
+                    placeholder={placeholder}
+                    type={isPasswordVisible ? undefined : type}
+                    value={value}
+                    onChange={onChange}
+                    disabled={loading}
+                    onKeyDown={onKeyDown}
+                    focusBorderColor={hasValidationError && isFirstInput ? "#F47070" : "#4161ed"}
                 />
-            }
+                {
+                    type === 'password' && <Image
+                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                        zIndex={100000}
+                        _hover={{ cursor: 'pointer' }}
+                        width="28px"
+                        src={isPasswordVisible ? eye : closed_eye}
+                        alt="Mostrar senha"
+                        position="absolute"
+                        top="32%"
+                        right="16px"
+                    />
+                }
 
-        </Box>
-    )
+            </Box>
+        )
 
     return (
         <Flex
@@ -132,7 +141,8 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         firstValue as string,
                         firstChange as VoidFunction,
                         loading,
-                        handleKeyPress
+                        handleKeyPress,
+                        true
                     )}
                     <Text color="red" fontSize="15"> {validationError} </Text>
 
