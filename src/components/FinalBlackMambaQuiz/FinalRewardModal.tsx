@@ -218,7 +218,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 
 			<Modal
 				isOpen={finalModalIsOpen}
-				onClose={finalModalOnClose}
+				onClose={updateBlackMambaBadge}
 				size='4xl'
 			>
 				<ModalOverlay />
