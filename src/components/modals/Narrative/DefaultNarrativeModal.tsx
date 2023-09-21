@@ -204,7 +204,7 @@ const DefaultNarrativeModal = ({
                                 opacity: '80%'
                             }}
                             onClick={() => {
-                                onToggle();
+                                endScriptFunction ? endScriptFunction() :  onToggle();
                             }}
                             mr="32px"
                             fontFamily={fontTheme.fonts}

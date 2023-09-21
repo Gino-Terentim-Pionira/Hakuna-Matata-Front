@@ -22,7 +22,7 @@ import api from '../services/api';
 import { useAuth } from '../contexts/authContext';
 import LoginRegister from '../components/LoginRegister';
 import axios from 'axios';
-import { GENERIC_MODAL_TEXT } from '../utils/constants/constants';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 
 interface IUser {
 	id: string;

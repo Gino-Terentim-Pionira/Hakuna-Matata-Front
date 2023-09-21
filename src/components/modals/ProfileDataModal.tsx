@@ -15,7 +15,7 @@ import Coins from '../../assets/icons/coinicon.svg'
 import fontTheme from '../../styles/base';
 import { editProfileErrorCases, errorCases } from '../../utils/errors/errorsCases';
 import AlertModal from './AlertModal';
-import { GENERIC_MODAL_TEXT } from '../../utils/constants/constants';
+import { GENERIC_MODAL_TEXT } from '../../utils/constants/buttonConstants';
 
 const ProfileDataModal = () => {
     const { userData, setUserData } = useUser();

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { useUser } from '../../hooks';
 import { Constants } from '../../utils/constants';
 import GenericModal from './GenericModal';
-import { BUY_HOUR_GLASS, REWATCH_VIDEOS } from '../../utils/constants/constants';
+import { BUY_HOUR_GLASS, REWATCH_VIDEOS } from '../../utils/constants/buttonConstants';
 
 // Styles
 

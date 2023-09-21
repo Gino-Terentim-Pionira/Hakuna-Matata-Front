@@ -25,7 +25,6 @@ import { Constants } from '../../utils/constants';
 interface IQuestions {
 	alternatives: string[];
 	dificulty: string;
-	score: number[];
 	user_id: string[];
 	_id: string;
 	description: string;
@@ -46,7 +45,6 @@ interface IQuizComponent {
 				alternatives: string[];
 				answer: number;
 				dificulty: string;
-				score: number[];
 				coins: number;
 				user_id: string[];
 			},
@@ -63,7 +61,7 @@ interface IQuizComponent {
 	routeQuestions: string;
 	insignaName: string;
 	withoutMoney: boolean;
-	userIgnorance: number;
+	userStatus: number;
 	trail: number;
 }
 
@@ -78,7 +76,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	routeQuestions,
 	insignaName,
 	withoutMoney,
-	userIgnorance,
+	userStatus,
 	trail
 }) => {
 	const { isOpen, onOpen } = useDisclosure();
@@ -90,7 +88,6 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 		'none',
 	]);
 	const [coins, setCoins] = useState(0);
-	const [status, setStatus] = useState([0, 0, 0, 0, 0, 0]);
 	const [correctAnswer, setCorrectAnswer] = useState(0);
 	const [delayButton, setDelayButton] = useState(true);
 	const [questionsId, setQuestionsId] = useState<string[]>([]);
@@ -118,20 +115,11 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	const isCorrect = (index: number) => {
 		const newCorrectAnswer = questions[step].answer;
 		const questionsCoins = questions[step].coins;
-		const questionStatus = questions[step].score;
 		const questionId = questions[step]._id;
 
 		if (index === newCorrectAnswer) {
 			setCoins(coins + questionsCoins);
 			setCorrectAnswer(correctAnswer + 1);
-			setStatus([
-				status[0] + questionStatus[0],
-				status[1] + questionStatus[1],
-				status[2] + questionStatus[2],
-				status[3] + questionStatus[3],
-				status[4] + questionStatus[4],
-				status[5] + questionStatus[5],
-			]);
 
 			setIgnorance(ignorance + 2.5);
 			setQuestionsId([...questionsId, questionId]);
@@ -243,9 +231,9 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	};
 
 	const handleQuestionDescription = () => {
-		if(userIgnorance >= 80) {
+		if(userStatus <= 20) {
 			return shuffleString(questions[step]?.description, 'hard');
-		} else if (userIgnorance >= 50) {
+		} else if (userStatus <= 80) {
 			return shuffleString(questions[step]?.description, 'medium');
 		} else {
 			return questions[step]?.description
@@ -255,9 +243,9 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 
 
 	const handleAlternative = (string: string) => {
-		if(userIgnorance >= 80) {
+		if(userStatus <= 20) {
 			return shiftCharacters(string, 'hard');
-		} else if (userIgnorance >= 50) {
+		} else if (userStatus <= 80) {
 			return shiftCharacters(string, 'medium');
 		} else {
 			return string;
@@ -425,7 +413,6 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 			<FinalUniversalRewardModal
 				isOpen={isOpen}
 				coins={coins}
-				score={status}
 				correctAnswers={correctAnswer}
 				totalAnswers={length}
 				allQuestionsId={questionsId}

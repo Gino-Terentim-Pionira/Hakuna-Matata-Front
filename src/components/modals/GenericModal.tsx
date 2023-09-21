@@ -26,7 +26,7 @@ import Coins from '../../assets/icons/coinicon.svg'
 import plusIcon from '../../assets/icons/plusIcon.png'
 import { errorCases } from '../../utils/errors/errorsCases';
 import Cheetah from '../../assets/icons/cheetahblink.svg'
-import { REWARD_MODAL_TEXT, GENERIC_MODAL_TEXT, LOAD_BUTTON } from '../../utils/constants/constants';
+import { REWARD_MODAL_TEXT, GENERIC_MODAL_TEXT, LOAD_BUTTON } from '../../utils/constants/buttonConstants';
 
 interface IGenericModal {
     genericModalInfo: {
@@ -35,7 +35,10 @@ interface IGenericModal {
         subtitle: string;
         icon: string;
         coins?: number;
-        status?: number[];
+        status?: {
+            name: string,
+            points: number
+        };
         firstButton?: string;
         secondButton?: string;
     },
@@ -60,17 +63,8 @@ const GenericModal: FC<IGenericModal> = ({
     const { title, titleColor, subtitle, icon, coins, status } = genericModalInfo;
     const [ isDisabled, setIsDisabled] = useState(false);
 
-    const statusPointsRecieved = [{
-        name: "Agilidade",
-        points: status && status[0]
-    },
-    {
-        name: "Liderança",
-        points: status && status[1]
-    }];
-
     const coinsValidation = coins && coins !== 0;
-    const statusValidation = statusPointsRecieved[0].points && statusPointsRecieved[0].points !== 0;
+    const statusValidation = status && status.points > 0;
 
     const defineButtonText = () => {
         const costumizedText = genericModalInfo.firstButton;
@@ -159,12 +153,10 @@ const GenericModal: FC<IGenericModal> = ({
                                             minHeight='70px'
                                         >
                                             {
-                                                statusValidation ? (statusPointsRecieved.map((status, index) => {
-                                                    if (status.points && status.points > 0) return (
-                                                        <Flex
-                                                            key={index}
+                                                statusValidation ? (
+                                                    <Flex
                                                             alignItems='center'
-                                                            marginTop={index >= 1 ? '4px' : undefined}
+                                                            marginTop={'4px'}
                                                         >
                                                             <Text
                                                                 textAlign='center'
@@ -173,7 +165,7 @@ const GenericModal: FC<IGenericModal> = ({
                                                                 fontWeight='semibold'
                                                                 color='#0B67A1'
                                                             >
-                                                                + {status.points} {status.name}
+                                                                + {status?.points} {status?.name}
                                                             </Text>
                                                             <Image
                                                                 src={plusIcon}
@@ -182,13 +174,12 @@ const GenericModal: FC<IGenericModal> = ({
                                                                 h='30'
                                                             />
                                                         </Flex>
-                                                    )
-                                                })) : null
+                                                ) : null
                                             }
                                             {
                                                 coinsValidation ? <Flex
                                                     alignItems='center'
-                                                    marginTop={statusPointsRecieved[0].points ? '8px' : undefined}
+                                                    marginTop={statusValidation ? '8px' : undefined}
                                                     marginBottom='55px'
                                                 >
                                                     <Text

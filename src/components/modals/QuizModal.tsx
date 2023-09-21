@@ -17,16 +17,22 @@ import { updateModuleCooldown } from '../../services/moduleCooldown';
 
 // Components
 import RewardModal from './GenericModal';
+import { UpdateStatus } from '../../services/updateStatus';
+import { getStatusName } from '../../utils/statusUtils';
 
 // Styles
 import fontTheme from '../../styles/base'
 import colorPalette from '../../styles/colorPalette';
 import api from '../../services/api';
-import { AxiosResponse } from 'axios';
 
 // Images
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
+
+interface IStatus {
+    name: string,
+    points: number
+}
 
 interface userDataProps {
     coins: number,
@@ -45,10 +51,11 @@ interface IQuizComponent {
             alternatives: string[],
             answer: number,
             coins: number,
-            score_points: number[],
+            score_point: number,
         }];
         dificulty: string;
         total_coins: number;
+        trail: string;
         _id: string;
     };
     validateUser: VoidFunction;
@@ -71,7 +78,10 @@ const QuizModal: FC<IQuizComponent> = ({
     const [step, setStep] = useState(0);
     const length = moduleInfo.questions_id.length;
     const [coins, setCoins] = useState(0);
-    const [status, setStatus] = useState([0, 0, 0, 0, 0, 0]);
+    const [status, setStatus] = useState<IStatus>({
+        name: getStatusName(moduleInfo.trail),
+        points: 0
+    });
     const [correctAnswers, setCorrectAnswers] = useState(0);
     const [passed, setPassed] = useState(Boolean);
     const [borderStyle, setBorderStyle] = useState(['none', 'none', 'none', 'none']);
@@ -84,9 +94,9 @@ const QuizModal: FC<IQuizComponent> = ({
     const isCorretAnswer = (index: number) => {
         const correctAnswer = moduleInfo.questions_id[step].answer;
         const questionsCoins = moduleInfo.questions_id[step].coins;
-        const questionStatus = moduleInfo.questions_id[step].score_points;
         const questionId = moduleInfo.questions_id[step]._id;
-        const questionUserId = userData.question_id
+        const questionUserId = userData.question_id;
+        const questionStatus = moduleInfo.questions_id[step].score_point;
 
         if (index === correctAnswer) {
 
@@ -95,14 +105,10 @@ const QuizModal: FC<IQuizComponent> = ({
             } else {
                 setCoins(coins + questionsCoins);
                 setCorrectAnswers(correctAnswers + 1);
-                setStatus([
-                    status[0] + questionStatus[0],
-                    status[1] + questionStatus[1],
-                    status[2] + questionStatus[2],
-                    status[3] + questionStatus[3],
-                    status[4] + questionStatus[4],
-                    status[5] + questionStatus[5],
-                ]);
+                setStatus({
+                    ...status,
+                    points: status.points + questionStatus
+                });
 
                 setIgnorance(ignorance + 1.5);
                 setQuestionsId([...questionsId, questionId]);
@@ -178,11 +184,8 @@ const QuizModal: FC<IQuizComponent> = ({
         }
     }, [delayButton]);
 
-    const incrementAtStatusIndex = (res: AxiosResponse<userDataProps>) => {
-        for (let i = 0; i < 2; i++) {
-            res.data.status[i] = res.data.status[i] + status[i];
-        }
-        return res.data.status;
+    const incrementStatus = async (userId: string) => {
+        await UpdateStatus(userData, userId, status.name, status.points);
     }
 
     const addCoinsStatus = async (value: number) => {
@@ -190,13 +193,14 @@ const QuizModal: FC<IQuizComponent> = ({
             const _userId = sessionStorage.getItem('@pionira/userId');
             const res = await api.get<userDataProps>(`/user/${_userId}`);
 
-            if (userQuizCoins < moduleInfo.total_coins)
+            if (userQuizCoins < moduleInfo.total_coins) {
                 await api.patch<userDataProps>(`/user/coins/${_userId}`, {
                     coins: res.data.coins + value
                 });
-            await api.patch<userDataProps>(`/user/status/${_userId}`, {
-                status: incrementAtStatusIndex(res)  // first parameter of this func needs to be dynamic
-            });
+
+                incrementStatus(_userId as string);
+            }
+            
             await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
                 ignorance: res.data.ignorance - ignorance,
             });
@@ -244,9 +248,7 @@ const QuizModal: FC<IQuizComponent> = ({
                 title: 'Arrasou!',
                 titleColor: colorPalette.inactiveButton,
                 subtitle: 'Você já conseguiu provar todo o seu valor nesse desafio! Pode seguir adiante com sua jornada, caro viajante!',
-                icon: Cheetah,
-                coins: undefined,
-                score: undefined
+                icon: Cheetah
             }
         if (passed)
             return {

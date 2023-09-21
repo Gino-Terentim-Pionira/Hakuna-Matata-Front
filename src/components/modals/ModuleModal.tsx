@@ -39,7 +39,7 @@ import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
-import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/constants';
+import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/mouseOverConstants';
 
 interface IModuleModal {
     quizIndex: number;
