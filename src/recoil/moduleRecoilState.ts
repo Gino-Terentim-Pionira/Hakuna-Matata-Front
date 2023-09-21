@@ -10,7 +10,7 @@ interface IQuiz {
         alternatives: string[],
         answer: number,
         coins: number,
-        score_points: number[],
+        score_point: number,
     }];
     category: string;
     dificulty: string;
@@ -24,6 +24,7 @@ interface IQuiz {
         coins: number
     }];
     total_coins: number;
+    trail: string;
 }
 
 const moduleState = atom({

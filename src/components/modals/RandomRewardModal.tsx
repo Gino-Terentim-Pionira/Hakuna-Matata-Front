@@ -19,7 +19,7 @@ import RewardModal from './GenericModal';
 import rewardOpenChest from "../../assets/icons/bauAberto.svg";
 import { useUser } from '../../hooks';
 import { Constants } from '../../utils/constants';
-import { SURPRISE_CHEST } from '../../utils/constants/constants';
+import { SURPRISE_CHEST } from '../../utils/constants/mouseOverConstants';
 
 interface userDataProps {
     coins: number

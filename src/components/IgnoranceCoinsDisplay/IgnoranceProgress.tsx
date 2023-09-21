@@ -4,7 +4,7 @@ import { Box, Text, Tooltip } from '@chakra-ui/react';
 // Styles
 import font from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
-import { WISDOM } from '../../utils/constants/constants';
+import { WISDOM } from '../../utils/constants/mouseOverConstants';
 import { PositionProps } from '../../utils/props';
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 
@@ -13,8 +13,8 @@ const IgnoranceProgress = ({ ignorance, position }: {
     ignorance: number,
     position: PositionProps
 }) => {
+    const progressBar = Math.floor(100 - ignorance);
     const {isIgnoranceFilterOn} = useIgnoranceFilter();
-    const progressBar = 100 - ignorance;
     return (
         <Tooltip
             hasArrow
@@ -46,7 +46,8 @@ const IgnoranceProgress = ({ ignorance, position }: {
                         color={colorPalette.blackBorder}
                         fontFamily={font.fonts}
                         fontWeight='bold'
-                        fontSize='16px'>
+                        fontSize='16px'
+                    >
                         Nível de sabedoria
                     </Text>
                 </Box>
@@ -59,7 +60,7 @@ const IgnoranceProgress = ({ ignorance, position }: {
                     fontWeight='bold'
                     fontSize='16px'
                 >
-                    {progressBar}%
+                    {`${progressBar}%`}
                 </Text>}
             </Box>
         </Tooltip>

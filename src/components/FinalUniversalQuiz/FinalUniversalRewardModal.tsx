@@ -14,7 +14,6 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 import api from '../../services/api';
-import { AxiosResponse } from 'axios';
 import fontTheme from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 import RewardModal from '../modals/GenericModal';
@@ -26,7 +25,6 @@ import Cross from '../../assets/icons/cross.svg';
 interface IFinalUniversalRewardModal {
 	isOpen: boolean;
 	coins: number;
-	score: number[];
 	correctAnswers: number;
 	totalAnswers: number;
 	allQuestionsId?: string[];
@@ -48,7 +46,6 @@ interface userDataProps {
 const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	isOpen,
 	coins,
-	score,
 	correctAnswers,
 	totalAnswers,
 	allQuestionsId,
@@ -71,52 +68,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	const [onError, setOnError] = useState(false);
 
 	const coinsRecieved = coins;
-
-	const statusPointsRecieved = [
-		{
-			name: 'AGI',
-			points: score[0],
-		},
-		{
-			name: 'LID',
-			points: score[1],
-		},
-		{
-			name: 'EST',
-			points: score[2],
-		},
-		{
-			name: 'INO',
-			points: score[3],
-		},
-		{
-			name: 'GM',
-			points: score[4],
-		},
-		{
-			name: 'GP',
-			points: score[5],
-		},
-	];
-
-	const incrementAtStatusIndex = (res: AxiosResponse<userDataProps>) => {
-		for (let i = 0; i < 6; i++) {
-			res.data.status[i] =
-				res.data.status[i] + statusPointsRecieved[i].points;
-		}
-		return res.data.status;
-	};
-
-	const updateUserQuizTime = async () => {
-		try {
-			const userId = sessionStorage.getItem('@pionira/userId');
-			await api.patch(`user/loadingQuiz/${userId}`, {
-				quiz_loading: Date.now() - 10800000,
-			});
-		} catch (error) {
-			setOnError(true);
-		}
-	};
 
 	const updateUserCoins = async () => {
 		try {
@@ -155,7 +106,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			} else {
 				window.location.reload();
 			}
-			await updateUserQuizTime();
 		} catch (error) {
 			setOnError(true);
 		}
@@ -192,9 +142,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			await api.patch<userDataProps>(`/user/coins/${_userId}`, {
 				coins: res.data.coins + value,
 			});
-			await api.patch<userDataProps>(`/user/status/${_userId}`, {
-				status: incrementAtStatusIndex(res),
-			});
 
 			await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
 				ignorance: res.data.ignorance - ignorance,
@@ -214,7 +161,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 				subtitle: `Você acertou ${correctAnswers} de ${totalAnswers} questões!`,
 				icon: Cheetah,
 				coins,
-				status: score
 			}
 		return {
 			title: 'Que pena!',
@@ -223,7 +169,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 				`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você poderá vencer a ignorância!`,
 			icon: Cross,
 			coins,
-			status: score
 		}
 	}
 
@@ -240,7 +185,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			{/* Modal de Reward */}
 			<Modal
 				isOpen={modalIsOpenCheetah}
-				onClose={modalOnCloseCheetah}
+				onClose={updateBadge}
 				size='4xl'
 			>
 				<ModalOverlay />

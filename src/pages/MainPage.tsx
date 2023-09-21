@@ -35,7 +35,7 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import BlockedModal from '../components/modals/BlockedModal';
 import IgnoranceFilter from '../components/IgnoranceFilter';
 import TrailIcon from '../components/TrailIcon';
-import { CHEETAH_TRAIL, BLOCKED_TRAIL } from '../utils/constants/constants';
+import { CHEETAH_TRAIL, BLOCKED_TRAIL } from '../utils/constants/mouseOverConstants';
 
 interface IScript {
 	name: string;

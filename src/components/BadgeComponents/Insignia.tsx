@@ -7,7 +7,7 @@ import cheetaTrailInsignia from '../../assets/icons/insignia/cheetaTrailInsignia
 import mambaTrailInsignia from '../../assets/icons/insignia/mambaTrailInsignia.png';
 import lionTrailInsignia from '../../assets/icons/insignia/lionTrailInsignia.png';
 import colorPalette from '../../styles/colorPalette';
-import { BADGE_DESCRIPTION } from '../../utils/constants/constants';
+import { BADGE_DESCRIPTION } from '../../utils/constants/mouseOverConstants';
 
 type InsigniaProps = {
     _id: string;

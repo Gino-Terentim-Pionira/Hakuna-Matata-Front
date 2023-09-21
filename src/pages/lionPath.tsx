@@ -54,6 +54,8 @@ import { errorCases } from '../utils/errors/errorsCases';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 import useInsignias from '../hooks/useInsignias';
 import { Constants } from '../utils/constants';
+import { getStatusPoints } from '../utils/statusUtils';
+import { LEADERSHIP } from '../utils/constants/statusConstants';
 
 
 interface IQuiz {
@@ -340,17 +342,14 @@ const LionPath = () => {
 		setIsConfirmOpen(false);
 		setPayLoading(true);
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const validation = await api.get(`user/loadingQuiz/${_userId}`);
 		const userCoins = userData.coins;
 
 		if (userCoins >= value) {
 			const newCoins = userCoins - value;
 			try {
-				if (validation) {
-					await api.patch(`/user/coins/${_userId}`, {
-						coins: newCoins,
-					});
-				}
+				await api.patch(`/user/coins/${_userId}`, {
+					coins: newCoins,
+				});
 
 				setPayLoading(false);
 				handleModal();
@@ -667,7 +666,7 @@ const LionPath = () => {
 				routeQuiz={'finallionquiz'}
 				insignaName={'do Leão e Leoa'}
 				withoutMoney={withoutMoney}
-				userIgnorance={userData.ignorance}
+				userStatus={getStatusPoints(userData, LEADERSHIP)}
 				trail={2}
 			/>
 

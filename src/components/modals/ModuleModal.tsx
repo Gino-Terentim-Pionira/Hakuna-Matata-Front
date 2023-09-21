@@ -15,6 +15,7 @@ import {
     Tooltip
 } from "@chakra-ui/react";
 import { useUser, useModule } from '../../hooks';
+import { AxiosResponse } from 'axios';
 
 // Components
 import QuizModal from './QuizModal';
@@ -25,6 +26,7 @@ import AlertModal from './AlertModal';
 
 // Requisitions
 import api from '../../services/api';
+import { verifyModuleCooldown } from '../../services/moduleCooldown';
 
 // Styles
 import fontTheme from '../../styles/base';
@@ -37,7 +39,7 @@ import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
-import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/constants';
+import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/mouseOverConstants';
 
 interface IModuleModal {
     quizIndex: number;
@@ -145,10 +147,10 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         try {
             setIsLoading(true);
             const userId = sessionStorage.getItem('@pionira/userId');
-            const validation = await api.get(`user/loadingQuiz/${userId}`);
+            const response: AxiosResponse = await verifyModuleCooldown(userId as string, moduleInfo._id);
             
 
-            if (!validation.data) {
+            if (!response.data.validation) {
                 setIsLoading(false);
                 timeOnOpen();
             }

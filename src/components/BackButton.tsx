@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip, Image } from '@chakra-ui/react';
-import { BACK_BUTTON } from '../utils/constants/constants';
+import { BACK_BUTTON } from '../utils/constants/mouseOverConstants';
 import sidearrow from '../assets/icons/sidearrow.png';
 
 const BackButton = ({

@@ -15,6 +15,7 @@ import AlertModal from './modals/AlertModal';
 
 // Requisitions
 import api from '../services/api';
+import { resetAllCooldown } from '../services/moduleCooldown';
 
 // Styles
 import fontTheme from '../styles/base';
@@ -27,7 +28,7 @@ import cardicon from '../assets/icons/shop2.svg';
 import coinicon from '../assets/icons/coinicon.svg';
 import confirmicon from '../assets/icons/confirmicon.png';
 import { errorCases } from '../utils/errors/errorsCases';
-import { GENERIC_MODAL_TEXT } from '../utils/constants/constants';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 
 type ShopItemProps = {
 	current_user_id: string;
@@ -91,9 +92,7 @@ const ShopItem: FC<ShopItemProps> = ({
 				if (type === "item3") {
 					try {
 
-						await api.patch(`/user/loadingQuiz/${current_user_id}`, {
-							quiz_loading: "",
-						});
+						await resetAllCooldown(current_user_id);
 
 						await api.patch(`/user/coins/${current_user_id}`, {
 							coins: newCoins,
