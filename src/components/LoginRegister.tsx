@@ -1,4 +1,4 @@
-import { Flex, Center, Box, Text, Input, Button, Link, Image } from '@chakra-ui/react';
+import { Flex, Center, Box, Text, Input, Button, Link, Image, InputGroup, InputRightElement } from '@chakra-ui/react';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
@@ -67,7 +67,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
         onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void,
         isFirstInput?: boolean
     ) => (
-            <Box w="60%" minWidth="250px" position="relative">
+            <InputGroup display="flex" alignItems="center" w="60%" minWidth="250px" position="relative">
                 <Input
                     width="100%"
                     minWidth="250px"
@@ -83,20 +83,20 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     focusBorderColor={hasValidationError && isFirstInput ? "#F47070" : "#4161ed"}
                 />
                 {
-                    type === 'password' && <Image
-                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                        zIndex={100000}
-                        _hover={{ cursor: 'pointer' }}
-                        width="28px"
-                        src={isPasswordVisible ? eye : closed_eye}
-                        alt="Mostrar senha"
-                        position="absolute"
-                        top="32%"
-                        right="16px"
-                    />
+                    type === 'password' &&
+                    <InputRightElement right="8px" top="auto">
+                        <Image
+                            onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                            zIndex={10000}
+                            _hover={{ cursor: 'pointer' }}
+                            width="28px"
+                            src={isPasswordVisible ? eye : closed_eye}
+                            alt="Mostrar senha"
+                        />
+                    </InputRightElement>
                 }
 
-            </Box>
+            </InputGroup>
         )
 
     return (
