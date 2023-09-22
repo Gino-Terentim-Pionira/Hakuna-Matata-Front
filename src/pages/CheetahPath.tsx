@@ -839,6 +839,7 @@ const CheetahPath = () => {
                 confirmFunction={handleStatusAlert}
                 secondFunction={closeStatusAlert}
                 closeFunction={closeStatusAlert}
+                isStaticModal={true}
                 loading={false}
                 error={false}
             />
