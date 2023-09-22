@@ -47,6 +47,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     //logic for checking and switching if first time is set to true
     const updateNarrative = async () => {
         try {
+            onToggle();
             let user;
             const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
             if (!userData._id) {
@@ -119,7 +120,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     }
                 });
             }
-            onToggle();
+            
         } catch (error) {
             alert(error);
         }

@@ -26,7 +26,8 @@ const colorPalette = {
     blackBorder: '#4A4A4A',
     progressOrange: '#F0C05D',
     whiteText: '#FEFEFE',
-    darkGrey: '#999999'
+    darkGrey: '#999999',
+    alertText: '#F47070'
 }
 
 export default colorPalette;

@@ -26,6 +26,7 @@ import { useModule } from '../hooks';
 //styles
 import colorPalette from '../styles/colorPalette';
 import './../styles/fadeEffect.css';
+import atencao from '../assets/icons/atencao.png';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -37,7 +38,8 @@ import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import IgnoranceFilter from '../components/IgnoranceFilter';
 import { CHEETAH_FINAL } from '../utils/constants/mouseOverConstants';
-import { STATUS_LEVEL, AGILITY } from '../utils/constants/statusConstants';
+import { STATUS_LEVEL, AGILITY, STATUS_WARNING } from '../utils/constants/statusConstants';
+import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 import { getStatusPoints } from '../utils/statusUtils';
 
 // Requisitions
@@ -60,6 +62,8 @@ import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
 import { Constants } from '../utils/constants';
 import BlockedModal from '../components/modals/BlockedModal';
+import GenericModal from '../components/modals/GenericModal';
+import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 
 interface IQuiz {
     _id: string;
@@ -116,6 +120,7 @@ const CheetahPath = () => {
     const [onError, setOnError] = useState(false);
     const [completeTrail, setCompleteTrail] = useState(false);
     const [isBlockedOpen, setIsBlockedOpen] = useState(false);
+    const [statusAlert, setStatusAlert] = useState(false);
 
     const ignoranceArray = [
         ignorance100,
@@ -404,6 +409,23 @@ const CheetahPath = () => {
         if (!payLoading) isAlertOnClose();
     }
 
+    const handleStatusAlert = () => {
+        setStatusAlert(false);
+        alertQuizConfirm();
+    }
+
+    const closeStatusAlert = () => {
+        setStatusAlert(false);
+    }
+
+    const checkStatus = () => {
+        if (getStatusPoints(userData, AGILITY) < 80) {
+            setStatusAlert(true);
+        } else {
+            alertQuizConfirm();
+        }
+    }
+
     useEffect(() => {
         getUser();
         updateNarrative();
@@ -623,9 +645,7 @@ const CheetahPath = () => {
                                                             _hover={{
                                                                 transform: 'scale(1.1)',
                                                             }}
-                                                            onClick={() => {
-                                                                alertQuizConfirm();
-                                                            }}
+                                                            onClick={checkStatus}
                                                         >
                                                             Vamos nessa!
                                                 </Button>
@@ -801,6 +821,26 @@ const CheetahPath = () => {
                 isOpen={isBlockedOpen}
                 onClose={() => { setIsBlockedOpen(false) }}
                 subtitle="Esse treinamento ainda não está disponível!"
+            />
+
+            <GenericModal 
+                genericModalInfo = {
+                    {
+                        title: WAIT_TITLE,
+                        titleColor: colorPalette.progressOrange,
+                        subtitle: STATUS_WARNING(AGILITY),
+                        icon: atencao,
+                        firstButton: CONTINUE,
+                        secondButton: GENERIC_MODAL_TEXT,
+                        alert: ALERT_CODE_SUBTITLE
+                    }
+                }
+                isOpen={statusAlert}
+                confirmFunction={handleStatusAlert}
+                secondFunction={closeStatusAlert}
+                closeFunction={closeStatusAlert}
+                loading={false}
+                error={false}
             />
         </>
     );

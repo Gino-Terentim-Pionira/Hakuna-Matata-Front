@@ -41,6 +41,7 @@ interface IGenericModal {
         };
         firstButton?: string;
         secondButton?: string;
+        alert?: string;
     },
     isOpen: boolean;
     confirmFunction: VoidFunction;
@@ -78,19 +79,19 @@ const GenericModal: FC<IGenericModal> = ({
     }
 
     const handleClose = () => {
-        if (!isDisabled) {
+        if (!isDisabled || genericModalInfo.alert) {
             setIsDisabled(true);
             closeFunction ? closeFunction() : confirmFunction();
         }
     }
 
     const handleButtonClick = (action: VoidFunction | undefined) => {
-        if (!isDisabled) {
+        if (!isDisabled || genericModalInfo.alert) {
             setIsDisabled(true);
             action && action();
         }
     }
-
+    
     return (
         <>
             <Modal isOpen={isOpen} onClose={handleClose}>
@@ -146,6 +147,18 @@ const GenericModal: FC<IGenericModal> = ({
                                             >
                                                 {subtitle}
                                             </Text>
+                                            {
+                                                genericModalInfo.alert && <Text
+                                                    textAlign='center'
+                                                    fontFamily={fontTheme.fonts}
+                                                    fontSize="14px"
+                                                    fontWeight='semibold'
+                                                    color={colorPalette.alertText}
+                                                    marginTop='16px'
+                                                >
+                                                    {genericModalInfo.alert}
+                                                </Text>
+                                            }
                                         </Box>
                                         <Center
                                             flexDirection='column'

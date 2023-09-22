@@ -45,6 +45,7 @@ import final_lion_icon from '../assets/icons/final_lion_icon.svg';
 import couple from '../assets/sprites/lion/couple.png';
 import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.svg';
 import lion_bg from '../assets/modal/lion_bg.png';
+import atencao from '../assets/icons/atencao.png';
 
 import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
 import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
@@ -55,7 +56,10 @@ import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQ
 import useInsignias from '../hooks/useInsignias';
 import { Constants } from '../utils/constants';
 import { getStatusPoints } from '../utils/statusUtils';
-import { LEADERSHIP } from '../utils/constants/statusConstants';
+import { LEADERSHIP, STATUS_WARNING } from '../utils/constants/statusConstants';
+import GenericModal from '../components/modals/GenericModal';
+import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
+import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 
 
 interface IQuiz {
@@ -113,6 +117,7 @@ const LionPath = () => {
 	const [completeTrail, setCompleteTrail] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [payLoading, setPayLoading] = useState<boolean>(false);
+	const [statusAlert, setStatusAlert] = useState(false);
 
 	const ignoranceArray = [ignorance100, ignorance75, ignorance50, ignorance25];
 
@@ -377,6 +382,23 @@ const LionPath = () => {
         if (!payLoading) isAlertOnClose();
     }
 
+	const handleStatusAlert = () => {
+        setStatusAlert(false);
+        alertQuizConfirm();
+    }
+
+    const closeStatusAlert = () => {
+        setStatusAlert(false);
+    }
+
+    const checkStatus = () => {
+        if (getStatusPoints(userData, LEADERSHIP) < 80) {
+            setStatusAlert(true);
+        } else {
+            alertQuizConfirm();
+        }
+    }
+
 	useEffect(() => {
 		getUser();
 		updateNarrative();
@@ -577,9 +599,7 @@ const LionPath = () => {
 													_hover={{
 														transform: 'scale(1.1)',
 													}}
-													onClick={() => {
-														alertQuizConfirm();
-													}}
+													onClick={checkStatus}
 												>
 													Vamos nessa!
 												</Button>
@@ -746,6 +766,26 @@ const LionPath = () => {
 					</Button>
 				}
 			/>
+
+			<GenericModal
+                genericModalInfo = {
+                    {
+                        title: WAIT_TITLE,
+                        titleColor: colorPalette.progressOrange,
+                        subtitle: STATUS_WARNING(LEADERSHIP),
+                        icon: atencao,
+                        firstButton: CONTINUE,
+                        secondButton: GENERIC_MODAL_TEXT,
+                        alert: ALERT_CODE_SUBTITLE
+                    }
+                }
+                isOpen={statusAlert}
+                confirmFunction={handleStatusAlert}
+                secondFunction={closeStatusAlert}
+                closeFunction={closeStatusAlert}
+                loading={false}
+                error={false}
+            />
 
 		</>
 	);

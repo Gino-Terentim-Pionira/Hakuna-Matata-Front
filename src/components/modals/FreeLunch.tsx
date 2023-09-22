@@ -68,8 +68,8 @@ const FreeLunch: FC<IFreeLunch> = ({
 
             incrementStatus(_userId as string);
 
-            history.go(0);
             await getNewUserInfo();
+            history.go(0);
         } catch (error) {
             setOnError(true);
         }
