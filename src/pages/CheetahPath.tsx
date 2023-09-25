@@ -214,6 +214,16 @@ const CheetahPath = () => {
         return res;
     };
 
+    const statusAlertInfo = {
+        title: WAIT_TITLE,
+        titleColor: colorPalette.progressOrange,
+        subtitle: STATUS_WARNING(AGILITY),
+        icon: atencao,
+        firstButton: CONTINUE,
+        secondButton: GENERIC_MODAL_TEXT,
+        alert: ALERT_CODE_SUBTITLE
+    }
+
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const alertOnClose = () => setIsConfirmOpen(false);
     const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
@@ -824,17 +834,7 @@ const CheetahPath = () => {
             />
 
             <GenericModal 
-                genericModalInfo = {
-                    {
-                        title: WAIT_TITLE,
-                        titleColor: colorPalette.progressOrange,
-                        subtitle: STATUS_WARNING(AGILITY),
-                        icon: atencao,
-                        firstButton: CONTINUE,
-                        secondButton: GENERIC_MODAL_TEXT,
-                        alert: ALERT_CODE_SUBTITLE
-                    }
-                }
+                genericModalInfo = {statusAlertInfo}
                 isOpen={statusAlert}
                 confirmFunction={handleStatusAlert}
                 secondFunction={closeStatusAlert}

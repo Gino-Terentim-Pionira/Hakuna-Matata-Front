@@ -399,6 +399,16 @@ const LionPath = () => {
         }
     }
 
+	const statusAlertInfo = {
+        title: WAIT_TITLE,
+		titleColor: colorPalette.progressOrange,
+		subtitle: STATUS_WARNING(LEADERSHIP),
+		icon: atencao,
+		firstButton: CONTINUE,
+		secondButton: GENERIC_MODAL_TEXT,
+		alert: ALERT_CODE_SUBTITLE
+    }
+
 	useEffect(() => {
 		getUser();
 		updateNarrative();
@@ -768,17 +778,7 @@ const LionPath = () => {
 			/>
 
 			<GenericModal
-                genericModalInfo = {
-                    {
-                        title: WAIT_TITLE,
-                        titleColor: colorPalette.progressOrange,
-                        subtitle: STATUS_WARNING(LEADERSHIP),
-                        icon: atencao,
-                        firstButton: CONTINUE,
-                        secondButton: GENERIC_MODAL_TEXT,
-                        alert: ALERT_CODE_SUBTITLE
-                    }
-                }
+                genericModalInfo = {statusAlertInfo}
                 isOpen={statusAlert}
                 confirmFunction={handleStatusAlert}
                 secondFunction={closeStatusAlert}

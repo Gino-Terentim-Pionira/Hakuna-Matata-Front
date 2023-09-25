@@ -165,7 +165,7 @@ const GenericModal: FC<IGenericModal> = ({
                                         <Center
                                             flexDirection='column'
                                             marginTop='26px'
-                                            minHeight='70px'
+                                            minHeight='40px'
                                         >
                                             {
                                                 statusValidation ? (
@@ -237,7 +237,7 @@ const GenericModal: FC<IGenericModal> = ({
                                             <Button
                                                 width='300px'
                                                 height='50px'
-                                                marginTop='25px'
+                                                marginTop='24px'
                                                 background={colorPalette.inactiveButton}
                                                 color={colorPalette.buttonTextColor}
                                                 fontSize='24px'
