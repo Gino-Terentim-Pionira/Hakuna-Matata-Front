@@ -146,11 +146,16 @@ const QuizModal: FC<IQuizComponent> = ({
                     break;
             }
             setIgnorance(ignorance - 0.75);
+
             const video_name = moduleInfo.questions_id[step].video_name;
-            const hasVideoname = videos.find((item) => item == video_name);
-            if (!hasVideoname) {
-                setVideos([...videos, video_name]);
-            }
+            updateVideoArray(videos, video_name);
+        }
+    }
+
+    const updateVideoArray = (videoArray: string[], video_name: string) => {
+        const hasVideoname = videoArray.find((item) => item == video_name);
+        if (!hasVideoname) {
+            setVideos([...videoArray, video_name]);
         }
     }
 
