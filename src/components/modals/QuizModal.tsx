@@ -52,6 +52,7 @@ interface IQuizComponent {
             answer: number,
             coins: number,
             score_point: number,
+            video_name: string,
         }];
         dificulty: string;
         total_coins: number;
@@ -90,6 +91,7 @@ const QuizModal: FC<IQuizComponent> = ({
     const [ignorance, setIgnorance] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
+    const [videos, setVideos] = useState<string[]>([]);
 
     const isCorretAnswer = (index: number) => {
         const correctAnswer = moduleInfo.questions_id[step].answer;
@@ -144,6 +146,11 @@ const QuizModal: FC<IQuizComponent> = ({
                     break;
             }
             setIgnorance(ignorance - 0.75);
+            const video_name = moduleInfo.questions_id[step].video_name;
+            const hasVideoname = videos.find((item) => item == video_name);
+            if (!hasVideoname) {
+                setVideos([...videos, video_name]);
+            }
         }
     }
 
@@ -252,12 +259,13 @@ const QuizModal: FC<IQuizComponent> = ({
             }
         if (passed)
             return {
-                title: 'Você é demais!',
+                title: 'Quiz finalizado!',
                 titleColor: colorPalette.inactiveButton,
                 subtitle: `Você acertou ${correctAnswers} de ${length} questões!`,
                 icon: Cheetah,
                 coins,
-                status
+                status,
+                video_names: videos
             }
         return {
             title: 'Que pena!',
@@ -265,7 +273,8 @@ const QuizModal: FC<IQuizComponent> = ({
             subtitle: `Você errou ${length - correctAnswers} de ${length} questões! Tente novamente em 30 minutos`,
             icon: Cross,
             coins,
-            status
+            status,
+            video_names: videos
         }
     }
 
