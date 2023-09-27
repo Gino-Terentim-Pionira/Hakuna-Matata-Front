@@ -56,12 +56,11 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             } else user = userData;
 
             if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
-                lunchOnOpen();
                 await api.patch(`/user/updateFirstTime/${user._id}`, {
                     isFirstTimeAppLaunching: false,
                 });
-            } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
                 lunchOnOpen();
+            } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
                 if (narrative === 'cheetah') {
                     setFreeStatus({
                         name: AGILITY,
@@ -86,6 +85,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     });
                 }
                 await getNewUserInfo();
+                lunchOnOpen();
             } else if (user.narrative_status.trail1 == 0 && narrative == 'cheetah') { //Verifica se é a primeira vez do usuário na trilha da cheetah
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {

@@ -41,6 +41,7 @@ interface IGenericModal {
         };
         firstButton?: string;
         secondButton?: string;
+        alert?: string;
     },
     isOpen: boolean;
     confirmFunction: VoidFunction;
@@ -48,6 +49,7 @@ interface IGenericModal {
     closeFunction?: VoidFunction;
     loading: boolean;
     error: boolean;
+    isStaticModal?: boolean
 }
 
 
@@ -59,6 +61,7 @@ const GenericModal: FC<IGenericModal> = ({
     closeFunction,
     loading,
     error,
+    isStaticModal = false
 }) => {
     const { title, titleColor, subtitle, icon, coins, status } = genericModalInfo;
     const [ isDisabled, setIsDisabled] = useState(false);
@@ -78,19 +81,19 @@ const GenericModal: FC<IGenericModal> = ({
     }
 
     const handleClose = () => {
-        if (!isDisabled) {
+        if (!isDisabled || isStaticModal) { // Um modal estático não precisará da limitação dos cliques pois não dá recompensa
             setIsDisabled(true);
             closeFunction ? closeFunction() : confirmFunction();
         }
     }
 
     const handleButtonClick = (action: VoidFunction | undefined) => {
-        if (!isDisabled) {
+        if (!isDisabled || isStaticModal) { // Um modal estático não precisará da limitação dos cliques pois não dá recompensa
             setIsDisabled(true);
             action && action();
         }
     }
-
+    
     return (
         <>
             <Modal isOpen={isOpen} onClose={handleClose}>
@@ -146,11 +149,23 @@ const GenericModal: FC<IGenericModal> = ({
                                             >
                                                 {subtitle}
                                             </Text>
+                                            {
+                                                genericModalInfo.alert && <Text
+                                                    textAlign='center'
+                                                    fontFamily={fontTheme.fonts}
+                                                    fontSize="14px"
+                                                    fontWeight='semibold'
+                                                    color={colorPalette.alertText}
+                                                    marginTop='16px'
+                                                >
+                                                    {genericModalInfo.alert}
+                                                </Text>
+                                            }
                                         </Box>
                                         <Center
                                             flexDirection='column'
                                             marginTop='26px'
-                                            minHeight='70px'
+                                            minHeight='40px'
                                         >
                                             {
                                                 statusValidation ? (
@@ -222,7 +237,7 @@ const GenericModal: FC<IGenericModal> = ({
                                             <Button
                                                 width='300px'
                                                 height='50px'
-                                                marginTop='25px'
+                                                marginTop='24px'
                                                 background={colorPalette.inactiveButton}
                                                 color={colorPalette.buttonTextColor}
                                                 fontSize='24px'

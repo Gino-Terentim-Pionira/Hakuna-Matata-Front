@@ -21,7 +21,7 @@ const BlockedModal: FC<BlockedModalProp> = ({
             titleColor: colorPalette.inactiveButton,
             subtitle,
             icon: stop
-        }} isOpen={isOpen} confirmFunction={onClose} loading={false} error={false} />
+        }} isOpen={isOpen} confirmFunction={onClose} loading={false} error={false} isStaticModal={true} />
 	);
 };
 

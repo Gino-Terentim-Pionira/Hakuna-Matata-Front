@@ -9,3 +9,5 @@ export const BUY_HOUR_GLASS = 'Comprar ampulheta';
 export const REWATCH_VIDEOS = 'Assistir videos novamente';
 
 export const LOAD_BUTTON = 'Viajando';
+
+export const CONTINUE = 'Continuar';
