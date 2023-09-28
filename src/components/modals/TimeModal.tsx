@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { useUser } from '../../hooks';
-import { Constants } from '../../utils/constants';
+import { HOURGLASS_SINK } from '../../utils/constants/constants';
 import GenericModal from './GenericModal';
 import { BUY_HOUR_GLASS, REWATCH_VIDEOS } from '../../utils/constants/buttonConstants';
 
@@ -34,7 +34,7 @@ const TimeModal: FC<ITimeModal> = ({ timeIsOpen, timeOnClose }) => {
                 {
                     title: 'Opa, calma aí!',
                     titleColor: colorPalette.closeButton,
-                    subtitle: userData.coins >= Constants.HOURGLASS_SINK 
+                    subtitle: userData.coins >= HOURGLASS_SINK 
                         ? 'Você deve esperar no mínimo 30 minutos para refazer um desafio ou vá na loja e compre a ampulheta do ancião!'
                         : 'Você deve esperar no mínimo 30 minutos para refazer um desafio ou junte moedas para comprar a ampulheta do ancião!',
                     icon: hourglass,

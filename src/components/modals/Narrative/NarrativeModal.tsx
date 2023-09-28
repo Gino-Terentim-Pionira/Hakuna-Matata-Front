@@ -9,7 +9,7 @@ import FreeLunch from '../FreeLunch';
 // Requisitions
 import api from '../../../services/api';
 
-import { Constants } from '../../../utils/constants';
+import { FREE_LUNCH_SOURCE } from '../../../utils/constants/constants';
 import DefaultNarrativeModal from './DefaultNarrativeModal';
 import { AGILITY, LEADERSHIP } from '../../../utils/constants/statusConstants';
 
@@ -41,7 +41,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     const { userData, setUserData, getNewUserInfo } = useUser();
     const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
 
-    const freeCoins = Constants.FREE_LUNCH_SOURCE;
+    const freeCoins = FREE_LUNCH_SOURCE;
     const [freeStatus, setFreeStatus] = useState<IStatus>();
 
     //logic for checking and switching if first time is set to true

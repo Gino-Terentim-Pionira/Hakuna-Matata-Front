@@ -54,7 +54,7 @@ import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
 import { errorCases } from '../utils/errors/errorsCases';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 import useInsignias from '../hooks/useInsignias';
-import { Constants } from '../utils/constants';
+import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import { getStatusPoints } from '../utils/statusUtils';
 import { LEADERSHIP, STATUS_WARNING } from '../utils/constants/statusConstants';
 import GenericModal from '../components/modals/GenericModal';
@@ -103,7 +103,6 @@ const LionPath = () => {
 	const { userData, setUserData } = useUser();
 	const { getInsignias } = useInsignias();
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
-	const [withoutMoney, setWithoutMoney] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
 	const isAlertCoinsOnClose = () => {
 		setIsAlertCoins(false);
@@ -210,7 +209,6 @@ const LionPath = () => {
 	const alertOnClose = () => setIsConfirmOpen(false);
 	const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
 	const [isAlertCoins, setIsAlertCoins] = useState(false);
-	const [isCoinsCheck, setIsCoinsCheck] = useState(false);
 	const cancelRef = useRef<HTMLButtonElement>(null);
 
 	const [ignoranceImage, setIgnoranceImage] = useState("");
@@ -332,7 +330,7 @@ const LionPath = () => {
 
 	const alertQuizConfirm = () => {
 		setAlertQuiz(
-			`Para fazer o desafio final do Leão e Leoa são necessárias ${Constants.FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
+			`Para fazer o desafio final do Leão e Leoa são necessárias ${FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
 		);
 		setIsAlertOpen(true);
 	};
@@ -343,7 +341,7 @@ const LionPath = () => {
 	};
 
 	const paxTax = async () => {
-		const value = Constants.FINAL_QUIZ_SINK;
+		const value = FINAL_QUIZ_SINK;
 		setIsConfirmOpen(false);
 		setPayLoading(true);
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
@@ -368,13 +366,6 @@ const LionPath = () => {
 		if (userCoins < value) {
 			setAlertCoins('Poxa! Parece que você não tem moedas suficientes!');
 			setIsAlertCoins(true);
-		}
-
-		if (userCoins <= 0 || userCoins < value) {
-			setAlertCoins(
-				'Poxa! Parece que você não tem moedas suficientes! Se você prosseguir podera ganhar o dobro de Ignorância e até ficar devendo moedas! Escolha com sabedoria aprendiz.',
-			);
-			setIsCoinsCheck(true);
 		}
 	};
 
@@ -695,7 +686,6 @@ const LionPath = () => {
 				routeQuestions={'lionquestions'}
 				routeQuiz={'finallionquiz'}
 				insignaName={'do Leão e Leoa'}
-				withoutMoney={withoutMoney}
 				userStatus={getStatusPoints(userData, LEADERSHIP)}
 				trail={2}
 			/>
@@ -731,20 +721,6 @@ const LionPath = () => {
 							display='flex'
 							justifyContent='space-between'
 						>
-							{isCoinsCheck ? (
-								<Button
-									ref={cancelRef}
-									color='white'
-									bg={colorPalette.closeButton}
-									onClick={() => {
-										handleModal();
-										setWithoutMoney(true);
-										setIsCoinsCheck(false);
-									}}
-								>
-									Prosseguir
-								</Button>
-							) : null}
 							<Button
 								ref={cancelRef}
 								color='white'
