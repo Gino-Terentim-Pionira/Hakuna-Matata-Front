@@ -20,7 +20,7 @@ import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import { shiftCharacters, shuffleString } from '../../utils/algorithms/shuffleString';
-import { Constants } from '../../utils/constants';
+import { FINAL_QUIZ_SINK, WINSDOM_SOURCE } from '../../utils/constants/constants';
 
 interface IQuestions {
 	alternatives: string[];
@@ -60,7 +60,6 @@ interface IQuizComponent {
 	routeQuiz: string;
 	routeQuestions: string;
 	insignaName: string;
-	withoutMoney: boolean;
 	userStatus: number;
 	trail: number;
 }
@@ -75,7 +74,6 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	routeQuiz,
 	routeQuestions,
 	insignaName,
-	withoutMoney,
 	userStatus,
 	trail
 }) => {
@@ -121,7 +119,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 			setCoins(coins + questionsCoins);
 			setCorrectAnswer(correctAnswer + 1);
 
-			setIgnorance(ignorance + 2.5);
+			setIgnorance(ignorance + WINSDOM_SOURCE);
 			setQuestionsId([...questionsId, questionId]);
 
 			switch (index) {
@@ -193,11 +191,6 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 					]);
 					break;
 			}
-			if (withoutMoney) {
-				setIgnorance(ignorance - 4);
-			} else {
-				setIgnorance(ignorance - 2);
-			}
 		}
 
 		setTimeout(handleQuestion, 1000);
@@ -225,15 +218,15 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 
 	const confirmClose = () => {
 		setAlertAnswer(
-			`Tem certeza que deseja sair do quiz? Você perderá as ${Constants.FINAL_QUIZ_SINK} joias do conhecimento que gastou!`,
+			`Tem certeza que deseja sair do quiz? Você perderá as ${FINAL_QUIZ_SINK} joias do conhecimento que gastou!`,
 		);
 		setIsConfirmOpen(true);
 	};
 
 	const handleQuestionDescription = () => {
-		if(userStatus <= 20) {
+		if(userStatus < 20) {
 			return shuffleString(questions[step]?.description, 'hard');
-		} else if (userStatus <= 80) {
+		} else if (userStatus < 80) {
 			return shuffleString(questions[step]?.description, 'medium');
 		} else {
 			return questions[step]?.description
@@ -243,9 +236,9 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 
 
 	const handleAlternative = (string: string) => {
-		if(userStatus <= 20) {
+		if(userStatus < 20) {
 			return shiftCharacters(string, 'hard');
-		} else if (userStatus <= 80) {
+		} else if (userStatus < 80) {
 			return shiftCharacters(string, 'medium');
 		} else {
 			return string;

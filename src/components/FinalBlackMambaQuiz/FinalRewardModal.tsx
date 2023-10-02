@@ -19,7 +19,6 @@ import RewardModal from '../modals/GenericModal';
 
 // Requisitions
 import api from '../../services/api';
-import { AxiosResponse } from 'axios';
 
 // Styles
 import fontTheme from '../../styles/base';
@@ -33,13 +32,13 @@ import Cross from '../../assets/icons/cross.svg';
 interface IFinalRewardModal {
 	isOpen: boolean;
 	coins: number;
-	score: number[];
 	correctAnswers: number;
 	totalAnswers: number;
 	allQuestionsId?: string[];
 	validateUser: VoidFunction;
 	trail: number;
 	certificateName: string;
+	ignorance: number;
 }
 
 interface userDataProps {
@@ -51,13 +50,13 @@ interface userDataProps {
 const FinalRewardModal: FC<IFinalRewardModal> = ({
 	isOpen,
 	coins,
-	score,
 	correctAnswers,
 	totalAnswers,
 	allQuestionsId,
 	validateUser,
 	trail,
-	certificateName
+	certificateName,
+	ignorance
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [onError, setOnError] = useState(false);
@@ -74,41 +73,6 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 	} = useDisclosure();
 
 	const coinsRecieved = coins;
-
-	const statusPointsRecieved = [
-		{
-			name: 'AGI',
-			points: score[0],
-		},
-		{
-			name: 'LID',
-			points: score[1],
-		},
-		{
-			name: 'EST',
-			points: score[2],
-		},
-		{
-			name: 'INO',
-			points: score[3],
-		},
-		{
-			name: 'GM',
-			points: score[4],
-		},
-		{
-			name: 'GP',
-			points: score[5],
-		},
-	];
-
-	const incrementAtStatusIndex = (res: AxiosResponse<userDataProps>) => {
-		for (let i = 0; i < 6; i++) {
-			res.data.status[i] =
-				res.data.status[i] + statusPointsRecieved[i].points;
-		}
-		return res.data.status;
-	};
 
 	const updateUserCoins = async () => {
 		try {
@@ -170,13 +134,9 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 			await api.patch<userDataProps>(`/user/coins/${_userId}`, {
 				coins: res.data.coins + value,
 			});
-			await api.patch<userDataProps>(`/user/status/${_userId}`, {
-				status: incrementAtStatusIndex(res), // first parameter of this func needs to be dynamic
-			});
 
 			await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
-				// TODO - refatorar isso
-				ignorance: (res.data.ignorance - 20 > 0) ? res.data.ignorance - 20 : 0,
+				ignorance: res.data.ignorance - ignorance,
 			});
 
 			validateUser();
@@ -192,8 +152,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 				titleColor: colorPalette.inactiveButton,
 				subtitle: `Você acertou ${correctAnswers} de ${totalAnswers} questões!`,
 				icon: Cheetah,
-				coins,
-				status: score
+				coins
 			}
 		return {
 			title: 'Que pena!',
@@ -201,8 +160,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 			subtitle: correctAnswers === 0 ? `Você não acertou nenhuma questão! Mas não desista, você poderá vencer a ignorância!` :
 				`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você poderá vencer a ignorância!`,
 			icon: Cross,
-			coins,
-			status: score
+			coins
 		}
 	}
 

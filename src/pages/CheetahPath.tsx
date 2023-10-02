@@ -60,7 +60,7 @@ import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
 import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
 import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
 import { errorCases } from '../utils/errors/errorsCases';
-import { Constants } from '../utils/constants';
+import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import BlockedModal from '../components/modals/BlockedModal';
 import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
@@ -107,7 +107,6 @@ const CheetahPath = () => {
     const { getNewModuleInfo, moduleData } = useModule();
     const { getInsignias } = useInsignias();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
-    const [withoutMoney, setWithoutMoney] = useState(false);
     const isAlertOnClose = () => setIsAlertOpen(false);
     const isAlertCoinsOnClose = () => {
         setIsAlertCoins(false);
@@ -228,7 +227,6 @@ const CheetahPath = () => {
     const alertOnClose = () => setIsConfirmOpen(false);
     const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
     const [isAlertCoins, setIsAlertCoins] = useState(false);
-    const [isCoinsCheck, setIsCoinsCheck] = useState(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const [ignoranceImage, setIgnoranceImage] = useState('');
 
@@ -367,7 +365,7 @@ const CheetahPath = () => {
 
     const alertQuizConfirm = () => {
         setAlertQuiz(
-            `Para fazer o desafio final da Cheetah são necessárias ${Constants.FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
+            `Para fazer o desafio final da Cheetah são necessárias ${FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
         );
         setIsAlertOpen(true);
     };
@@ -378,7 +376,7 @@ const CheetahPath = () => {
     };
 
     const paxTax = async () => {
-        const value = Constants.FINAL_QUIZ_SINK;
+        const value = FINAL_QUIZ_SINK;
         setIsConfirmOpen(false);
         setPayLoading(true);
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
@@ -405,13 +403,6 @@ const CheetahPath = () => {
         if (userCoins < value) {
             setAlertCoins('Poxa! Parece que você não tem moedas suficientes!');
             setIsAlertCoins(true);
-        }
-
-        if (userCoins <= 0 || userCoins < value) {
-            setAlertCoins(
-                'Poxa! Parece que você não tem moedas suficientes! Se você proseguir podera ganhar o dobro de Ignorância e até ficar devendo moesdas! Escolha com sabedoria filhote.',
-            );
-            setIsCoinsCheck(true);
         }
     };
 
@@ -745,7 +736,6 @@ const CheetahPath = () => {
                 routeQuestions={'cheetahquestions'}
                 routeQuiz={'finalcheetahquiz'}
                 insignaName={'da Cheetah'}
-                withoutMoney={withoutMoney}
                 userStatus={getStatusPoints(userData, AGILITY)}
                 trail={1}
             />
@@ -781,20 +771,6 @@ const CheetahPath = () => {
                             display='flex'
                             justifyContent='space-between'
                         >
-                            {isCoinsCheck ? (
-                                <Button
-                                    ref={cancelRef}
-                                    color='white'
-                                    bg={colorPalette.closeButton}
-                                    onClick={() => {
-                                        handleModal();
-                                        setWithoutMoney(true);
-                                        setIsCoinsCheck(false);
-                                    }}
-                                >
-                                    Proseguir
-                                </Button>
-                            ) : null}
                             <Button
                                 ref={cancelRef}
                                 color='white'

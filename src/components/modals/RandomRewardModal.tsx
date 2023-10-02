@@ -18,7 +18,7 @@ import rewardChest from "../../assets/icons/bau.png";
 import RewardModal from './GenericModal';
 import rewardOpenChest from "../../assets/icons/bauAberto.svg";
 import { useUser } from '../../hooks';
-import { Constants } from '../../utils/constants';
+import { CHEST_LUCK_SOURCE, CHEST_NORMAL_SOURCE } from '../../utils/constants/constants';
 import { SURPRISE_CHEST } from '../../utils/constants/mouseOverConstants';
 
 interface userDataProps {
@@ -41,9 +41,9 @@ const RandomRewardModal = () => {
                 setRandomNumber(true);
                 const randomCoins = Math.floor(Math.random() * 100);
                 if (randomCoins < userData.luck) {
-                    setCoins(Constants.CHEST_LUCK_SOURCE);
+                    setCoins(CHEST_LUCK_SOURCE);
                 } else {
-                    setCoins(Constants.CHEST_NORMAL_SOURCE);
+                    setCoins(CHEST_NORMAL_SOURCE);
                 }
             }
 

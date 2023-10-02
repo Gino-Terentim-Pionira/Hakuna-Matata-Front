@@ -88,7 +88,6 @@ const QuizModal: FC<IQuizComponent> = ({
     const [borderStyle, setBorderStyle] = useState(['none', 'none', 'none', 'none']);
     const [delayButton, setDelayButton] = useState(true);
     const [questionsId, setQuestionsId] = useState<string[]>([]);
-    const [ignorance, setIgnorance] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
     const [videos, setVideos] = useState<string[]>([]);
@@ -112,7 +111,6 @@ const QuizModal: FC<IQuizComponent> = ({
                     points: status.points + questionStatus
                 });
 
-                setIgnorance(ignorance + 1.5);
                 setQuestionsId([...questionsId, questionId]);
             }
 
@@ -145,7 +143,6 @@ const QuizModal: FC<IQuizComponent> = ({
                     setBorderStyle(['none', 'none', 'none', `3px solid ${colorPalette.incorrectAnswer}`]);
                     break;
             }
-            setIgnorance(ignorance - 0.75);
 
             const video_name = moduleInfo.questions_id[step].video_name;
             updateVideoArray(videos, video_name);
@@ -212,10 +209,6 @@ const QuizModal: FC<IQuizComponent> = ({
 
                 incrementStatus(_userId as string);
             }
-            
-            await api.patch<userDataProps>(`/user/ignorance/${_userId}`, {
-                ignorance: res.data.ignorance - ignorance,
-            });
         } catch (error) {
             console.log(error);
             setOnError(true);
