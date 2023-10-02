@@ -26,7 +26,7 @@ import colorPalette from '../../styles/colorPalette';
 // Images
 import blackMamba from "../../assets/sprites/blackMamba/mamba_negra.png";
 import { errorCases } from '../../utils/errors/errorsCases';
-import { Constants } from '../../utils/constants';
+import { FINAL_QUIZ_SINK, WINSDOM_SOURCE } from '../../utils/constants/constants';
 
 interface IQuestions {
     alternatives: string[];
@@ -74,8 +74,8 @@ const FinalQuizModal: FC<IQuizComponent> = ({
     const [step, setStep] = useState(0);
     const [borderStyle, setBorderStyle] = useState(['none', 'none', 'none', 'none']);
     const [coins, setCoins] = useState(0);
-    const [status, setStatus] = useState([0, 0, 0, 0, 0, 0]);
     const [correctAnswer, setCorrectAnswer] = useState(0);
+    const [ignorance, setIgnorance] = useState(0);
     const [delayButton, setDelayButton] = useState(true);
     const [questionsId, setQuestionsId] = useState<string[]>([]);
     const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
@@ -96,20 +96,12 @@ const FinalQuizModal: FC<IQuizComponent> = ({
     const isCorrect = (index: number) => {
         const newCorrectAnswer = questions[step].answer;
         const questionsCoins = questions[step].coins;
-        const questionStatus = questions[step].score;
         const questionId = questions[step]._id;
 
         if (index === newCorrectAnswer) {
-            setStatus([
-                status[0] + questionStatus[0],
-                status[1] + questionStatus[1],
-                status[2] + questionStatus[2],
-                status[3] + questionStatus[3],
-                status[4] + questionStatus[4],
-                status[5] + questionStatus[5],
-            ]);
             setCoins(coins + questionsCoins);
             setCorrectAnswer(correctAnswer + 1);
+            setIgnorance(ignorance + WINSDOM_SOURCE);
             setQuestionsId([...questionsId, questionId]);
 
             switch (index) {
@@ -168,7 +160,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
     }
 
     const confirmClose = () => {
-        setAlertAnswer(`Tem certeza que deseja sair do quiz? Você perderá as ${Constants.FINAL_QUIZ_SINK} joias do conhecimento que gastou!`);
+        setAlertAnswer(`Tem certeza que deseja sair do quiz? Você perderá as ${FINAL_QUIZ_SINK} joias do conhecimento que gastou!`);
         setIsConfirmOpen(true);
     }
 
@@ -347,7 +339,7 @@ const FinalQuizModal: FC<IQuizComponent> = ({
             <FinalRewardModal
                 isOpen={isOpen}
                 coins={coins}
-                score={status}
+                ignorance={ignorance}
                 correctAnswers={correctAnswer}
                 totalAnswers={length}
                 allQuestionsId={questionsId}

@@ -4,7 +4,7 @@ import colorPalette from '../../styles/colorPalette';
 import RewardModal from './GenericModal';
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import { useUser } from '../../hooks';
-import { Constants } from '../../utils/constants';
+import { DAILY_SOURCE } from '../../utils/constants/constants';
 
 interface IDailyReward {
     isOpen: boolean;
@@ -24,7 +24,7 @@ const DailyRewardModal: FC<IDailyReward> = ({
     const { getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
-    const coins = Constants.DAILY_SOURCE;
+    const coins = DAILY_SOURCE;
 
 
 
