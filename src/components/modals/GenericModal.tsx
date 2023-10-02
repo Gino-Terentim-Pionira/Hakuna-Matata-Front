@@ -242,7 +242,7 @@ const GenericModal: FC<IGenericModal> = ({
 
                                                     <Text
                                                         color={colorPalette.secundaryGrey}
-                                                        fontSize='15px'
+                                                        fontSize='16px'
                                                         fontWeight='bold'
                                                     >
                                                         {video_names?.join(", ")}
