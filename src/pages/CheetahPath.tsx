@@ -271,8 +271,8 @@ const CheetahPath = () => {
             setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
             const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
             setTimeout(() => {
-				setIsLoading(false);
-			}, 1000)
+                setIsLoading(false);
+            }, 1000)
 
             if (isComplete) {
                 setCheetahText(
@@ -439,118 +439,180 @@ const CheetahPath = () => {
 
     return (
         <>
-            <Flex h='100vh' flexDirection='column' alignItems='center'>
-                <Image
-                    src={trail_bg}
-                    position='absolute'
-                    h='100vh'
-                    w='100%'
-                    zIndex='-3'
-                    left='0'
-                    top='0'
-                />
-			<IgnoranceFilter
-				ignoranceImage={ignoranceImage}
-			/>
+            <Image
+                src={trail_bg}
+                position='absolute'
+                h='100vh'
+                w='100%'
+                zIndex='-3'
+                left='0'
+                top='0'
+            />
+            <IgnoranceFilter
+                ignoranceImage={ignoranceImage}
+            />
 
-                <Flex
-                    width='92.5%'
-                    justifyContent='space-between'
-                    alignItems='flex-start'
-                    margin='auto'
-                    zIndex='10'
-                    position='fixed'
-                >
-                    {narrativeIsOpen ||
-                        narrativeChallengeIsOpen ||
-                        finalNarrativeChallengeIsOpen ? null : (
-                            <NavActions logout={logout} />
-                        )}
-
-                    {narrativeIsOpen ||
-                        narrativeChallengeIsOpen ||
-                        finalNarrativeChallengeIsOpen ? null : (
-                            <IgnorancePremiumIcons 
-                                ignorance={userData.ignorance} 
-                                showStatus={true}
-                                statusText={STATUS_LEVEL(AGILITY)}
-                                statusPoints={getStatusPoints(userData, AGILITY)}
-                                statusColor={colorPalette.primaryColor}
-                            />
-                        )}
-                </Flex>
+            <Flex
+                width='92.5%'
+                justifyContent='space-between'
+                alignItems='flex-start'
+                margin='auto'
+            >
+                {narrativeIsOpen ||
+                    narrativeChallengeIsOpen ||
+                    finalNarrativeChallengeIsOpen ? null : (
+                        <NavActions logout={logout} />
+                    )}
 
                 {narrativeIsOpen ||
                     narrativeChallengeIsOpen ||
                     finalNarrativeChallengeIsOpen ? null : (
-                        <>
-                            <Flex
-                                margin='2vw'
-                                justifyContent='space-between'
-                                zIndex='10'
-                            >
-                                <ModuleModal left='19vw' top='67vh' quizIndex={0} />
-                                <ModuleModal left='45vw' top='54vh' quizIndex={1} />
-                                <ModuleModal left='68vw' top='82vh' quizIndex={2} />
-                                <ModuleModal left='89vw' top='60vh' quizIndex={0} isBlocked={true} blockedFunction={() => setIsBlockedOpen(true)} />
-                                <Center
-                                    _hover={{
-                                        cursor: 'pointer',
-                                        transform: 'scale(1.1)',
-                                    }}
-                                    transition='all 0.2s ease'
-                                    width='7rem'
-                                    height='7rem'
-                                    onClick={() => {
-                                        if (!completeTrail) {
-                                            narrativeChallengeOnOpen();
-                                            challengeNarrative();
-                                        }
-                                        modalOnOpen();
-                                    }}
-                                    position='absolute'
-                                    top='35vh'
-                                    left='70vw'
-                                    zIndex='999'
-                                >
-                                    <Tooltip
-                                        hasArrow
-                                        placement='top'
-                                        gutter={12}
-                                        label={CHEETAH_FINAL}
-                                    >
-                                        <Image
-                                            src={final_cheetah_icon}
-                                            width='90%'
-                                            height='90%'
-                                        />
-                                    </Tooltip>
-                                </Center>
-                            </Flex>
+                        <IgnorancePremiumIcons
+                            ignorance={userData.ignorance}
+                            showStatus={true}
+                            statusText={STATUS_LEVEL(AGILITY)}
+                            statusPoints={getStatusPoints(userData, AGILITY)}
+                            statusColor={colorPalette.primaryColor}
+                        />
+                    )}
+            </Flex>
 
-                            <Modal
-                                isOpen={modalIsOpen}
-                                onClose={modalOnClose}
-                                size='4xl'
+            {narrativeIsOpen ||
+                narrativeChallengeIsOpen ||
+                finalNarrativeChallengeIsOpen ? null : (
+                    <>
+                        <Flex
+                            margin='2vw'
+                            justifyContent='space-between'
+                        >
+                            <ModuleModal left='19vw' top='67vh' quizIndex={0} />
+                            <ModuleModal left='45vw' top='54vh' quizIndex={1} />
+                            <ModuleModal left='68vw' top='82vh' quizIndex={2} />
+                            <ModuleModal left='89vw' top='60vh' quizIndex={0} isBlocked={true} blockedFunction={() => setIsBlockedOpen(true)} />
+                            <Center
+                                _hover={{
+                                    cursor: 'pointer',
+                                    transform: 'scale(1.1)',
+                                }}
+                                transition='all 0.2s ease'
+                                width='7rem'
+                                height='7rem'
+                                onClick={() => {
+                                    if (!completeTrail) {
+                                        narrativeChallengeOnOpen();
+                                        challengeNarrative();
+                                    }
+                                    modalOnOpen();
+                                }}
+                                position='absolute'
+                                top='35vh'
+                                left='70vw'
                             >
-                                <ModalOverlay />
-                                <ModalContent
-                                    height='34rem'
-                                    fontFamily={fontTheme.fonts}
+                                <Tooltip
+                                    hasArrow
+                                    placement='top'
+                                    gutter={12}
+                                    label={CHEETAH_FINAL}
                                 >
-                                    <Box
-                                        w='25%'
-                                        bg={colorPalette.primaryColor}
-                                        h='25rem'
-                                        position='absolute'
-                                        zIndex='-1'
-                                        left='0'
-                                        top='0'
-                                        borderTopStartRadius='5px'
-                                        clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+                                    <Image
+                                        src={final_cheetah_icon}
+                                        width='90%'
+                                        height='90%'
                                     />
-                                    {completeTrail ? (
+                                </Tooltip>
+                            </Center>
+                        </Flex>
+
+                        <Modal
+                            isOpen={modalIsOpen}
+                            onClose={modalOnClose}
+                            size='4xl'
+                        >
+                            <ModalOverlay />
+                            <ModalContent
+                                height='34rem'
+                                fontFamily={fontTheme.fonts}
+                            >
+                                <Box
+                                    w='25%'
+                                    bg={colorPalette.primaryColor}
+                                    h='25rem'
+                                    position='absolute'
+                                    zIndex='-1'
+                                    left='0'
+                                    top='0'
+                                    borderTopStartRadius='5px'
+                                    clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+                                />
+                                {completeTrail ? (
+                                    <>
+                                        <ModalBody
+                                            d='flex'
+                                            mt='-1rem'
+                                            flexDirection='column'
+                                            alignItems='center'
+                                            justifyContent='space-between'
+                                        >
+                                            <Flex
+                                                w='65%'
+                                                h='100%'
+                                                justifyContent='space-between'
+                                                flexDirection='column'
+                                                marginBottom='0.8rem'
+                                            >
+                                                <Text
+                                                    w='100%'
+                                                    marginTop='5rem'
+                                                    fontSize='2rem'
+                                                    lineHeight='9vh'
+                                                    textAlign='center'
+                                                    fontWeight='normal'
+                                                >
+                                                    "{cheetahText}"
+                                                </Text>
+                                                <Button
+                                                    bgColor={
+                                                        colorPalette.secondaryColor
+                                                    }
+                                                    width='45%'
+                                                    alignSelf='center'
+                                                    color={
+                                                        colorPalette.buttonTextColor
+                                                    }
+                                                    height='4rem'
+                                                    fontSize='1.4rem'
+                                                    _hover={{
+                                                        transform: 'scale(1.1)',
+                                                    }}
+                                                    onClick={modalOnClose}
+                                                >
+                                                    Okay!
+                                                </Button>
+                                            </Flex>
+                                        </ModalBody>
+                                    </>
+                                ) : (
                                         <>
+                                            <ModalHeader
+                                                d='flex'
+                                                justifyContent='center'
+                                                mt='1.4rem'
+                                            >
+                                                <Text
+                                                    ml='2.3rem'
+                                                    w='75%'
+                                                    fontSize='1.4rem'
+                                                    textAlign='center'
+                                                    fontWeight='normal'
+                                                >
+                                                    {cheetahText}
+                                                </Text>
+                                                <ModalCloseButton
+                                                    color={colorPalette.closeButton}
+                                                    size='lg'
+                                                />
+                                            </ModalHeader>
+
                                             <ModalBody
                                                 d='flex'
                                                 mt='-1rem'
@@ -558,173 +620,105 @@ const CheetahPath = () => {
                                                 alignItems='center'
                                                 justifyContent='space-between'
                                             >
+                                                <Image
+                                                    src={cheetah_bg}
+                                                    w='65%'
+                                                    h='75%'
+                                                />
+
                                                 <Flex
                                                     w='65%'
-                                                    h='100%'
                                                     justifyContent='space-between'
-                                                    flexDirection='column'
                                                     marginBottom='0.8rem'
                                                 >
-                                                    <Text
-                                                        w='100%'
-                                                        marginTop='5rem'
-                                                        fontSize='2rem'
-                                                        lineHeight='9vh'
-                                                        textAlign='center'
-                                                        fontWeight='normal'
-                                                    >
-                                                        "{cheetahText}"
-                                                </Text>
                                                     <Button
                                                         bgColor={
-                                                            colorPalette.secondaryColor
+                                                            colorPalette.confirmButton
                                                         }
                                                         width='45%'
-                                                        alignSelf='center'
-                                                        color={
-                                                            colorPalette.buttonTextColor
-                                                        }
                                                         height='4rem'
-                                                        fontSize='1.4rem'
+                                                        fontSize='1.2rem'
+                                                        _hover={{
+                                                            transform: 'scale(1.1)',
+                                                        }}
+                                                        onClick={checkStatus}
+                                                    >
+                                                        Vamos nessa!
+                                                </Button>
+                                                    <Button
+                                                        bgColor={
+                                                            colorPalette.closeButton
+                                                        }
+                                                        width='45%'
+                                                        height='4rem'
+                                                        fontSize='1.2rem'
                                                         _hover={{
                                                             transform: 'scale(1.1)',
                                                         }}
                                                         onClick={modalOnClose}
                                                     >
-                                                        Okay!
+                                                        Ainda não estou pronto!
                                                 </Button>
                                                 </Flex>
                                             </ModalBody>
                                         </>
-                                    ) : (
-                                            <>
-                                                <ModalHeader
-                                                    d='flex'
-                                                    justifyContent='center'
-                                                    mt='1.4rem'
-                                                >
-                                                    <Text
-                                                        ml='2.3rem'
-                                                        w='75%'
-                                                        fontSize='1.4rem'
-                                                        textAlign='center'
-                                                        fontWeight='normal'
-                                                    >
-                                                        {cheetahText}
-                                                    </Text>
-                                                    <ModalCloseButton
-                                                        color={colorPalette.closeButton}
-                                                        size='lg'
-                                                    />
-                                                </ModalHeader>
-
-                                                <ModalBody
-                                                    d='flex'
-                                                    mt='-1rem'
-                                                    flexDirection='column'
-                                                    alignItems='center'
-                                                    justifyContent='space-between'
-                                                >
-                                                    <Image
-                                                        src={cheetah_bg}
-                                                        w='65%'
-                                                        h='75%'
-                                                    />
-
-                                                    <Flex
-                                                        w='65%'
-                                                        justifyContent='space-between'
-                                                        marginBottom='0.8rem'
-                                                    >
-                                                        <Button
-                                                            bgColor={
-                                                                colorPalette.confirmButton
-                                                            }
-                                                            width='45%'
-                                                            height='4rem'
-                                                            fontSize='1.2rem'
-                                                            _hover={{
-                                                                transform: 'scale(1.1)',
-                                                            }}
-                                                            onClick={checkStatus}
-                                                        >
-                                                            Vamos nessa!
-                                                </Button>
-                                                        <Button
-                                                            bgColor={
-                                                                colorPalette.closeButton
-                                                            }
-                                                            width='45%'
-                                                            height='4rem'
-                                                            fontSize='1.2rem'
-                                                            _hover={{
-                                                                transform: 'scale(1.1)',
-                                                            }}
-                                                            onClick={modalOnClose}
-                                                        >
-                                                            Ainda não estou pronto!
-                                                </Button>
-                                                    </Flex>
-                                                </ModalBody>
-                                            </>
-                                        )}
-                                </ModalContent>
-                            </Modal>
-                        </>
-                    )}
+                                    )}
+                            </ModalContent>
+                        </Modal>
+                    </>
+                )}
 
 
-                {script.length > 0 ? (
-                    //verifica se o script possui algum conteúdo
-                    <NarrativeModal
-                        isOpen={narrativeIsOpen}
-                        script={script}
-                        onToggle={narrativeOnToggle}
-                        narrative="cheetah"
-                    />
-                ) : null}
-                {challengeScript.length > 0 ? (
-                    //verifica se o script possui algum conteúdo
-                    <NarrativeModal
-                        isOpen={narrativeChallengeIsOpen}
-                        script={challengeScript}
-                        onToggle={narrativeChallengeOnToggle}
-                        narrative="cheetah"
-                    />
-                ) : null}
-
-                {finalChallengeScript.length > 0 ? (
-                    //verifica se o script possui algum conteúdo
-                    <NarrativeModal
-                        isOpen={finalNarrativeChallengeIsOpen}
-                        script={finalChallengeScript}
-                        onToggle={finalNarrativeChallengeOnToggle}
-                        narrative="cheetah"
-                    />
-                ) : null}
-
-
-                <AlertModal
-                    isOpen={isConfirmOpen}
-                    onClose={alertOnClose}
-                    alertTitle='Logout'
-                    alertBody={alertAnswer}
-                    buttonBody={
-                        <Button
-                            ref={cancelRef}
-                            color='white'
-                            bg={colorPalette.primaryColor}
-                            onClick={() => {
-                                alertOnClose();
-                                sessionStorage.clear();
-                                location.reload();
-                            }}
-                        >
-                            Sair
-                        </Button>
-                    }
+            {script.length > 0 ? (
+                //verifica se o script possui algum conteúdo
+                <NarrativeModal
+                    isOpen={narrativeIsOpen}
+                    script={script}
+                    onToggle={narrativeOnToggle}
+                    narrative="cheetah"
                 />
-            </Flex>
+            ) : null}
+            {challengeScript.length > 0 ? (
+                //verifica se o script possui algum conteúdo
+                <NarrativeModal
+                    isOpen={narrativeChallengeIsOpen}
+                    script={challengeScript}
+                    onToggle={narrativeChallengeOnToggle}
+                    narrative="cheetah"
+                />
+            ) : null}
+
+            {finalChallengeScript.length > 0 ? (
+                //verifica se o script possui algum conteúdo
+                <NarrativeModal
+                    isOpen={finalNarrativeChallengeIsOpen}
+                    script={finalChallengeScript}
+                    onToggle={finalNarrativeChallengeOnToggle}
+                    narrative="cheetah"
+                />
+            ) : null}
+
+
+            <AlertModal
+                isOpen={isConfirmOpen}
+                onClose={alertOnClose}
+                alertTitle='Logout'
+                alertBody={alertAnswer}
+                buttonBody={
+                    <Button
+                        ref={cancelRef}
+                        color='white'
+                        bg={colorPalette.primaryColor}
+                        onClick={() => {
+                            alertOnClose();
+                            sessionStorage.clear();
+                            location.reload();
+                        }}
+                    >
+                        Sair
+                        </Button>
+                }
+            />
 
             <FinalUniversalQuiz
                 openModal={quizIsOpen}
@@ -809,8 +803,8 @@ const CheetahPath = () => {
                 subtitle="Esse treinamento ainda não está disponível!"
             />
 
-            <GenericModal 
-                genericModalInfo = {statusAlertInfo}
+            <GenericModal
+                genericModalInfo={statusAlertInfo}
                 isOpen={statusAlert}
                 confirmFunction={handleStatusAlert}
                 secondFunction={closeStatusAlert}
