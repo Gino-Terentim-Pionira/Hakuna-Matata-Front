@@ -11,6 +11,7 @@ interface IQuiz {
         answer: number,
         coins: number,
         score_point: number,
+        video_name: string,
     }];
     category: string;
     dificulty: string;
@@ -20,7 +21,7 @@ interface IQuiz {
         module_name: string,
         name: string,
         url: string,
-        nick: string,
+        description: string,
         coins: number
     }];
     total_coins: number;

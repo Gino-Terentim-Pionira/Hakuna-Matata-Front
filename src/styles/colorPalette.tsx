@@ -27,7 +27,8 @@ const colorPalette = {
     progressOrange: '#F0C05D',
     whiteText: '#FEFEFE',
     darkGrey: '#999999',
-    alertText: '#F47070'
+    alertText: '#F47070',
+    gold: '#F2CB05'
 }
 
 export default colorPalette;

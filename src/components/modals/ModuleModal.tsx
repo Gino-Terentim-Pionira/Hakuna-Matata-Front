@@ -248,10 +248,10 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                     <>
                                         <GridContainer>
                                             {
-                                                moduleInfo.videos_id.map(({ _id, name, url, nick, coins }: {
+                                                moduleInfo.videos_id.map(({ _id, name, url, description, coins }: {
                                                     name: string,
                                                     url: string,
-                                                    nick: string,
+                                                    description: string,
                                                     _id: string,
                                                     coins: number
                                                 }) => {
@@ -280,7 +280,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                                     {name}
                                                                 </Text>
                                                                 <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
-                                                                    {nick}
+                                                                    {description}
                                                                 </Text>
                                                                 {
                                                                     userData?.video_id.includes(_id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">

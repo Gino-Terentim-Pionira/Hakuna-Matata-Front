@@ -27,6 +27,7 @@ import plusIcon from '../../assets/icons/plusIcon.png'
 import { errorCases } from '../../utils/errors/errorsCases';
 import Cheetah from '../../assets/icons/cheetahblink.svg'
 import { REWARD_MODAL_TEXT, GENERIC_MODAL_TEXT, LOAD_BUTTON } from '../../utils/constants/buttonConstants';
+import { getStatusColor } from '../../utils/statusUtils';
 
 interface IGenericModal {
     genericModalInfo: {
@@ -42,6 +43,7 @@ interface IGenericModal {
         firstButton?: string;
         secondButton?: string;
         alert?: string;
+        video_names?: string[];
     },
     isOpen: boolean;
     confirmFunction: VoidFunction;
@@ -63,11 +65,12 @@ const GenericModal: FC<IGenericModal> = ({
     error,
     isStaticModal = false
 }) => {
-    const { title, titleColor, subtitle, icon, coins, status } = genericModalInfo;
+    const { title, titleColor, subtitle, icon, coins, status, video_names } = genericModalInfo;
     const [ isDisabled, setIsDisabled] = useState(false);
 
     const coinsValidation = coins && coins !== 0;
     const statusValidation = status && status.points > 0;
+    const videosValidation = video_names && video_names.length > 0
 
     const defineButtonText = () => {
         const costumizedText = genericModalInfo.firstButton;
@@ -164,8 +167,9 @@ const GenericModal: FC<IGenericModal> = ({
                                         </Box>
                                         <Center
                                             flexDirection='column'
-                                            marginTop='26px'
+                                            marginTop='16px'
                                             minHeight='40px'
+                                            marginBottom='55px'
                                         >
                                             {
                                                 statusValidation ? (
@@ -178,7 +182,7 @@ const GenericModal: FC<IGenericModal> = ({
                                                                 fontFamily={fontTheme.fonts}
                                                                 fontSize="24px"
                                                                 fontWeight='semibold'
-                                                                color='#0B67A1'
+                                                                color={getStatusColor(status?.name as string)}
                                                             >
                                                                 + {status?.points} {status?.name}
                                                             </Text>
@@ -195,14 +199,13 @@ const GenericModal: FC<IGenericModal> = ({
                                                 coinsValidation ? <Flex
                                                     alignItems='center'
                                                     marginTop={statusValidation ? '8px' : undefined}
-                                                    marginBottom='55px'
                                                 >
                                                     <Text
                                                         textAlign='center'
                                                         fontFamily={fontTheme.fonts}
                                                         fontSize="24px"
                                                         fontWeight='semibold'
-                                                        color='#EDA641'
+                                                        color={colorPalette.gold}
                                                     >
                                                         + {coins} Joias
                                                     </Text>
@@ -214,6 +217,38 @@ const GenericModal: FC<IGenericModal> = ({
                                                         marginLeft='5px'
                                                     />
                                                 </Flex> : null
+                                            }
+                                            {
+                                                videosValidation && <Flex
+                                                    width='295px'
+                                                    flexDirection='column'
+                                                    textAlign='center'
+                                                    marginTop='32px'  
+                                                    fontFamily={fontTheme.fonts}
+                                                >
+                                                    <Text
+                                                        fontSize='18px'
+                                                        color={colorPalette.secundaryGrey}
+                                                        marginBottom='8px'
+                                                    >
+                                                        Para acertar as 
+                                                        <Text 
+                                                            as='span' 
+                                                            color={colorPalette.closeButton}
+                                                            fontWeight='bold'
+                                                        > questões que errou</Text>
+                                                        , veja esses vídeos novamente:
+                                                    </Text>
+
+                                                    <Text
+                                                        color={colorPalette.secundaryGrey}
+                                                        fontSize='16px'
+                                                        fontWeight='bold'
+                                                    >
+                                                        {video_names?.join(", ")}
+                                                    </Text>
+                                                    
+                                                </Flex>
                                             }
                                         </Center>
                                     </Center>
