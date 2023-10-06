@@ -1,15 +1,20 @@
-import { Flex } from "@chakra-ui/react";
-import React from "react";
+import { Flex, useDisclosure } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
 import IgnoranceProgress from "./IgnoranceProgress";
 import RandomRewardModal from "../modals/RandomRewardModal";
 import Glasses from '../../assets/icons/double-glasses.png';
 import GlassesOn from '../../assets/icons/double-glasses-on.png';
+import Daily from '../../assets/icons/daily_quiz.png';
+import Horizon from '../../assets/Tela_de_inicio.png';
 import { useUser } from "../../hooks";
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
 import NavIcon from "../NavigationComponents/NavIcon";
-import { IGNORANCE_GLASS } from "../../utils/constants/mouseOverConstants";
+import { IGNORANCE_GLASS, DAILY_QUIZ } from "../../utils/constants/mouseOverConstants";
 import StatusProgress from "./StatusProgress";
+import QuizAlertModal from "../Quiz/QuizAlertModal";
+import { ALERT_QUIZ_MODAL } from "../../utils/constants/textConstants";
+import DailyQuiz from "../Quiz/DailyQuiz";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -29,6 +34,32 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
   // } = useDisclosure();
   const { userData } = useUser();
   const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDifferentDay, setIsDifferentDay] = useState(false);
+
+  const { isOpen: quizIsOpen,
+    onClose: quizOnClose,
+    onOpen: quizOnOpen,
+    onToggle: quizToggle
+} = useDisclosure();
+
+  const handleDaily = () => {
+    setIsModalOpen(false);
+    quizOnOpen();
+  }
+
+  const verifyDailyQuiz = () => {
+    const item = localStorage.getItem("@pionira/dailyQuiz");
+    if (item) {
+      const currentDate = new Date();
+      const storedDate = new Date(item);
+      setIsDifferentDay(currentDate.toDateString() !== storedDate.toDateString());
+    }
+  }
+
+  useEffect(() => {
+    verifyDailyQuiz();
+  }, []);
 
   return (
     <>
@@ -86,8 +117,30 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
             isMap={false}
             position="bottom"
           />
+          { //Fazer uma função para verificar se o quiz diário está disponível e controlar por meio de outro estado
+            (!isIgnoranceFilterOn && isDifferentDay) && <NavIcon 
+              image={Daily}
+              mouseOver={DAILY_QUIZ}
+              onClick={() => {setIsModalOpen(true)}}
+              size="normal"
+              isMap={false}
+              position="bottom"
+            />
+          }
         </Flex>
         <RandomRewardModal />
+        <QuizAlertModal 
+          modalIsOpen={isModalOpen}
+          modalOnClose={() => setIsModalOpen(false)}
+          title={ALERT_QUIZ_MODAL}
+          image={Horizon}
+          confirmFunction={handleDaily}
+        />
+        <DailyQuiz 
+          closeModal={quizOnClose}
+          onToggle={quizToggle}
+          openModal={quizIsOpen}
+        />
       </Flex>
       {/* <PremiumPassport
         isOpen={premiumIsOpen}

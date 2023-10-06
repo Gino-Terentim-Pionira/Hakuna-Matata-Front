@@ -45,3 +45,5 @@ export const IGNORANCE_GLASS = "Óculos da ignorância";
 export const STATUS = 'Seu progresso na trilha';
 
 export const CHAT = "Sabedoria do Babuíno";
+
+export const DAILY_QUIZ = "Desafio diário";
