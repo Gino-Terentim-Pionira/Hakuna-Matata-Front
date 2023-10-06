@@ -18,11 +18,11 @@ import { useUser, useModule } from '../../hooks';
 import { AxiosResponse } from 'axios';
 
 // Components
-import QuizModal from './QuizModal';
 import LoadingState from '../LoadingState';
 import VideoModal from './VideoModal';
 import TimeModal from './TimeModal';
 import AlertModal from './AlertModal';
+import ModuleQuiz from '../Quiz/ModuleQuiz';
 
 // Requisitions
 import api from '../../services/api';
@@ -329,7 +329,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             </Modal >
 
             {
-                moduleInfo ? <QuizModal
+                moduleInfo ? <ModuleQuiz
                     openModal={quizIsOpen}
                     closeModal={quizOnClose}
                     moduleInfo={moduleInfo}

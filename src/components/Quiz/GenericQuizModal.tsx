@@ -1,118 +1,80 @@
-import React, { FC, useEffect, useState } from 'react';
-import {
-    Text,
-    Box,
-    Flex,
-    Modal,
-    ModalContent,
-    ModalOverlay,
-    ModalBody,
-    ModalCloseButton,
-    Center,
-    useDisclosure
-} from '@chakra-ui/react';
-import { useUser } from '../../hooks';
-import { validateQuestionSize } from '../../utils/validates';
-import { updateModuleCooldown } from '../../services/moduleCooldown';
-
-// Components
-import RewardModal from './GenericModal';
-import { UpdateStatus } from '../../services/updateStatus';
-import { getStatusName } from '../../utils/statusUtils';
-
-// Styles
-import fontTheme from '../../styles/base'
+import { Flex, Text, Modal, ModalOverlay, ModalContent, Box, ModalBody, ModalCloseButton, Center } from '@chakra-ui/react';
+import React, { FC, useState, useEffect } from 'react';
 import colorPalette from '../../styles/colorPalette';
-import api from '../../services/api';
+import fontTheme from '../../styles/base';
+import { validateQuestionSize } from '../../utils/validates';
 
-// Images
-import Cheetah from '../../assets/icons/cheetahblink.svg';
-import Cross from '../../assets/icons/cross.svg';
-
-interface IStatus {
-    name: string,
-    points: number
-}
-
-interface userDataProps {
-    coins: number,
-    status: number[],
-    ignorance: number
-}
-
-interface IQuizComponent {
+interface IGenericQuizModal {
     openModal: boolean;
     closeModal: VoidFunction;
     onToggle: VoidFunction;
-    moduleInfo: {
-        questions_id: [{
-            _id: string,
-            description: string,
-            alternatives: string[],
-            answer: number,
-            coins: number,
-            score_point: number,
-            video_name: string,
-        }];
-        dificulty: string;
-        total_coins: number;
-        trail: string;
+    questions_id: ({
         _id: string;
-    };
-    validateUser: VoidFunction;
-    firsTimeChallenge: boolean;
-    userQuizCoins: number;
+        description: string;
+        alternatives: string[];
+        answer: number;
+    })[] | [];
+    onCorrect(question_id: string): void;
+    onWrong(question_id: string): void;
+    onEndQuiz(passed: boolean): void;
+    correctAnswers: number;
 }
 
-
-const QuizModal: FC<IQuizComponent> = ({
+const GenericQuizModal: FC<IGenericQuizModal> = ({
     openModal,
+    onEndQuiz,
     closeModal,
-    moduleInfo,
     onToggle,
-    validateUser,
-    firsTimeChallenge,
-    userQuizCoins
+    questions_id,
+    onCorrect,
+    onWrong,
+    correctAnswers
 }) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const { getNewUserInfo, userData } = useUser();
     const [step, setStep] = useState(0);
-    const length = moduleInfo.questions_id.length;
-    const [coins, setCoins] = useState(0);
-    const [status, setStatus] = useState<IStatus>({
-        name: getStatusName(moduleInfo.trail),
-        points: 0
-    });
-    const [correctAnswers, setCorrectAnswers] = useState(0);
-    const [passed, setPassed] = useState(Boolean);
     const [borderStyle, setBorderStyle] = useState(['none', 'none', 'none', 'none']);
     const [delayButton, setDelayButton] = useState(true);
-    const [questionsId, setQuestionsId] = useState<string[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [onError, setOnError] = useState(false);
-    const [videos, setVideos] = useState<string[]>([]);
+    const length = questions_id.length;
+
+    const callReward = (passed: boolean) => {
+        onEndQuiz(passed);
+    }
+
+    const handleQuestion = () => {
+        if (step >= (length - 1)) {
+            onToggle();
+            if (correctAnswers >= length / 2) {
+                callReward(true);
+            }
+            else {
+                callReward(false);
+            }
+        } else {
+            setStep(step + 1);
+        }
+        setBorderStyle(['none', 'none', 'none', 'none']);
+    }
 
     const isCorretAnswer = (index: number) => {
-        const correctAnswer = moduleInfo.questions_id[step].answer;
-        const questionsCoins = moduleInfo.questions_id[step].coins;
-        const questionId = moduleInfo.questions_id[step]._id;
-        const questionUserId = userData.question_id;
-        const questionStatus = moduleInfo.questions_id[step].score_point;
+        const correctAnswer = questions_id[step].answer;
+        const questionId = questions_id[step]._id;
 
         if (index === correctAnswer) {
+            onCorrect(questionId);
+            /*
+            Mudar essa lógica para a função onCorrect
+                if (questionUserId.includes(moduleInfo.questions_id[step]._id)) {
+                    setCorrectAnswers(correctAnswers + 1);
+                } else {
+                    setCoins(coins + questionsCoins);
+                    setCorrectAnswers(correctAnswers + 1);
+                    setStatus({
+                        ...status,
+                        points: status.points + questionStatus
+                    });
 
-            if (questionUserId.includes(moduleInfo.questions_id[step]._id)) {
-                setCorrectAnswers(correctAnswers + 1);
-            } else {
-                setCoins(coins + questionsCoins);
-                setCorrectAnswers(correctAnswers + 1);
-                setStatus({
-                    ...status,
-                    points: status.points + questionStatus
-                });
-
-                setQuestionsId([...questionsId, questionId]);
-            }
+                    setQuestionsId([...questionsId, questionId]);
+                }
+            */
 
             switch (index) {
                 case 0:
@@ -144,31 +106,14 @@ const QuizModal: FC<IQuizComponent> = ({
                     break;
             }
 
-            const video_name = moduleInfo.questions_id[step].video_name;
-            updateVideoArray(videos, video_name);
-        }
-    }
+            /*
+            Passar essa lógica para função onWrong
+                const video_name = moduleInfo.questions_id[step].video_name;
+                updateVideoArray(videos, video_name);
+            */
 
-    const updateVideoArray = (videoArray: string[], video_name: string) => {
-        const hasVideoname = videoArray.find((item) => item == video_name);
-        if (!hasVideoname) {
-            setVideos([...videoArray, video_name]);
+            onWrong(questionId);
         }
-    }
-
-    const handleQuestion = () => {
-        if (step >= (length - 1)) {
-            onToggle();
-            if (correctAnswers >= length / 2) {
-                callReward(true);
-            }
-            else {
-                callReward(false);
-            }
-        } else {
-            setStep(step + 1);
-        }
-        setBorderStyle(['none', 'none', 'none', 'none']);
     }
 
     const buttonFunctions = (index: number) => {
@@ -179,11 +124,6 @@ const QuizModal: FC<IQuizComponent> = ({
         }
     }
 
-    const callReward = (passed: boolean) => {
-        setPassed(passed);
-        onOpen();
-    }
-
     useEffect(() => {
         if (!delayButton) {
             const timeout = setTimeout(() => {
@@ -192,89 +132,6 @@ const QuizModal: FC<IQuizComponent> = ({
             return () => clearTimeout(timeout);
         }
     }, [delayButton]);
-
-    const incrementStatus = async (userId: string) => {
-        await UpdateStatus(userData, userId, status.name, status.points);
-    }
-
-    const addCoinsStatus = async (value: number) => {
-        try {
-            const _userId = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get<userDataProps>(`/user/${_userId}`);
-
-            if (userQuizCoins < moduleInfo.total_coins) {
-                await api.patch<userDataProps>(`/user/coins/${_userId}`, {
-                    coins: res.data.coins + value
-                });
-
-                incrementStatus(_userId as string);
-            }
-        } catch (error) {
-            console.log(error);
-            setOnError(true);
-        }
-    }
-
-    const updateUserQuizTime = async () => {
-        try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            await updateModuleCooldown(userId as string, moduleInfo._id);
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
-    const updateUserCoins = async () => {
-        try {
-            setIsLoading(true);
-            await addCoinsStatus(coins);
-            if (questionsId) {
-                const userId = sessionStorage.getItem('@pionira/userId');
-                const length = questionsId.length;
-                for (let i = 0; i < length; i++) {
-                    await api.patch(`/user/addquestion/${userId}`, {
-                        question_id: questionsId[i]
-                    });
-                }
-            }
-            firsTimeChallenge ? validateUser() : null
-
-            await updateUserQuizTime();
-            await getNewUserInfo();
-            onClose();
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
-    const rewardModalInfo = () => {
-        if (userQuizCoins >= moduleInfo.total_coins)
-            return {
-                title: 'Arrasou!',
-                titleColor: colorPalette.inactiveButton,
-                subtitle: 'Você já conseguiu provar todo o seu valor nesse desafio! Pode seguir adiante com sua jornada, caro viajante!',
-                icon: Cheetah
-            }
-        if (passed)
-            return {
-                title: 'Quiz finalizado!',
-                titleColor: colorPalette.inactiveButton,
-                subtitle: `Você acertou ${correctAnswers} de ${length} questões!`,
-                icon: Cheetah,
-                coins,
-                status,
-                video_names: videos
-            }
-        return {
-            title: 'Que pena!',
-            titleColor: colorPalette.closeButton,
-            subtitle: `Você errou ${length - correctAnswers} de ${length} questões! Tente novamente em 30 minutos`,
-            icon: Cross,
-            coins,
-            status,
-            video_names: videos
-        }
-    }
 
     return (
         <>
@@ -300,7 +157,7 @@ const QuizModal: FC<IQuizComponent> = ({
                                 <Text marginTop='0.5rem' fontFamily={fontTheme.fonts} fontSize='30' fontWeight='bold' color={colorPalette.secondaryColor} >Q {step + 1}/{length}</Text>
                                 <Flex marginTop='0.5rem' bg='white' boxShadow='4px 4px 4px rgba(0, 0, 0, 0.25)' borderRadius='8' h='29vh' justifyContent='center' alignItems='center' >
                                     <Text w='92%' h='77%' fontFamily={fontTheme.fonts} fontSize='25px' >
-                                        {moduleInfo?.questions_id[step]?.description}
+                                        {questions_id[step]?.description}
                                     </Text>
                                 </Flex>
                             </Flex>
@@ -324,10 +181,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[0]) ? '18px' : '24px'}
+                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[0]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
-                                            {moduleInfo?.questions_id[step]?.alternatives[0]}
+                                            {questions_id[step]?.alternatives[0]}
                                         </Text>
                                     </Center>
                                     <Center
@@ -347,10 +204,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[1]) ? '18px' : '24px'}
+                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[1]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
-                                            {moduleInfo?.questions_id[step]?.alternatives[1]}
+                                            {questions_id[step]?.alternatives[1]}
                                         </Text>
                                     </Center>
                                 </Flex>
@@ -372,10 +229,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[2]) ? '18px' : '24px'}
+                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[2]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
-                                            {moduleInfo?.questions_id[step]?.alternatives[2]}
+                                            {questions_id[step]?.alternatives[2]}
                                         </Text>
                                     </Center>
                                     <Center
@@ -395,10 +252,10 @@ const QuizModal: FC<IQuizComponent> = ({
                                         <Text
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(moduleInfo?.questions_id[step]?.alternatives[3]) ? '18px' : '24px'}
+                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[3]) ? '18px' : '24px'}
                                             textAlign='center'
                                         >
-                                            {moduleInfo?.questions_id[step]?.alternatives[3]}
+                                            {questions_id[step]?.alternatives[3]}
                                         </Text>
                                     </Center>
                                 </Flex>
@@ -408,16 +265,8 @@ const QuizModal: FC<IQuizComponent> = ({
                     </ModalBody>
                 </ModalContent>
             </Modal>
-
-            <RewardModal
-                isOpen={isOpen}
-                genericModalInfo={rewardModalInfo()}
-                confirmFunction={updateUserCoins}
-                loading={isLoading}
-                error={onError}
-            />
         </>
     );
 }
 
-export default QuizModal;
+export default GenericQuizModal;
