@@ -90,7 +90,6 @@ const DailyQuiz: FC<IDailyQuiz> = ({
                 coins: res.data.coins + value
             });
         } catch (error) {
-            console.log(error);
             setOnError(true);
         }
     }

@@ -60,21 +60,6 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
 
         if (index === correctAnswer) {
             onCorrect(questionId);
-            /*
-            Mudar essa lógica para a função onCorrect
-                if (questionUserId.includes(moduleInfo.questions_id[step]._id)) {
-                    setCorrectAnswers(correctAnswers + 1);
-                } else {
-                    setCoins(coins + questionsCoins);
-                    setCorrectAnswers(correctAnswers + 1);
-                    setStatus({
-                        ...status,
-                        points: status.points + questionStatus
-                    });
-
-                    setQuestionsId([...questionsId, questionId]);
-                }
-            */
 
             switch (index) {
                 case 0:
@@ -105,12 +90,6 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                     setBorderStyle(['none', 'none', 'none', `3px solid ${colorPalette.incorrectAnswer}`]);
                     break;
             }
-
-            /*
-            Passar essa lógica para função onWrong
-                const video_name = moduleInfo.questions_id[step].video_name;
-                updateVideoArray(videos, video_name);
-            */
 
             onWrong(questionId);
         }

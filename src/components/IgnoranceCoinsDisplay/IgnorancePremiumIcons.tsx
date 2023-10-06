@@ -117,7 +117,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
             isMap={false}
             position="bottom"
           />
-          { //Fazer uma função para verificar se o quiz diário está disponível e controlar por meio de outro estado
+          {
             (!isIgnoranceFilterOn && isDifferentDay) && <NavIcon 
               image={Daily}
               mouseOver={DAILY_QUIZ}

@@ -132,7 +132,6 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
                 incrementStatus(_userId as string);
             }
         } catch (error) {
-            console.log(error);
             setOnError(true);
         }
     }
