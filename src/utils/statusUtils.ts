@@ -37,3 +37,16 @@ export const getStatusColor = (status: string) => {
             return colorPalette.secondaryColor;
     }
 }
+
+export const getStatusNick = (status: string) => {
+    switch (status) {
+        case AGILITY:
+            return 'AGI';
+
+        case LEADERSHIP:
+            return 'LID';
+    
+        default:
+            return '';
+    }
+}

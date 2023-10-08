@@ -47,3 +47,5 @@ export const STATUS = 'Seu progresso na trilha';
 export const CHAT = "Sabedoria do Babuíno";
 
 export const DAILY_QUIZ = "Desafio diário";
+
+export const NOT_ENOUGH_STATUS = (statusName: string) => `Seu nivel de ${statusName} não é o suficiente!`

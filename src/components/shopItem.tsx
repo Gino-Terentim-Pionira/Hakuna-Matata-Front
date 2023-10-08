@@ -7,6 +7,7 @@ import {
 	Text,
 	Slide,
 	useDisclosure,
+	Tooltip,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
@@ -29,6 +30,8 @@ import coinicon from '../assets/icons/coinicon.svg';
 import confirmicon from '../assets/icons/confirmicon.png';
 import { errorCases } from '../utils/errors/errorsCases';
 import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
+import { NOT_ENOUGH_STATUS } from '../utils/constants/mouseOverConstants';
+import { getStatusNick, getStatusColor } from '../utils/statusUtils';
 
 type ShopItemProps = {
 	current_user_id: string;
@@ -39,6 +42,11 @@ type ShopItemProps = {
 	type: string;
 	items_id: string[];
 	userCoins: number;
+	userStatus: number;
+	itemStatus: {
+		status_name: string;
+		points: number;
+	};
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -49,7 +57,9 @@ const ShopItem: FC<ShopItemProps> = ({
 	type,
 	current_user_id,
 	items_id,
-	userCoins
+	userCoins,
+	userStatus,
+	itemStatus
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -58,6 +68,8 @@ const ShopItem: FC<ShopItemProps> = ({
 	const [isAlert, setIsAlert] = useState(false);
 	const [onError, setOnError] = useState(false);
 	const [loading, setLoaging] = useState(false);
+
+	const statusRequirement = userStatus >= itemStatus.points;
 
 	const onClose = () => {
 		setIsConfirmOpen(false);
@@ -344,45 +356,77 @@ const ShopItem: FC<ShopItemProps> = ({
 										ml='0.3rem'
 									/>
 								</Box>
-								{items_id.includes(_id) ? (
-									<>
-										<Box
-											width='180px'
-											height='3.5rem'
-											background={colorPalette.secondaryColor}
-											color={colorPalette.buttonTextColor}
-											fontSize='1.5rem'
-											display='flex'
-											borderRadius='8px'
-											justifyContent='center'
-											alignItems='center'
-											marginBottom="24px"
+
+								<Flex
+									justifyContent='center'
+								>
+									{items_id.includes(_id) ? (
+										<>
+											<Box
+												width='180px'
+												height='3.5rem'
+												background={colorPalette.secondaryColor}
+												color={colorPalette.buttonTextColor}
+												fontSize='1.5rem'
+												display='flex'
+												borderRadius='8px'
+												justifyContent='center'
+												alignItems='center'
+												marginBottom="24px"
+											>
+												<Image
+													src={confirmicon}
+													padding='1rem 1rem' />
+												<Text mr='1rem'>Comprado</Text>
+											</Box>
+										</>
+									) : (
+										<Tooltip
+											label={NOT_ENOUGH_STATUS(itemStatus.status_name)}
+											placement='bottom'
+											hasArrow
+											isDisabled={statusRequirement}
+											closeOnClick={false}
 										>
-											<Image
-												src={confirmicon}
-												padding='1rem 1rem' />
-											<Text mr='1rem'>Comprado</Text>
-										</Box>
-									</>
-								) : (
-										<Button
-											width='180px'
-											height='3.5rem'
-											background={colorPalette.primaryColor}
-											color={colorPalette.buttonTextColor}
-											marginBottom="24px"
-											fontSize='1.5rem'
-											borderRadius='8px'
-											onClick={() => {
-												setIsConfirmOpen(true);
-												setAlertAnswer(
-													'Ei, viajante! Você tem certeza que deseja comprar esse item?',
-												);
-											}}
-										>
-											Comprar
-										</Button>
+											<Button
+												width='150px'
+												height='3.5rem'
+												background={statusRequirement ? colorPalette.primaryColor : colorPalette.grayBackground}
+												color={colorPalette.buttonTextColor}
+												marginBottom="24px"
+												fontSize='1.5rem'
+												borderRadius='8px'
+												_hover={{}}
+												onClick={() => {
+													if(statusRequirement) {
+														setIsConfirmOpen(true);
+														setAlertAnswer(
+															'Ei, viajante! Você tem certeza que deseja comprar esse item?',
+														);
+													}
+												}}
+												cursor={!statusRequirement ? 'help' : 'pointer'}
+											>
+												Comprar
+											</Button>
+										</Tooltip>
 									)}
+									<Box
+										marginLeft='15px'
+										fontFamily={fontTheme.fonts}
+										fontSize="18px"
+										fontWeight="bold"
+										color={getStatusColor(itemStatus.status_name)}
+										textAlign='center'
+									>
+										<Text> {userStatus}/{itemStatus.points}</Text>
+										<Text>
+												{getStatusNick(itemStatus.status_name)}
+										</Text>
+									</Box>
+								</Flex>
+								
+									
 
 								<AlertModal
 									isOpen={isConfirmOpen}
