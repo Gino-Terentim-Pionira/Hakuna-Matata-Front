@@ -64,6 +64,7 @@ import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import BlockedModal from '../components/modals/BlockedModal';
 import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
+import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
 
 interface IQuiz {
     _id: string;
@@ -327,7 +328,7 @@ const CheetahPath = () => {
         }
     };
     //Lógica para verificar a progressão da narrativa e autalizar o script
-    const updateNarrative = async () => {
+    const checkNarrative = async () => {
         let userInfoData;
         const _userId = sessionStorage.getItem('@pionira/userId');
         if (!userData._id) {
@@ -348,7 +349,22 @@ const CheetahPath = () => {
             const newScript = cheetahBeggining(userInfoData.userName);
             setScript(newScript);
             narrativeOnOpen();
-        }
+        } else if (userInfoData.narrative_status.trail1 != 3){ // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
+            const cheetah_access =  localStorage.getItem('@pionira/cheetah_access');
+            if (cheetah_access) {
+                const number_access = parseInt(cheetah_access);
+                if (number_access < 3) {
+                    localStorage.setItem('@pionira/cheetah_access', `${number_access + 1}`);
+                } else {
+                    localStorage.setItem('@pionira/cheetah_access', '0');
+                    const newScript = cheetahTeasing();
+                    setScript(newScript);
+                    narrativeOnOpen();
+                }
+            } else {
+                localStorage.setItem('@pionira/cheetah_access', '1');
+            }
+        } 
     };
 
     const challengeNarrative = async () => {
@@ -429,7 +445,7 @@ const CheetahPath = () => {
 
     useEffect(() => {
         getUser();
-        updateNarrative();
+        checkNarrative();
         getFinalQuiz();
     }, []);
 

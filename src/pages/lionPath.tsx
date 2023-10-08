@@ -36,7 +36,6 @@ import api from '../services/api';
 import lionBeggining from '../utils/scripts/LionTrail/LionBeggining';
 import lionFreeLunch from '../utils/scripts/LionTrail/LionFreeLunch';
 import lionConclusion from '../utils/scripts/LionTrail/LionConclusion';
-// import trail2Teasing from '../utils/scripts/LionTrail/Trail2Teasing';
 import lionFinalQuiz from '../utils/scripts/LionTrail/LionFinalQuiz';
 
 // Images
@@ -60,6 +59,7 @@ import { LEADERSHIP, STATUS_WARNING } from '../utils/constants/statusConstants';
 import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
+import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
 
 
 interface IQuiz {
@@ -291,7 +291,7 @@ const LionPath = () => {
 	};
 
 	//Lógica para verificar a progressão da narrativa e autalizar o script
-	const updateNarrative = async () => {
+	const checkNarrative = async () => {
 		let userInfoData;
 		const _userId = sessionStorage.getItem('@pionira/userId');
 		if (!userData._id) {
@@ -312,7 +312,22 @@ const LionPath = () => {
 			const newScript = await lionBeggining();
 			setScript(newScript);
 			narrativeOnOpen();
-		}
+		} else if (userInfoData.narrative_status.trail2 != 3){ // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
+            const lion_access =  localStorage.getItem('@pionira/lion_access');
+            if (lion_access) {
+                const number_access = parseInt(lion_access);
+                if (number_access < 3) {
+                    localStorage.setItem('@pionira/lion_access', `${number_access + 1}`);
+                } else {
+                    localStorage.setItem('@pionira/lion_access', '0');
+                    const newScript = lionTeasing();
+                    setScript(newScript);
+                    narrativeOnOpen();
+                }
+            } else {
+                localStorage.setItem('@pionira/lion_access', '1');
+            }
+        } 
 	};
 
 
@@ -402,7 +417,7 @@ const LionPath = () => {
 
 	useEffect(() => {
 		getUser();
-		updateNarrative();
+		checkNarrative();
 		getQuiz();
 	}, []);
 
