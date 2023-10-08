@@ -21,6 +21,7 @@ import colorPalette from '../styles/colorPalette';
 import icon_inventory from '../assets/icons/icon_inventory.svg';
 import { errorCases } from '../utils/errors/errorsCases';
 import BackButton from '../components/BackButton';
+import { getStatusPoints } from '../utils/statusUtils';
 
 const Shop = () => {
 	const { handleBack } = usePath();
@@ -34,8 +35,9 @@ const Shop = () => {
 
 	const getShopItens = async () => {
 		try {
-			if (Object.keys(userData).length == 0)
-				getNewUserInfo();
+			if (Object.keys(userData).length == 0) {
+				await getNewUserInfo();
+			}
 			const res = await api.get('/shopItem/');
 			const userId = sessionStorage.getItem('@pionira/userId');
 			const userIdString = '' + userId;
@@ -138,12 +140,17 @@ const Shop = () => {
 								value,
 								description,
 								type,
+								status_requirement
 							}: {
 								_id: string;
 								name: string;
 								value: number;
 								description: string;
 								type: string;
+								status_requirement: {
+									status_name: string;
+									points: number;
+								}
 							}) => {
 								if (!userData?.items_id?.includes(_id)) {
 									return (
@@ -157,6 +164,8 @@ const Shop = () => {
 											value={value}
 											description={description}
 											type={type}
+											userStatus={getStatusPoints(userData, status_requirement.status_name)}
+											itemStatus={status_requirement}
 										/>
 									);
 								}
