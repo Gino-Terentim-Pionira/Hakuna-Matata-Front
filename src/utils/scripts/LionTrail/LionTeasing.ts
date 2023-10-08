@@ -2,8 +2,8 @@ import lion from "../../../assets/sprites/lion/lion.png";
 import lioness from "../../../assets/sprites/lion/lioness.png";
 
 
-const lionTeasing = async (index:number) => {
-    
+const lionTeasing = () => {
+    const index = Math.floor(Math.random() * 10);
     switch (index) {
         case 0:{
             const script0 = [

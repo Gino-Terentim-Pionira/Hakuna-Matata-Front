@@ -1,8 +1,8 @@
 import cheetah from "../../../assets/sprites/cheetah/cheetah.png";
 
 
-const cheetahTeasing = async (index:number) => {
-    
+const cheetahTeasing = () => {
+    const index = Math.floor(Math.random() * 10);
     switch (index) {
         case 0:{
             const script0 = [
