@@ -40,6 +40,7 @@ import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
 import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/mouseOverConstants';
+import { getStatusPoints, getStatusColor, getStatusNick } from '../../utils/statusUtils';
 
 interface IModuleModal {
     quizIndex: number;
@@ -117,10 +118,17 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [buttonValidation, setButtonValidation] = useState(false);
     const [isFirstTimeChallenge, setIsFirstTimeChallenge] = useState(true);
     const [totalCoins, setTotalCoins] = useState(0);
-    const [step, setStep] = useState(0);
     const [onError, setOnError] = useState(false);
     const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0 });
     const [remainingCoins, setRemainingCoins] = useState(0);
+    const [label, setLabel] = useState<string>();
+    const [image, setImage] = useState<string>();
+
+    const moduleStatusName = moduleInfo.status_requirement.status_name;
+    const userStatus = getStatusPoints(userData, moduleStatusName);
+    const moduleStatus = moduleInfo.status_requirement.points;
+    const statusRequirement = userStatus >= moduleStatus;
+
     // Metodos
     const addUserIdToModule = async () => {
         try {
@@ -148,7 +156,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             setIsLoading(true);
             const userId = sessionStorage.getItem('@pionira/userId');
             const response: AxiosResponse = await verifyModuleCooldown(userId as string, moduleInfo._id);
-            
+
 
             if (!response.data.validation) {
                 setIsLoading(false);
@@ -177,47 +185,74 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         videoOnOpen();
     }
 
-    const defineLabel = () => {
-        if (isBlocked) {
-            return BLOCKED_MODULE;
-        } else if (userData.module_id?.includes(moduleInfo._id)) {
-            return COMPLETE_MODULE(moduleInfo.module_name);
+    const defineProperties = () => {
+        if (isBlocked || !statusRequirement) {
+            setLabel(BLOCKED_MODULE);
+            setImage(button_blocked);
+        } else if (buttonValidation || userData.module_id?.includes(moduleInfo._id)) {
+            setLabel(COMPLETE_MODULE(moduleInfo.module_name));
+            setImage(button_on);
         } else {
-            return INCOMPLETE_MODULE(moduleInfo.module_name);
+            setLabel(INCOMPLETE_MODULE(moduleInfo.module_name));
+            setImage(button_off);
         }
     }
 
     useEffect(() => {
         setTotalCoins(moduleInfo.total_coins);
-        if(userData.question_id.includes(moduleInfo.questions_id[0]._id)) {
-            setStep(step + 1);
-
-        };
+        defineProperties();
     }, [moduleInfo])
 
     return (
         <>
-            <Tooltip 
+            <Tooltip
                 hasArrow
-                placement='top'
+                placement='bottom'
                 gutter={12}
-                label={defineLabel()}
+                label={label}
             >
-                <Image
-                    src={isBlocked ? button_blocked : (buttonValidation || userData.module_id?.includes(moduleInfo._id) ? button_on : button_off)}
-                    onClick={isBlocked ? blockedFunction : onOpen}
-                    _hover={{
-                        cursor: 'pointer',
-                        transform: 'scale(1.1)',
-                    }}
+                <Flex
                     position="absolute"
-                    transition='all 0.2s ease'
-                    width={[116, null, null, null, null, 180]}
-                    height={[70, null, null, null, null, 110]}
                     top={top}
                     bottom={bottom}
                     left={left}
-                />
+                    flexDirection='column'
+                    justifyContent='center'
+                    alignItems='center'
+                >
+                    {
+                        !isBlocked && <Flex
+                            width='114px'
+                            height='36px'
+                            backgroundColor={colorPalette.backgroundColor}
+                            alignItems='center'
+                            justifyContent='center'
+                            borderRadius='8px'
+                        >
+                            <Text
+                                textAlign='center'
+                                fontWeight='bold'
+                                fontSize='18px'
+                                color={getStatusColor(moduleStatusName)}
+                            >
+                                {userStatus}/{moduleStatus} {getStatusNick(moduleStatusName)}
+                        </Text>
+                        </Flex>
+                    }
+                    <Image
+                        src={image}
+                        onClick={isBlocked || !statusRequirement ? blockedFunction : onOpen}
+                        _hover={{
+                            cursor: 'pointer',
+                            transform: 'scale(1.1)',
+                        }}
+
+                        transition='all 0.2s ease'
+                        width={[116, null, null, null, null, 180]}
+                        height={[70, null, null, null, null, 110]}
+
+                    />
+                </Flex>
             </Tooltip>
 
             <Modal isOpen={isOpen} onClose={onClose} size="full">
