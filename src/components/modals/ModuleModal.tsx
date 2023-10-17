@@ -201,7 +201,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     useEffect(() => {
         setTotalCoins(moduleInfo.total_coins);
         defineProperties();
-    }, [moduleInfo])
+    }, [moduleInfo, statusRequirement])
 
     return (
         <>
