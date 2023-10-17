@@ -238,6 +238,7 @@ const CheetahPath = () => {
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [payLoading, setPayLoading] = useState<boolean>(false);
+    const [blockedMessage, setBlockedMessage] = useState<string>('');
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -443,6 +444,16 @@ const CheetahPath = () => {
         }
     }
 
+    const handleStatusRequirement = () => {
+        setBlockedMessage(`Seu nível de ${AGILITY} não é suficiente!`);
+        setIsBlockedOpen(true);
+    }
+
+    const handleBlockedModule = () => {
+        setBlockedMessage("Esse treinamento ainda não está disponível!");
+        setIsBlockedOpen(true);
+    }
+
     useEffect(() => {
         getUser();
         checkNarrative();
@@ -501,10 +512,10 @@ const CheetahPath = () => {
                             margin='2vw'
                             justifyContent='space-between'
                         >
-                            <ModuleModal left='19vw' top='67vh' quizIndex={0} />
-                            <ModuleModal left='45vw' top='54vh' quizIndex={1} />
-                            <ModuleModal left='68vw' top='82vh' quizIndex={2} />
-                            <ModuleModal left='89vw' top='60vh' quizIndex={0} isBlocked={true} blockedFunction={() => setIsBlockedOpen(true)} />
+                            <ModuleModal left='19vw' top='60vh' quizIndex={0} blockedFunction={handleStatusRequirement} />
+                            <ModuleModal left='45vw' top='48vh' quizIndex={1} blockedFunction={handleStatusRequirement} />
+                            <ModuleModal left='68vw' top='76vh' quizIndex={2} blockedFunction={handleStatusRequirement} />
+                            <ModuleModal left='89vw' top='58vh' quizIndex={0} isBlocked={true} blockedFunction={handleBlockedModule} />
                             <Center
                                 _hover={{
                                     cursor: 'pointer',
@@ -816,7 +827,7 @@ const CheetahPath = () => {
             <BlockedModal
                 isOpen={isBlockedOpen}
                 onClose={() => { setIsBlockedOpen(false) }}
-                subtitle="Esse treinamento ainda não está disponível!"
+                subtitle={blockedMessage}
             />
 
             <GenericModal

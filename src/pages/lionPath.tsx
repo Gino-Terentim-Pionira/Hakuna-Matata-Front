@@ -14,7 +14,7 @@ import {
 	ModalHeader,
 	ModalCloseButton,
 } from '@chakra-ui/react';
-import { useUser } from '../hooks';
+import { useUser, useModule } from '../hooks';
 
 //utils
 import fontTheme from '../styles/base';
@@ -60,6 +60,7 @@ import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
+import BlockedModal from '../components/modals/BlockedModal';
 
 
 interface IQuiz {
@@ -101,6 +102,7 @@ interface IScript {
 
 const LionPath = () => {
 	const { userData, setUserData } = useUser();
+	const { getNewModuleInfo, moduleData } = useModule();
 	const { getInsignias } = useInsignias();
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
@@ -216,6 +218,8 @@ const LionPath = () => {
 	const [script, setScript] = useState<IScript[]>([]);
 	const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
 	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>([]);
+	const [blockedMessage, setBlockedMessage] = useState<string>('');
+	const [isBlockedOpen, setIsBlockedOpen] = useState(false);
 
 	const logout = () => {
 		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -231,6 +235,10 @@ const LionPath = () => {
 		try {
 			let userInfoData;
 			const _userId = sessionStorage.getItem('@pionira/userId');
+			if (moduleData.length === 0) {
+                await getNewModuleInfo();
+            }
+
 			if (!userData._id) {
 				const { data } = await api.get(`/user/${_userId}`);
 				await getInsignias();
@@ -415,6 +423,16 @@ const LionPath = () => {
 		alert: ALERT_CODE_SUBTITLE
 	}
 
+	const handleStatusRequirement = () => {
+        setBlockedMessage(`Seu nível de ${LEADERSHIP} não é suficiente!`);
+        setIsBlockedOpen(true);
+    }
+
+    const handleBlockedModule = () => {
+        setBlockedMessage("Esse treinamento ainda não está disponível!");
+        setIsBlockedOpen(true);
+    }
+
 	useEffect(() => {
 		getUser();
 		checkNarrative();
@@ -467,10 +485,10 @@ const LionPath = () => {
 						margin='2vw'
 						justifyContent='space-between'
 					>
-						<ModuleModal left='7vw' top='62vh' quizIndex={4} />
-						<ModuleModal left='22vw' top='86vh' quizIndex={5} />
-						<ModuleModal left='58vw' top='87vh' quizIndex={6} />
-						<ModuleModal left='79vw' top='58vh' quizIndex={7} />
+						<ModuleModal left='9vw' top='60vh' quizIndex={0} blockedFunction={handleStatusRequirement} />
+						<ModuleModal left='22vw' top='80vh' quizIndex={1} blockedFunction={handleStatusRequirement} />
+						<ModuleModal left='58vw' top='82vh' quizIndex={2} blockedFunction={handleStatusRequirement}/>
+						<ModuleModal left='79vw' top='54vh' quizIndex={0} isBlocked={true} blockedFunction={handleBlockedModule}/>
 						<Center
 							_hover={{
 								cursor: 'pointer',
@@ -771,6 +789,12 @@ const LionPath = () => {
 				loading={false}
 				error={false}
 			/>
+
+			<BlockedModal
+                isOpen={isBlockedOpen}
+                onClose={() => { setIsBlockedOpen(false) }}
+                subtitle={blockedMessage}
+            />
 
 		</>
 	);

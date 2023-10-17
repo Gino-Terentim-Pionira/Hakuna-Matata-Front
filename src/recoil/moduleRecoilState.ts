@@ -26,6 +26,10 @@ interface IQuiz {
     }];
     total_coins: number;
     trail: string;
+    status_requirement: {
+        status_name: string;
+        points: number;
+    }
 }
 
 const moduleState = atom({
