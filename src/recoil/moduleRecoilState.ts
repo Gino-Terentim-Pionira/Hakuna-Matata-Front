@@ -30,6 +30,7 @@ interface IQuiz {
         status_name: string;
         points: number;
     }
+    final_message: string[];
 }
 
 const moduleState = atom({

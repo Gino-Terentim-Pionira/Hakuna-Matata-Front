@@ -50,6 +50,8 @@ interface IModuleQuiz {
     validateUser: VoidFunction;
     firsTimeChallenge: boolean;
     userQuizCoins: number;
+    openFinalModuleNarrative: VoidFunction;
+    remainingCoins: number;
 }
 
 
@@ -60,7 +62,9 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     onToggle,
     validateUser,
     firsTimeChallenge,
-    userQuizCoins
+    openFinalModuleNarrative,
+    userQuizCoins,
+    remainingCoins
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { getNewUserInfo, userData } = useUser();
@@ -159,10 +163,10 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
                 }
             }
             firsTimeChallenge ? validateUser() : null
-
             await updateUserQuizTime();
             await getNewUserInfo();
             onClose();
+            coins >= remainingCoins ? openFinalModuleNarrative() : null
         } catch (error) {
             setOnError(true);
         }
