@@ -1,13 +1,20 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Flex, Box, Image, Text, Slide, useDisclosure, Tooltip } from '@chakra-ui/react';
+import { Flex, Box, Image, Text, Slide, useDisclosure, Tooltip, Button } from '@chakra-ui/react';
 
 // Images
 import insigniaImg from '../../assets/icons/insignia/insignia.png';
 import cheetaTrailInsignia from '../../assets/icons/insignia/cheetaTrailInsignia.png';
 import mambaTrailInsignia from '../../assets/icons/insignia/mambaTrailInsignia.png';
 import lionTrailInsignia from '../../assets/icons/insignia/lionTrailInsignia.png';
+import badgeShare from '../../assets/socialShare/badge.png';
 import colorPalette from '../../styles/colorPalette';
 import { BADGE_DESCRIPTION } from '../../utils/constants/mouseOverConstants';
+import { getLogInUrl, setItems } from '../../services/linkedin';
+import { convertImageToBase64 } from '../../utils/stringUtils';
+import TypesEnum from '../../utils/enums/type';
+import PlataformsEnum from '../../utils/enums/plataform';
+import { SHARE } from '../../utils/constants/buttonConstants';
+import linkedin from '../../assets/icons/social/linkedin.png';
 
 type InsigniaProps = {
     _id: string;
@@ -44,6 +51,25 @@ const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
     const showDescription = () => {
         setTimeout(changeShow, 100);
         onToggle();
+    }
+
+    const handleLinkedin = async () => {
+        try {
+            const response = await getLogInUrl();
+            const imgbase64 = await convertImageToBase64(badgeShare);
+            const text = `Ganhei a insígnia ${name}`;
+            const description = `Insígnia ${name}`;
+            setItems(
+                text,
+                description,
+                imgbase64 as string,
+                TypesEnum.badge,
+                _id,
+                PlataformsEnum.linkedin);
+            window.location.replace(response.data.url);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     useEffect(() => {
@@ -145,6 +171,29 @@ const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
                                 >
                                     {description}
                                 </Text>
+                            </Flex>
+
+                            <Flex
+                                justifyContent='flex-end'
+                                marginBottom='36px'
+                                marginRight='20px'
+                            >
+                                <Button
+                                    width='190px'
+                                    height='45px'
+                                    colorScheme='linkedin'
+                                    fontSize='20px'
+                                    leftIcon={
+                                        <Image 
+                                            width='24px'
+                                            height='24px'
+                                            src={linkedin} 
+                                        />
+                                    }
+                                    onClick={handleLinkedin}
+                                >
+                                    {SHARE}
+                                </Button>
                             </Flex>
                         </Flex>
                     </Slide>

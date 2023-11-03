@@ -254,13 +254,7 @@ const LionPath = () => {
 					`Você já alcançou o máximo da sua liderança, aprendiz... digo ${userInfoData.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
 				);
 				setCompleteTrail(true);
-				if (userInfoData.narrative_status.trail2 === 2) {
-					await api.patch(`/user/narrative/${_userId}`, {
-						narrative_status: {
-							...userInfoData.narrative_status,
-							trail2: 3
-						},
-					});
+				if (userInfoData.narrative_status.trail2 === 3) {
 					finalLionNarrative(userInfoData.userName);
 				}
 			} else {

@@ -281,14 +281,8 @@ const CheetahPath = () => {
                     `Você já alcançou o máximo da sua agilidade filhote... digo ${userInfoData.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
                 );
                 setCompleteTrail(true);
-                if (userInfoData.narrative_status.trail1 === 2) {
+                if (userInfoData.narrative_status.trail1 === 3) {
                     finalCheetahNarrative(userInfoData.userName);
-                    await api.patch(`/user/narrative/${_userId}`, {
-                        narrative_status: {
-                            ...userInfoData.narrative_status,
-                            trail1: 3
-                        },
-                    });
                 }
             } else {
                 if (userInfoData.ignorance > 80)
