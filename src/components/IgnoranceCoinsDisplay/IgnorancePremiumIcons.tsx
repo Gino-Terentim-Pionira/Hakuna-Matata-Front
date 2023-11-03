@@ -54,6 +54,8 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
       const currentDate = new Date();
       const storedDate = new Date(item);
       setIsDifferentDay(currentDate.toDateString() !== storedDate.toDateString());
+    } else {
+      setIsDifferentDay(true);
     }
   }
 

@@ -28,6 +28,7 @@ import { errorCases } from '../../utils/errors/errorsCases';
 import Cheetah from '../../assets/icons/cheetahblink.svg'
 import { REWARD_MODAL_TEXT, GENERIC_MODAL_TEXT, LOAD_BUTTON } from '../../utils/constants/buttonConstants';
 import { getStatusColor } from '../../utils/statusUtils';
+import linkedin from '../../assets/icons/social/linkedin.png';
 
 interface IGenericModal {
     genericModalInfo: {
@@ -44,6 +45,7 @@ interface IGenericModal {
         secondButton?: string;
         alert?: string;
         video_names?: string[];
+        isSocial?: boolean
     },
     isOpen: boolean;
     confirmFunction: VoidFunction;
@@ -273,13 +275,22 @@ const GenericModal: FC<IGenericModal> = ({
                                                 width='300px'
                                                 height='50px'
                                                 marginTop='24px'
-                                                background={colorPalette.inactiveButton}
+                                                background={genericModalInfo.isSocial ? 'linkedin.500' : colorPalette.inactiveButton}
                                                 color={colorPalette.buttonTextColor}
                                                 fontSize='24px'
                                                 fontFamily={fontTheme.fonts}
                                                 onClick={() => handleButtonClick(secondFunction)}
                                                 loadingText={LOAD_BUTTON}
                                                 spinnerPlacement='end'
+                                                leftIcon={
+                                                    genericModalInfo.isSocial ? (
+                                                        <Image 
+                                                            width='24px'
+                                                            height='24px'
+                                                            src={linkedin} 
+                                                        />
+                                                    ) : <></>
+                                                }
                                             >
                                                 {
                                                     genericModalInfo.secondButton

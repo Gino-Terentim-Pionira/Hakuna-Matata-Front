@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState, useRef } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
 import { useUser } from '../hooks';
@@ -36,6 +36,10 @@ import BlockedModal from '../components/modals/BlockedModal';
 import IgnoranceFilter from '../components/IgnoranceFilter';
 import TrailIcon from '../components/TrailIcon';
 import { CHEETAH_TRAIL, BLOCKED_TRAIL } from '../utils/constants/mouseOverConstants';
+import { share } from '../services/linkedin';
+import { verifySocialShare } from '../services/socialShare';
+import Cheetah from '../assets/icons/cheetahblink.svg';
+import GenericModal from '../components/modals/GenericModal';
 
 interface IScript {
 	name: string;
@@ -68,15 +72,26 @@ const MainPage = () => {
 	const { getNewUserInfo, setUserData, userData } = useUser();
 	const { getInsignias } = useInsignias();
 	const [script, setScript] = useState<IScript[]>([]);
-	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-	const alertOnClose = () => setIsConfirmOpen(false);
-	const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
-	const cancelRef = useRef<HTMLButtonElement>(null);
-	const [onError, setOnError] = useState(false);
+	const [onAlert, setOnAlert] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [openBlockedModal, setOpenBlockedModal] = useState<boolean>(false);
+	const [alert, setAlert] = useState<{
+		title: string,
+		body: string,
+		closeFunction: VoidFunction,
+		buttonFunction: VoidFunction,
+		buttonText: string
+	}>({
+		title: 'Ops!',
+		body: errorCases.SERVER_ERROR,
+		closeFunction: () => window.location.reload(),
+		buttonFunction: () => window.location.reload(),
+		buttonText: 'Recarregar'
+	});
+	const [rewardOpen, setRewardOpen] = useState(false);
+	const [rewardLoading, setRewardLoading] = useState(false);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -84,6 +99,32 @@ const MainPage = () => {
 		ignorance50,
 		ignorance25,
 	];
+
+	const handleErrorAlert = () => {
+		setAlert({
+			title: 'Ops!',
+			body: errorCases.SERVER_ERROR,
+			closeFunction: () => window.location.reload(),
+			buttonFunction: () => window.location.reload(),
+			buttonText: 'Recarregar'
+		});
+
+		setOnAlert(true);
+	}
+
+	const handleLogOutAlert = () => {
+		setAlert({
+			title: 'Logout',
+			body: 'Tem certeza que você deseja sair da Savana?',
+			closeFunction: () => setOnAlert(false),
+			buttonFunction: () => {
+				quit();
+			},
+			buttonText: 'Sair'
+		});
+
+		setOnAlert(true);
+	}
 
 	//logic for checking and switching if first time is set to true
 	const tutorialFirstOnClose = () => {
@@ -96,7 +137,7 @@ const MainPage = () => {
 
 			tutorialOnClose();
 		} catch (error) {
-			setOnError(true);
+			handleErrorAlert();
 		}
 	};
 
@@ -122,7 +163,7 @@ const MainPage = () => {
 				});
 				await getNewUserInfo();
 			} catch (error) {
-				setOnError(true);
+				handleErrorAlert();
 			}
 		}
 	};
@@ -162,13 +203,65 @@ const MainPage = () => {
 			}
 
 			await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
+			await verifySocialLoginRedirect();
+
 			setTimeout(() => {
 				setIsLoading(false);
 			}, 1000)
 		} catch (error) {
-			setOnError(true);
+			handleErrorAlert();
 		}
 	};
+
+	const socialShareCoins = async () => {
+		setRewardLoading(true);
+		await api.patch(`/user/coins/${userData._id}`, {
+			coins: userData.coins + 3,
+		});
+		getNewUserInfo();
+		setRewardOpen(false);
+		setRewardLoading(false);
+	} 
+
+	const rewardModalInfo = () => {
+		return {
+			title: 'Parabéns!',
+			titleColor: colorPalette.inactiveButton,
+			subtitle: `Publicação foi feita com sucesso!`,
+			icon: Cheetah,
+			coins: 3,
+		}
+	} 
+
+	const verifySocialLoginRedirect = async () => {
+		const queryParameters = new URLSearchParams(window.location.search);
+		const code = queryParameters.get("code");
+		if (code) {
+			try {
+				await share(code);
+				const validation = await verifySocialShare();
+				if (validation) {
+					setRewardOpen(true);
+				} else {
+					setAlert({
+						title: 'Linkedin',
+						body: 'Publicação feita com sucesso! Recompensas somente no primeiro compartilhamento de cada plataforma',
+						closeFunction: () => {setOnAlert(false)},
+						buttonFunction: () => {setOnAlert(false)},
+						buttonText: 'Voltar'
+					});
+					setOnAlert(true);
+				}
+			} catch (error) {
+				setAlert({
+					...alert,
+					body: 'Ocorreu um erro ao fazer a publicação. Tente novamente mais tarde'
+				});
+				setOnAlert(true);
+			}
+			history.replace(history.location.pathname);
+		}
+	}
 
 	/*
 		const goToPath1 = () => {
@@ -187,14 +280,13 @@ const MainPage = () => {
 	*/
 
 	const quit = async () => {
-		alertOnClose();
+		setOnAlert(false);
 		sessionStorage.clear();
 		location.reload();
 	};
 
 	const logout = () => {
-		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
-		setIsConfirmOpen(true);
+		handleLogOutAlert();
 	};
 
 	const updateImageOnTime = () => {
@@ -223,7 +315,7 @@ const MainPage = () => {
 	// 		else
 	// 			premiumOnOpen();
 	// 	} catch (error) {
-	// 		setOnError(true);
+	// 		setOnAlert(true);
 	// 	}
 	// }
 	// const checkSubscription = async () => {
@@ -243,7 +335,7 @@ const MainPage = () => {
 	// 			}
 	// 		}
 	// 	} catch (error) {
-	// 		setOnError(true);
+	// 		setOnAlert(true);
 	// 	}
 	// }
 
@@ -360,38 +452,27 @@ const MainPage = () => {
 
 
 			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody={errorCases.SERVER_ERROR}
+				isOpen={onAlert}
+				onClose={alert.closeFunction}
+				alertTitle={alert.title}
+				alertBody={alert.body}
 				buttonBody={
 					<Button
 						color='white'
 						bg={colorPalette.primaryColor}
-						onClick={() => window.location.reload()}
+						onClick={alert.buttonFunction}
 					>
-						Recarregar
+						{alert.buttonText}
 					</Button>
 				}
 			/>
 
-			<AlertModal
-				isOpen={isConfirmOpen}
-				onClose={alertOnClose}
-				alertTitle='Logout'
-				alertBody={alertAnswer}
-				buttonBody={
-					<Button
-						ref={cancelRef}
-						color='white'
-						bg={colorPalette.primaryColor}
-						onClick={() => {
-							quit();
-						}}
-					>
-						Sair
-					</Button>
-				}
+			<GenericModal 
+				isOpen={rewardOpen}
+				genericModalInfo={rewardModalInfo()}
+				loading={rewardLoading}
+				error={false}
+				confirmFunction={socialShareCoins}
 			/>
 
 			<SubscribedModal
