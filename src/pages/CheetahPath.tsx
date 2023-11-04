@@ -65,7 +65,7 @@ import BlockedModal from '../components/modals/BlockedModal';
 import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
-import cheetahBuildModuleEndScript from '../utils/scripts/CheetahTrail/CheetahBuildModuleEndScript';
+import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 
 interface IQuiz {
     _id: string;
@@ -439,8 +439,8 @@ const CheetahPath = () => {
         setIsBlockedOpen(true);
     }
 
-    const buildModuleEndScript = (quizIndex: number) => {
-        const script = cheetahBuildModuleEndScript(moduleData[quizIndex].final_message);
+    const moduleEndNarrativeScript = (quizIndex: number) => {
+        const script = buildModuleEndScript('Cheetah', moduleData[quizIndex].final_message);
         handleNarrativeModal(script)
     }
 
@@ -500,21 +500,21 @@ const CheetahPath = () => {
                                 left='19vw' 
                                 top='60vh' 
                                 quizIndex={0} 
-                                openFinalModuleNarrative={() => buildModuleEndScript(0)} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
                                 blockedFunction={handleStatusRequirement} 
                             />
                             <ModuleModal
                                 left='45vw' 
                                 top='48vh' 
                                 quizIndex={1} 
-                                openFinalModuleNarrative={() => buildModuleEndScript(1)} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(1)} 
                                 blockedFunction={handleStatusRequirement} 
                              />
                             <ModuleModal 
                                 left='68vw' 
                                 top='76vh' 
                                 quizIndex={2} 
-                                openFinalModuleNarrative={() => buildModuleEndScript(2)} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(2)} 
                                 blockedFunction={handleStatusRequirement} 
                             />
                             <ModuleModal 
@@ -522,7 +522,7 @@ const CheetahPath = () => {
                                 top='58vh' 
                                 quizIndex={0} 
                                 isBlocked={true} 
-                                openFinalModuleNarrative={() => buildModuleEndScript(0)} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
                                 blockedFunction={handleBlockedModule}
                             />
                             <Center

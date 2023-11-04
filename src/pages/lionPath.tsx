@@ -61,6 +61,7 @@ import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstant
 import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
 import BlockedModal from '../components/modals/BlockedModal';
+import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 
 
 interface IQuiz {
@@ -140,18 +141,6 @@ const LionPath = () => {
 		onOpen: quizOnOpen,
 	} = useDisclosure();
 
-	const {
-		isOpen: narrativeChallengeIsOpen,
-		onOpen: narrativeChallengeOnOpen,
-		onToggle: narrativeChallengeOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: finalNarrativeChallengeIsOpen,
-		onOpen: finalNarrativeChallengeOnOpen,
-		onToggle: finalNarrativeChallengeOnToggle,
-	} = useDisclosure();
-
 	const [questions, setQuestions] = useState<IQuestions[]>([
 		{
 			alternatives: [''],
@@ -216,8 +205,6 @@ const LionPath = () => {
 	const [ignoranceImage, setIgnoranceImage] = useState("");
 
 	const [script, setScript] = useState<IScript[]>([]);
-	const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
-	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>([]);
 	const [blockedMessage, setBlockedMessage] = useState<string>('');
 	const [isBlockedOpen, setIsBlockedOpen] = useState(false);
 
@@ -230,6 +217,11 @@ const LionPath = () => {
 		const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
 		setIgnoranceImage(filterBackgroung);
 	}
+
+	const handleNarrativeModal = (script: IScript[]) => {
+        setScript(script);
+        narrativeOnOpen();
+    }
 
 	const getUser = async () => {
 		try {
@@ -313,13 +305,11 @@ const LionPath = () => {
 		) {
 			//Verifica se é a primeira vez do usuário em uma trilha
 			const newScript = await lionFreeLunch();
-			setScript(newScript);
-			narrativeOnOpen();
+			handleNarrativeModal(newScript);
 		} else if (userInfoData.narrative_status.trail2 == 0) {
 			//Verifica se é a primeira vez do usuário na trilha do leao
 			const newScript = await lionBeggining();
-			setScript(newScript);
-			narrativeOnOpen();
+			handleNarrativeModal(newScript);
 		} else if (userInfoData.narrative_status.trail2 != 3){ // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
             const lion_access =  localStorage.getItem('@pionira/lion_access');
             if (lion_access) {
@@ -329,8 +319,7 @@ const LionPath = () => {
                 } else {
                     localStorage.setItem('@pionira/lion_access', '0');
                     const newScript = lionTeasing();
-                    setScript(newScript);
-                    narrativeOnOpen();
+					handleNarrativeModal(newScript);
                 }
             } else {
                 localStorage.setItem('@pionira/lion_access', '1');
@@ -341,14 +330,12 @@ const LionPath = () => {
 
 	const challengeNarrative = async () => {
 		const newChallengeScript = await lionFinalQuiz();
-		setChallengeScript(newChallengeScript);
-		narrativeChallengeOnOpen();
+		handleNarrativeModal(newChallengeScript);
 	};
 
 	const finalLionNarrative = (userName: string) => {
 		const newChallengeScript = lionConclusion(userName);
-		setFinalChallengeScript(newChallengeScript);
-		finalNarrativeChallengeOnOpen();
+		handleNarrativeModal(newChallengeScript);
 	};
 
 	const alertQuizConfirm = () => {
@@ -433,6 +420,11 @@ const LionPath = () => {
         setIsBlockedOpen(true);
     }
 
+    const moduleEndNarrativeScript = (quizIndex: number) => {
+        const script = buildModuleEndScript('Leão e Leoa', moduleData[quizIndex].final_message);
+        handleNarrativeModal(script)
+    }
+
 	useEffect(() => {
 		getUser();
 		checkNarrative();
@@ -470,25 +462,50 @@ const LionPath = () => {
 				alignItems='flex-start'
 				margin='auto'
 			>
-				{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
+				{narrativeIsOpen ? null : (
 					<NavActions logout={logout} />
 				)}
 
-				{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
+				{narrativeIsOpen ? null : (
 					<IgnorancePremiumIcons ignorance={userData.ignorance} />
 				)}
 			</Flex>
 
-			{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
+			{narrativeIsOpen ? null : (
 				<>
 					<Flex
 						margin='2vw'
 						justifyContent='space-between'
 					>
-						<ModuleModal left='9vw' top='60vh' quizIndex={0} blockedFunction={handleStatusRequirement} />
-						<ModuleModal left='22vw' top='80vh' quizIndex={1} blockedFunction={handleStatusRequirement} />
-						<ModuleModal left='58vw' top='82vh' quizIndex={2} blockedFunction={handleStatusRequirement}/>
-						<ModuleModal left='79vw' top='54vh' quizIndex={0} isBlocked={true} blockedFunction={handleBlockedModule}/>
+						<ModuleModal 
+							left='9vw' 
+							top='60vh' 
+							quizIndex={0} 
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
+							blockedFunction={handleStatusRequirement} 
+						/>
+						<ModuleModal 
+							left='22vw' 
+							top='80vh' 
+							quizIndex={1} 
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(1)}
+							blockedFunction={handleStatusRequirement} 
+						/>
+						<ModuleModal 
+							left='58vw' 
+							top='82vh' 
+							quizIndex={2} 
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(2)}
+							blockedFunction={handleStatusRequirement}
+						/>
+						<ModuleModal 
+							left='79vw' 
+							top='54vh' 
+							quizIndex={0}
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
+							isBlocked={true} 
+							blockedFunction={handleBlockedModule}
+						/>
 						<Center
 							_hover={{
 								cursor: 'pointer',
@@ -499,7 +516,6 @@ const LionPath = () => {
 							height='7rem'
 							onClick={() => {
 								if (!completeTrail) {
-									narrativeChallengeOnOpen();
 									challengeNarrative();
 								}
 								modalOnOpen();
@@ -653,7 +669,7 @@ const LionPath = () => {
 				</>
 			)}
 
-			{script.length > 0 ? (
+			{script.length > 0 && 
 				//verifica se o script possui algum conteúdo
 				<NarrativeModal
 					isOpen={narrativeIsOpen}
@@ -661,26 +677,7 @@ const LionPath = () => {
 					onToggle={narrativeOnToggle}
 					narrative="lion"
 				/>
-			) : null}
-			{challengeScript.length > 0 ? (
-				//verifica se o script possui algum conteúdo
-				<NarrativeModal
-					isOpen={narrativeChallengeIsOpen}
-					script={challengeScript}
-					onToggle={narrativeChallengeOnToggle}
-					narrative="lion"
-				/>
-			) : null}
-
-			{finalChallengeScript.length > 0 ? (
-				//verifica se o script possui algum conteúdo
-				<NarrativeModal
-					isOpen={finalNarrativeChallengeIsOpen}
-					script={finalChallengeScript}
-					onToggle={finalNarrativeChallengeOnToggle}
-					narrative="lion"
-				/>
-			) : null}
+			}
 
 			<AlertModal
 				isOpen={isConfirmOpen}
