@@ -49,6 +49,7 @@ interface IModuleModal {
     left?: string;
     isBlocked?: boolean;
     blockedFunction?: VoidFunction;
+    openFinalModuleNarrative: VoidFunction;
 }
 
 const GridContainer = styled.div`
@@ -78,7 +79,7 @@ const GridContainer = styled.div`
     }
 `;
 
-const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked, blockedFunction }) => {
+const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked, blockedFunction, openFinalModuleNarrative }) => {
     //modais
     const { isOpen,
         onClose,
@@ -372,6 +373,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                     firsTimeChallenge={isFirstTimeChallenge}
                     validateUser={confirmationValidation}
                     userQuizCoins={totalCoins - remainingCoins}
+                    remainingCoins={remainingCoins}
+                    openFinalModuleNarrative={openFinalModuleNarrative}
                 /> : null
             }
 

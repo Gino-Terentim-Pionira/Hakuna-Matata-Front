@@ -65,6 +65,7 @@ import BlockedModal from '../components/modals/BlockedModal';
 import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
+import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 
 interface IQuiz {
     _id: string;
@@ -147,18 +148,6 @@ const CheetahPath = () => {
         onOpen: quizOnOpen,
     } = useDisclosure();
 
-    const {
-        isOpen: narrativeChallengeIsOpen,
-        onOpen: narrativeChallengeOnOpen,
-        onToggle: narrativeChallengeOnToggle,
-    } = useDisclosure();
-
-    const {
-        isOpen: finalNarrativeChallengeIsOpen,
-        onOpen: finalNarrativeChallengeOnOpen,
-        onToggle: finalNarrativeChallengeOnToggle,
-    } = useDisclosure();
-
     const [questions, setQuestions] = useState<IQuestions[]>([
         {
             alternatives: [''],
@@ -232,10 +221,6 @@ const CheetahPath = () => {
     const [ignoranceImage, setIgnoranceImage] = useState('');
 
     const [script, setScript] = useState<IScript[]>([]);
-    const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
-    const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>(
-        [],
-    );
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [payLoading, setPayLoading] = useState<boolean>(false);
     const [blockedMessage, setBlockedMessage] = useState<string>('');
@@ -255,6 +240,11 @@ const CheetahPath = () => {
         );
         setIgnoranceImage(filterBackgroung);
     };
+
+    const handleNarrativeModal = (script: IScript[]) => {
+        setScript(script);
+        narrativeOnOpen();
+    }
 
     const getUser = async () => {
         try {
@@ -337,15 +327,13 @@ const CheetahPath = () => {
         ) {
             //Verifica se é a primeira vez do usuário em uma trilha
             const newScript = cheetahFreeLunch(userInfoData.userName);
-            setScript(newScript);
-            narrativeOnOpen();
+            handleNarrativeModal(newScript);
         } else if (userInfoData.narrative_status.trail1 == 0) {
             //Verifica se é a primeira vez do usuário na trilha da cheetah
             const newScript = cheetahBeggining(userInfoData.userName);
-            setScript(newScript);
-            narrativeOnOpen();
-        } else if (userInfoData.narrative_status.trail1 != 3){ // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
-            const cheetah_access =  localStorage.getItem('@pionira/cheetah_access');
+            handleNarrativeModal(newScript);
+        } else if (userInfoData.narrative_status.trail1 != 3) { // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
+            const cheetah_access = localStorage.getItem('@pionira/cheetah_access');
             if (cheetah_access) {
                 const number_access = parseInt(cheetah_access);
                 if (number_access < 3) {
@@ -353,25 +341,22 @@ const CheetahPath = () => {
                 } else {
                     localStorage.setItem('@pionira/cheetah_access', '0');
                     const newScript = cheetahTeasing();
-                    setScript(newScript);
-                    narrativeOnOpen();
+                    handleNarrativeModal(newScript);
                 }
             } else {
                 localStorage.setItem('@pionira/cheetah_access', '1');
             }
-        } 
+        }
     };
 
     const challengeNarrative = async () => {
         const newChallengeScript = await cheetahFinalQuiz();
-        setChallengeScript(newChallengeScript);
-        narrativeChallengeOnOpen();
+        handleNarrativeModal(newChallengeScript);
     };
 
     const finalCheetahNarrative = (userName: string) => {
         const newChallengeScript = cheetahConclusion(userName);
-        setFinalChallengeScript(newChallengeScript);
-        finalNarrativeChallengeOnOpen();
+        handleNarrativeModal(newChallengeScript);
     };
 
     const alertQuizConfirm = () => {
@@ -448,6 +433,11 @@ const CheetahPath = () => {
         setIsBlockedOpen(true);
     }
 
+    const moduleEndNarrativeScript = (quizIndex: number) => {
+        const script = buildModuleEndScript('Cheetah', moduleData[quizIndex].final_message);
+        handleNarrativeModal(script)
+    }
+
     useEffect(() => {
         getUser();
         checkNarrative();
@@ -479,15 +469,11 @@ const CheetahPath = () => {
                 alignItems='flex-start'
                 margin='auto'
             >
-                {narrativeIsOpen ||
-                    narrativeChallengeIsOpen ||
-                    finalNarrativeChallengeIsOpen ? null : (
+                {narrativeIsOpen ? null : (
                         <NavActions logout={logout} />
                     )}
 
-                {narrativeIsOpen ||
-                    narrativeChallengeIsOpen ||
-                    finalNarrativeChallengeIsOpen ? null : (
+                {narrativeIsOpen ? null : (
                         <IgnorancePremiumIcons
                             ignorance={userData.ignorance}
                             showStatus={true}
@@ -498,18 +484,41 @@ const CheetahPath = () => {
                     )}
             </Flex>
 
-            {narrativeIsOpen ||
-                narrativeChallengeIsOpen ||
-                finalNarrativeChallengeIsOpen ? null : (
+            {narrativeIsOpen ? null : (
                     <>
                         <Flex
                             margin='2vw'
                             justifyContent='space-between'
                         >
-                            <ModuleModal left='19vw' top='60vh' quizIndex={0} blockedFunction={handleStatusRequirement} />
-                            <ModuleModal left='45vw' top='48vh' quizIndex={1} blockedFunction={handleStatusRequirement} />
-                            <ModuleModal left='68vw' top='76vh' quizIndex={2} blockedFunction={handleStatusRequirement} />
-                            <ModuleModal left='89vw' top='58vh' quizIndex={0} isBlocked={true} blockedFunction={handleBlockedModule} />
+                            <ModuleModal 
+                                left='19vw' 
+                                top='60vh' 
+                                quizIndex={0} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
+                                blockedFunction={handleStatusRequirement} 
+                            />
+                            <ModuleModal
+                                left='45vw' 
+                                top='48vh' 
+                                quizIndex={1} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(1)} 
+                                blockedFunction={handleStatusRequirement} 
+                             />
+                            <ModuleModal 
+                                left='68vw' 
+                                top='76vh' 
+                                quizIndex={2} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(2)} 
+                                blockedFunction={handleStatusRequirement} 
+                            />
+                            <ModuleModal 
+                                left='89vw' 
+                                top='58vh' 
+                                quizIndex={0} 
+                                isBlocked={true} 
+                                openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
+                                blockedFunction={handleBlockedModule}
+                            />
                             <Center
                                 _hover={{
                                     cursor: 'pointer',
@@ -520,7 +529,6 @@ const CheetahPath = () => {
                                 height='7rem'
                                 onClick={() => {
                                     if (!completeTrail) {
-                                        narrativeChallengeOnOpen();
                                         challengeNarrative();
                                     }
                                     modalOnOpen();
@@ -689,36 +697,14 @@ const CheetahPath = () => {
                     </>
                 )}
 
-
-            {script.length > 0 ? (
-                //verifica se o script possui algum conteúdo
-                <NarrativeModal
+            {
+                script.length > 0 && <NarrativeModal 
                     isOpen={narrativeIsOpen}
                     script={script}
                     onToggle={narrativeOnToggle}
                     narrative="cheetah"
                 />
-            ) : null}
-            {challengeScript.length > 0 ? (
-                //verifica se o script possui algum conteúdo
-                <NarrativeModal
-                    isOpen={narrativeChallengeIsOpen}
-                    script={challengeScript}
-                    onToggle={narrativeChallengeOnToggle}
-                    narrative="cheetah"
-                />
-            ) : null}
-
-            {finalChallengeScript.length > 0 ? (
-                //verifica se o script possui algum conteúdo
-                <NarrativeModal
-                    isOpen={finalNarrativeChallengeIsOpen}
-                    script={finalChallengeScript}
-                    onToggle={finalNarrativeChallengeOnToggle}
-                    narrative="cheetah"
-                />
-            ) : null}
-
+            }
 
             <AlertModal
                 isOpen={isConfirmOpen}
