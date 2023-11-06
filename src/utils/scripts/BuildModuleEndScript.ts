@@ -1,5 +1,5 @@
-import cheetah from "../../../assets/sprites/cheetah/cheetah.png";
-import couple from "../../../assets/sprites/lion/couple.png";
+import cheetah from "../../assets/sprites/cheetah/cheetah.png";
+import couple from "../../assets/sprites/lion/couple.png";
 
 
 const buildModuleEndScript = (name: 'Cheetah' | 'Leão e Leoa',scriptTexts: string[]) => {
