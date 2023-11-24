@@ -2,6 +2,7 @@ import React, { useState, BaseSyntheticEvent } from 'react';
 import { Text, Flex, Button, Box, Image, Center, Input } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 import moment from 'moment';
+import { motion } from "framer-motion"
 import { useUser } from '../../hooks';
 import api from '../../services/api';
 
@@ -24,6 +25,7 @@ const ProfileDataModal = () => {
         fullName: `${userData.first_name} ${userData.last_name}`,
         birthday_date: userData.birthday_date
     });
+    const [showEditAvatar, setShowEditAvatar] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [alertModalInfo, setAlertModalInfo] = useState({
@@ -34,6 +36,8 @@ const ProfileDataModal = () => {
         buttonOnClick: () => console.log(),
         buttonLabel: '',
     });
+
+    const AnimatedCenter = motion(Center);
 
     const onClose = () => {
         setAlertModalInfo({
@@ -236,7 +240,13 @@ const ProfileDataModal = () => {
                     <>
                         <Flex mt="40px" ml="48px">
                             <Flex direction='column' alignItems='center'>
-                                <Center borderRadius="4px" bg="#FFFEEE">
+                                <Center borderRadius="4px" bg="#FFFEEE" position="relative" onMouseEnter={() => setShowEditAvatar(true)}>
+                                    {
+                                        showEditAvatar &&
+                                        <AnimatedCenter initial={{opacity: 0, background: 'transparent'}}  exit={{opacity: 0}} animate={{ opacity: 1, background: colorPalette.textColor }} transition={{ duration: 0.3 }}  animation="step-start" borderRadius="8px" position="absolute" width="100%" height="100%" background={colorPalette.textColor} _hover={{cursor: "pointer"}} onMouseLeave={() => setShowEditAvatar(false)} >
+                                            <Text fontFamily={fontTheme.fonts} fontSize="18px" color={colorPalette.slideBackground}>Editar avatar</Text>
+                                        </AnimatedCenter>
+                                    }
                                     <Image width="180px" src={profilePlaceholder} />
                                 </Center>
                                 <Button bg='white' isLoading={isLoading} onClick={editButton} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
