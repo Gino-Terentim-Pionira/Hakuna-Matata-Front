@@ -1,6 +1,6 @@
 import { SetStateAction } from "react";
 import { useRecoilState } from "recoil"
-import { userState } from "../recoil/useRecoilState"
+import { userState, IUser } from "../recoil/useRecoilState"
 import api from "../services/api";
 
 
@@ -13,7 +13,13 @@ export const useUser = () => {
                 '@pionira/userId',
             );
             const res = await api.get(`/user/${_userId}`);
-            setUserData(res.data);
+            const resAvatar = await api.get(`user/avatar/${_userId}`);
+            const user: IUser = {
+                ...res.data,
+                custom_avatar: resAvatar.data
+            }
+            console.log(user)
+            setUserData(user);
         } catch (error) {
             console.log('');
         }

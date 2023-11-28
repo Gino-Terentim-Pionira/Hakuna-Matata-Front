@@ -35,6 +35,16 @@ export interface IUser {
     video_id: string[];
 	module_id: string[];
 	insignias_id: string[];
+	custom_avatar: {
+        hair: string;
+        hair_color: string;
+        facial_hair: string;
+        clothes: string;
+        eyes: string;
+        eyebrow: string;
+        mouth: string;
+        skin: string
+    }
 }
 
 const userState = atom({

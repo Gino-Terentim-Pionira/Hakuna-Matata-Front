@@ -4,13 +4,13 @@ import { useHistory } from 'react-router';
 import moment from 'moment';
 import { motion } from "framer-motion"
 import { useUser } from '../../hooks';
+import Avatar from 'avataaars';
 import api from '../../services/api';
 
 // Components
 import LoadingState from '../LoadingState';
 
 // Images
-import profilePlaceholder from '../../assets/icons/profile.svg';
 import colorPalette from '../../styles/colorPalette';
 import Coins from '../../assets/icons/coinicon.svg'
 import fontTheme from '../../styles/base';
@@ -173,6 +173,7 @@ const ProfileDataModal = () => {
             setIsEditMode(true);
         }
     }
+
     const handleEditInfo = (e: BaseSyntheticEvent, value: 'userName' | 'birthday_date' | 'fullName') => {
         setUserDataMirror({
             ...userDataMirror,
@@ -243,11 +244,26 @@ const ProfileDataModal = () => {
                                 <Center borderRadius="4px" bg="#FFFEEE" position="relative" onMouseEnter={() => setShowEditAvatar(true)}>
                                     {
                                         showEditAvatar &&
-                                        <AnimatedCenter initial={{opacity: 0, background: 'transparent'}}  exit={{opacity: 0}} animate={{ opacity: 1, background: colorPalette.textColor }} transition={{ duration: 0.3 }}  animation="step-start" borderRadius="8px" position="absolute" width="100%" height="100%" background={colorPalette.textColor} _hover={{cursor: "pointer"}} onMouseLeave={() => setShowEditAvatar(false)} >
+                                        <AnimatedCenter initial={{ opacity: 0, background: 'transparent' }} exit={{ opacity: 0 }} animate={{ opacity: 1, background: colorPalette.textColor }} transition={{ duration: 0.3 }} animation="step-start" borderRadius="8px" position="absolute" width="100%" height="100%" background={colorPalette.textColor} _hover={{ cursor: "pointer" }} onMouseLeave={() => setShowEditAvatar(false)} >
                                             <Text fontFamily={fontTheme.fonts} fontSize="18px" color={colorPalette.slideBackground}>Editar avatar</Text>
                                         </AnimatedCenter>
                                     }
-                                    <Image width="180px" src={profilePlaceholder} />
+                                    <Avatar
+                                        avatarStyle='Circle'
+                                        topType={userData.custom_avatar.hair}
+                                        accessoriesType='Blank'
+                                        hairColor={userData.custom_avatar.hair_color}
+                                        facialHairType={userData.custom_avatar.facial_hair}
+                                        clotheType={userData.custom_avatar.clothes}
+                                        eyeType={userData.custom_avatar.eyes}
+                                        eyebrowType={userData.custom_avatar.eyebrow}
+                                        mouthType={userData.custom_avatar.mouth}
+                                        skinColor={userData.custom_avatar.skin}
+                                        style={{
+                                            width: "178px",
+                                            height: "178px"
+                                        }}
+                                    />
                                 </Center>
                                 <Button bg='white' isLoading={isLoading} onClick={editButton} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
                                     <Text color={colorPalette.textColor} fontSize='1.3rem'>
