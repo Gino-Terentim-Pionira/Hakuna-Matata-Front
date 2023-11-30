@@ -26,7 +26,6 @@ const ProfileDataModal = () => {
         fullName: `${userData.first_name} ${userData.last_name}`,
         birthday_date: userData.birthday_date
     });
-    const [showEditAvatar, setShowEditAvatar] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [alertModalInfo, setAlertModalInfo] = useState({
@@ -176,10 +175,8 @@ const ProfileDataModal = () => {
             }
             setIsLoading(false);
             setIsEditMode(false);
-            setShowEditAvatar(true);
         } else {
             setIsEditMode(true);
-            setShowEditAvatar(true);
         }
     }
 
@@ -270,7 +267,7 @@ const ProfileDataModal = () => {
                             <Flex direction='column' alignItems='center'>
                                 <Center borderRadius="4px" bg="#FFFEEE" position="relative">
                                     {
-                                        showEditAvatar &&
+                                        isEditMode &&
                                         <AnimatedCenter
                                             initial={{ opacity: 0, background: 'transparent' }}
                                             whileTap={{ scale: 1.0 }}
