@@ -1,10 +1,9 @@
 import React, { useState, BaseSyntheticEvent } from 'react';
-import { Text, Flex, Button, Box, Image, Center, Input } from '@chakra-ui/react';
+import { Text, Flex, Button, Box, Image, Center, Input, useDisclosure } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 import moment from 'moment';
 import { motion } from "framer-motion"
 import { useUser } from '../../hooks';
-import Avatar from 'avataaars';
 import api from '../../services/api';
 
 // Components
@@ -17,6 +16,8 @@ import fontTheme from '../../styles/base';
 import { editProfileErrorCases, errorCases } from '../../utils/errors/errorsCases';
 import AlertModal from './AlertModal';
 import { GENERIC_MODAL_TEXT } from '../../utils/constants/buttonConstants';
+import ProfileAvatarModal from './ProfileAvatarModal';
+import UserAvatar from '../UserAvatar';
 
 const ProfileDataModal = () => {
     const { userData, setUserData } = useUser();
@@ -38,6 +39,12 @@ const ProfileDataModal = () => {
     });
 
     const AnimatedCenter = motion(Center);
+
+    const {
+        isOpen: avatarModalIsOpen,
+        onClose: avatarModalOnClose,
+        onOpen: avatarModalOnOpen
+    } = useDisclosure();
 
     const onClose = () => {
         setAlertModalInfo({
@@ -169,9 +176,35 @@ const ProfileDataModal = () => {
             }
             setIsLoading(false);
             setIsEditMode(false);
+            setShowEditAvatar(true);
         } else {
             setIsEditMode(true);
+            setShowEditAvatar(true);
         }
+    }
+
+    const sendEditAvatar = async (custom_avatar: {
+        hair: string;
+        hair_color: string;
+        facial_hair: string;
+        clothes: string;
+        eyes: string;
+        eyebrow: string;
+        mouth: string;
+        skin: string
+    }) => {
+        setIsLoading(true);
+        try {
+            await api.patch(`/user/avatar/${userData._id}`, { custom_avatar });
+            setUserData({
+                ...userData,
+                custom_avatar: custom_avatar,
+            });
+            avatarModalOnClose()
+        } catch (error) {
+            verifyErrorType('SERVER_ERROR');
+        }
+        setIsLoading(false);
     }
 
     const handleEditInfo = (e: BaseSyntheticEvent, value: 'userName' | 'birthday_date' | 'fullName') => {
@@ -179,14 +212,8 @@ const ProfileDataModal = () => {
             ...userDataMirror,
             [value]: e.target.value
         })
-        // if (value === 'fullName') {
-        //     setFullName(e.target.value);
-        // } else
-        //     setUserData({
-        //         ...userData,
-        //         [value]: e.target.value
-        //     })
     }
+
     const renderInfo = () => {
         const birthday_date = userDataMirror.birthday_date.split("T")[0];
         const infoArray = [{
@@ -241,29 +268,27 @@ const ProfileDataModal = () => {
                     <>
                         <Flex mt="40px" ml="48px">
                             <Flex direction='column' alignItems='center'>
-                                <Center borderRadius="4px" bg="#FFFEEE" position="relative" onMouseEnter={() => setShowEditAvatar(true)}>
+                                <Center borderRadius="4px" bg="#FFFEEE" position="relative">
                                     {
                                         showEditAvatar &&
-                                        <AnimatedCenter initial={{ opacity: 0, background: 'transparent' }} exit={{ opacity: 0 }} animate={{ opacity: 1, background: colorPalette.textColor }} transition={{ duration: 0.3 }} animation="step-start" borderRadius="8px" position="absolute" width="100%" height="100%" background={colorPalette.textColor} _hover={{ cursor: "pointer" }} onMouseLeave={() => setShowEditAvatar(false)} >
+                                        <AnimatedCenter
+                                            initial={{ opacity: 0, background: 'transparent' }}
+                                            whileTap={{ scale: 1.0 }}
+                                            whileHover={{ scale: 1.05 }}
+                                            animate={{ opacity: 1, background: colorPalette.textColor }}
+                                            transition={{ duration: 0.4 }}
+                                            borderRadius="8px"
+                                            position="absolute"
+                                            width="100%"
+                                            height="100%"
+                                            background={colorPalette.textColor}
+                                            _hover={{ cursor: "pointer" }}
+                                            onClick={avatarModalOnOpen}
+                                        >
                                             <Text fontFamily={fontTheme.fonts} fontSize="18px" color={colorPalette.slideBackground}>Editar avatar</Text>
                                         </AnimatedCenter>
                                     }
-                                    <Avatar
-                                        avatarStyle='Circle'
-                                        topType={userData.custom_avatar.hair}
-                                        accessoriesType='Blank'
-                                        hairColor={userData.custom_avatar.hair_color}
-                                        facialHairType={userData.custom_avatar.facial_hair}
-                                        clotheType={userData.custom_avatar.clothes}
-                                        eyeType={userData.custom_avatar.eyes}
-                                        eyebrowType={userData.custom_avatar.eyebrow}
-                                        mouthType={userData.custom_avatar.mouth}
-                                        skinColor={userData.custom_avatar.skin}
-                                        style={{
-                                            width: "178px",
-                                            height: "178px"
-                                        }}
-                                    />
+                                    <UserAvatar customAvatar={userData.custom_avatar} />
                                 </Center>
                                 <Button bg='white' isLoading={isLoading} onClick={editButton} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
                                     <Text color={colorPalette.textColor} fontSize='1.3rem'>
@@ -307,6 +332,7 @@ const ProfileDataModal = () => {
                     </Button>
                 }
             />
+            <ProfileAvatarModal isOpen={avatarModalIsOpen} onClose={avatarModalOnClose} isLoading={isLoading} userData={userData} sendEditAvatar={sendEditAvatar} />
         </Box>
     )
 }

@@ -13,3 +13,5 @@ export const LOAD_BUTTON = 'Viajando';
 export const CONTINUE = 'Continuar';
 
 export const SHARE = 'Compartilhar';
+
+export const SAVE = 'Salvar';
