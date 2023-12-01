@@ -18,8 +18,10 @@ import AlertModal from './AlertModal';
 import { GENERIC_MODAL_TEXT } from '../../utils/constants/buttonConstants';
 import ProfileAvatarModal from './ProfileAvatarModal';
 import UserAvatar from '../UserAvatar';
+import { UserServices } from '../../services/UserServices';
 
 const ProfileDataModal = () => {
+    const userServices = new UserServices();
     const { userData, setUserData } = useUser();
     const [userDataMirror, setUserDataMirror] = useState({
         userName: userData.userName,
@@ -192,7 +194,7 @@ const ProfileDataModal = () => {
     }) => {
         setIsLoading(true);
         try {
-            await api.patch(`/user/avatar/${userData._id}`, { custom_avatar });
+            await userServices.patchUserAvatar(userData._id, custom_avatar);
             setUserData({
                 ...userData,
                 custom_avatar: custom_avatar,

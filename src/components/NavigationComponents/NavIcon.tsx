@@ -67,7 +67,9 @@ const NavIcon: FC<NavIconProps> = ({
             >
                 {
                     image === 'profile' ?
-                        <UserAvatar customAvatar={userData.custom_avatar} width="64px" height="64px" /> : <Image
+                        <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="52px" height="52px" marginBottom="4px" />
+                        :
+                        <Image
                             maxW={isMap ? '' : '50px'}
                             src={image}
                             marginBottom='.1rem'

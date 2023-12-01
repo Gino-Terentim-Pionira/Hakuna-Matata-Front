@@ -32,7 +32,6 @@ const ProfileAvatarModal = ({ isOpen, onClose, userData, isLoading, sendEditAvat
     const { custom_avatar } = userData;
     const [avatar, setAvatar] = useState(custom_avatar);
 
-    console.log(avatar)
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="md">
             <ModalOverlay />

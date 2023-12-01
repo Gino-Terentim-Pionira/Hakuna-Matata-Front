@@ -5,6 +5,7 @@ import React from 'react';
 interface UserAvatarInterface {
     width?: string;
     height?: string;
+    marginBottom?: string;
     customAvatar: {
         hair: string;
         hair_color: string;
@@ -18,7 +19,7 @@ interface UserAvatarInterface {
     avatarStyle?: 'Circle' | 'Transparent'
 }
 
-const UserAvatar = ({ avatarStyle = 'Circle', customAvatar, width = '160px', height = '160px' }: UserAvatarInterface) => (<Avatar
+const UserAvatar = ({ avatarStyle = 'Circle', customAvatar, width = '160px', height = '160px', marginBottom }: UserAvatarInterface) => (<Avatar
     avatarStyle={avatarStyle}
     topType={customAvatar.hair}
     accessoriesType='Blank'
@@ -32,7 +33,8 @@ const UserAvatar = ({ avatarStyle = 'Circle', customAvatar, width = '160px', hei
     skinColor={customAvatar.skin}
     style={{
         width,
-        height
+        height,
+        marginBottom
     }}
 />
 )

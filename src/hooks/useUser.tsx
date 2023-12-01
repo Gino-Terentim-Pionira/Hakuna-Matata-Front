@@ -2,10 +2,12 @@ import { SetStateAction } from "react";
 import { useRecoilState } from "recoil"
 import { userState, IUser } from "../recoil/useRecoilState"
 import api from "../services/api";
+import { UserServices } from "../services/UserServices";
 
 
 export const useUser = () => {
     const [userData, setUserData] = useRecoilState(userState);
+    const userServices = new UserServices()
 
     const getNewUserInfo = async () => {
         try {
@@ -13,12 +15,11 @@ export const useUser = () => {
                 '@pionira/userId',
             );
             const res = await api.get(`/user/${_userId}`);
-            const resAvatar = await api.get(`user/avatar/${_userId}`);
+            const resAvatar = await userServices.getUserAvatar(_userId as string);
             const user: IUser = {
                 ...res.data,
                 custom_avatar: resAvatar.data
             }
-            console.log(user)
             setUserData(user);
         } catch (error) {
             console.log('');
