@@ -41,10 +41,10 @@ export const getStatusColor = (status: string) => {
 export const getStatusNick = (status: string) => {
     switch (status) {
         case AGILITY:
-            return 'AGI';
+            return 'AGILIDADE';
 
         case LEADERSHIP:
-            return 'LID';
+            return 'LIDERANÇA';
     
         default:
             return '';

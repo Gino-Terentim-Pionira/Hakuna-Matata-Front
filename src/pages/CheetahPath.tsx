@@ -492,28 +492,28 @@ const CheetahPath = () => {
                         >
                             <ModuleModal 
                                 left='19vw' 
-                                top='60vh' 
+                                top='66vh' 
                                 quizIndex={0} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
                                 blockedFunction={handleStatusRequirement} 
                             />
                             <ModuleModal
                                 left='45vw' 
-                                top='48vh' 
+                                top='54vh' 
                                 quizIndex={1} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(1)} 
                                 blockedFunction={handleStatusRequirement} 
                              />
                             <ModuleModal 
                                 left='68vw' 
-                                top='76vh' 
+                                top='82vh' 
                                 quizIndex={2} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(2)} 
                                 blockedFunction={handleStatusRequirement} 
                             />
                             <ModuleModal 
                                 left='89vw' 
-                                top='58vh' 
+                                top='59vh' 
                                 quizIndex={0} 
                                 isBlocked={true} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
