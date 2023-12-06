@@ -5,7 +5,6 @@ import TutorialModal from "../modals/TutorialModal";
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import { useUser } from '../../hooks';
 
-import icon_profile from '../../assets/icons/icon_profile.svg';
 import icon_tutorial from '../../assets/icons/icon_tutorial.svg';
 import icon_shop from '../../assets/icons/icon_shop.svg';
 import icon_map from '../../assets/icons/icon_map.svg';
@@ -77,7 +76,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
       >
         <Flex flexDirection='column' align='center'>
           <NavIcon
-            image={icon_profile}
+            image="profile"
             onClick={profileOnOpen}
             size='normal'
             isMap={false}
