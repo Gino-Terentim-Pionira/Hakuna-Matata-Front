@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Flex, Box, Tabs, TabPanels, TabPanel, Image, Grid, Text, Tooltip } from '@chakra-ui/react';
 import { useUser } from '../../hooks';
 
 // Components
-import Insignia from './Insignia';
+import Relic from './Relic';
 import LoadingState from '../LoadingState';
 
 // Images
-import insigniaCheetahSillouete from '../../assets/icons/insignia/cheetaInsigniaSillouete.png';
-import insigniaMambaSillouete from '../../assets/icons/insignia/mambaInsigniaSillouete.png';
-import insigniaLionSillouete from '../../assets/icons/insignia/lionInsigniaSillouete.png';
-import useInsignias from '../../hooks/useInsignias';
 import { LOCKED_BADGE } from '../../utils/constants/mouseOverConstants';
+import useRelic from '../../hooks/useRelic';
+import rarityEnum from '../../utils/enums/rarity';
 
-const InsigniaCertificate = () => {
-    const { insigniasData } = useInsignias();
+const RelicsCertificate = () => {
+    const { relicData, getRelics } = useRelic();
     const { userData } = useUser();
 
-    // Pega as informações das insigniasData
+    const verifyRelics = async () => {
+        if (relicData.length === 0) {
+            await getRelics();
+        }
+    }
+    useEffect(() => {
+        verifyRelics();
+    }, []);
+
 
     // Pega as informações dos certificados
     // const getCertificates = async () => {
@@ -32,7 +38,7 @@ const InsigniaCertificate = () => {
     return (
         <Flex h='100%' w='100%' flexDirection='column' justifyContent='space-between' alignItems='center' >
             {
-                insigniasData.length > 0 ? (
+                relicData.length > 0 ? (
                     <>
                         <Tabs h='100%' w='100%' marginBottom='0.5rem' align='center' size='lg' >
                             <TabPanels h='85%' padding='0'>
@@ -40,18 +46,30 @@ const InsigniaCertificate = () => {
                                     <Box w='100%' h='100%' overflowY='auto'>
                                         <Grid templateColumns='25% 25% 25%' columnGap='12.5%' width='95%' mt='1rem' h='95%' >
                                             {
-                                                insigniasData.map(({ _id, trail, name, description }: {
-                                                    user_id: Array<string>
-                                                    _id: string,
-                                                    name: string,
-                                                    trail: string,
-                                                    description: string,
-                                                    image: string,
-                                                    imageSillouete: string,
+                                                relicData.map(({ 
+                                                    _id, 
+                                                    relic_name, 
+                                                    description,
+                                                    image,
+                                                    image_sillouete
+                                                }: {
+                                                    _id: string;
+                                                    relic_name: string;
+                                                    description: string;
+                                                    hint: string;
+                                                    rarity: rarityEnum;
+                                                    image: string;
+                                                    image_sillouete: string;
                                                 }) => {
                                                     return (
-                                                        userData.insignias_id.includes(_id) ? (
-                                                            <Insignia key={_id} _id={_id} trail={trail} name={name} description={description} />
+                                                        userData.owned_relics.includes(relic_name) ? (
+                                                            <Relic 
+                                                                key={_id} 
+                                                                _id={_id} 
+                                                                description={description} 
+                                                                relic_name={relic_name}
+                                                                image={image}
+                                                            />
                                                         ) : (
                                                             <Box
                                                                 marginTop='1rem'
@@ -74,11 +92,7 @@ const InsigniaCertificate = () => {
                                                                 >
                                                                     <Image
                                                                         boxSize='8rem'
-                                                                        src={
-                                                                            trail === 'Trilha 1' ? insigniaCheetahSillouete : (
-                                                                                trail === 'Trilha 3' ? insigniaMambaSillouete : insigniaLionSillouete
-                                                                            )
-                                                                        }
+                                                                        src={image_sillouete}
                                                                     />
                                                                 </Tooltip>
                                                                 <Text
@@ -106,4 +120,4 @@ const InsigniaCertificate = () => {
     );
 }
 
-export default InsigniaCertificate;
+export default RelicsCertificate;

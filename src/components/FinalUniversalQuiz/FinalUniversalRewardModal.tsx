@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import RewardModal from '../modals/GenericModal';
@@ -11,6 +11,9 @@ import badgeShare from '../../assets/socialShare/badge.png';
 import TypesEnum from '../../utils/enums/type';
 import PlataformsEnum from '../../utils/enums/plataform';
 import { SHARE } from '../../utils/constants/buttonConstants';
+import RelicsName from '../../utils/enums/relics_name';
+import { addRelic } from '../../services/relic';
+import useRelic from '../../hooks/useRelic';
 
 interface IFinalUniversalRewardModal {
 	isOpen: boolean;
@@ -19,12 +22,11 @@ interface IFinalUniversalRewardModal {
 	totalAnswers: number;
 	allQuestionsId?: string[];
 	validateUser: VoidFunction;
-	imgReward: string;
 	routeQuiz: string;
 	routeQuestions: string;
-	insignaName: string;
 	ignorance: number;
 	trail: number;
+	relic: RelicsName
 }
 
 interface userDataProps {
@@ -40,13 +42,13 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	totalAnswers,
 	allQuestionsId,
 	validateUser,
-	imgReward,
 	routeQuiz,
 	routeQuestions,
-	insignaName,
 	ignorance,
 	trail,
+	relic
 }) => {
+	const { relicData, getRelics } = useRelic();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [onError, setOnError] = useState(false);
@@ -57,13 +59,13 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
         try {
             const response = await getLogInUrl();
             const imgbase64 = await convertImageToBase64(badgeShare);
-            const text = `Ganhei a insígnia Marca ${insignaName}`;
-            const description = `Insígnia Marca ${insignaName}`;
+            const text = `Ganhei a relíquia ${relic}`;
+            const description = `Relíquia ${relic}`;
             setItems(
                 text,
                 description,
                 imgbase64 as string,
-                TypesEnum.badge,
+                TypesEnum.relic,
                 shareId as string,
                 PlataformsEnum.linkedin);
             window.location.replace(response.data.url);
@@ -88,13 +90,8 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 
 			const userValidade = (await api.get(`/user/${userId}`)).data;
 
-			const badges = await api.get('/insignias/');
-
-			const userBadges = badges.data[trail - 1].user_id;
-			const badgeId = badges.data[trail - 1]._id;
-
 			if (correctAnswers === totalAnswers) {
-				await updateBadge(userBadges, badgeId, userId as string);
+				await updateRelic(userValidade.owned_relics, relic, userId as string);
 				if (trail === 1) {
 					await api.patch(`/user/${routeQuiz}/${userId}`, {
 						finalQuizComplete: {
@@ -126,7 +123,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 				}
 			} 
 			if (share) {
-				await handleLinkedin(badgeId);
+				await handleLinkedin(relic);
 			} else {
 				window.location.reload();
 			}
@@ -135,15 +132,9 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		}
 	};
 
-	const updateBadge = async (userBadges: string[], badgeId: string, userId: string) => {
+	const updateRelic = async (ownedRelics: string[], relicName: RelicsName, userId: string) => {
 		try {
-			if (!userBadges.includes(userId)) {
-				userBadges.push(userId);
-				await api.patch(`/user/addinsignia/${userId}`, {
-					insignias_id: badgeId,
-				});
-			}
-			
+			await addRelic(ownedRelics, relicName, userId);
 		} catch (error) {
 			setOnError(true);
 		}
@@ -168,13 +159,19 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		}
 	};
 
+	const verifyRelics = async () => {
+		if (relicData.length == 0) {
+			await getRelics();
+		}
+	}
+
 	const rewardModalInfo = () => {
 		if (correctAnswers === totalAnswers)
 			return {
 				title: 'Parabéns!!',
 				titleColor: colorPalette.inactiveButton,
-				subtitle: `Você provou por completo o seu valo e por isso lhe concedo a Marca ${insignaName}!`,
-				icon: imgReward,
+				subtitle: `Você provou por completo o seu valo e por isso lhe concedo: ${relic}!`,
+				icon: relicData.find(item => item.relic_name == relic)?.image as string,
 				coins,
 				isSocial: true,
 				secondButton: SHARE
@@ -188,6 +185,10 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			coins,
 		}
 	}
+
+	useEffect(() => {
+        verifyRelics();
+    }, []);
 
 	return (
 		<RewardModal

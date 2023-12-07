@@ -42,7 +42,6 @@ import lionFinalQuiz from '../utils/scripts/LionTrail/LionFinalQuiz';
 import trail_bg from '../assets/scenerys/lion/Trilha_leao_e_leoa.png';
 import final_lion_icon from '../assets/icons/final_lion_icon.svg';
 import couple from '../assets/sprites/lion/couple.png';
-import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.svg';
 import lion_bg from '../assets/modal/lion_bg.png';
 import atencao from '../assets/icons/atencao.png';
 
@@ -52,7 +51,6 @@ import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
 import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
 import { errorCases } from '../utils/errors/errorsCases';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
-import useInsignias from '../hooks/useInsignias';
 import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import { getStatusPoints } from '../utils/statusUtils';
 import { LEADERSHIP, STATUS_WARNING } from '../utils/constants/statusConstants';
@@ -62,6 +60,7 @@ import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants
 import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
 import BlockedModal from '../components/modals/BlockedModal';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
+import RelicsName from '../utils/enums/relics_name';
 
 
 interface IQuiz {
@@ -104,7 +103,6 @@ interface IScript {
 const LionPath = () => {
 	const { userData, setUserData } = useUser();
 	const { getNewModuleInfo, moduleData } = useModule();
-	const { getInsignias } = useInsignias();
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
 	const isAlertCoinsOnClose = () => {
@@ -233,7 +231,6 @@ const LionPath = () => {
 
 			if (!userData._id) {
 				const { data } = await api.get(`/user/${_userId}`);
-				await getInsignias();
 				setUserData(data);
 				userInfoData = data;
 			} else userInfoData = userData;
@@ -700,12 +697,11 @@ const LionPath = () => {
 				quiz={quiz}
 				questions={questions}
 				imgName={couple}
-				imgReward={lionTrailInsignia}
 				routeQuestions={'lionquestions'}
 				routeQuiz={'finallionquiz'}
-				insignaName={'do Leão e Leoa'}
 				userStatus={getStatusPoints(userData, LEADERSHIP)}
 				trail={2}
+				relic={RelicsName.glasses}
 			/>
 
 			<AlertModal

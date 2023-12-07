@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 // Components
-import InsigniaCertificate from '../BadgeComponents/InsigniaCertificate';
+import RelicsCertificate from '../BadgeComponents/RelicsCertificate';
 import ProfileDataModal from './ProfileDataModal';
 import PerfilModalButton from '../PerfilModalButton';
 import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusModal';
@@ -139,7 +139,7 @@ const ProfileModal: FC<ProfileModalProps> = ({
                                 onClick={() => setStep(3)}
                             >
                                 <Text fontSize='1.5rem'>
-                                    Insígnias
+                                    Relíquias
                                 </Text>
                             </Button>
                         ) : (
@@ -154,7 +154,7 @@ const ProfileModal: FC<ProfileModalProps> = ({
                     ) : step === 2 ? (
                         renderBackgroundImage(<ProfileDataModal />)
                     ) : (
-                        renderBackgroundImage(<InsigniaCertificate />)
+                        renderBackgroundImage(<RelicsCertificate />)
                     )}
                 </ModalBody>
             </ModalContent>

@@ -34,7 +34,7 @@ export interface IUser {
 	question_id: string[];
     video_id: string[];
 	module_id: string[];
-	insignias_id: string[];
+	owned_relics: string[];
 }
 
 const userState = atom({
@@ -42,12 +42,7 @@ const userState = atom({
 	default: {} as IUser
 });
 
-const insigniaState = atom({
-	key: "insigniaState",
-	default: []
-});
 
 export {
-	userState,
-	insigniaState
+	userState
 };
