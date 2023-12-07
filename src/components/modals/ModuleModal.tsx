@@ -40,7 +40,7 @@ import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
 import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/mouseOverConstants';
-import { getStatusPoints, getStatusColor, getStatusNick } from '../../utils/statusUtils';
+import { getStatusPoints, getStatusNick } from '../../utils/statusUtils';
 
 interface IModuleModal {
     quizIndex: number;
@@ -199,6 +199,23 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         }
     }
 
+    const renderTooltip = () => {
+        if (userStatus >= moduleStatus)
+            return <>
+                <p>{label}</p>
+                {!isBlocked && <p style={{ fontWeight: 'bold', color: colorPalette.correctAnswer }}>
+                    Acesso liberado
+                </p>}
+            </>
+        else
+            return <>
+                <p>{label}</p>
+                {!isBlocked && <p>Para acessar: <span style={{ fontWeight: 'bold', color: colorPalette.closeButton }}>
+                    {'Acesso liberado'}% {getStatusNick(moduleStatusName)}
+                </span></p>}
+            </>
+    }
+
     useEffect(() => {
         setTotalCoins(moduleInfo.total_coins);
         defineProperties();
@@ -208,9 +225,10 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         <>
             <Tooltip
                 hasArrow
-                placement='bottom'
+                placement='top'
                 gutter={12}
-                label={label}
+                label={renderTooltip()}
+
             >
                 <Flex
                     position="absolute"
@@ -221,25 +239,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                     justifyContent='center'
                     alignItems='center'
                 >
-                    {
-                        !isBlocked && <Flex
-                            width='114px'
-                            height='36px'
-                            backgroundColor={colorPalette.backgroundColor}
-                            alignItems='center'
-                            justifyContent='center'
-                            borderRadius='8px'
-                        >
-                            <Text
-                                textAlign='center'
-                                fontWeight='bold'
-                                fontSize='18px'
-                                color={getStatusColor(moduleStatusName)}
-                            >
-                                {userStatus}/{moduleStatus} {getStatusNick(moduleStatusName)}
-                        </Text>
-                        </Flex>
-                    }
                     <Image
                         src={image}
                         onClick={isBlocked || !statusRequirement ? blockedFunction : onOpen}

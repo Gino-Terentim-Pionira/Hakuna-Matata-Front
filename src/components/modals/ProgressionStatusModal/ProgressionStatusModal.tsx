@@ -2,8 +2,7 @@ import React from 'react';
 import {
     Stack,
     Flex,
-    Box,
-    Image
+    Box
 } from "@chakra-ui/react"
 import { useUser } from '../../../hooks';
 
@@ -15,8 +14,8 @@ import { AGILITY, LEADERSHIP } from '../../../utils/constants/statusConstants';
 import { getStatusPoints } from '../../../utils/statusUtils';
 
 // Images
-import Profile from '../../../assets/icons/profile.svg';
 import CoinsDisplay from '../../IgnoranceCoinsDisplay/CoinsDisplay';
+import UserAvatar from '../../UserAvatar';
 
 
 const ProgressionStatusModal = () => {
@@ -36,8 +35,7 @@ const ProgressionStatusModal = () => {
                                 </Stack>
                             </Box>
                             <Box display='flex' flexDirection='column' alignItems='center'>
-
-                                <Image src={Profile} />
+                                <UserAvatar customAvatar={userData.custom_avatar} width="180px" height="180px" />
                             </Box>
                             <Box w="35%">
                                 <Stack w="100%">
@@ -48,19 +46,19 @@ const ProgressionStatusModal = () => {
                             </Box>
                         </Flex>
                         <Flex w="90%" h="25%" flexDirection="row" justifyContent="space-between" alignItems="flex-end" marginBottom='1rem' >
-                            <IgnoranceProgress 
+                            <IgnoranceProgress
                                 ignorance={userData.ignorance}
                                 position='top'
                             />
-                            <CoinsDisplay 
+                            <CoinsDisplay
                                 value={userData.coins}
                                 position='top'
                             />
                         </Flex>
                     </>
                 ) : (
-                    <LoadingState />
-                )
+                        <LoadingState />
+                    )
             }
         </Flex>
 
