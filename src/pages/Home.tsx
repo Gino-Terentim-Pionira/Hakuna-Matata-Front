@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Center, Flex, Image } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -6,13 +6,16 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 
 //styles
-import colorPalette from '../styles/colorPalette';
 import './../styles/fadeEffect.css';
 
 // Images
 import initalScreen from '../assets/Tela_de_inicio.png';
 import registerImg from '../assets/icons/registerImg.svg';
 import loginImg from '../assets/icons/loginImg.svg';
+import PioniraLogo from '../assets/PioniraLogo.png';
+import GinoLogo from '../assets/GinoLogo.png';
+import HomeButton from '../components/HomeButton';
+import { LOGIN, REGISTER } from '../utils/constants/mouseOverConstants';
 
 const Home = () => {
 	const { authenticated } = useAuth();
@@ -34,86 +37,31 @@ const Home = () => {
 			}}
 		>
 			<Box w='100vw' mt='5%'>
-				<Center>
+				<Center flexDir="column">
+					<Image ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
 					<Flex
-						w='60%'
-						borderRadius='8px'
+						gap="108px"
 						flexDirection='row'
 						align='center'
-						justifyContent='space-between'
+						mt="8px"
 					>
-						<Flex
-							width='45%'
-							h='70%'
-							padding='2rem'
-							border='0.1rem  solid'
-							borderColor={colorPalette.primaryColor}
-							background='rgba(255, 255, 255, 0.51)'
-							borderRadius='8px'
-							flexDirection='column'
-							justifyContent='flex-end'
-							alignItems='center'
-							transition='all 0.3s'
-							_hover={{
-								cursor: 'pointer',
-								boxShadow:
-									'0 10px 20px rgba(0, 0, 0, 0.25), 10px 10px 10px rgba(0, 0, 0, 0.22)',
-							}}
-							onClick={() => history.push('/login')}
-						>
-							<Flex
-								flexDirection='column'
-								width='100%'
-								h='80%'
-								justifyContent='space-around'
-								alignItems='center'
-							>
-								<Image w='17%' src={loginImg} mb='1rem'/>
-								<Text
-									fontSize={[25, 28, 32, 36]}
-									color='#926021'
-								>
-									Fazer Login
-								</Text>
-							</Flex>
-						</Flex>
-						<Flex
-							width='45%'
-							h='70%'
-							padding='2rem'
-							border='0.1rem solid'
-							background='rgba(255, 255, 255, 0.51)'
-							borderColor={colorPalette.primaryColor}
-							borderRadius='8px'
-							flexDirection='column'
-							justifyContent='flex-end'
-							alignItems='center'
-							transition='all 0.3s'
-							_hover={{
-								cursor: 'pointer',
-								boxShadow:
-									'0 10px 20px rgba(0, 0, 0, 0.25), 10px 10px 10px rgba(0, 0, 0, 0.22)',
-							}}
-							onClick={() => history.push('/register')}
-						>
-							<Flex
-								flexDirection='column'
-								width='100%'
-								h='80%'
-								justifyContent='space-around'
-								alignItems='center'
-							>
-								<Image w='17%' src={registerImg} mb='1rem'/>
-								<Text
-									fontSize={[25, 28, 32, 36]}
-									color='#926021'
-								>
-									Fazer Cadastro
-								</Text>
-							</Flex>
-						</Flex>
+						<HomeButton 
+						text='Entrar na Savana'
+						image={loginImg}
+						onClick={() => history.push('/login')}
+						mouseOver={LOGIN}
+						/>
+						<HomeButton 
+						text='Criar Passaporte'
+						image={registerImg}
+						onClick={() => history.push('/register')}
+						mouseOver={REGISTER}
+						/>
 					</Flex>
 				</Center>
+				<a target="_blank" href='https://www.ginoterentim.com'>
+					<Image filter="drop-shadow(0px 4px 1px rgba(0, 0, 0, 0.14))" position="absolute" left="0" right="0" margin="auto" bottom="40px" width="125px" src={GinoLogo} alt="Logo gino" />
+				</a>
 			</Box>
 		</Flex>
 	);

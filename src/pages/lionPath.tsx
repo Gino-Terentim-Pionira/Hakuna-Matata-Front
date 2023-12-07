@@ -14,9 +14,9 @@ import {
 	ModalHeader,
 	ModalCloseButton,
 } from '@chakra-ui/react';
+import { useUser, useModule } from '../hooks';
 
 //utils
-import { useHistory } from 'react-router-dom';
 import fontTheme from '../styles/base';
 import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
 
@@ -25,41 +25,44 @@ import colorPalette from "../styles/colorPalette";
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import TutorialModal from '../components/modals/TutorialModal';
-import ProfileModal from '../components/modals/ProfileModal';
-import RandomRewardModal from '../components/modals/RandomRewardModal';
-import IgnoranceProgress from '../components/IgnoranceProgress';
-import NarrativeModal from '../components/modals/NarrativeModal';
+import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
 import ModuleModal from '../components/modals/ModuleModal';
-import FinalLionQuiz from '../components/FinalLionQuiz';
-import PremiumPassport from '../components/modals/PremiumPassport';
+import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
+import NavActions from '../components/NavigationComponents/NavActions';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
 import api from '../services/api';
-import trail2Beggining from '../utils/scripts/LionTrail/Trail2Beggining';
-import trail2First from '../utils/scripts/LionTrail/Trail2First';
-import trail2Conclusion from '../utils/scripts/LionTrail/Trail2Conclusion';
-// import trail2Teasing from '../utils/scripts/LionTrail/Trail2Teasing';
-import trail2FinalQuiz from '../utils/scripts/LionTrail/Trail2FinalQuiz';
+import lionBeggining from '../utils/scripts/LionTrail/LionBeggining';
+import lionFreeLunch from '../utils/scripts/LionTrail/LionFreeLunch';
+import lionConclusion from '../utils/scripts/LionTrail/LionConclusion';
+import lionFinalQuiz from '../utils/scripts/LionTrail/LionFinalQuiz';
 
 // Images
 import trail_bg from '../assets/scenerys/lion/Trilha_leao_e_leoa.png';
-import icon_profile from '../assets/icons/icon_profile.svg';
-import icon_tutorial from '../assets/icons/icon_tutorial.svg';
-import icon_shop from '../assets/icons/icon_shop.svg';
-import icon_map from '../assets/icons/icon_map.svg';
-import icon_map_opened from '../assets/icons/icon_map_opened.svg';
-import icon_logout from '../assets/icons/icon_logout.svg';
 import final_lion_icon from '../assets/icons/final_lion_icon.svg';
-import icon_membership from '../assets/icons/icon_membership.svg';
 import couple from '../assets/sprites/lion/couple.png';
 import lionTrailInsignia from '../assets/icons/insignia/lionTrailInsignia.svg';
 import lion_bg from '../assets/modal/lion_bg.png';
+import atencao from '../assets/icons/atencao.png';
 
- import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
- import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
- import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
- import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
+import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
+import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
+import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import { errorCases } from '../utils/errors/errorsCases';
+import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
+import useInsignias from '../hooks/useInsignias';
+import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
+import { getStatusPoints } from '../utils/statusUtils';
+import { LEADERSHIP, STATUS_WARNING } from '../utils/constants/statusConstants';
+import GenericModal from '../components/modals/GenericModal';
+import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
+import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
+import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
+import BlockedModal from '../components/modals/BlockedModal';
+import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
+
 
 interface IQuiz {
 	_id: string;
@@ -92,12 +95,6 @@ interface IQuestions {
 	coins: number;
 }
 
-interface IUser {
-	ignorance: number;
-	_id: string;
-	userName: string;
-}
-
 interface IScript {
 	name: string;
 	image: string;
@@ -105,29 +102,26 @@ interface IScript {
 }
 
 const LionPath = () => {
-	const { isOpen, onClose, onOpen } = useDisclosure();
-	const history = useHistory();
-
-	const [user, setUser] = useState<IUser>({} as IUser);
+	const { userData, setUserData } = useUser();
+	const { getNewModuleInfo, moduleData } = useModule();
+	const { getInsignias } = useInsignias();
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
-	const [withoutMoney, setWithoutMoney] = useState(false);
 	const isAlertOnClose = () => setIsAlertOpen(false);
-	const isAlertCoinsOnClose = () => setIsAlertCoins(false);
+	const isAlertCoinsOnClose = () => {
+		setIsAlertCoins(false);
+		setIsLoading(false);
+	};
 	const [lionText, setLionText] = useState<string>();
 	const [alertCoins, setAlertCoins] = useState<string | undefined>('');
 	0;
 	const [alertQuiz, setAlertQuiz] = useState<string | undefined>('');
 	const [onError, setOnError] = useState(false);
 	const [completeTrail, setCompleteTrail] = useState(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [payLoading, setPayLoading] = useState<boolean>(false);
+	const [statusAlert, setStatusAlert] = useState(false);
 
 	const ignoranceArray = [ignorance100, ignorance75, ignorance50, ignorance25];
-
-	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
-		onToggle: tutorialOnToggle,
-	} = useDisclosure();
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -145,25 +139,6 @@ const LionPath = () => {
 		isOpen: quizIsOpen,
 		onClose: quizOnClose,
 		onOpen: quizOnOpen,
-	} = useDisclosure();
-
-	const {
-		isOpen: narrativeChallengeIsOpen,
-		onOpen: narrativeChallengeOnOpen,
-		onToggle: narrativeChallengeOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: finalNarrativeChallengeIsOpen,
-		onOpen: finalNarrativeChallengeOnOpen,
-		onToggle: finalNarrativeChallengeOnToggle,
-	} = useDisclosure();
-
-	const {
-		isOpen: premiumIsOpen,
-		onClose: premiumOnClose,
-		onOpen: premiumOnOpen,
-		onToggle: premiumOnToggle,
 	} = useDisclosure();
 
 	const [questions, setQuestions] = useState<IQuestions[]>([
@@ -225,184 +200,141 @@ const LionPath = () => {
 	const alertOnClose = () => setIsConfirmOpen(false);
 	const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
 	const [isAlertCoins, setIsAlertCoins] = useState(false);
-	const [isCoinsCheck, setIsCoinsCheck] = useState(false);
 	const cancelRef = useRef<HTMLButtonElement>(null);
-	
+
 	const [ignoranceImage, setIgnoranceImage] = useState("");
 
 	const [script, setScript] = useState<IScript[]>([]);
-	const [challengeScript, setChallengeScript] = useState<IScript[]>([]);
-	const [finalChallengeScript, setFinalChallengeScript] = useState<IScript[]>([]);
+	const [blockedMessage, setBlockedMessage] = useState<string>('');
+	const [isBlockedOpen, setIsBlockedOpen] = useState(false);
 
-	const goToShop = () => {
-		history.push('/shop');
-	};
 	const logout = () => {
-		setAlertAnswer('Tem certeza que você deseja sair da savana?');
+		setAlertAnswer('Tem certeza que você deseja sair da Savana?');
 		setIsConfirmOpen(true);
 	};
-	const goToMap = () => {
-		history.push('/mainPage');
-	};
 
-	 const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
-	 	const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
-	 	setIgnoranceImage(filterBackgroung);
-	 }
+	const setIgnoranceFilter = (ignorance: number, ignoranceArray: string[]) => {
+		const filterBackgroung = ignoranceFilterFunction(ignorance, ignoranceArray);
+		setIgnoranceImage(filterBackgroung);
+	}
+
+	const handleNarrativeModal = (script: IScript[]) => {
+        setScript(script);
+        narrativeOnOpen();
+    }
 
 	const getUser = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
-		setIgnoranceFilter(data.ignorance, ignoranceArray);
-		const isComplete = data.finalQuizComplete.lionFinal;
+		try {
+			let userInfoData;
+			const _userId = sessionStorage.getItem('@pionira/userId');
+			if (moduleData.length === 0) {
+                await getNewModuleInfo();
+            }
 
-		if (isComplete) {
-			setLionText(
-				`Você já alcançou o máximo da sua liderança, aprendiz... digo ${data.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
-			);
-			setCompleteTrail(true);
-			if (data.narrative_status.trail2 !== 4) {
-				await api.patch(`/user/narrative/${_userId}`, {
-					narrative_status: {
-						trail2: 3
-					},
-				});
-				await finalLionNarrative();
+			if (!userData._id) {
+				const { data } = await api.get(`/user/${_userId}`);
+				await getInsignias();
+				setUserData(data);
+				userInfoData = data;
+			} else userInfoData = userData;
+			setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
+			const isComplete = userInfoData.finalQuizComplete.lionFinal;
+			setIsLoading(false);
+
+			if (isComplete) {
+				setLionText(
+					`Você já alcançou o máximo da sua liderança, aprendiz... digo ${userInfoData.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+				);
+				setCompleteTrail(true);
+				if (userInfoData.narrative_status.trail2 === 3) {
+					finalLionNarrative(userInfoData.userName);
+				}
+			} else {
+				if (userInfoData.ignorance > 80)
+					setLionText(
+						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
+					);
+				else if (userInfoData.ignorance > 40)
+					setLionText(
+						'Você está definitivamente mais forte, jovem! Mas temo que o Leão e a Leoa é um desafio muito grande para você!',
+					);
+				else
+					setLionText(
+						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+					);
 			}
-		} else {
-			if (data.ignorance > 80)
-				setLionText(
-					'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
-				);
-			else if (data.ignorance > 40)
-				setLionText(
-					'Você está definitivamente mais forte, jovem! Mas temo que a Leão e Leoa é um desafio muito grande para você!',
-				);
-			else
-				setLionText(
-					'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
-				);
+		} catch (error) {
+			setOnError(true);
 		}
 	};
 
 	const getQuiz = async () => {
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const { data } = await api.get(`/user/${_userId}`);
 		const newQuiz = await api.get('/finallionquiz');
+		setQuiz(newQuiz.data[0]);
+		const finishQuestions = finishQuestionIncludes(
+			newQuiz.data[0].questions_id,
+			_userId as string,
+		);
 
-		if (data.ignorance > 80) {
-			setQuiz(newQuiz.data[2]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[2].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[2].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
-		} else if (data.ignorance > 40) {
-			setQuiz(newQuiz.data[1]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[1].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[1].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
+		if (finishQuestions.length <= 0) {
+			setQuestions(newQuiz.data[0].questions_id);
 		} else {
-			setQuiz(newQuiz.data[0]);
-			const finishQuestions = finishQuestionIncludes(
-				newQuiz.data[0].questions_id,
-				_userId as string,
-			);
-
-			if (finishQuestions.length <= 0) {
-				setQuestions(newQuiz.data[0].questions_id);
-			} else {
-				setQuestions(finishQuestions);
-			}
-		}
-	};
-
-	const getUserRequisition = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const res = await api.get(`/user/${_userId}`);
-		setUser(res.data);
-	};
-	const firstAccess = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const res = await api.get(`/user/${_userId}`);
-
-		if (res.data.narrative_status.trail2 == 0) {
-			await api.patch(`/user/narrative/${_userId}`, {
-				narrative_status: {
-					trail1: res.data.narrative_status.trail1,
-					trail2: 1,
-				},
-			});
-
-			history.go(0);
+			setQuestions(finishQuestions);
 		}
 	};
 
 	//Lógica para verificar a progressão da narrativa e autalizar o script
-	const updateNarrative = async () => {
-		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const res = await api.get(`/user/${_userId}`);
-		// const { data } = await api.get(`/user/${_userId}`);
-		// const isComplete = data.finalQuizComplete.lionFinal;
+	const checkNarrative = async () => {
+		let userInfoData;
+		const _userId = sessionStorage.getItem('@pionira/userId');
+		if (!userData._id) {
+			const { data } = await api.get(`/user/${_userId}`);
+			userInfoData = data;
+		} else userInfoData = userData;
 
 		if (
-			res.data.narrative_status.trail1 == 0 &&
-			res.data.narrative_status.trail2 == 1
+			userInfoData.narrative_status.trail1 == 0 &&
+			userInfoData.narrative_status.trail2 == 0
 		) {
 			//Verifica se é a primeira vez do usuário em uma trilha
-			const newScript = await trail2Beggining();
-			setScript(newScript);
-			narrativeOnOpen();
-	
-			await api.patch(`/user/narrative/${_userId}`, {
-				narrative_status: {
-					trail1: res.data.narrative_status.trail1,
-					trail2: 2,
-				},
-			});
-		} else if (res.data.narrative_status.trail2 == 1) {
+			const newScript = await lionFreeLunch();
+			handleNarrativeModal(newScript);
+		} else if (userInfoData.narrative_status.trail2 == 0) {
 			//Verifica se é a primeira vez do usuário na trilha do leao
-			const newScript = await trail2First();
-			setScript(newScript);
-			narrativeOnOpen();
-		} 
-		// else if (res.data.narrative_status.trail2 == 2 && !isComplete) {
-		// 	//Verifica se o usuário está no dia a dia da trilha
-		// 	const randomNumber = Math.floor(Math.random() * 10);
-		// 	const newScript = await trail2Teasing(randomNumber);
-		// 	setScript(newScript);
-		// 	narrativeOnOpen();
-		// }
+			const newScript = await lionBeggining();
+			handleNarrativeModal(newScript);
+		} else if (userInfoData.narrative_status.trail2 != 3){ // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
+            const lion_access =  localStorage.getItem('@pionira/lion_access');
+            if (lion_access) {
+                const number_access = parseInt(lion_access);
+                if (number_access < 3) {
+                    localStorage.setItem('@pionira/lion_access', `${number_access + 1}`);
+                } else {
+                    localStorage.setItem('@pionira/lion_access', '0');
+                    const newScript = lionTeasing();
+					handleNarrativeModal(newScript);
+                }
+            } else {
+                localStorage.setItem('@pionira/lion_access', '1');
+            }
+        } 
 	};
 
 
 	const challengeNarrative = async () => {
-		const newChallengeScript = await trail2FinalQuiz();
-		setChallengeScript(newChallengeScript);
-		narrativeChallengeOnOpen();
+		const newChallengeScript = await lionFinalQuiz();
+		handleNarrativeModal(newChallengeScript);
 	};
 
-	const finalLionNarrative = async () => {
-		const newChallengeScript = await trail2Conclusion();
-		setFinalChallengeScript(newChallengeScript);
-		finalNarrativeChallengeOnOpen();
+	const finalLionNarrative = (userName: string) => {
+		const newChallengeScript = lionConclusion(userName);
+		handleNarrativeModal(newChallengeScript);
 	};
 
 	const alertQuizConfirm = () => {
 		setAlertQuiz(
-			'Para fazer o desafio final do Leão e Leoa são necessárias 40 joias do conhecimento! Tem certeza que deseja prosseguir?',
+			`Para fazer o desafio final do Leão e Leoa são necessárias ${FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
 		);
 		setIsAlertOpen(true);
 	};
@@ -413,359 +345,252 @@ const LionPath = () => {
 	};
 
 	const paxTax = async () => {
-		const value = 40;
+		const value = FINAL_QUIZ_SINK;
 		setIsConfirmOpen(false);
+		setPayLoading(true);
 		const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
-		const user = await api.get(`/user/${_userId}`);
-		const validation = await api.get(`user/loadingQuiz/${_userId}`);
-		const userCoins = user.data.coins;
+		const userCoins = userData.coins;
 
 		if (userCoins >= value) {
 			const newCoins = userCoins - value;
 			try {
-				if (validation) {
-					await api.patch(`/user/coins/${_userId}`, {
-						coins: newCoins,
-					});
-				}
+				await api.patch(`/user/coins/${_userId}`, {
+					coins: newCoins,
+				});
 
+				setPayLoading(false);
 				handleModal();
 			} catch (error) {
+				setPayLoading(false);
 				setOnError(true);
 			}
 		}
 
+		setPayLoading(false);
 		if (userCoins < value) {
 			setAlertCoins('Poxa! Parece que você não tem moedas suficientes!');
 			setIsAlertCoins(true);
 		}
-
-		if (userCoins <= 0 || userCoins < value) {
-			setAlertCoins(
-				'Poxa! Parece que você não tem moedas suficientes! Se você prosseguir podera ganhar o dobro de Ignorância e até ficar devendo moedas! Escolha com sabedorias aprendiz.',
-			);
-			setIsCoinsCheck(true);
-		}
 	};
+
+	const closeAlert = () => {
+		if (!payLoading) isAlertOnClose();
+	}
+
+	const handleStatusAlert = () => {
+		setStatusAlert(false);
+		alertQuizConfirm();
+	}
+
+	const closeStatusAlert = () => {
+		setStatusAlert(false);
+	}
+
+	const checkStatus = () => {
+		if (getStatusPoints(userData, LEADERSHIP) < 80) {
+			setStatusAlert(true);
+		} else {
+			alertQuizConfirm();
+		}
+	}
+
+	const statusAlertInfo = {
+		title: WAIT_TITLE,
+		titleColor: colorPalette.progressOrange,
+		subtitle: STATUS_WARNING(LEADERSHIP),
+		icon: atencao,
+		firstButton: CONTINUE,
+		secondButton: GENERIC_MODAL_TEXT,
+		alert: ALERT_CODE_SUBTITLE
+	}
+
+	const handleStatusRequirement = () => {
+        setBlockedMessage(`Seu nível de ${LEADERSHIP} não é suficiente!`);
+        setIsBlockedOpen(true);
+    }
+
+    const handleBlockedModule = () => {
+        setBlockedMessage("Esse treinamento ainda não está disponível!");
+        setIsBlockedOpen(true);
+    }
+
+    const moduleEndNarrativeScript = (quizIndex: number) => {
+        const script = buildModuleEndScript('Leão e Leoa', moduleData[quizIndex].final_message);
+        handleNarrativeModal(script)
+    }
 
 	useEffect(() => {
 		getUser();
-		getUserRequisition();
-		firstAccess();
-		updateNarrative();
+		checkNarrative();
 		getQuiz();
 	}, []);
 
+	if (isLoading) {
+		return <LoadingOverlay />
+	}
+
 	return (
 		<>
-			<Flex h='100vh' flexDirection='column' alignItems='center'>
-				<Image
-					src={trail_bg}
-					position='absolute'
-					h='100vh'
-					w='100%'
-					zIndex='-3'
-					left='0'
-					top='0'
-				/>
-				<Image
-					src={ignoranceImage}
-					position='absolute'
-					h='100vh'
-					w='100%'
-					zIndex='-3'
-					left='0'
-					top='0'
-				/> 
+			<Image
+				src={trail_bg}
+				position='absolute'
+				h='100vh'
+				w='100%'
+				zIndex='-3'
+				left='0'
+				top='0'
+			/>
+			<Image
+				src={ignoranceImage}
+				position='absolute'
+				h='100vh'
+				w='100%'
+				zIndex='-3'
+				left='0'
+				top='0'
+			/>
 
-				<Flex
-					width='92.5%'
-					justifyContent='space-between'
-					alignItems='flex-start'
-					margin='auto'
-					zIndex='10'
-					position='fixed'
-				>
+			<Flex
+				width='92.5%'
+				justifyContent='space-between'
+				alignItems='flex-start'
+				margin='auto'
+			>
+				{narrativeIsOpen ? null : (
+					<NavActions logout={logout} />
+				)}
+
+				{narrativeIsOpen ? null : (
+					<IgnorancePremiumIcons ignorance={userData.ignorance} />
+				)}
+			</Flex>
+
+			{narrativeIsOpen ? null : (
+				<>
 					<Flex
-						maxWidth='4.5rem'
-						marginTop='1.5rem'
-						flexDirection='column'
-						alignItems='center'
+						margin='2vw'
+						justifyContent='space-between'
 					>
-						{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-							<>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={onOpen}
-								>
-									<Image
-										src={icon_profile}
-										marginBottom='.5rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='4.5rem'
-									height='4.5rem'
-									bg='white'
-									onClick={() => goToShop()}
-								>
-									<Image
-										src={icon_shop}
-										marginBottom='.1rem'
-									/>
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={tutorialOnOpen}
-								>
-									<Image src={icon_tutorial} />
-								</Center>
-
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									mb='.75rem'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='3.75rem'
-									height='3.75rem'
-									bg='white'
-									onClick={() => logout()}
-								>
-									<Image src={icon_logout} />
-								</Center>
-								<Center
-									_hover={{
-										cursor: 'pointer',
-										transform: 'scale(1.1)',
-									}}
-									transition='all 0.2s ease'
-									border='2px solid black'
-									borderRadius='4.5rem'
-									width='6.55rem'
-									height='6.55rem'
-									bg='white'
-									onClick={() => goToMap()}
-									position='absolute'
-									mt='78vh'
-								>
-									<Image
-										src={icon_map}
-										onMouseOverCapture={(e) =>
-											(e.currentTarget.src = icon_map_opened)
-										}
-										onMouseOut={(e) =>
-											(e.currentTarget.src = icon_map)
-										}
-									/>
-								</Center>
-							</>
-						)}
-					</Flex>
-
-					{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-						<Flex
-							flexDirection='column'
-							justifyContent='space-between'
-							alignItems='flex-end'
-							h='87.5vh'
-							marginTop='1.5rem'
+						<ModuleModal 
+							left='8vw' 
+							top='65vh' 
+							quizIndex={0} 
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
+							blockedFunction={handleStatusRequirement} 
+						/>
+						<ModuleModal 
+							left='22vw' 
+							top='88vh' 
+							quizIndex={1} 
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(1)}
+							blockedFunction={handleStatusRequirement} 
+						/>
+						<ModuleModal 
+							left='58vw' 
+							top='85vh' 
+							quizIndex={2} 
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(2)}
+							blockedFunction={handleStatusRequirement}
+						/>
+						<ModuleModal 
+							left='79vw' 
+							top='55vh' 
+							quizIndex={0}
+							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
+							isBlocked={true} 
+							blockedFunction={handleBlockedModule}
+						/>
+						<Center
+							_hover={{
+								cursor: 'pointer',
+								transform: 'scale(1.1)',
+							}}
+							transition='all 0.2s ease'
+							width='7rem'
+							height='7rem'
+							onClick={() => {
+								if (!completeTrail) {
+									challengeNarrative();
+								}
+								modalOnOpen();
+							}}
+							position='absolute'
+							top='60vh'
+							left='40vw'
 						>
 							<Image
-								src={icon_membership}
-								width='5.5rem'
-								_hover={{
-									cursor: 'pointer',
-									transform: 'scale(1.1)',
-								}}
-								transition='all 0.2s ease'
-								onClick={premiumOnOpen}
+								src={final_lion_icon}
+								width='90%'
+								height='90%'
 							/>
-							<Flex
-								flexDirection='row'
-								marginTop='65vh'
-								justifyContent='flex-end'
-								alignItems='center'
-							>
-								<RandomRewardModal />
-								<IgnoranceProgress
-									fontSize='1.7rem'
-									marginTop='0'
-									size='6rem'
-									ignorance={user.ignorance}
-									position='absolute'
-								/>
-							</Flex>
-						</Flex>
-					)}
-				</Flex>
+						</Center>
+					</Flex>
 
-				{narrativeIsOpen || narrativeChallengeIsOpen || finalNarrativeChallengeIsOpen ? null : (
-					<>
-						<Flex
-							margin='2vw'
-							justifyContent='space-between'
-							zIndex='10'
+					<Modal
+						isOpen={modalIsOpen}
+						onClose={modalOnClose}
+						size='4xl'
+					>
+						<ModalOverlay />
+						<ModalContent
+							height='34rem'
+							fontFamily={fontTheme.fonts}
 						>
 							<Box
+								w='25%'
+								bg={colorPalette.primaryColor}
+								h='25rem'
 								position='absolute'
-								left='7vw'
-								top='58vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={4} />
-							</Box>
-
-							<Box
-								position='absolute'
-								left='22vw'
-								top='81vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={5} />
-							</Box>
-							<Box
-								position='absolute'
-								left='58vw'
-								top='82vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={6} />
-							</Box>
-							<Box
-								position='absolute'
-								left='79vw'
-								top='52vh'
-								w='10vw'
-							>
-								<ModuleModal quizIndex={7} />
-							</Box>
-							<Center
-								_hover={{
-									cursor: 'pointer',
-									transform: 'scale(1.1)',
-								}}
-								transition='all 0.2s ease'
-								width='7rem'
-								height='7rem'
-								onClick={() => {
-									if (!completeTrail) {
-										narrativeChallengeOnOpen();
-										challengeNarrative();
-									}
-									modalOnOpen();
-								}}
-								position='absolute'
-								top='60vh'
-								left='40vw'
-								zIndex='999'
-							>
-								<Image
-									src={final_lion_icon}
-									width='90%'
-									height='90%'
-								/>
-							</Center>
-						</Flex>
-
-						<Modal
-							isOpen={modalIsOpen}
-							onClose={modalOnClose}
-							size='4xl'
-						>
-							<ModalOverlay />
-							<ModalContent
-								height='34rem'
-								fontFamily={fontTheme.fonts}
-							>
-								<Box
-									w='25%'
-									bg={colorPalette.primaryColor}
-									h='25rem'
-									position='absolute'
-									zIndex='-1'
-									left='0'
-									top='0'
-									borderTopStartRadius='5px'
-									clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
-								/>
-								{completeTrail ? (
-									<>
-										<ModalBody
-											d='flex'
-											mt='-1rem'
-											flexDirection='column'
-											alignItems='center'
+								zIndex='-1'
+								left='0'
+								top='0'
+								borderTopStartRadius='5px'
+								clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+							/>
+							{completeTrail ? (
+								<>
+									<ModalBody
+										d='flex'
+										mt='-1rem'
+										flexDirection='column'
+										alignItems='center'
+										justifyContent='space-between'
+									>
+										<Flex
+											w='65%'
+											h='100%'
 											justifyContent='space-between'
+											flexDirection='column'
+											marginBottom='0.8rem'
 										>
-											<Flex
-												w='65%'
-												h='100%'
-												justifyContent='space-between'
-												flexDirection='column'
-												marginBottom='0.8rem'
+											<Text
+												w='100%'
+												marginTop='5rem'
+												fontSize='2rem'
+												lineHeight='9vh'
+												textAlign='center'
+												fontWeight='normal'
 											>
-												<Text
-													w='100%'
-													marginTop='5rem'
-													fontSize='2rem'
-													lineHeight='9vh'
-													textAlign='center'
-													fontWeight='normal'
-												>
-													"{lionText}"
+												"{lionText}"
 												</Text>
-												<Button
-													bgColor={colorPalette.secondaryColor}
-													width='45%'
-													alignSelf='center'
-													color={colorPalette.buttonTextColor}
-													height='4rem'
-													fontSize='1.4rem'
-													_hover={{
-														transform: 'scale(1.1)',
-													}}
-													onClick={modalOnClose}
-												>
-													Okay!
+											<Button
+												bgColor={colorPalette.secondaryColor}
+												width='45%'
+												alignSelf='center'
+												color={colorPalette.buttonTextColor}
+												height='4rem'
+												fontSize='1.4rem'
+												_hover={{
+													transform: 'scale(1.1)',
+												}}
+												onClick={modalOnClose}
+											>
+												Okay!
 												</Button>
-											</Flex>
-										</ModalBody>
-									</>
-								) : (
+										</Flex>
+									</ModalBody>
+								</>
+							) : (
 									<>
 										<ModalHeader
 											d='flex'
@@ -813,9 +638,7 @@ const LionPath = () => {
 													_hover={{
 														transform: 'scale(1.1)',
 													}}
-													onClick={() => {
-														alertQuizConfirm();
-													}}
+													onClick={checkStatus}
 												>
 													Vamos nessa!
 												</Button>
@@ -835,74 +658,43 @@ const LionPath = () => {
 										</ModalBody>
 									</>
 								)}
-							</ModalContent>
-						</Modal>
-					</>
-				)}
+						</ModalContent>
+					</Modal>
+				</>
+			)}
 
-				<ProfileModal isOpen={isOpen} onClose={onClose} />
-
-				{script.length > 0 ? (
-					//verifica se o script possui algum conteúdo
-					<NarrativeModal
-						isOpen={narrativeIsOpen}
-						script={script}
-						onToggle={narrativeOnToggle}
-					/>
-				) : null}
-				{challengeScript.length > 0 ? (
-					//verifica se o script possui algum conteúdo
-					<NarrativeModal
-						isOpen={narrativeChallengeIsOpen}
-						script={challengeScript}
-						onToggle={narrativeChallengeOnToggle}
-					/>
-				) : null}
-
-				{finalChallengeScript.length > 0 ? (
-					//verifica se o script possui algum conteúdo
-					<NarrativeModal
-						isOpen={finalNarrativeChallengeIsOpen}
-						script={finalChallengeScript}
-						onToggle={finalNarrativeChallengeOnToggle}
-					/>
-				) : null}
-
-				<TutorialModal
-					isOpen={tutorialIsOpen}
-					onClose={tutorialOnClose}
-					onToggle={tutorialOnToggle}
+			{script.length > 0 && 
+				//verifica se o script possui algum conteúdo
+				<NarrativeModal
+					isOpen={narrativeIsOpen}
+					script={script}
+					onToggle={narrativeOnToggle}
+					narrative="lion"
 				/>
+			}
 
-				<PremiumPassport
-					isOpen={premiumIsOpen}
-					onClose={premiumOnClose}
-					onToggle={premiumOnToggle}
-				/>
-
-				<AlertModal
-					isOpen={isConfirmOpen}
-					onClose={alertOnClose}
-					alertTitle='Logout'
-					alertBody={alertAnswer}
-					buttonBody={
-						<Button
-							ref={cancelRef}
-							color='white'
-							bg={colorPalette.primaryColor}
-							onClick={() => {
-								alertOnClose();
-								sessionStorage.clear();
-								location.reload();
-							}}
-						>
-							Sair
+			<AlertModal
+				isOpen={isConfirmOpen}
+				onClose={alertOnClose}
+				alertTitle='Logout'
+				alertBody={alertAnswer}
+				buttonBody={
+					<Button
+						ref={cancelRef}
+						color='white'
+						bg={colorPalette.primaryColor}
+						onClick={() => {
+							alertOnClose();
+							sessionStorage.clear();
+							location.reload();
+						}}
+					>
+						Sair
 						</Button>
-					}
-				/>
-			</Flex>
+				}
+			/>
 
-			<FinalLionQuiz
+			<FinalUniversalQuiz
 				openModal={quizIsOpen}
 				closeModal={quizOnClose}
 				quiz={quiz}
@@ -912,12 +704,14 @@ const LionPath = () => {
 				routeQuestions={'lionquestions'}
 				routeQuiz={'finallionquiz'}
 				insignaName={'do Leão e Leoa'}
-				withoutMoney={withoutMoney}
+				userStatus={getStatusPoints(userData, LEADERSHIP)}
+				trail={2}
 			/>
 
 			<AlertModal
 				isOpen={isAlertOpen}
-				onClose={isAlertOnClose}
+				onClose={closeAlert}
+				onClickClose={closeAlert}
 				alertTitle='Desafio Final'
 				alertBody={alertQuiz}
 				buttonBody={
@@ -925,10 +719,8 @@ const LionPath = () => {
 						ref={cancelRef}
 						color='white'
 						bg={colorPalette.primaryColor}
-						onClick={() => {
-							paxTax();
-							isAlertOnClose();
-						}}
+						onClick={paxTax}
+						isLoading={payLoading}
 					>
 						Pagar
 					</Button>
@@ -947,26 +739,13 @@ const LionPath = () => {
 							display='flex'
 							justifyContent='space-between'
 						>
-							{isCoinsCheck ? (
-								<Button
-									ref={cancelRef}
-									color='white'
-									bg={colorPalette.closeButton}
-									onClick={() => {
-										handleModal();
-										setWithoutMoney(true);
-										setIsCoinsCheck(false);
-									}}
-								>
-									Proseguir
-								</Button>
-							) : null}
 							<Button
 								ref={cancelRef}
 								color='white'
 								bg={colorPalette.primaryColor}
 								onClick={() => {
 									isAlertCoinsOnClose();
+									setIsLoading(false);
 								}}
 							>
 								Cancelar
@@ -980,7 +759,7 @@ const LionPath = () => {
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'
@@ -991,6 +770,22 @@ const LionPath = () => {
 					</Button>
 				}
 			/>
+
+			<GenericModal
+				genericModalInfo={statusAlertInfo}
+				isOpen={statusAlert}
+				confirmFunction={handleStatusAlert}
+				secondFunction={closeStatusAlert}
+				closeFunction={closeStatusAlert}
+				loading={false}
+				error={false}
+			/>
+
+			<BlockedModal
+                isOpen={isBlockedOpen}
+                onClose={() => { setIsBlockedOpen(false) }}
+                subtitle={blockedMessage}
+            />
 
 		</>
 	);

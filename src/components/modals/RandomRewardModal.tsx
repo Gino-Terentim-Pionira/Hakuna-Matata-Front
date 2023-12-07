@@ -1,58 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import {
     useDisclosure,
-    Modal,
-    ModalOverlay,
-    ModalContent,
     Box,
-    ModalBody,
-    Flex,
-    Button,
-    Text,
     Image,
+    Tooltip,
 } from '@chakra-ui/react';
-
-// Components
-import AlertModal from './AlertModal';
 
 // Requisitions
 import api from '../../services/api';
 
 // Styles
-import fontTheme from '../../styles/base';
 import { motion } from 'framer-motion';
 import colorPalette from "../../styles/colorPalette";
 
 // Images
-import Coins from '../../assets/icons/coinicon.svg';
 import rewardChest from "../../assets/icons/bau.png";
+import RewardModal from './GenericModal';
+import rewardOpenChest from "../../assets/icons/bauAberto.svg";
+import { useUser } from '../../hooks';
+import { CHEST_LUCK_SOURCE, CHEST_NORMAL_SOURCE } from '../../utils/constants/constants';
+import { SURPRISE_CHEST } from '../../utils/constants/mouseOverConstants';
 
 interface userDataProps {
     coins: number
 }
 
 const RandomRewardModal = () => {
+    const { userData, getNewUserInfo } = useUser();
     const [randomNumber, setRandomNumber] = useState(false);
     const [coins, setCoins] = useState(0);
     const [onError, setOnError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const { isOpen, onOpen } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const getUser = async () => {
         try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            const user = await api.get(`/user/${userId}`);
             const random = Math.floor(Math.random() * 100);
-            if (random < user.data.luck) {
+            if (random < userData.luck ) {
                 setRandomNumber(true);
-                if (user.data.ignorance <= 30) {
-                    setCoins(120);
-                } else if (user.data.ignorance < 50) {
-                    setCoins(80);
-                } else if (user.data.ignorance < 80) {
-                    setCoins(50);
+                const randomCoins = Math.floor(Math.random() * 100);
+                if (randomCoins < userData.luck) {
+                    setCoins(CHEST_LUCK_SOURCE);
                 } else {
-                    setCoins(20);
+                    setCoins(CHEST_NORMAL_SOURCE);
                 }
             }
 
@@ -63,10 +54,11 @@ const RandomRewardModal = () => {
 
     const updateUserCoins = async () => {
         try {
-
+            setIsLoading(true);
             await addCoinsStatus(coins);
-            window.location.reload();
-
+            onClose();
+            setRandomNumber(false);
+            setIsLoading(false);
         } catch (error) {
             setOnError(true);
         }
@@ -81,22 +73,34 @@ const RandomRewardModal = () => {
             await api.patch<userDataProps>(`/user/coins/${_userId}`, {
                 coins: res.data.coins + value
             });
-
+            await getNewUserInfo();
         } catch (error) {
             setOnError(true);
         }
     }
 
+    const rewardModalInfo = {
+        title: "Opa! O que é isso?",
+        titleColor: colorPalette.inactiveButton,
+        subtitle: "Ao explorar a Savana você se deparou com um baú cheio de joias! Dentro dele tinha:",
+        icon: rewardOpenChest,
+        coins,
+    }
 
     useEffect(() => {
         getUser();
     }, []);
 
     return (
-        <Box width="18%" >
-            {
-                randomNumber ? (
-                    <>
+        <>
+            <Tooltip 
+                hasArrow
+                placement='top'
+                label={SURPRISE_CHEST}
+            >
+                <Box width="18%" >
+                    {
+                        randomNumber &&
                         <motion.div
                             animate={{ scale: [0.8, 1, 0.8] }}
                             transition={{ loop: Infinity }}
@@ -104,64 +108,18 @@ const RandomRewardModal = () => {
                             <Image _hover={{
                                 cursor: 'pointer',
                             }} onClick={() => { onOpen(); }} src={rewardChest} width='32rem' />
-                            <Modal isOpen={isOpen} onClose={updateUserCoins} size="4xl">
-                                <ModalOverlay />
-                                <ModalContent paddingBottom='1.5rem' >
-                                    <Box w="15%" bg={colorPalette.primaryColor} h="50vh" position="absolute" zIndex='0' right="-0.3" top="-0.2" borderTopEndRadius='5px' borderBottomStartRadius='23%' clipPath="polygon(0% 0%, 100% 0%, 100% 80%)" />
-                                    <ModalBody>
-                                        <Flex direction="column" alignItems='center' mt='1.2rem' mr='1.5rem'>
-                                            <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="4rem" color={colorPalette.secondaryColor}>
-                                                Opa! O que é isso??
-                                            </Text>
-                                            <Text fontFamily={fontTheme.fonts} fontWeight="semibold" fontSize="1.8rem" color={colorPalette.secondaryColor}>
-                                                Ao explorar a Savana você se deparou com um baú cheio de joias!
-                                            </Text>
-                                        </Flex>
-                                        <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-                                            {/* first column of modal body  */}
-                                            <Flex mt='2rem' ml='5rem' direction="column" alignItems="flex-start" width="75%">
-                                                <Text fontFamily={fontTheme.fonts} fontSize="1.7rem">Você ganhou:</Text>
-                                            </Flex>
-
-                                            <Flex ml='5rem' direction='column' marginTop='1.5rem' width='75%' >
-                                                <Flex w='50%' mt='2.5rem' ml='-5rem' justifyContent='center' alignSelf='center' alignItems='center'>
-                                                    <Image src={Coins} w='50' h='50' />
-                                                    <Text ml='1.5rem' fontSize='1.6rem'>{coins} Joias</Text>
-                                                </Flex>
-                                            </Flex>
-                                        </Flex>
-
-                                        <Flex w='48%' h="12vh" margin='auto' justifyContent="flex-end" flexDirection="column" alignItems="center">
-                                            <Button bgColor={colorPalette.primaryColor} color="white" onClick={updateUserCoins} w="100%" h="55px" borderRadius="5px" fontSize="2.5rem" fontFamily={fontTheme.fonts}>
-                                                Continuar
-                                            </Button>
-                                        </Flex>
-                                    </ModalBody>
-                                </ModalContent>
-                            </Modal>
                         </motion.div>
-                    </>
-                ) : (
-                    null
-                )
-            }
-            <AlertModal
-                isOpen={onError}
-                onClose={() => window.location.reload()}
-                alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
-
-                buttonBody={
-                    <Button
-                        color='white'
-                        bg={colorPalette.primaryColor}
-                        onClick={() => window.location.reload()}
-                    >
-                        Recarregar
-                    </Button>
-                }
+                    }
+                </Box>
+            </Tooltip>
+            <RewardModal
+            isOpen={isOpen}
+            genericModalInfo={rewardModalInfo}
+            confirmFunction={updateUserCoins}
+            error={onError}
+            loading={isLoading}
             />
-        </Box>
+        </>
     );
 }
 

@@ -1,8 +1,12 @@
-import { Flex, Center, Box, Text, Input, Button, Link } from '@chakra-ui/react';
-import React, { ChangeEventHandler, FC } from 'react';
+import { Flex, Center, Box, Text, Input, Button, Link, Image, InputGroup, InputRightElement } from '@chakra-ui/react';
+import React, { ChangeEventHandler, FC, useState } from 'react';
+import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
+import closed_eye from '../assets/icons/closed-eye.png';
+import eye from '../assets/icons/eye.png'
 
 type LoginRegisterProps = {
+    mainText: string;
     firstText: string;
     secondText?: string;
     firstPlaceholder: string;
@@ -20,9 +24,11 @@ type LoginRegisterProps = {
     forgetPasswordLink?: VoidFunction;
     validationError?: string;
     hasValidationError?: boolean;
+    loading: boolean;
 }
 
 const LoginRegister: FC<LoginRegisterProps> = ({
+    mainText,
     firstText,
     secondText,
     firstValue,
@@ -39,82 +45,158 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     forgetPasswordLink,
     buttonText,
     validationError,
-    hasValidationError
+    hasValidationError,
+    loading
 }) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const inputElement = event.target as HTMLInputElement;
+            inputElement.blur();
+            nextStep();
+        }
+    }
+
+    const renderPassword = (
+        placeholder: string,
+        type: string,
+        value: string,
+        onChange: VoidFunction,
+        loading: boolean,
+        onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void,
+        isFirstInput?: boolean
+    ) => (
+            <InputGroup display="flex" alignItems="center" w="60%" minWidth="250px" position="relative">
+                <Input
+                    width="100%"
+                    minWidth="250px"
+                    height="60px"
+                    borderColor={colorPalette.secundaryGrey}
+                    marginTop='4px'
+                    placeholder={placeholder}
+                    type={isPasswordVisible ? undefined : type}
+                    value={value}
+                    onChange={onChange}
+                    disabled={loading}
+                    onKeyDown={onKeyDown}
+                    focusBorderColor={hasValidationError && isFirstInput ? "#F47070" : "#4161ed"}
+                />
+                {
+                    type === 'password' &&
+                    <InputRightElement right="8px" top="auto">
+                        <Image
+                            onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                            zIndex={10000}
+                            _hover={{ cursor: 'pointer' }}
+                            width="28px"
+                            src={isPasswordVisible ? eye : closed_eye}
+                            alt="Mostrar senha"
+                        />
+                    </InputRightElement>
+                }
+
+            </InputGroup>
+        )
+
     return (
         <Flex
-            w='35%'
-            h='80%'
-            border='1px solid'
-            borderColor={colorPalette.inputBoder}
-            color='Black'
-            borderRadius='8px'
-            flexDirection='column'
-            align='center'
-            justifyContent='space-between'
-            marginLeft='1rem'
+            width="55%"
+            height="100vh"
+            padding="80px 0 60px 32px"
+            flexDir="column"
+            justifyContent="space-between"
+            fontFamily={fontTheme.fonts}
         >
-            <Box
-                width='90%'
-                h='93%'
-                marginTop='2.2rem'
-                fontSize={[13, 15, 18, 22]}
+            <Flex
+                flexDir="column"
             >
-                <Text w='100%'> {firstText} </Text>
-                <Input
-                    borderColor={colorPalette.inputBoder}
-                    marginTop='1rem'
-                    isInvalid={hasValidationError}
-                    focusBorderColor={hasValidationError ? "#red" : "#4161ed"}
-                    color={colorPalette.textColor}
-                    h='13%'
-                    placeholder={firstPlaceholder}
-                    type={firstInputType}
-                    value={firstValue}
-                    onChange={firstChange}
-                />
-                <Text color="red" fontSize="15"> {validationError} </Text>
+                <Flex
+                    width="100%"
+                    height="fit-content"
+                    maxHeight="200px"
+                    minH="100px"
+                    border={`2px solid ${colorPalette.secundaryGrey}`}
+                    borderRadius='8px'
+                    padding="16px 16px"
+                >
+                    <Text
+                        fontSize={{ base: "14px", md: '16px', lg: '20px' }}
+                        color={colorPalette.textColor}
+                        width="100%"
+                    >
+                        {mainText}
+                    </Text>
+                </Flex>
+                <Box marginTop="32px">
+                    <Text
+                        fontSize={{ base: "14px", md: '16px', lg: '18px' }}
+                        color={colorPalette.textColor}
+                    >
+                        {firstText}
+                    </Text>
+                    {renderPassword(
+                        firstPlaceholder as string,
+                        firstInputType as string,
+                        firstValue as string,
+                        firstChange as VoidFunction,
+                        loading,
+                        handleKeyPress,
+                        true
+                    )}
+                    <Text color="red" fontSize="15"> {validationError} </Text>
 
+                </Box>
+                <Box marginTop="16px">
+                    {secondText || secondValue || secondPlaceholder ? (
+                        <>
+                            <Text
+                                fontSize={{ base: "14px", md: '16px', lg: '18px' }}
+                                color={colorPalette.textColor}
+                            >
+                                {secondText}
+                            </Text>
+                            {renderPassword(
+                                secondPlaceholder as string,
+                                secondInputType as string,
+                                secondValue as string,
+                                secondChange as VoidFunction,
+                                loading,
+                                handleKeyPress
+                            )}
+                        </>
+                    ) : (null)}
 
-                {secondText || secondValue || secondPlaceholder ? (
-                    <>
-                        <Text marginTop='6%'> {secondText}</Text>
-                        <Input
-                            borderColor={colorPalette.inputBoder}
-                            marginTop='1rem'
-                            h='13%'
-                            placeholder={secondPlaceholder}
-                            type={secondInputType}
-                            value={secondValue}
-                            onChange={secondChange}
-                        />
-                    </>
-                ) : (null)}
+                    {forgetPassword ? (
+                        <Box display="flex" justifyContent="flex-start" marginTop='8px'>
+                            <Link
+                                color={colorPalette.linkTextColor}
+                                fontSize="1rem"
+                                textDecoration="underline"
+                                onClick={loading ? () => { return null } : forgetPasswordLink}
+                                _hover={loading ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
+                            >
+                                Esqueci minha senha
+                            </Link>
+                        </Box>) : (
+                            null
+                        )}
+                </Box>
+            </Flex>
 
-                {forgetPassword ? (
-                    <Box display="flex" justifyContent="flex-end" marginTop='0.5rem'>
-                        <Link
-                            color={colorPalette.linkTextColor}
-                            fontSize="1rem"
-                            textDecoration="underline"
-                            onClick={forgetPasswordLink}
-                        >
-                            Esqueci minha senha
-                        </Link>
-                    </Box>) : (
-                    null
-                )}
-
-            </Box>
-            <Box w='70%' h='30%'>
+            <Box w='70%' h='fit-content'>
                 <Center marginTop='1rem'>
                     <Button
                         width='100%'
-                        height='3rem'
-                        background={colorPalette.primaryColor}
+                        height='50px'
+                        background={loading ? colorPalette.neutralGray : colorPalette.primaryColor}
                         color={colorPalette.buttonTextColor}
                         fontSize='1.7rem'
                         onClick={nextStep}
+                        _hover={{}}
+                        loadingText="Enviando"
+                        isLoading={loading}
+                        spinnerPlacement='end'
                     >
                         {buttonText}
                     </Button>
@@ -122,16 +204,17 @@ const LoginRegister: FC<LoginRegisterProps> = ({
 
                 <Box display='flex' justifyContent='flex-end'>
                     <Link
-                        marginTop='0.3rem'
+                        marginTop='8px'
                         color={colorPalette.linkTextColor}
                         textDecoration='underLine'
-                        onClick={previousStep}
+                        onClick={loading ? () => { return null } : previousStep}
+                        _hover={loading ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
                     >
                         Voltar
                     </Link>
                 </Box>
             </Box>
-        </Flex>
+        </Flex >
     );
 }
 

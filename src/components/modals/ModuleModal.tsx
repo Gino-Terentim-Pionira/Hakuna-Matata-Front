@@ -10,83 +10,76 @@ import {
     Flex,
     Button,
     Text,
-    Grid,
     useDisclosure,
-    Image
+    Image,
+    Tooltip
 } from "@chakra-ui/react";
+import { useUser, useModule } from '../../hooks';
+import { AxiosResponse } from 'axios';
 
 // Components
-import QuizModal from './QuizModal';
 import LoadingState from '../LoadingState';
 import VideoModal from './VideoModal';
 import TimeModal from './TimeModal';
 import AlertModal from './AlertModal';
+import ModuleQuiz from '../Quiz/ModuleQuiz';
 
 // Requisitions
 import api from '../../services/api';
+import { verifyModuleCooldown } from '../../services/moduleCooldown';
 
 // Styles
 import fontTheme from '../../styles/base';
+import styled from 'styled-components';
 
 // Images
-import Coins from '../../assets/icons/coinicon.svg';
 import button_on from '../../assets/icons/button_on.png';
 import button_off from '../../assets/icons/button_off.png';
+import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
-
+import { errorCases } from '../../utils/errors/errorsCases';
+import VideoIcon from '../../assets/icons/video.png';
+import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/mouseOverConstants';
+import { getStatusPoints, getStatusNick } from '../../utils/statusUtils';
 
 interface IModuleModal {
     quizIndex: number;
+    top?: string;
+    bottom?: string;
+    left?: string;
+    isBlocked?: boolean;
+    blockedFunction?: VoidFunction;
+    openFinalModuleNarrative: VoidFunction;
 }
 
-interface IQuizz {
-    user_id: string;
-    _id: string
-    name: string;
-    questions_id: [{
-        _id: string,
-        description: string,
-        alternatives: string[],
-        answer: number,
-        coins: number,
-        score: number[],
-        user_id: string[]
-    }];
-    category: string;
-    dificulty: string;
-    videos_id: [{
-        user_id: string[],
-        name: string,
-        url: string,
-        nick: string,
-        _id: string,
-    }];
-    total_coins: number;
-}
+const GridContainer = styled.div`
+    display: grid;
+    margin-left: 47px;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 1100px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-bottom: 116px;
+    padding-left: 8px;
+    grid-row-gap: 40px;
+    grid-column-gap: 48px;
 
-interface IUser {
-    _id: string;
-    userName: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    birthday_date: string;
-    is_confirmed: boolean;
-    status: [number];
-    coins: number;
-    contribution: number;
-    first_certificate: string;
-    second_certificate: string;
-    quiz_coins: {
-        module1: number,
-        module2: number,
-        module3: number,
-        module4: number
+    @media (max-width: 1100px) {
+        width: 700px;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 48px;
     }
-}
 
-const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
+    @media (max-width: 780px) {
+        grid-template-columns: 1fr;
+
+        > .videoCardContainer {
+            margin: auto;
+        }
+    }
+`;
+
+const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked, blockedFunction, openFinalModuleNarrative }) => {
     //modais
     const { isOpen,
         onClose,
@@ -102,8 +95,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
 
     const { isOpen: timeIsOpen,
         onClose: timeOnClose,
-        onOpen: timeOnOpen,
-        onToggle: timeOnToggle
+        onOpen: timeOnOpen
     } = useDisclosure();
 
     const { isOpen: verificationIsOpen,
@@ -112,78 +104,50 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
         onToggle: verificationOnToggle
     } = useDisclosure();
 
-    // States
-    const [quiz, setQuiz] = useState<IQuizz>({
-        name: '',
-        questions_id: [{
-            _id: '',
-            description: '',
-            alternatives: ['', '', '', ''],
-            answer: 0,
-            coins: 0,
-            score: [0, 0, 0, 0, 0, 0],
-            user_id: ['']
-        }],
-        category: '',
-        dificulty: '',
-        videos_id: [{
-            user_id: [''],
-            name: '',
-            url: '',
-            nick: '',
-            _id: ''
-        }],
-        total_coins: 0
-    } as IQuizz);
+    const { isOpen: videoIsOpen,
+        onClose: videoOnClose,
+        onOpen: videoOnOpen,
+        onToggle: videoOnToggle
+    } = useDisclosure();
 
+
+    // States
+    const { moduleData, getNewModuleInfo } = useModule();
+    const moduleInfo = moduleData[quizIndex];
+    const { userData, getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
-    const [user, setUser] = useState<IUser>({} as IUser);
     const [buttonValidation, setButtonValidation] = useState(false);
     const [isFirstTimeChallenge, setIsFirstTimeChallenge] = useState(true);
     const [totalCoins, setTotalCoins] = useState(0);
-    const [step, setStep] = useState(0);
-    const [userQuizCoins, setUserQuizCoins] = useState(0);
     const [onError, setOnError] = useState(false);
+    const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0 });
+    const [remainingCoins, setRemainingCoins] = useState(0);
+    const [label, setLabel] = useState<string>();
+    const [image, setImage] = useState<string>();
+
+    const moduleStatusName = moduleInfo.status_requirement.status_name;
+    const userStatus = getStatusPoints(userData, moduleStatusName);
+    const moduleStatus = moduleInfo.status_requirement.points;
+    const statusRequirement = userStatus >= moduleStatus;
 
     // Metodos
-    const getQuiz = async (quizIndex: number) => {
-        try {
-            const res = await api.get('/quizz');
-            const quiz = res.data[quizIndex];
-
-            setQuiz(quiz);
-
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
-
-    const getUser = async () => {
+    const addUserIdToModule = async () => {
         try {
             const userId = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get(`/user/${userId}`);
-            setUser(res.data);
-            setUserQuizCoins(res.data.quiz_coins[quizIndex]);
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
-    const updateQuiz = async (quizId: string) => {
-        try {
-            await api.patch(`quizz/user/${quizId}`, {
-                user_id: user._id
+            await api.patch(`user/addmodule/${userId}`, {
+                module_id: moduleInfo._id
             });
+            await getNewModuleInfo();
         } catch (error) {
             setOnError(true);
         }
     }
 
     const confirmationValidation = async () => {
-        if (user) {
+        if (userData) {
             setIsLoading(true);
-            await updateQuiz(quiz._id);
+            await addUserIdToModule();
+            setIsLoading(false);
         }
         setButtonValidation(true);
     }
@@ -192,13 +156,18 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
         try {
             setIsLoading(true);
             const userId = sessionStorage.getItem('@pionira/userId');
-            const validation = await api.get(`user/loadingQuiz/${userId}`);
-            setIsLoading(false);
+            const response: AxiosResponse = await verifyModuleCooldown(userId as string, moduleInfo._id);
 
-            if (!validation.data) {
+
+            if (!response.data.validation) {
+                setIsLoading(false);
                 timeOnOpen();
             }
-            else {
+            else { // Fazer requisição de moedas faltantes aqui
+                const module_name = encodeURI(moduleInfo.module_name);
+                const coins = await api.get(`module/remainingCoins/${module_name}`);
+                setRemainingCoins(coins.data);
+                setIsLoading(false);
                 verificationOnOpen();
             }
         } catch (error) {
@@ -212,125 +181,203 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
         quizOnOpen();
     }
 
-    //UseEffects
-    useEffect(() => {
-        getUser();
-        getQuiz(quizIndex);
-    }, []);
+    const handleVideoModal = (id: string, name: string, url: string, coins: number) => {
+        setVideoInfo({ id, name, url, coins });
+        videoOnOpen();
+    }
 
-    useEffect(() => {
-        const userId = sessionStorage.getItem('@pionira/userId');
-
-        setTotalCoins(quiz.total_coins);
-
-        if (quiz.questions_id[0].user_id.includes(userId as string)) {
-            setStep(step + 1);
+    const defineProperties = () => {
+        if (isBlocked || !statusRequirement) {
+            setLabel(BLOCKED_MODULE);
+            setImage(button_blocked);
+        } else if (buttonValidation || userData.module_id?.includes(moduleInfo._id)) {
+            setLabel(COMPLETE_MODULE(moduleInfo.module_name));
+            setImage(button_on);
+        } else {
+            setLabel(INCOMPLETE_MODULE(moduleInfo.module_name));
+            setImage(button_off);
         }
-    }, [quiz])
+    }
+
+    const renderTooltip = () => {
+        if (userStatus >= moduleStatus)
+            return <>
+                <p>{label}</p>
+                {!isBlocked && <p style={{ fontWeight: 'bold', color: colorPalette.correctAnswer }}>
+                    Acesso liberado
+                </p>}
+            </>
+        else
+            return <>
+                <p>{label}</p>
+                {!isBlocked && <p>Para acessar: <span style={{ fontWeight: 'bold', color: colorPalette.closeButton }}>
+                    {'Acesso liberado'}% {getStatusNick(moduleStatusName)}
+                </span></p>}
+            </>
+    }
+
+    useEffect(() => {
+        setTotalCoins(moduleInfo.total_coins);
+        defineProperties();
+    }, [moduleInfo, statusRequirement])
 
     return (
         <>
-            <Image
-                src={buttonValidation || quiz.user_id?.includes(user._id) ? button_on : button_off}
-                onClick={onOpen}
-                _hover={{
-                    cursor: 'pointer',
-                    transform: 'scale(1.1)',
-                }}
-                transition='all 0.2s ease'
-            />
+            <Tooltip
+                hasArrow
+                placement='top'
+                gutter={12}
+                label={renderTooltip()}
 
-            <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+            >
+                <Flex
+                    position="absolute"
+                    top={top}
+                    bottom={bottom}
+                    left={left}
+                    flexDirection='column'
+                    justifyContent='center'
+                    alignItems='center'
+                >
+                    <Image
+                        src={image}
+                        onClick={isBlocked || !statusRequirement ? blockedFunction : onOpen}
+                        _hover={{
+                            cursor: 'pointer',
+                            transform: 'scale(1.1)',
+                        }}
+
+                        transition='all 0.2s ease'
+                        width={[116, null, null, null, null, 180]}
+                        height={[70, null, null, null, null, 110]}
+
+                    />
+                </Flex>
+            </Tooltip>
+
+            <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <ModalOverlay />
                 <ModalContent height="34rem" fontFamily={fontTheme.fonts}>
                     <Box
-                        w="25%"
+                        w="150px"
                         bg={colorPalette.primaryColor}
-                        h="25rem"
+                        h="100%"
                         position="absolute"
                         zIndex="-1"
                         left="0"
                         top="0"
                         borderTopStartRadius='5px'
-                        clipPath="polygon(0% 0%, 55% 0%, 0% 100%)"
                     />
                     <ModalHeader d='flex' justifyContent='center'>
-                        <Text fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{quiz.name}</Text>
+                        <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{moduleInfo.module_name}</Text>
                         <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     </ModalHeader>
 
-                    <ModalBody d='flex' mt='-1rem' flexDirection='column' alignItems='center' justifyContent='space-around' >
-
+                    <ModalBody display="flex" flexDirection='column' alignItems='center' >
                         {
                             isLoading ? (
-                                <>
+                                <Box width="100%" h="90%">
                                     <LoadingState />
-                                </>
+                                </Box>
                             ) : (
-                                <>
-                                    <Grid gridTemplateColumns='1fr 1fr' w='90%' h='19rem' overflowY='auto'>
-                                        {
-                                            quiz.videos_id.map(({ _id, user_id, name, url, nick }: {
-                                                user_id: string[],
-                                                name: string,
-                                                url: string,
-                                                nick: string
-                                                _id: string
-                                            }, index) => {
-                                                return (
-                                                    <div key={index}>
-                                                        <VideoModal id={_id} name={name} nick={nick} usersId={user_id} url={url} />
-                                                    </div>
-                                                )
-                                            })
-                                        }
+                                    <>
+                                        <GridContainer>
+                                            {
+                                                moduleInfo.videos_id.map(({ _id, name, url, description, coins }: {
+                                                    name: string,
+                                                    url: string,
+                                                    description: string,
+                                                    _id: string,
+                                                    coins: number
+                                                }) => {
+                                                    return (
+                                                        <Flex
+                                                            className='videoCardContainer'
+                                                            width="297px"
+                                                            height="334px"
+                                                            borderRadius="8px"
+                                                            flexDir="column"
+                                                            boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
+                                                            bg={"#FEFEFE"}
+                                                            onClick={() => handleVideoModal(_id, name, url, coins)}
+                                                            transition="ease 200ms"
+                                                            _hover={{
+                                                                cursor: 'pointer',
+                                                                opacity: '0.8'
+                                                            }}
+                                                            key={_id}
+                                                        >
+                                                            <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="147px" bg={colorPalette.textColor}>
+                                                                <Image height='59px' src={VideoIcon} alt="Icone de video" />
+                                                            </Flex>
+                                                            <Flex flexDir="column" paddingX="16px" marginTop="24px">
+                                                                <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
+                                                                    {name}
+                                                                </Text>
+                                                                <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
+                                                                    {description}
+                                                                </Text>
+                                                                {
+                                                                    userData?.video_id.includes(_id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
+                                                                        Já assistido
+                                                                    </Text>
+                                                                }
 
-                                        <Flex opacity='0'>.</Flex>
-                                    </Grid>
-                                </>
-                            )
+                                                            </Flex>
+                                                        </Flex>
+                                                    )
+                                                })
+                                            }
+                                        </GridContainer>
+                                    </>
+                                )
                         }
-
-                        <Flex justifyContent="flex-end" w='100%' >
-                            <Flex justifyContent="space-between" w='65%' alignItems='center'>
-                                <Button
-                                    bgColor={colorPalette.confirmButton}
-                                    width="50%"
-                                    height="4rem"
-                                    onClick={() => handleModal()}
+                        {
+                            !isLoading && <Button
+                                display="Button"
+                                justifyContent="center"
+                                alignItems="center"
+                                boxShadow="5px 5px 5px rgba(0, 0, 0, 0.25)"
+                                margin="auto"
+                                bottom="56px"
+                                position='absolute'
+                                bg={colorPalette.progressOrange}
+                                width="330px"
+                                height="65px"
+                                borderRadius="16px"
+                                _hover={{
+                                    transform: 'scale(1.05)',
+                                }}
+                                onClick={() => handleModal()}
+                            >
+                                <Text
+                                    fontFamily={fontTheme.fonts}
+                                    fontSize="30px"
+                                    color={colorPalette.textColor}
                                 >
-                                    <Text
-                                        fontFamily={fontTheme.fonts}
-                                        fontWeight="semibold"
-                                        fontSize="2rem"
-                                    >
-                                        Ir para o desafio!
-                                    </Text>
-                                </Button>
-                                <Flex mr='1rem' alignItems='center' fontWeight='bold' fontSize='1.3rem' >
-                                    <Image src={Coins} mr='0.5rem' /> {userQuizCoins}/{totalCoins}
-                                </Flex>
-                            </Flex>
-                        </Flex>
-
+                                    Ir para o desafio!
+                                </Text>
+                            </Button>
+                        }
                     </ModalBody>
                 </ModalContent >
             </Modal >
 
             {
-                quiz ? <QuizModal
+                moduleInfo ? <ModuleQuiz
                     openModal={quizIsOpen}
                     closeModal={quizOnClose}
-                    quiz={quiz}
+                    moduleInfo={moduleInfo}
                     onToggle={quizToggle}
                     firsTimeChallenge={isFirstTimeChallenge}
                     validateUser={confirmationValidation}
-                    userQuizCoins={userQuizCoins}
-                    quizIndex={quizIndex}
+                    userQuizCoins={totalCoins - remainingCoins}
+                    remainingCoins={remainingCoins}
+                    openFinalModuleNarrative={openFinalModuleNarrative}
                 /> : null
             }
 
-            <TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} timeOnToggle={timeOnToggle} />
+            <TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} />
 
             <Modal isOpen={verificationIsOpen} onClose={verificatioOnClose} size='3xl' >
                 <ModalOverlay />
@@ -352,11 +399,11 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
 
                     <ModalBody d='flex' w='80%' flexDirection='column' justifyContent='space-evenly'>
                         {
-                            buttonValidation || quiz.user_id?.includes(user._id) ? (
+                            buttonValidation || userData.module_id?.includes(moduleInfo._id) ? (
                                 <>
                                     <div>
                                         {
-                                            userQuizCoins === totalCoins ? (
+                                            remainingCoins == 0 ? ( // Mudar essa comparação já que o usuário não terá mais esse atributo
                                                 <>
                                                     <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
                                                         Voce já provou por completo seu valor nesse desafio!
@@ -369,18 +416,18 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
                                                     </Text>
                                                 </>
                                             ) : (
-                                                <>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
-                                                        Ainda faltam joias para se conquistar!
+                                                    <>
+                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
+                                                            Ainda faltam Joias para se conquistar!
                                                     </Text>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.1rem' marginTop='0.2rem'>
-                                                        Deseja realizar o desafio novamente?
+                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.1rem' marginTop='0.2rem'>
+                                                            Deseja realizar o desafio novamente?
                                                     </Text>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
-                                                        Joias restantes {totalCoins - userQuizCoins}
-                                                    </Text>
-                                                </>
-                                            )
+                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
+                                                            Joias restantes {remainingCoins}
+                                                        </Text>
+                                                    </>
+                                                )
                                         }
                                     </div>
                                     <Flex justifyContent='space-around'>
@@ -388,7 +435,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
                                             setIsFirstTimeChallenge(false);
                                             closeConfirmationModal();
                                         }}>
-                                            realizar desafio denovo!
+                                            Realizar desafio denovo!
                                         </Button>
                                         <Button h='3.5rem' w='45%' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
                                             Voltar!
@@ -396,20 +443,20 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
                                     </Flex>
                                 </>
                             ) : (
-                                <>
-                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='1rem'>
-                                        Está preparado para responder o desafio desse video?
+                                    <>
+                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='1rem'>
+                                            Está preparado para responder o desafio desse módulo?
                                     </Text>
-                                    <Flex justifyContent='space-around'>
-                                        <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => closeConfirmationModal()}>
-                                            Sim, estou pronto!
+                                        <Flex justifyContent='space-around'>
+                                            <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => closeConfirmationModal()}>
+                                                Sim, estou pronto!
                                         </Button>
-                                        <Button h='3.5rem' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
-                                            Não, não estou pronto!
+                                            <Button h='3.5rem' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
+                                                Não, não estou pronto!
                                         </Button>
-                                    </Flex>
-                                </>
-                            )
+                                        </Flex>
+                                    </>
+                                )
                         }
                     </ModalBody>
                 </ModalContent>
@@ -418,7 +465,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
                 isOpen={onError}
                 onClose={() => window.location.reload()}
                 alertTitle='Ops!'
-                alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+                alertBody={errorCases.SERVER_ERROR}
 
                 buttonBody={
                     <Button
@@ -429,6 +476,16 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex }) => {
                         Recarregar
                     </Button>
                 }
+            />
+            <VideoModal
+                id={videoInfo.id}
+                name={videoInfo.name}
+                url={videoInfo.url}
+                coins={videoInfo.coins}
+                videoIsOpen={videoIsOpen}
+                videoOnClose={videoOnClose}
+                videoOnToggle={videoOnToggle}
+                updateQuiz={getNewUserInfo}
             />
         </>
     );

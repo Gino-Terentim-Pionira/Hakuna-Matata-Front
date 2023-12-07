@@ -3,6 +3,7 @@ import LoginRegister from '../components/LoginRegister';
 import { useHistory } from 'react-router-dom';
 import { CreateUser } from '../services/createUser';
 import { useAuth } from '../contexts/authContext';
+import { errorCases } from '../utils/errors/errorsCases';
 import {
     Flex,
     Center,
@@ -10,6 +11,7 @@ import {
     Image,
     Button,
 } from '@chakra-ui/react';
+import { validatePassword } from '../utils/validates';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -19,7 +21,9 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import monkey from '../assets/sprites/monkey/monkeyHappy.png';
+import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
+import axios from 'axios';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 
 const Register = () => {
 
@@ -34,11 +38,18 @@ const Register = () => {
     const [formConfirmPassword, setFormConfirmPassword] = useState('');
     const [validationError, setValidationError] = useState('');
     const [hasValidationError, setHasValidationError] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-    const onClose = () => setIsConfirmOpen(false);
+    const [alertModal, setAlertModal] = useState({
+        isOpen: false,
+        alertAnswer: '',
+        action: () => console.log(),
+    });
     const cancelRef = useRef<HTMLButtonElement>(null);
-    const [alertAnswer, setAlertAnswer] = useState('');
+    const onClose = () => setAlertModal({
+        ...alertModal,
+        isOpen: false
+    });
 
     const history = useHistory();
 
@@ -50,6 +61,55 @@ const Register = () => {
         }
     }, [authenticated]);
 
+    const ERROR_TYPES: {
+        [key: string]: {
+            label: string,
+            action: VoidFunction
+        }
+    } = {
+        'SMALL_PASSWORD_ERROR': {
+            label: errorCases.SMALL_PASSWORD_ERROR,
+            action: onClose
+        },
+        'INVALID_NAME_ERROR': {
+            label: errorCases.INVALID_NAME_ERROR,
+            action: onClose
+        },
+        'INVALID_EMAIL_ERROR': {
+            label: errorCases.INVALID_EMAIL_ERROR,
+            action: onClose,
+        },
+        'DIFFERENT_PASSWORDS_ERROR': {
+            label: errorCases.DIFFERENT_PASSWORDS_ERROR,
+            action: onClose
+        },
+        'MISSING_FIELDS_ERROR': {
+            label: errorCases.MISSING_FIELDS_ERROR,
+            action: onClose
+        },
+        'SENDING_EMAIL_PROBLEM_ERROR': {
+            label: errorCases.SENDING_EMAIL_PROBLEM_ERROR,
+            action: onClose
+        },
+        'DUPLICATE_EMAIL_ERROR': {
+            label: errorCases.DUPLICATE_EMAIL_ERROR,
+            action: () => { setStep(2); onClose() }
+        },
+        'SUCCESS_CASE_REGISTER': {
+            label: errorCases.SUCCESS_CASE_REGISTER,
+            action: () => history.push('/login')
+        }
+    };
+
+    const handleAlertModal = (erroType: string) => {
+        setAlertModal({
+            ...alertModal,
+            isOpen: !alertModal.isOpen,
+            alertAnswer: ERROR_TYPES[erroType].label,
+            action: ERROR_TYPES[erroType].action
+        })
+    }
+
     const lastIndexValidation = (name: string[]) => {
         for (let i = 1; i <= name.length; i++) {
             const last = name.length - i;
@@ -58,25 +118,13 @@ const Register = () => {
             }
         }
     }
-    // Declara os metodos que vai rotacionar os steps
-    const validatePassword = () => {
-        if (formPassword.length < 6) {
-            setValidationError("Senha muito pequena");
-            setHasValidationError(true);
-            return true;
-        } else {
-            setValidationError('');
-            setHasValidationError(false);
-            return false;
-        }
-    }
 
     const validateName = () => {
         const firstname = formName.split(' ');
         const lastname = lastIndexValidation(firstname) as string;
 
         if (firstname[0] === lastname || lastname === ' ') {
-            setValidationError("Escreva um nome válido");
+            setValidationError("Preencha com seu nome completo");
             setHasValidationError(true);
             return true;
         } else {
@@ -126,16 +174,20 @@ const Register = () => {
     }
 
     const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setFormPassword(event.target.value);
-        validatePassword();
+        const currentPassword = event.target.value as string;
+        setFormPassword(currentPassword);
+        const res = validatePassword(currentPassword);
+        setValidationError(res.message);
+        setHasValidationError(res.validate);
     }
 
     const nextStep = async () => {
         if (step == 3) {
-            const invalidPassword = validatePassword();
-            if (formConfirmPassword && formPassword && !invalidPassword) {
+            const { validate } = validatePassword(formPassword);
+            if (formConfirmPassword && formPassword && !validate) {
                 if (formPassword === formConfirmPassword) {
                     try {
+                        setIsLoading(true);
                         const name = formName.split(' ');
                         let lastName = name[1];
 
@@ -147,20 +199,21 @@ const Register = () => {
 
                         await CreateUser(name[0], lastName, formEmail, formPassword, formDate, formUserName);
 
-                        setAlertAnswer('Prontinho, agora a Savana possui o seu cadastro. Por favor cheque o seu email para confirmá-lo!');
-                        setIsConfirmOpen(true);
+                        handleAlertModal('SUCCESS_CASE_REGISTER');
 
                     } catch (err) {
-                        setAlertAnswer(err.response.data.message);
-                        setIsConfirmOpen(true);
+                        if (axios.isAxiosError(err)) {
+                            if (err.response) {
+                                handleAlertModal(err.response.data.message);
+                                setIsLoading(false);
+                            }
+                        }
                     }
                 } else {
-                    setAlertAnswer("Por favor, coloque as mesmas senhas");
-                    setIsConfirmOpen(true);
+                    handleAlertModal('DIFFERENT_PASSWORDS_ERROR');
                 }
             } else {
-                setAlertAnswer('Calma aí, viajante. Parece que você não preencheu todos os campos corretamente!');
-                setIsConfirmOpen(true);
+                handleAlertModal('MISSING_FIELDS_ERROR');
             }
 
         } else if (step == 2) {
@@ -170,8 +223,7 @@ const Register = () => {
             if (formEmail && formDate && !invalidName) {
                 setStep(step + 1);
             } else {
-                setAlertAnswer("Calma aí, viajante. Parece que você não preencheu todos os campos corretamente!");
-                setIsConfirmOpen(true);
+                handleAlertModal('MISSING_FIELDS_ERROR');
                 setHasValidationError(true);
             }
 
@@ -182,8 +234,7 @@ const Register = () => {
             if (formName && formUserName && !invalidName) {
                 setStep(step + 1);
             } else {
-                setAlertAnswer("Calma aí, viajante. Parece que você não preencheu todos os campos corretamente!");
-                setIsConfirmOpen(true);
+                handleAlertModal('MISSING_FIELDS_ERROR');
                 setHasValidationError(true);
             }
 
@@ -205,24 +256,12 @@ const Register = () => {
             fontFamily={fontTheme.fonts}
             fontWeight='regular'
         >
-            <Box w="40%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' left="0" top="0" clipPath="polygon(0% 0%, 85% 0, 40% 100%, 0 100%)"></Box>
-            <Center width='100%' >
-                <Box
-                    display='flex'
-                    alignItems='center'
-                    w='40%'
-                    h='90%'
-                    zIndex='1'
-                    backgroundColor='transparent'
-                    marginLeft='3rem'
-                >
-                    <Image w='100%' src={monkey} alt='Image' />
-                </Box>
-
+            <Center width='100%'>
                 {step === 1 ? (
                     <LoginRegister
-                        firstText="Vejo que temos um novo aventureiro por aqui, antes de começarmos nossa aventura, gostaria de saber quem é você, caro viajante?"
-                        secondText="E como você gostaria de ser chamado?"
+                        mainText='Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, jovem.'
+                        firstText="”Qual é o seu nome, jovem?”"
+                        secondText="”E como você gostaria de ser chamado dentro da savana?”"
                         firstPlaceholder="Nome Completo"
                         secondPlaceholder="Nome de Usuário"
                         nextStep={() => nextStep()}
@@ -236,12 +275,14 @@ const Register = () => {
                         buttonText="Próximo"
                         validationError={validationError}
                         hasValidationError={hasValidationError}
+                        loading={false}
                     />
 
                 ) : step === 2 ? (
                     <LoginRegister
-                        firstText="Poderia me falar seu endereço de e-mail? Nós da Savana precisamos de um meio para te contatar!"
-                        secondText="Queria saber também, que ano e dia você nasceu?"
+                        mainText='Agora preciso de outras informações adicionais. Não sei o que é isso, mas a sabedoria da Savana está me pedindo o seu e-mail.'
+                        firstText="”Qual é o seu e-mail, jovem?”"
+                        secondText="”Queria saber também qual a sua data de nascimento?”"
                         firstPlaceholder="Endereço de e-mail"
                         secondPlaceholder="Data de Nascimento"
                         nextStep={() => nextStep()}
@@ -255,11 +296,13 @@ const Register = () => {
                         buttonText="Próximo"
                         validationError={validationError}
                         hasValidationError={hasValidationError}
+                        loading={false}
                     />
                 ) : step === 3 ? (
                     <LoginRegister
-                        firstText="Agora vamos colocar uma senha secreta para permitir sua entrada na savana"
-                        secondText="Não ouvi muito bem, poderia repeti-lá?"
+                        mainText='Por último, precisamos definir uma senha para permitir a sua entrada na Savana. Lembre-se que não pode ser uma senha fácil de adivinhar, não queremos invasores na Savana.'
+                        firstText="”Qual é a sua senha, jovem?”"
+                        secondText="”Não entendi muito bem, poderia repeti-la?”"
                         firstPlaceholder="Senha"
                         secondPlaceholder="Confirmar senha"
                         nextStep={() => nextStep()}
@@ -273,6 +316,7 @@ const Register = () => {
                         buttonText="Próximo"
                         validationError={validationError}
                         hasValidationError={hasValidationError}
+                        loading={isLoading}
                     />
                 ) : (
                     <div>Você não devia estar aqui, chapa!</div>
@@ -280,57 +324,47 @@ const Register = () => {
 
                 {(step === 3 && !hasValidationError) ? (
                     <AlertModal
-                        isOpen={isConfirmOpen}
+                        isOpen={alertModal.isOpen}
                         onClose={onClose}
-                        alertTitle='Cadastro de Usuário'
-                        alertBody={alertAnswer}
-                        onClickClose={
-                            () => {
-                                onClose();
-                            }
-                        }
+                        alertTitle='Criação do Passaporte'
+                        alertBody={alertModal.alertAnswer}
+                        onClickClose={() => onClose()}
                         buttonBody={
                             <Button
                                 ref={cancelRef}
                                 color='white'
                                 bg={colorPalette.primaryColor}
-                                onClick={() => {
-                                    history.push('/');
-                                }}
+                                onClick={alertModal.action}
                             >
-                                Continuar
+                                {GENERIC_MODAL_TEXT}
                             </Button>
                         }
                     />
                 ) : (
 
                     <AlertModal
-                        isOpen={isConfirmOpen}
+                        isOpen={alertModal.isOpen}
                         onClose={onClose}
-                        alertTitle='Cadastro de Usuário'
-                        alertBody={alertAnswer}
-                        onClickClose={
-                            () => {
-                                onClose();
-                            }
-                        }
+                        alertTitle='Criação do Passaporte'
+                        alertBody={alertModal.alertAnswer}
+                        onClickClose={() => onClose()}
                         buttonBody={
                             <Button
                                 ref={cancelRef}
                                 color='white'
                                 bg={colorPalette.primaryColor}
-                                onClick={() => {
-                                    onClose();
-                                }}
+                                onClick={alertModal.action}
                             >
-                                Continuar
+                                {GENERIC_MODAL_TEXT}
                             </Button>
                         }
                     />
                 )}
-
+                <Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
+                <Box w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
             </Center>
         </Flex>
+
     );
 }
 

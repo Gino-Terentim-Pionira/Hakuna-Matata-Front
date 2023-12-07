@@ -2,12 +2,13 @@ const colorPalette = {
     primaryColor: '#EDA641',
     backgroundColor: '#FFFFFF',
     backgroundGrey: '#F6F6F6',
+    secundaryGrey: '#9D9D9D',
     greyText: '#646464',
     inactiveButton: '#6D99F2',
     secondaryColor: '#0B67A1',
     confirmButton: '#FCBF49',
     inputBoder: '#EDA641',
-    textColor: '#000000',
+    textColor: '#4a4a4a',
     infoTextColor: '#757575',
     subtitleColor: '#3A3A3A',
     buttonTextColor: '#FFFFFF',
@@ -20,6 +21,14 @@ const colorPalette = {
     backgroundHighlight: '#F5F5F5',
     detailsPremium: '#232323',
     descriptionText: '#646464',
+    neutralGray: '#999',
+    grayBackground: '#D9D9D9',
+    blackBorder: '#4A4A4A',
+    progressOrange: '#F0C05D',
+    whiteText: '#FEFEFE',
+    darkGrey: '#999999',
+    alertText: '#F47070',
+    gold: '#F2CB05'
 }
 
 export default colorPalette;

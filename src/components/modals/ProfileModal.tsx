@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, ReactElement } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -9,17 +9,22 @@ import {
     ModalCloseButton,
     Flex,
     Button,
-    Text
+    Text,
+    Image
 } from "@chakra-ui/react";
 
 // Components
-import InsigniaCertificate from '../InsigniaCertificate';
+import InsigniaCertificate from '../BadgeComponents/InsigniaCertificate';
 import ProfileDataModal from './ProfileDataModal';
 import PerfilModalButton from '../PerfilModalButton';
-import ProgressionStatusModal from './ProgressionStatusModal';
+import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusModal';
 
 //styles
 import colorPalette from '../../styles/colorPalette';
+
+// Images
+import WorldMap from '../../assets/WorldMap.png';
+import ApprovedIcon from '../../assets/icons/ApprovedIcon.png';
 
 type ProfileModalProps = {
     isOpen: boolean,
@@ -58,11 +63,30 @@ const ProfileModal: FC<ProfileModalProps> = ({
         }
     }, [width]);
 
+    const renderBackgroundImage = (component: ReactElement, notShowStamp?: boolean) => (
+        <Box
+            position="relative"
+            bgColor="#FFFCEA"
+            bgImage={`url(${WorldMap})`}
+            bgPosition="top"
+            bgRepeat="no-repeat"
+            h='97%' w='100%' borderRadius='8px'
+            border='2px solid'
+            borderColor={colorPalette.secondaryColor}
+            boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'
+        >
+            {component}
+            {
+                !notShowStamp && <Image bottom="16px" right="32px" position="absolute" src={ApprovedIcon} />
+            }
+        </Box>
+    )
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size={variant}>
             <ModalOverlay />
-            <ModalContent height='80%' bg={colorPalette.backgroundColor}>
-                <Box w="85%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' left="0" top="0" borderTopStartRadius='5px' borderBottomStartRadius='23%' clipPath="polygon(0% 0%, 100% 0%, 30% 80%, 0% 80%)"></Box>
+            <ModalContent height='80%' maxH="600px" bg={colorPalette.backgroundColor}>
+                <Box w="25%" bg={colorPalette.primaryColor} h="100%" position="absolute" zIndex='0' left="0" top="0"></Box>
                 <ModalHeader margin-top='1rem'>
                     <Flex justifyContent='space-around'>
                         {step === 1 ? (
@@ -115,10 +139,7 @@ const ProfileModal: FC<ProfileModalProps> = ({
                                 onClick={() => setStep(3)}
                             >
                                 <Text fontSize='1.5rem'>
-                                    Insígnias e
-                                </Text>
-                                <Text fontSize='1.5rem'>
-                                    Certificados
+                                    Insígnias
                                 </Text>
                             </Button>
                         ) : (
@@ -129,25 +150,11 @@ const ProfileModal: FC<ProfileModalProps> = ({
                 <ModalCloseButton />
                 <ModalBody zIndex='1'>
                     {step === 1 ? (
-                        <Box bg={colorPalette.backgroundColor} h='97%' w='100%' borderRadius='8px' border='2px solid' borderColor={colorPalette.secondaryColor} boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'>
-                            <ProgressionStatusModal />
-                        </Box>
+                        renderBackgroundImage(<ProgressionStatusModal />, true)
                     ) : step === 2 ? (
-                        <Box bg={colorPalette.backgroundColor} h='97%' w='100%' borderRadius='8px' border='2px solid' borderColor={colorPalette.secondaryColor} boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'>
-                            <ProfileDataModal />
-                        </Box>
+                        renderBackgroundImage(<ProfileDataModal />)
                     ) : (
-                        <Box
-                            bg={colorPalette.backgroundColor}
-                            h='97%'
-                            w='100%'
-                            borderRadius='8px'
-                            border='2px solid'
-                            borderColor={colorPalette.secondaryColor}
-                            boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'
-                        >
-                            <InsigniaCertificate />
-                        </Box>
+                        renderBackgroundImage(<InsigniaCertificate />)
                     )}
                 </ModalBody>
             </ModalContent>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import api from './api';
 
 export async function SignIn(email: string, password: string) {
@@ -8,6 +9,10 @@ export async function SignIn(email: string, password: string) {
         });
         return res.data;
     } catch (error) {
-        return error.response.data.error;
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                return error.response.data.error;
+            }
+        }
     }
 }

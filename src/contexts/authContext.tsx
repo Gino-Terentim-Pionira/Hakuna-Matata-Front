@@ -28,7 +28,6 @@ export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
     const _userId = sessionStorage.getItem('@pionira/userId');
 
     if (token && _userId) {
-      api.defaults.headers.Authorization = `Bearer ${token}`;
       setAuthenticated(true);
       setUserId(_userId);
     } else {
@@ -44,7 +43,6 @@ export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
     }
     sessionStorage.setItem('@pionira/token', result.token);
     sessionStorage.setItem('@pionira/userId', result.user.id);
-    api.defaults.headers.Authorization = `Bearer ${result.token}`;
     setAuthenticated(true);
     setUserId(result.user.id);
     history.push('/mainPage');

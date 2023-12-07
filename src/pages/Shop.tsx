@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
 import { Button, Center, Image, SimpleGrid } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import { useUser } from '../hooks';
+import usePath from '../hooks/usePath';
 
 // Components
-import LoadingState from '../components/LoadingState';
 import ShopItem from '../components/shopItem';
 import AlertModal from '../components/modals/AlertModal';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
 import api from '../services/api';
@@ -16,39 +18,44 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import sidearrow from '../assets/icons/sidearrow.png';
 import icon_inventory from '../assets/icons/icon_inventory.svg';
+import { errorCases } from '../utils/errors/errorsCases';
+import BackButton from '../components/BackButton';
+import { getStatusPoints } from '../utils/statusUtils';
 
 const Shop = () => {
+	const { handleBack } = usePath();
+	const { getNewUserInfo, userData } = useUser();
 	const [shopItem, setShopItem] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
 	const [onError, setOnError] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const history = useHistory();
 
 	const getShopItens = async () => {
 		try {
+			if (Object.keys(userData).length == 0) {
+				await getNewUserInfo();
+			}
 			const res = await api.get('/shopItem/');
 			const userId = sessionStorage.getItem('@pionira/userId');
 			const userIdString = '' + userId;
 			setShopItem(res.data);
 			setCurrentUserId(userIdString);
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
 	};
 
 	const goToInventory = async () => {
-		try {
-			const userId = sessionStorage.getItem('@pionira/userId');
-			history.push(`/inventory/${userId}`);
-		} catch (error) {
-			setOnError(true);
-		}
+		const userId = sessionStorage.getItem('@pionira/userId');
+		history.push(`/inventory/${userId}`);
 	}
 
 	const goBack = () => {
-		history.push('/');
+		handleBack();
 	};
 
 	useEffect(() => {
@@ -79,18 +86,8 @@ const Shop = () => {
 				alignItems='center'
 				justifyContent='center'
 			>
-				<Image
-					w='3rem'
-					transition='all 150ms ease'
-					_hover={{
-						cursor: 'pointer',
-						transform: 'scale(1.2)'
-					}}
+				<BackButton 
 					onClick={goBack}
-					src={sidearrow}
-					alt='sidearrow'
-					zIndex='2'
-					ml='2rem'
 				/>
 				<Spacer />
 				<Text
@@ -131,9 +128,11 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{shopItem.length > 0 ? (
+			{isLoading ? (
+				<LoadingOverlay />
+			) : (
 				<>
-					<SimpleGrid zIndex='2' w='72%' columns={3} overflowY='auto' mt='2rem'>
+					<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
 						{shopItem.map(
 							({
 								_id,
@@ -141,39 +140,45 @@ const Shop = () => {
 								value,
 								description,
 								type,
-								user_id,
+								status_requirement
 							}: {
-								user_id: Array<string>;
 								_id: string;
 								name: string;
 								value: number;
 								description: string;
 								type: string;
+								status_requirement: {
+									status_name: string;
+									points: number;
+								}
 							}) => {
-								return (
-									<ShopItem
-										key={_id}
-										_id={_id}
-										current_user_id={currentUserId}
-										users_id={user_id}
-										name={name}
-										value={value}
-										description={description}
-										type={type}
-									/>
-								);
+								if (!userData?.items_id?.includes(_id)) {
+									return (
+										<ShopItem
+											key={_id}
+											_id={_id}
+											current_user_id={currentUserId}
+											items_id={userData.items_id}
+											userCoins={userData.coins}
+											name={name}
+											value={value}
+											description={description}
+											type={type}
+											userStatus={getStatusPoints(userData, status_requirement.status_name)}
+											itemStatus={status_requirement}
+										/>
+									);
+								}
 							},
 						)}
 					</SimpleGrid>
 				</>
-			) : (
-				<LoadingState />
 			)}
 			<AlertModal
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 
 				buttonBody={
 					<Button

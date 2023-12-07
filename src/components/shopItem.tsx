@@ -7,6 +7,7 @@ import {
 	Text,
 	Slide,
 	useDisclosure,
+	Tooltip,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ import AlertModal from './modals/AlertModal';
 
 // Requisitions
 import api from '../services/api';
+import { resetAllCooldown } from '../services/moduleCooldown';
 
 // Styles
 import fontTheme from '../styles/base';
@@ -26,15 +28,25 @@ import hourglassicon from '../assets/icons/hourglass_icon.png';
 import cardicon from '../assets/icons/shop2.svg';
 import coinicon from '../assets/icons/coinicon.svg';
 import confirmicon from '../assets/icons/confirmicon.png';
+import { errorCases } from '../utils/errors/errorsCases';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
+import { NOT_ENOUGH_STATUS } from '../utils/constants/mouseOverConstants';
+import { getStatusNick, getStatusColor } from '../utils/statusUtils';
 
 type ShopItemProps = {
 	current_user_id: string;
-	users_id: Array<string>;
 	_id: string;
 	name: string;
 	value: number;
 	description: string;
 	type: string;
+	items_id: string[];
+	userCoins: number;
+	userStatus: number;
+	itemStatus: {
+		status_name: string;
+		points: number;
+	};
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -43,8 +55,11 @@ const ShopItem: FC<ShopItemProps> = ({
 	value,
 	description,
 	type,
-	users_id,
 	current_user_id,
+	items_id,
+	userCoins,
+	userStatus,
+	itemStatus
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
@@ -52,6 +67,9 @@ const ShopItem: FC<ShopItemProps> = ({
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const [isAlert, setIsAlert] = useState(false);
 	const [onError, setOnError] = useState(false);
+	const [loading, setLoaging] = useState(false);
+
+	const statusRequirement = userStatus >= itemStatus.points;
 
 	const onClose = () => {
 		setIsConfirmOpen(false);
@@ -70,30 +88,30 @@ const ShopItem: FC<ShopItemProps> = ({
 		onToggle();
 	};
 
+	const itemType: { [key: string]: string } = {
+		"item1": "E-books",
+		"item2": "Utilitários",
+		"item3": "Especiais"
+	}
+
 	const buyItem = async () => {
-		setIsConfirmOpen(false);
+		setLoaging(true);
 		// then make buying logic
 		try {
-			const user = await api.get(`/user/${current_user_id}`);
-			const userCoins = user.data.coins;
-			if (!users_id.includes(current_user_id) && userCoins >= value) {
-				users_id.push(current_user_id);
+			if (!items_id.includes(_id) && userCoins >= value) {
 				const newCoins = userCoins - value;
 
 				if (type === "item3") {
 					try {
 
-						await api.patch(`/user/loadingQuiz/${current_user_id}`, {
-							quiz_loading: "",
-						});
+						await resetAllCooldown(current_user_id);
 
 						await api.patch(`/user/coins/${current_user_id}`, {
 							coins: newCoins,
 						});
 
+						setLoaging(false);
 						setAlertAnswer('Parabéns! Seu tempo de espera foi zerado!');
-						console.log();
-						setIsConfirmOpen(true);
 						setIsAlert(true);
 					} catch (error) {
 						setOnError(true);
@@ -101,16 +119,16 @@ const ShopItem: FC<ShopItemProps> = ({
 				} else {
 					try {
 
-						await api.patch(`/shopitem/${_id}`, {
-							user_id: users_id,
+						await api.patch(`/user/additem/${current_user_id}`, {
+							item_id: _id,
 						});
 
 						await api.patch(`/user/coins/${current_user_id}`, {
 							coins: newCoins,
 						});
 
+						setLoaging(false);
 						setAlertAnswer('Parabéns! Seu item foi comprado com sucesso!');
-						setIsConfirmOpen(true);
 						setIsAlert(true);
 					} catch (error) {
 						setOnError(true);
@@ -145,8 +163,8 @@ const ShopItem: FC<ShopItemProps> = ({
 				transform={show ? `scale(1.05)` : ' '}
 				transition='150ms cubic-bezier(.38, .5, .5, 1.5)'
 			>
-				<Box 
-					maxHeight='300px' 
+				<Box
+					maxHeight='300px'
 					justifySelf='flex-start'
 					maxWidth='300px'
 				>
@@ -155,7 +173,8 @@ const ShopItem: FC<ShopItemProps> = ({
 							<Image
 								maxWidth='300px'
 								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}								
+								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+								minW="190px"
 								w='100%'
 								h='18.75rem'
 								mt='0.5rem'
@@ -167,36 +186,38 @@ const ShopItem: FC<ShopItemProps> = ({
 							/>
 						</Box>
 					) : (
-						type === 'item2' ? (
-							<Image
-								maxWidth='300px'
-								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}								
-								w='100%'
-								h='18.75rem'
-								mt='0.5rem'
-								src={bookicon}
-								alt='bookicon'
-								padding='5rem 3.5rem'
-								mb='1rem'
-								borderRadius='7.5%'
-							/>
-						) : (
-							<Image
-								maxWidth='300px'
-								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
-								w='100%'
-								h='18.75rem'
-								mt='0.5rem'
-								src={cardicon}
-								alt='cardicon'
-								padding='5rem 5rem'
-								mb='1rem'
-								borderRadius='7.5%'
-							/>
-						)
-					)}
+							type === 'item2' ? (
+								<Image
+									maxWidth='300px'
+									transition='50ms'
+									bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+									minW="190px"
+									w='100%'
+									h='18.75rem'
+									mt='0.5rem'
+									src={bookicon}
+									alt='bookicon'
+									padding='5rem 3.5rem'
+									mb='1rem'
+									borderRadius='7.5%'
+								/>
+							) : (
+									<Image
+										maxWidth='300px'
+										transition='50ms'
+										bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+										minW="190px"
+										w='100%'
+										h='18.75rem'
+										mt='0.5rem'
+										src={cardicon}
+										alt='cardicon'
+										padding='5rem 5rem'
+										mb='1rem'
+										borderRadius='7.5%'
+									/>
+								)
+						)}
 				</Box>
 				<Flex
 					flexDirection='column'
@@ -219,7 +240,7 @@ const ShopItem: FC<ShopItemProps> = ({
 						color={colorPalette.infoTextColor}
 						mb='0.3rem'
 					>
-						Tipo: {type}
+						Tipo: {itemType[type as string]}
 					</Text>
 					<Box display='flex' flexDirection='row'>
 						<Text
@@ -238,7 +259,7 @@ const ShopItem: FC<ShopItemProps> = ({
 					</Box>
 				</Flex>
 			</Flex>
-			{show ? (
+			{show && (
 				<Slide direction='bottom' in={isOpen} style={{ zIndex: 10 }}>
 					<Box onClick={showDescription} w='100%' h='100vh' />
 					<Flex
@@ -282,13 +303,13 @@ const ShopItem: FC<ShopItemProps> = ({
 							marginLeft='1.5rem'
 							justifyContent='space-between'
 						>
-							<Flex flexDirection='column' w='60%'>
+							<Flex flexDirection='column' w='80%'>
 								<Text
 									fontSize={['0.5rem', '1.2rem', '1.5rem']}
 									w='60%'
 									fontWeight='semibold'
 									textAlign='left'
-									mb='0.5rem'
+									mb='8px'
 								>
 									{name}
 								</Text>
@@ -296,77 +317,123 @@ const ShopItem: FC<ShopItemProps> = ({
 									fontSize={['0.3rem', '0.8rem', '1rem']}
 									fontWeight='regular'
 									textAlign='left'
+									overflow="auto"
+									maxH="160px"
 								>
 									{description}
 								</Text>
 							</Flex>
 							<Flex flexDirection='column' alignSelf='flex-end'>
-								<Box display='flex' flexDirection='row'>
+								<Box display='flex' flexDirection='row' marginBottom="4px">
 									<Text
 										fontFamily={fontTheme.fonts}
-										fontSize='1.5rem'
+										fontSize="24px"
+										fontWeight="semibold"
+										color={colorPalette.secundaryGrey}
+									>
+										Suas joias: {userCoins}
+									</Text>
+									<Image
+										w='20px'
+										src={coinicon}
+										alt='coinicon'
+										ml='4px'
+									/>
+								</Box>
+								<Box display='flex' flexDirection='row' marginBottom="16px">
+									<Text
+										fontFamily={fontTheme.fonts}
+										fontSize='28px'
 										fontWeight='semibold'
-										color={colorPalette.infoTextColor}
+										color={colorPalette.closeButton}
 									>
 										Valor: {value}
 									</Text>
 									<Image
-										w='15%'
+										w='32px'
 										src={coinicon}
 										alt='coinicon'
 										ml='0.3rem'
 									/>
 								</Box>
-								{users_id.includes(current_user_id) ? (
-									<>
-										<Box
-											width='100%'
-											height='3.5rem'
-											background={colorPalette.secondaryColor}
-											color={colorPalette.buttonTextColor}
-											fontSize='1.5rem'
-											display='flex'
-											borderRadius='8px'
-											justifyContent='center'
-											alignItems='center'
-											mt='2rem'
+
+								<Flex
+									justifyContent='center'
+								>
+									{items_id.includes(_id) ? (
+										<>
+											<Box
+												width='180px'
+												height='3.5rem'
+												background={colorPalette.secondaryColor}
+												color={colorPalette.buttonTextColor}
+												fontSize='1.5rem'
+												display='flex'
+												borderRadius='8px'
+												justifyContent='center'
+												alignItems='center'
+												marginBottom="24px"
+											>
+												<Image
+													src={confirmicon}
+													padding='1rem 1rem' />
+												<Text mr='1rem'>Comprado</Text>
+											</Box>
+										</>
+									) : (
+										<Tooltip
+											label={NOT_ENOUGH_STATUS(itemStatus.status_name)}
+											placement='bottom'
+											hasArrow
+											isDisabled={statusRequirement}
+											closeOnClick={false}
 										>
-											<Image
-												src={confirmicon}
-												padding='1rem 1rem' />
-											<Text mr='1rem'>Comprado</Text>
-										</Box>
-									</>
-								) : (
-									<Button
-										mt='2rem'
-										width='100%'
-										height='3.5rem'
-										background={colorPalette.primaryColor}
-										color={colorPalette.buttonTextColor}
-										fontSize='1.5rem'
-										borderRadius='8px'
-										onClick={() => {
-											setIsConfirmOpen(true);
-											setAlertAnswer(
-												'Ei, viajante! Você tem certeza que deseja comprar esse item?',
-											);
-										}}
+											<Button
+												width='150px'
+												height='3.5rem'
+												background={statusRequirement ? colorPalette.primaryColor : colorPalette.grayBackground}
+												color={colorPalette.buttonTextColor}
+												marginBottom="24px"
+												fontSize='1.5rem'
+												borderRadius='8px'
+												_hover={{}}
+												onClick={() => {
+													if(statusRequirement) {
+														setIsConfirmOpen(true);
+														setAlertAnswer(
+															'Ei, viajante! Você tem certeza que deseja comprar esse item?',
+														);
+													}
+												}}
+												cursor={!statusRequirement ? 'help' : 'pointer'}
+											>
+												Comprar
+											</Button>
+										</Tooltip>
+									)}
+									<Box
+										marginLeft='15px'
+										fontFamily={fontTheme.fonts}
+										fontSize="18px"
+										fontWeight="bold"
+										color={getStatusColor(itemStatus.status_name)}
+										textAlign='center'
 									>
-										Comprar
-									</Button>
-								)}
+										<Text> {userStatus}/{itemStatus.points}</Text>
+										<Text>
+												{getStatusNick(itemStatus.status_name)}
+										</Text>
+									</Box>
+								</Flex>
+								
+									
 
 								<AlertModal
 									isOpen={isConfirmOpen}
-									onClose={onClose}
+									onClose={() => { if (!loading) history.go(0) }}
 									alertTitle='Loja'
 									alertBody={alertAnswer}
-									onClickClose={
-										() => {
-											history.go(0);
-										}
-									}
+									onClickClose={() => { if (!loading) history.go(0) }}
 									buttonBody={
 										isAlert ? (
 											<Button
@@ -377,26 +444,28 @@ const ShopItem: FC<ShopItemProps> = ({
 												}}
 												ml={3}
 											>
-												Continuar
+												{GENERIC_MODAL_TEXT}
 											</Button>
 										) : (
-											<>
-												<Button
-													ref={cancelRef}
-													onClick={onClose}
-												>
-													Cancel
+												<>
+													<Button
+														ref={cancelRef}
+														onClick={onClose}
+														isDisabled={loading}
+													>
+														Cancel
 												</Button>
-												<Button
-													color='white'
-													bg={colorPalette.primaryColor}
-													onClick={buyItem}
-													ml={3}
-												>
-													Comprar
+													<Button
+														color='white'
+														bg={colorPalette.primaryColor}
+														onClick={buyItem}
+														ml={3}
+														isLoading={loading}
+													>
+														Comprar
 												</Button>
-											</>
-										)
+												</>
+											)
 									}
 								/>
 
@@ -404,7 +473,7 @@ const ShopItem: FC<ShopItemProps> = ({
 									isOpen={onError}
 									onClose={() => window.location.reload()}
 									alertTitle='Ops!'
-									alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+									alertBody={errorCases.SERVER_ERROR}
 
 									buttonBody={
 										<Button
@@ -420,7 +489,7 @@ const ShopItem: FC<ShopItemProps> = ({
 						</Flex>
 					</Flex>
 				</Slide>
-			) : null}
+			)}
 		</Box>
 	);
 };

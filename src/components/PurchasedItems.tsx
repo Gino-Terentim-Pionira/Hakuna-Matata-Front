@@ -21,14 +21,13 @@ import cardicon from '../assets/icons/shop2.svg';
 //import api from '../services/api';
 
 type ShopItemProps = {
-	current_user_id: string;
-	users_id: Array<string>;
 	_id: string;
 	name: string;
 	value: number;
 	description: string;
 	type: string;
 	id_link: string;
+	items_id: string[];
 };
 
 const ShopItem: FC<ShopItemProps> = ({
@@ -36,13 +35,14 @@ const ShopItem: FC<ShopItemProps> = ({
 	name,
 	description,
 	type,
-	users_id,
-	current_user_id,
-	id_link
+	id_link,
+	items_id
 }) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const [show, setShow] = useState(false);
-	const idLink = `https://docs.google.com/uc?export=download&id=${id_link}`;
+	// NAO REMOVER, ESSE LINK É MUITO UTIL
+	// const idLink = `https://docs.google.com/uc?export=download&id=${id_link}`;
+	const idLink = `https://drive.google.com/file/d/${id_link}/view`
 
 	const changeShow = () => {
 		setShow(!show);
@@ -57,9 +57,15 @@ const ShopItem: FC<ShopItemProps> = ({
 		window.open(idLink);
 	}
 
+	const itemType: {[key:string] : string} = {
+		"item1": "E-books",
+		"item2": "Utilitários",
+		"item3": "Especiais"
+	}
+
 	return (
 		<>
-			{users_id.includes(current_user_id) ? (
+			{items_id.includes(_id) ? (
 				<Box>
 					<Flex
 						_hover={{
@@ -133,7 +139,7 @@ const ShopItem: FC<ShopItemProps> = ({
 								color={colorPalette.infoTextColor}
 								mb='0.3rem'
 							>
-								Tipo: {type}
+								Tipo: {itemType[type]}
 							</Text>
 						</Flex>
 					</Flex>
@@ -185,7 +191,7 @@ const ShopItem: FC<ShopItemProps> = ({
 									marginLeft='1.5rem'
 									justifyContent='space-between'
 								>
-									<Flex flexDirection='column' w='60%'>
+									<Flex flexDirection='column' w='80%'>
 										<Text
 											fontSize={[
 												'0.5rem',
@@ -195,7 +201,7 @@ const ShopItem: FC<ShopItemProps> = ({
 											w='60%'
 											fontWeight='semibold'
 											textAlign='left'
-											mb='0.5rem'
+											mb='8px'
 										>
 											{name}
 										</Text>
@@ -207,13 +213,15 @@ const ShopItem: FC<ShopItemProps> = ({
 											]}
 											fontWeight='regular'
 											textAlign='left'
+											overflow="auto"
+											maxH="160px"
 										>
 											{description}
 										</Text>
 									</Flex>
 									<Flex
 										flexDirection='column'
-										alignSelf='flex-end'
+										alignSelf='flex-start'
 									>
 										<Button
 											width='100%'

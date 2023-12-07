@@ -1,17 +1,15 @@
 import React, { BaseSyntheticEvent, useEffect, useState, useRef } from 'react';
-import monkey from '../assets/sprites/monkey/monkey.png';
+import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
 import fontTheme from '../styles/base';
 import {
 	Flex,
 	Center,
 	Box,
-	Text,
-	Input,
 	Button,
-	Link,
 	Image
 } from '@chakra-ui/react';
 import { useHistory, useParams, withRouter } from 'react-router-dom';
+import { validatePassword } from '../utils/validates';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -22,6 +20,9 @@ import colorPalette from "../styles/colorPalette";
 // Requisitions
 import api from '../services/api';
 import { useAuth } from '../contexts/authContext';
+import LoginRegister from '../components/LoginRegister';
+import axios from 'axios';
+import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 
 interface IUser {
 	id: string;
@@ -33,6 +34,8 @@ const ResetPassword = () => {
 
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+    const [validationError, setValidationError] = useState('');
+	const [hasValidationError, setHasValidationError] = useState(false);
 
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const onClose = () => setIsConfirmOpen(false);
@@ -40,8 +43,17 @@ const ResetPassword = () => {
 
 	const [alertAnswer, setAlertAnswer] = useState('');
 	const [correctPassword, setCorrectPassword] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const { authenticated } = useAuth();
+
+	const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        const currentPassword = event.target.value as string;
+		setPassword(currentPassword);
+        const res = validatePassword(currentPassword);
+		setValidationError(res.message);
+		setHasValidationError(res.validate);
+    }
 
 	useEffect(() => {
 		if (authenticated) {
@@ -53,15 +65,22 @@ const ResetPassword = () => {
 		history.push('/login');
 	};
 
-	const submitChange = async (e: BaseSyntheticEvent) => {
-		e.preventDefault();
+	const submitChange = async () => {
 		if (password === confirmPassword) {
 			try {
+				setIsLoading(true);
 				await api.patch(`/user/resetPassword/${id}`, { password });
 				setAlertAnswer('Sua senha foi alterada com sucesso!');
 				setCorrectPassword(true);
+				setIsLoading(false);
+
 			} catch (error) {
-				setAlertAnswer(error.response.data.error);
+				if (axios.isAxiosError(error)) {
+					if (error.response) {
+						setIsLoading(false);
+						setAlertAnswer(error.response.data.error);
+					}
+				}
 			}
 		} else {
 			setAlertAnswer('Ops, parece que a senha não é igual à confirmação!');
@@ -76,104 +95,34 @@ const ResetPassword = () => {
 			fontFamily={fontTheme.fonts}
 			fontWeight='regular'
 		>
-			<Box
-				w='40%'
-				bg={colorPalette.primaryColor}
-				h='100vh'
-				position='absolute'
-				zIndex='0'
-				left='0'
-				top='0'
-				clipPath='polygon(0% 0%, 85% 0, 40% 100%, 0 100%)'
-			></Box>
+			<Box w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
 			<Center width='100%'>
-				<Box
-					display='flex'
-					alignItems='center'
-					w='40%'
-					h='90%'
-					zIndex='1'
-					backgroundColor='transparent'
-					marginLeft='3rem'
-				>
-					<Image w='90%' src={monkey} alt='Image' />
-				</Box>
-
-				<Flex
-					w='35%'
-					h='80%'
-					border='1px solid'
-					borderColor={colorPalette.primaryColor}
-					color='Black'
-					borderRadius='8px'
-					flexDirection='column'
-					align='center'
-					justifyContent='space-between'
-					marginLeft='1rem'
-				>
-					<Box
-						width='90%'
-						h='93%'
-						marginTop='2.2rem'
-						fontSize={['0.8rem', '1rem', '1.5rem']}
-					>
-						<Text w='100%'>
-							{' '}
-							Parece que vocês esqueceu a sua senha. Sem
-							problemas, só colocar uma outra que não seja a mesma
-							para redefiní-la.
-						</Text>
-						<Input
-							marginTop='1rem'
-							h='13%'
-							placeholder='Digite sua senha nova'
-							type='password'
-							onChange={(e: BaseSyntheticEvent) => {
-								setPassword(e.target.value);
-							}}
-						/>
-						<Text w='100%'>
-							{' '}
-							Não ouvi muito bem, poderia repeti-lá?
-						</Text>
-						<Input
-							marginTop='1rem'
-							h='13%'
-							placeholder='Confirme a sua senha'
-							type='password'
-							onChange={(e: BaseSyntheticEvent) => {
-								setConfirmPassword(e.target.value);
-							}}
-						/>
-					</Box>
-					<Box w='70%' h='30%'>
-						<Center marginTop='1rem'>
-							<Button
-								width='100%'
-								height='2.5rem'
-								background={colorPalette.primaryColor}
-								color={colorPalette.buttonTextColor}
-								fontSize='1.7rem'
-								onClick={(e) => {
-									submitChange(e);
-								}}
-							>
-								Enviar
-							</Button>
-						</Center>
-
-						<Box display='flex' justifyContent='flex-end'>
-							<Link
-								marginTop='0.3rem'
-								color={colorPalette.secondaryColor}
-								textDecoration='underLine'
-								onClick={() => goToLogin()}
-							>
-								Voltar
-							</Link>
-						</Box>
-					</Box>
-				</Flex>
+				<LoginRegister
+					mainText='Parece que vocês esqueceu a sua senha. Sem problemas, só colocar uma outra que não seja a mesma para redefiní-la.'
+					firstText='”Qual é a sua nova senha, jovem?”'
+					secondText='”Não entendi muito bem, poderia repeti-la”'
+					firstChange={(e: BaseSyntheticEvent) => {
+						handlePasswordChanged(e);
+					}}
+					firstInputType='password'
+					firstValue={password}
+					validationError={validationError}
+					hasValidationError={hasValidationError}
+					firstPlaceholder='Nova senha'
+					secondChange={(e: BaseSyntheticEvent) => {
+						setConfirmPassword(e.target.value);
+					}}
+					secondInputType="password"
+					secondValue={confirmPassword}
+					secondPlaceholder="Confirmar nova senha"
+					nextStep={() => {
+						submitChange();
+					}}
+					previousStep={() => goToLogin()}
+					buttonText='Enviar'
+					loading={isLoading}
+				/>
+				<Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
 
 				<AlertModal
 					isOpen={isConfirmOpen}
@@ -192,13 +141,14 @@ const ResetPassword = () => {
 								}
 							}}
 						>
-							Continuar
+							{GENERIC_MODAL_TEXT}
 						</Button>
 					}
 				/>
 
 			</Center>
 		</Flex>
+
 	);
 };
 

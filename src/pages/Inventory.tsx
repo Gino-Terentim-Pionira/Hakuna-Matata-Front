@@ -2,56 +2,54 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
 import { Button, Center, Image, SimpleGrid } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import usePath from '../hooks/usePath';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
-import LoadingState from '../components/LoadingState';
 import PurchasedItems from '../components/PurchasedItems';
 
 // Requisitions
 import api from '../services/api';
+import { useUser } from '../hooks';
 
 // Styles
 import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import sidearrow from '../assets/icons/sidearrow.png';
 import icon_shop from '../assets/icons/icon_shop.svg';
+import { errorCases } from '../utils/errors/errorsCases';
+import LoadingOverlay from '../components/LoadingOverlay';
+import BackButton from '../components/BackButton';
 
 
 const Shop = () => {
+	const { getNewUserInfo, userData } = useUser();
+	const { handleBack } = usePath();
 	const [shopItem, setShopItem] = useState([]);
-	const [currentUserId, setCurrentUserId] = useState('');
-	const [validation, setValidation] = useState(false);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const getShopItens = async () => {
 		try {
+			if (Object.keys(userData).length == 0)
+				getNewUserInfo();
+			
 			const res = await api.get('/shopItem/');
-			const userId = sessionStorage.getItem('@pionira/userId');
-			const userIdString = '' + userId;
 			setShopItem(res.data);
-			setCurrentUserId(userIdString);
-			res.data.map(({ user_id }: { user_id: [string] }) => {
-				user_id.includes(userId as string) ? setValidation(true) : null;
-			});
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
 	};
 
 	const goBackShop = async () => {
-		try {
-			history.push(`/shop`);
-		} catch (error) {
-			setOnError(true);
-		}
+		history.push(`/shop`);
 	};
 
 	const goBack = () => {
-		history.goBack();
+		handleBack();
 	};
 
 	useEffect(() => {
@@ -82,16 +80,8 @@ const Shop = () => {
 				alignItems='center'
 				justifyContent='flex-start'
 			>
-				<Image
-					w='3rem'
-					_hover={{
-						cursor: 'pointer',
-					}}
+				<BackButton 
 					onClick={goBack}
-					src={sidearrow}
-					alt='sidearrow'
-					zIndex='2'
-					ml='2rem'
 				/>
 				<Spacer />
 				<Text
@@ -135,54 +125,47 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{validation ? (
-				shopItem.length > 0 ? (
-					<>
-						<SimpleGrid
-							zIndex='2'
-							w='70%'
-							columns={3}
-							overflowY='auto'
-							mt='2.5rem'
-						>
-							{shopItem.map(
-								({
-									_id,
-									name,
-									value,
-									description,
-									type,
-									user_id,
-									id_link,
-								}: {
-									user_id: Array<string>;
-									_id: string;
-									name: string;
-									value: number;
-									description: string;
-									type: string;
-									id_link: string;
-								}) => {
-									return (
-										<PurchasedItems
-											key={_id}
-											_id={_id}
-											current_user_id={currentUserId}
-											users_id={user_id}
-											name={name}
-											value={value}
-											description={description}
-											type={type}
-											id_link={id_link}
-										/>
-									);
-								},
-							)}
-						</SimpleGrid>
-					</>
-				) : (
-					<LoadingState />
-				)
+			{userData?.items_id?.length > 0 ? (
+				<>
+					<SimpleGrid
+						zIndex='2'
+						w='70%'
+						columns={3}
+						overflowY='auto'
+						mt='2.5rem'
+					>
+						{shopItem.map(
+							({
+								_id,
+								name,
+								value,
+								description,
+								type,
+								id_link,
+							}: {
+								_id: string;
+								name: string;
+								value: number;
+								description: string;
+								type: string;
+								id_link: string;
+							}) => {
+								return (
+									<PurchasedItems
+										key={_id}
+										_id={_id}
+										items_id={userData.items_id}
+										name={name}
+										value={value}
+										description={description}
+										type={type}
+										id_link={id_link}
+									/>
+								);
+							},
+						)}
+					</SimpleGrid>
+				</>
 			) : (
 				<Text
 					mt='2.6rem'
@@ -197,11 +180,14 @@ const Shop = () => {
 					Você ainda não possui nenhum item!
 				</Text>
 			)}
+			{
+				isLoading && <LoadingOverlay />
+			}
 			<AlertModal
 				isOpen={onError}
 				onClose={() => window.location.reload()}
 				alertTitle='Ops!'
-				alertBody='Parece que ocorreu um erro durante a nossa viagem, Jovem! tente recarregar!'
+				alertBody={errorCases.SERVER_ERROR}
 				buttonBody={
 					<Button
 						color='white'
