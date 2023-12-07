@@ -203,16 +203,16 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         if (userStatus >= moduleStatus)
             return <>
                 <p>{label}</p>
-                <p style={{ fontWeight: 'bold', color: colorPalette.correctAnswer }}>
+                {!isBlocked && <p style={{ fontWeight: 'bold', color: colorPalette.correctAnswer }}>
                     Acesso liberado
-                </p>
+                </p>}
             </>
         else
             return <>
                 <p>{label}</p>
-                <p>Para acessar: <span style={{ fontWeight: 'bold', color: colorPalette.closeButton }}>
+                {!isBlocked && <p>Para acessar: <span style={{ fontWeight: 'bold', color: colorPalette.closeButton }}>
                     {'Acesso liberado'}% {getStatusNick(moduleStatusName)}
-                </span></p>
+                </span></p>}
             </>
     }
 
@@ -227,7 +227,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 hasArrow
                 placement='top'
                 gutter={12}
-                label={!isBlocked && renderTooltip()}
+                label={renderTooltip()}
 
             >
                 <Flex

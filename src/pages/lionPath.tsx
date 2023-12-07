@@ -472,29 +472,29 @@ const LionPath = () => {
 						justifyContent='space-between'
 					>
 						<ModuleModal 
-							left='9vw' 
-							top='60vh' 
+							left='8vw' 
+							top='65vh' 
 							quizIndex={0} 
 							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
 							blockedFunction={handleStatusRequirement} 
 						/>
 						<ModuleModal 
 							left='22vw' 
-							top='80vh' 
+							top='88vh' 
 							quizIndex={1} 
 							openFinalModuleNarrative={() => moduleEndNarrativeScript(1)}
 							blockedFunction={handleStatusRequirement} 
 						/>
 						<ModuleModal 
 							left='58vw' 
-							top='82vh' 
+							top='85vh' 
 							quizIndex={2} 
 							openFinalModuleNarrative={() => moduleEndNarrativeScript(2)}
 							blockedFunction={handleStatusRequirement}
 						/>
 						<ModuleModal 
 							left='79vw' 
-							top='54vh' 
+							top='55vh' 
 							quizIndex={0}
 							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
 							isBlocked={true} 
