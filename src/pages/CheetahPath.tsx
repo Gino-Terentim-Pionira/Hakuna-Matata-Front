@@ -527,9 +527,9 @@ const CheetahPath = () => {
                                 transition='all 0.2s ease'
                                 width='7rem'
                                 height='7rem'
-                                onClick={() => {
+                                onClick={async () => {
                                     if (!completeTrail) {
-                                        challengeNarrative();
+                                        await challengeNarrative();
                                     }
                                     modalOnOpen();
                                 }}
