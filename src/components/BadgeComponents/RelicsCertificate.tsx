@@ -62,7 +62,7 @@ const RelicsCertificate = () => {
                                                     image_sillouete: string;
                                                 }) => {
                                                     return (
-                                                        userData.owned_relics.includes(relic_name) ? (
+                                                        userData.owned_relics.find(item => item.relic_name === relic_name) ? (
                                                             <Relic 
                                                                 key={_id} 
                                                                 _id={_id} 

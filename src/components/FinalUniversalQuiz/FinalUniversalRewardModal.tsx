@@ -132,7 +132,14 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		}
 	};
 
-	const updateRelic = async (ownedRelics: string[], relicName: RelicsName, userId: string) => {
+	const updateRelic = async (
+		ownedRelics: [{
+			relic_name: string,
+			date: Date
+		}], 
+		relicName: RelicsName, 
+		userId: string
+	) => {
 		try {
 			await addRelic(ownedRelics, relicName, userId);
 		} catch (error) {
