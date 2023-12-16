@@ -515,8 +515,8 @@ const LionPath = () => {
 							transition='all 0.2s ease'
 							width='7rem'
 							height='7rem'
-							onClick={async () => {
-								await handleChallengeNarrative();
+							onClick={() => {
+								handleChallengeNarrative();
 							}}
 							position='absolute'
 							top='60vh'
