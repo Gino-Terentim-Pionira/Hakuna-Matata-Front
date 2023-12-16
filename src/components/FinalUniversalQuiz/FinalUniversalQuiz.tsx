@@ -21,7 +21,7 @@ import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import { shiftCharacters, shuffleString } from '../../utils/algorithms/shuffleString';
 import { FINAL_QUIZ_SINK, WINSDOM_SOURCE } from '../../utils/constants/constants';
-import RelicsName from '../../utils/enums/relics_name';
+import RelicsName from '../../utils/enums/relicsName';
 
 interface IQuestions {
 	alternatives: string[];

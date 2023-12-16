@@ -2,7 +2,7 @@ import { useRecoilState } from "recoil";
 import api from "../services/api";
 import { relicState } from "../recoil/relicRecoilState";
 
-const useRelic = () => {
+export const useRelic = () => {
     const [relicData, setRelicData] = useRecoilState(relicState);
 
     const getRelics = async () => {

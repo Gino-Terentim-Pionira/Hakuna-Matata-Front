@@ -47,9 +47,9 @@ const Relic: FC<RelicProps> = ({
                 text,
                 description,
                 imgbase64 as string,
-                TypesEnum.relic,
+                TypesEnum.RELIC,
                 _id,
-                PlataformsEnum.linkedin);
+                PlataformsEnum.LINKEDIN);
             window.location.replace(response.data.url);
         } catch (error) {
             console.log(error);

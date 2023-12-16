@@ -1,12 +1,10 @@
 import api from '../services/api';
-import RelicsName from '../utils/enums/relics_name';
+import RelicsName from '../utils/enums/relicsName';
+import { IUser } from '../recoil/useRecoilState';
 
 
 async function addRelic(
-    owned_relics: [{
-		relic_name: string,
-		date: Date
-	}], 
+    owned_relics: IUser['owned_relics'], 
     relic: RelicsName,
     userId: string
 ) {

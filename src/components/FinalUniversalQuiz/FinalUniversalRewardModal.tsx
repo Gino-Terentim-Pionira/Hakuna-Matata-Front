@@ -11,9 +11,10 @@ import badgeShare from '../../assets/socialShare/badge.png';
 import TypesEnum from '../../utils/enums/type';
 import PlataformsEnum from '../../utils/enums/plataform';
 import { SHARE } from '../../utils/constants/buttonConstants';
-import RelicsName from '../../utils/enums/relics_name';
+import RelicsName from '../../utils/enums/relicsName';
 import { addRelic } from '../../services/relic';
 import useRelic from '../../hooks/useRelic';
+import { IUser } from '../../recoil/useRecoilState';
 
 interface IFinalUniversalRewardModal {
 	isOpen: boolean;
@@ -65,9 +66,9 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
                 text,
                 description,
                 imgbase64 as string,
-                TypesEnum.relic,
+                TypesEnum.RELIC,
                 shareId as string,
-                PlataformsEnum.linkedin);
+                PlataformsEnum.LINKEDIN);
             window.location.replace(response.data.url);
         } catch (error) {
             console.log(error);
@@ -133,10 +134,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	};
 
 	const updateRelic = async (
-		ownedRelics: [{
-			relic_name: string,
-			date: Date
-		}], 
+		ownedRelics: IUser['owned_relics'], 
 		relicName: RelicsName, 
 		userId: string
 	) => {

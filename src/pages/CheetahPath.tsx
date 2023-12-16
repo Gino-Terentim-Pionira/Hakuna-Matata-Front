@@ -64,7 +64,7 @@ import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
-import RelicsName from '../utils/enums/relics_name';
+import RelicsName from '../utils/enums/relicsName';
 
 interface IQuiz {
     _id: string;
@@ -734,7 +734,7 @@ const CheetahPath = () => {
                 routeQuiz={'finalcheetahquiz'}
                 userStatus={getStatusPoints(userData, AGILITY)}
                 trail={1}
-                relic={RelicsName.sandals}
+                relic={RelicsName.SANDALS}
             />
 
             <AlertModal

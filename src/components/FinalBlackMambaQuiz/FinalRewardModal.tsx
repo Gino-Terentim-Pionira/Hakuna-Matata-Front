@@ -28,10 +28,9 @@ import colorPalette from '../../styles/colorPalette';
 import imgReward from '../../assets/icons/insignia/mambaTrailInsignia.png'
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
-import { useUser } from '../../hooks';
-import useRelic from '../../hooks/useRelic';
+import { useUser, useRelic } from '../../hooks';
 import { addRelic } from '../../services/relic';
-import RelicsName from '../../utils/enums/relics_name';
+import RelicsName from '../../utils/enums/relicsName';
 
 interface IFinalRewardModal {
 	isOpen: boolean;
@@ -125,7 +124,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 			setIsLoading(true);
 			
 
-			await addRelic(userData.owned_relics, RelicsName.mamba, userId as string);
+			await addRelic(userData.owned_relics, RelicsName.MAMBA, userId as string);
 			finalModalOnClose();
 			setIsLoading(false);
 			certificateOnOpen();

@@ -60,7 +60,7 @@ import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants
 import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
 import BlockedModal from '../components/modals/BlockedModal';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
-import RelicsName from '../utils/enums/relics_name';
+import RelicsName from '../utils/enums/relicsName';
 
 
 interface IQuiz {
@@ -701,7 +701,7 @@ const LionPath = () => {
 				routeQuiz={'finallionquiz'}
 				userStatus={getStatusPoints(userData, LEADERSHIP)}
 				trail={2}
-				relic={RelicsName.glasses}
+				relic={RelicsName.GLASSES}
 			/>
 
 			<AlertModal

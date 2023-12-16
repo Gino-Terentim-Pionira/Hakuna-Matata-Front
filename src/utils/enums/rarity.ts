@@ -1,7 +1,7 @@
 enum rarityEnum {
-    normal = 'Normal',
-    legendary = 'Lendário',
-    mistic = 'Místico'
+    NORMAL = 'Normal',
+    LEGENDARY = 'Lendário',
+    MISTIC = 'Místico'
 }
 
 export default rarityEnum

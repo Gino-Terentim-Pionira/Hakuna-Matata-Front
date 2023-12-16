@@ -1,5 +1,5 @@
 enum TypesEnum {
-    relic = 'relic'
+    RELIC = 'relic'
 }
 
 export default TypesEnum
