@@ -327,6 +327,13 @@ const LionPath = () => {
 		handleNarrativeModal(newChallengeScript);
 	};
 
+	const handleChallengeNarrative = async () => {
+        if (!completeTrail) {
+            await challengeNarrative();
+        }
+        modalOnOpen();
+    }
+
 	const finalLionNarrative = (userName: string) => {
 		const newChallengeScript = lionConclusion(userName);
 		handleNarrativeModal(newChallengeScript);
@@ -509,10 +516,7 @@ const LionPath = () => {
 							width='7rem'
 							height='7rem'
 							onClick={() => {
-								if (!completeTrail) {
-									challengeNarrative();
-								}
-								modalOnOpen();
+								handleChallengeNarrative();
 							}}
 							position='absolute'
 							top='60vh'

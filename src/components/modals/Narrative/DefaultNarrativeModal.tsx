@@ -103,6 +103,13 @@ const DefaultNarrativeModal = ({
         }
     }, [delayButton]);
 
+    useEffect(() => {
+        // Função para resetar o texto do script ao abrir e fechar o modal
+        setScriptText(script[0].texts[0]);
+        setTextIndex(0);
+        setScriptIndex(0);
+    }, [isOpen]);
+
     return (
         <Box zIndex={10000}>
             <Slide direction="bottom" in={isOpen} >

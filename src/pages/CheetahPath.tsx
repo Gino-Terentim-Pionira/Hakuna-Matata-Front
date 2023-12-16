@@ -354,6 +354,13 @@ const CheetahPath = () => {
         handleNarrativeModal(newChallengeScript);
     };
 
+    const handleChallengeNarrative = async () => {
+        if (!completeTrail) {
+            await challengeNarrative();
+        }
+        modalOnOpen();
+    }
+
     const finalCheetahNarrative = (userName: string) => {
         const newChallengeScript = cheetahConclusion(userName);
         handleNarrativeModal(newChallengeScript);
@@ -528,10 +535,7 @@ const CheetahPath = () => {
                                 width='7rem'
                                 height='7rem'
                                 onClick={() => {
-                                    if (!completeTrail) {
-                                        challengeNarrative();
-                                    }
-                                    modalOnOpen();
+                                    handleChallengeNarrative();
                                 }}
                                 position='absolute'
                                 top='35vh'
