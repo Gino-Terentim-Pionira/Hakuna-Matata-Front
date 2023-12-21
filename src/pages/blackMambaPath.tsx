@@ -14,7 +14,6 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
-import useInsignias from '../hooks/useInsignias';
 
 // Components
 import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
@@ -82,7 +81,6 @@ interface IQuestions {
 const BlackMambaPath = () => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const { userData, setUserData, getNewUserInfo } = useUser();
-	const { getInsignias } = useInsignias();
 	const {
 		isOpen: quizIsOpen,
 		onClose: quizOnClose,
@@ -182,7 +180,6 @@ const BlackMambaPath = () => {
 			if (!userData._id) {
 				const _userId = sessionStorage.getItem('@pionira/userId');
 				const { data } = await api.get(`/user/${_userId}`);
-				await getInsignias();
 				setUserData(data);
 				userInfoData = data;
 			} else userInfoData = userData;

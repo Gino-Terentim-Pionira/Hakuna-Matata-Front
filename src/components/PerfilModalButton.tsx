@@ -39,7 +39,7 @@ const PerfilModalButton: FC<PerfilModalButtonProps> = ({ click, text, whichBtn }
                 onClick={click}
             >
                 <Text fontSize='1.5rem'>
-                    Insígnias
+                    Relíquias
                 </Text>
             </Button>
         )

@@ -2,7 +2,6 @@ import React, { SetStateAction, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
 import { useUser } from '../hooks';
-import useInsignias from '../hooks/useInsignias';
 
 // Components
 import TutorialModal from '../components/modals/TutorialModal';
@@ -70,7 +69,6 @@ const MainPage = () => {
 	} = useDisclosure();
 
 	const { getNewUserInfo, setUserData, userData } = useUser();
-	const { getInsignias } = useInsignias();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [onAlert, setOnAlert] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
@@ -193,7 +191,6 @@ const MainPage = () => {
 				'@pionira/userId',
 			);
 			const res = await api.get(`/user/${_userId}`);
-			await getInsignias();
 			setUserData(res.data);
 
 			setIgnoranceFilter(res.data.ignorance, ignoranceArray);

@@ -21,6 +21,7 @@ import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import { shiftCharacters, shuffleString } from '../../utils/algorithms/shuffleString';
 import { FINAL_QUIZ_SINK, WINSDOM_SOURCE } from '../../utils/constants/constants';
+import RelicsName from '../../utils/enums/relicsName';
 
 interface IQuestions {
 	alternatives: string[];
@@ -56,12 +57,11 @@ interface IQuizComponent {
 	};
 	questions: IQuestions[];
 	imgName: string;
-	imgReward: string;
 	routeQuiz: string;
 	routeQuestions: string;
-	insignaName: string;
 	userStatus: number;
 	trail: number;
+	relic: RelicsName
 }
 
 const FinalUniversalQuiz: FC<IQuizComponent> = ({
@@ -70,12 +70,11 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	quiz,
 	questions,
 	imgName,
-	imgReward,
 	routeQuiz,
 	routeQuestions,
-	insignaName,
 	userStatus,
-	trail
+	trail,
+	relic
 }) => {
 	const { isOpen, onOpen } = useDisclosure();
 	const [step, setStep] = useState(0);
@@ -410,12 +409,11 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 				totalAnswers={length}
 				allQuestionsId={questionsId}
 				validateUser={validateUser}
-				imgReward={imgReward}
 				routeQuiz={routeQuiz}
 				routeQuestions={routeQuestions}
-				insignaName={insignaName}
 				ignorance={ignorance}
 				trail={trail}
+				relic={relic}
 			/>
 
 			<AlertModal

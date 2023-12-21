@@ -1,5 +1,5 @@
 enum PlataformsEnum {
-    linkedin = 'linkedin'
+    LINKEDIN = 'linkedin'
 }
 
 export default PlataformsEnum

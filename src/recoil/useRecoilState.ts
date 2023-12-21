@@ -34,7 +34,10 @@ export interface IUser {
 	question_id: string[];
     video_id: string[];
 	module_id: string[];
-	insignias_id: string[];
+	owned_relics: [{
+		relic_name: string,
+		date: Date
+	}];
 	custom_avatar: {
         hair: string;
         hair_color: string;
@@ -52,12 +55,7 @@ const userState = atom({
 	default: {} as IUser
 });
 
-const insigniaState = atom({
-	key: "insigniaState",
-	default: []
-});
 
 export {
-	userState,
-	insigniaState
+	userState
 };

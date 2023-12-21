@@ -1,11 +1,7 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import { Flex, Box, Image, Text, Slide, useDisclosure, Tooltip, Button } from '@chakra-ui/react';
 
 // Images
-import insigniaImg from '../../assets/icons/insignia/insignia.png';
-import cheetaTrailInsignia from '../../assets/icons/insignia/cheetaTrailInsignia.png';
-import mambaTrailInsignia from '../../assets/icons/insignia/mambaTrailInsignia.png';
-import lionTrailInsignia from '../../assets/icons/insignia/lionTrailInsignia.png';
 import badgeShare from '../../assets/socialShare/badge.png';
 import colorPalette from '../../styles/colorPalette';
 import { BADGE_DESCRIPTION } from '../../utils/constants/mouseOverConstants';
@@ -16,33 +12,21 @@ import PlataformsEnum from '../../utils/enums/plataform';
 import { SHARE } from '../../utils/constants/buttonConstants';
 import linkedin from '../../assets/icons/social/linkedin.png';
 
-type InsigniaProps = {
+type RelicProps = {
     _id: string;
-    trail: string;
-    name: string;
+    relic_name: string;
     description: string;
+    image: string;
 }
 
-const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
+const Relic: FC<RelicProps> = ({ 
+    _id, 
+    relic_name, 
+    description,
+    image
+}) => {
     const { isOpen, onToggle } = useDisclosure();
     const [show, setShow] = useState(false);
-    const [trailImage, setTrailImage] = useState('');
-
-    const changeImage = () => {
-        switch (trail) {
-            case 'Trilha 1':
-                setTrailImage(cheetaTrailInsignia);
-                break;
-            case 'Trilha 2':
-                setTrailImage(lionTrailInsignia);
-                break;
-            case 'Trilha 3':
-                setTrailImage(mambaTrailInsignia);
-                break;
-            default:
-                setTrailImage(insigniaImg);
-        }
-    }
 
     const changeShow = () => {
         setShow(!show);
@@ -57,24 +41,20 @@ const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
         try {
             const response = await getLogInUrl();
             const imgbase64 = await convertImageToBase64(badgeShare);
-            const text = `Ganhei a insígnia ${name}`;
-            const description = `Insígnia ${name}`;
+            const text = `Ganhei a relíquia ${relic_name}`;
+            const description = `Relíquia ${relic_name}`;
             setItems(
                 text,
                 description,
                 imgbase64 as string,
-                TypesEnum.badge,
+                TypesEnum.RELIC,
                 _id,
-                PlataformsEnum.linkedin);
+                PlataformsEnum.LINKEDIN);
             window.location.replace(response.data.url);
         } catch (error) {
             console.log(error);
         }
     }
-
-    useEffect(() => {
-        changeImage();
-    }, [])
 
     return (
         <>
@@ -100,13 +80,13 @@ const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
                 >
                     <Image
                         boxSize='7.5rem'
-                        src={trailImage}
+                        src={image}
                     />
                     <Text
                         textDecoration='underline'
                         fontWeight='bold'
                         marginBottom='1rem'
-                    >{name}</Text>
+                    >{relic_name}</Text>
                 </ Box>
             </Tooltip>
             {
@@ -159,7 +139,7 @@ const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
                                     fontWeight='bold'
                                     textAlign='left'
                                 >
-                                    {name}
+                                    {relic_name}
                                 </Text>
 
                                 <Text
@@ -204,4 +184,4 @@ const Insignia: FC<InsigniaProps> = ({ _id, trail, name, description }) => {
     );
 }
 
-export default Insignia;
+export default Relic;
