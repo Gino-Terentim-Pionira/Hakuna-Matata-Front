@@ -16,7 +16,6 @@ import {
     Tooltip,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
-import useInsignias from '../hooks/useInsignias';
 
 //utils
 import fontTheme from '../styles/base';
@@ -53,7 +52,6 @@ import cheetahFinalQuiz from '../utils/scripts/CheetahTrail/CheetahFinalQuiz';
 import trail_bg from '../assets/scenerys/cheetah/trail_bg.png';
 import final_cheetah_icon from '../assets/icons/final_cheetah_icon.svg';
 import cheetah from '../assets/sprites/cheetah/cheetah.png';
-import insignaCheetah from '../assets/icons/insignia/insignaCheetah.svg';
 import cheetah_bg from '../assets/modal/cheetah_bg.png';
 import ignorance100 from '../assets/ignorance/cheetahPath/ignorance100.png';
 import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
@@ -66,6 +64,7 @@ import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
+import RelicsName from '../utils/enums/relicsName';
 
 interface IQuiz {
     _id: string;
@@ -107,7 +106,6 @@ interface IScript {
 const CheetahPath = () => {
     const { userData, setUserData } = useUser();
     const { getNewModuleInfo, moduleData } = useModule();
-    const { getInsignias } = useInsignias();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const isAlertOnClose = () => setIsAlertOpen(false);
     const isAlertCoinsOnClose = () => {
@@ -256,7 +254,6 @@ const CheetahPath = () => {
 
             if (!userData._id) {
                 const { data } = await api.get(`/user/${_userId}`);
-                await getInsignias();
                 setUserData(data);
                 userInfoData = data;
             } else userInfoData = userData;
@@ -737,12 +734,11 @@ const CheetahPath = () => {
                 quiz={quiz}
                 questions={questions}
                 imgName={cheetah}
-                imgReward={insignaCheetah}
                 routeQuestions={'cheetahquestions'}
                 routeQuiz={'finalcheetahquiz'}
-                insignaName={'da Cheetah'}
                 userStatus={getStatusPoints(userData, AGILITY)}
                 trail={1}
+                relic={RelicsName.SANDALS}
             />
 
             <AlertModal

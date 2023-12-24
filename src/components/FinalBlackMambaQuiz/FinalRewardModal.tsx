@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import {
 	Modal,
 	ModalContent,
@@ -28,6 +28,9 @@ import colorPalette from '../../styles/colorPalette';
 import imgReward from '../../assets/icons/insignia/mambaTrailInsignia.png'
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
+import { useUser, useRelic } from '../../hooks';
+import { addRelic } from '../../services/relic';
+import RelicsName from '../../utils/enums/relicsName';
 
 interface IFinalRewardModal {
 	isOpen: boolean;
@@ -60,6 +63,8 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [onError, setOnError] = useState(false);
+	const { userData, getNewUserInfo } = useUser();
+	const { relicData, getRelics } = useRelic();
 
 	const {
 		isOpen: finalModalIsOpen,
@@ -73,6 +78,16 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 	} = useDisclosure();
 
 	const coinsRecieved = coins;
+
+	const verifyInfo = async () => {
+		if (!userData._id) {
+			await getNewUserInfo();
+		}
+		if (relicData.length == 0) {
+			await getRelics();
+		}
+
+	}
 
 	const updateUserCoins = async () => {
 		try {
@@ -107,16 +122,9 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 		try {
 			const userId = sessionStorage.getItem('@pionira/userId');
 			setIsLoading(true);
-			const badges = await api.get('/insignias/');
-			const userBadges = badges.data[2].user_id;
-			const badgeId = badges.data[2]._id;
+			
 
-			if (!userBadges.includes(userId)) {
-				userBadges.push(userId);
-				await api.patch(`user/addinsignia/${userId}`, {
-					insignias_id: badgeId,
-				});
-			}
+			await addRelic(userData.owned_relics, RelicsName.MAMBA, userId as string);
 			finalModalOnClose();
 			setIsLoading(false);
 			certificateOnOpen();
@@ -163,6 +171,10 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 			coins
 		}
 	}
+
+	useEffect(() => {
+        verifyInfo();
+    }, []);
 
 	return (
 		<>
