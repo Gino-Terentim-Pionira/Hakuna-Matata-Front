@@ -102,7 +102,6 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
                   position='bottom'
                   labelText={statusText || ""} 
                   color={statusColor || ""}
-                  ignoranceFilter={isIgnoranceFilterOn}
                 />
               }
             </Flex>
