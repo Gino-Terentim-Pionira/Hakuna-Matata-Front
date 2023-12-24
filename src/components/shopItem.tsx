@@ -94,6 +94,15 @@ const ShopItem: FC<ShopItemProps> = ({
 		"item3": "Especiais"
 	}
 
+	const confirmBuyItem = () => {
+		if(statusRequirement) {
+			setIsConfirmOpen(true);
+			setAlertAnswer(
+				'Ei, viajante! Você tem certeza que deseja comprar esse item?',
+			);
+		}
+	}
+
 	const buyItem = async () => {
 		setLoaging(true);
 		// then make buying logic
@@ -397,14 +406,7 @@ const ShopItem: FC<ShopItemProps> = ({
 												fontSize='1.5rem'
 												borderRadius='8px'
 												_hover={{}}
-												onClick={() => {
-													if(statusRequirement) {
-														setIsConfirmOpen(true);
-														setAlertAnswer(
-															'Ei, viajante! Você tem certeza que deseja comprar esse item?',
-														);
-													}
-												}}
+												onClick={confirmBuyItem}
 												cursor={!statusRequirement ? 'help' : 'pointer'}
 											>
 												Comprar

@@ -211,7 +211,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             return <>
                 <p>{label}</p>
                 {!isBlocked && <p>Para acessar: <span style={{ fontWeight: 'bold', color: colorPalette.closeButton }}>
-                    {'Acesso liberado'}% {getStatusNick(moduleStatusName)}
+                    {(moduleStatus)}% {getStatusNick(moduleStatusName)}
                 </span></p>}
             </>
     }
