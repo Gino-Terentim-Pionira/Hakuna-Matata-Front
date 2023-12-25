@@ -69,7 +69,7 @@ const ShopItem: FC<ShopItemProps> = ({
 	const [onError, setOnError] = useState(false);
 	const [loading, setLoaging] = useState(false);
 
-	const statusRequirement = userStatus >= itemStatus.points;
+	const IS_USER_HAS_STATUS_REQUIREMENT = userStatus >= itemStatus.points;
 
 	const onClose = () => {
 		setIsConfirmOpen(false);
@@ -95,7 +95,7 @@ const ShopItem: FC<ShopItemProps> = ({
 	}
 
 	const confirmBuyItem = () => {
-		if(statusRequirement) {
+		if (IS_USER_HAS_STATUS_REQUIREMENT) {
 			setIsConfirmOpen(true);
 			setAlertAnswer(
 				'Ei, viajante! Você tem certeza que deseja comprar esse item?',
@@ -390,29 +390,29 @@ const ShopItem: FC<ShopItemProps> = ({
 											</Box>
 										</>
 									) : (
-										<Tooltip
-											label={NOT_ENOUGH_STATUS(itemStatus.status_name)}
-											placement='bottom'
-											hasArrow
-											isDisabled={statusRequirement}
-											closeOnClick={false}
-										>
-											<Button
-												width='150px'
-												height='3.5rem'
-												background={statusRequirement ? colorPalette.primaryColor : colorPalette.grayBackground}
-												color={colorPalette.buttonTextColor}
-												marginBottom="24px"
-												fontSize='1.5rem'
-												borderRadius='8px'
-												_hover={{}}
-												onClick={confirmBuyItem}
-												cursor={!statusRequirement ? 'help' : 'pointer'}
+											<Tooltip
+												label={NOT_ENOUGH_STATUS(itemStatus.status_name)}
+												placement='bottom'
+												hasArrow
+												isDisabled={IS_USER_HAS_STATUS_REQUIREMENT}
+												closeOnClick={false}
 											>
-												Comprar
+												<Button
+													width='150px'
+													height='3.5rem'
+													background={IS_USER_HAS_STATUS_REQUIREMENT ? colorPalette.primaryColor : colorPalette.grayBackground}
+													color={colorPalette.buttonTextColor}
+													marginBottom="24px"
+													fontSize='1.5rem'
+													borderRadius='8px'
+													_hover={{}}
+													onClick={confirmBuyItem}
+													cursor={IS_USER_HAS_STATUS_REQUIREMENT ? 'pointer' : 'help'}
+												>
+													{IS_USER_HAS_STATUS_REQUIREMENT ? 'Comprar': 'Bloqueado'}
 											</Button>
-										</Tooltip>
-									)}
+											</Tooltip>
+										)}
 									<Box
 										marginLeft='15px'
 										fontFamily={fontTheme.fonts}
@@ -423,12 +423,12 @@ const ShopItem: FC<ShopItemProps> = ({
 									>
 										<Text> {userStatus}/{itemStatus.points}</Text>
 										<Text>
-												{getStatusNick(itemStatus.status_name)}
+											{getStatusNick(itemStatus.status_name)}
 										</Text>
 									</Box>
 								</Flex>
-								
-									
+
+
 
 								<AlertModal
 									isOpen={isConfirmOpen}
