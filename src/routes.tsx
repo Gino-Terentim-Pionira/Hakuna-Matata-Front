@@ -14,7 +14,6 @@ import Inventory from './pages/Inventory';
 import CheetahPath from './pages/CheetahPath';
 import BlackMambaPath from './pages/blackMambaPath';
 import LionPath from './pages/lionPath';
-import PaymentPage from './pages/PaymentPage';
 import { RecoilRoot } from 'recoil';
 
 const useWindowSize = () => {
@@ -56,8 +55,6 @@ const Routes = () => {
 						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath} />
 						<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
 						<ProtectedRoute path='/trilha-leao' component={LionPath} />
-						<ProtectedRoute path='/payment' component={PaymentPage} />
-						{/* <ProtectedRoute path='/premium' component={Premium} /> */}
 					</Switch>
 
 				</AuthProvider >
