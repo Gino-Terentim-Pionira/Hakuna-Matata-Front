@@ -1,4 +1,4 @@
-import babuino from "../../../assets/sprites/monkey/monkey.png";
+import babuino from "../../../assets/sprites/monkey/monkey.webp";
 import blackMamba from "../../../assets/sprites/blackMamba/mamba_negra.png";
 
 const blackMambaBeggining = async () => {

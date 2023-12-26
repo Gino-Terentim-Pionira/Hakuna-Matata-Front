@@ -49,14 +49,14 @@ import cheetahConclusion from '../utils/scripts/CheetahTrail/CheetahConclusion';
 import cheetahFinalQuiz from '../utils/scripts/CheetahTrail/CheetahFinalQuiz';
 
 // Images
-import trail_bg from '../assets/scenerys/cheetah/trail_bg.png';
+import trail_bg from '../assets/scenerys/cheetah/cheetah_bg.webp';
 import final_cheetah_icon from '../assets/icons/final_cheetah_icon.svg';
-import cheetah from '../assets/sprites/cheetah/cheetah.png';
-import cheetah_bg from '../assets/modal/cheetah_bg.png';
-import ignorance100 from '../assets/ignorance/cheetahPath/ignorance100.png';
-import ignorance75 from '../assets/ignorance/cheetahPath/ignorance75.png';
-import ignorance50 from '../assets/ignorance/cheetahPath/ignorance50.png';
-import ignorance25 from '../assets/ignorance/cheetahPath/ignorance25.png';
+import cheetah from '../assets/sprites/cheetah/cheetah.webp';
+import cheetah_bg from '../assets/modal/cheetah_banner.webp';
+import ignorance100 from '../assets/ignorance/cheetahPath/ignorance_100.webp';
+import ignorance75 from '../assets/ignorance/cheetahPath/ignorance_75.webp';
+import ignorance50 from '../assets/ignorance/cheetahPath/ignorance_50.webp';
+import ignorance25 from '../assets/ignorance/cheetahPath/ignorance_25.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import BlockedModal from '../components/modals/BlockedModal';

@@ -5,7 +5,7 @@ import RandomRewardModal from "../modals/RandomRewardModal";
 import Glasses from '../../assets/icons/double-glasses.png';
 import GlassesOn from '../../assets/icons/double-glasses-on.png';
 import Daily from '../../assets/icons/daily_quiz.png';
-import Horizon from '../../assets/Tela_de_inicio.png';
+import Horizon from '../../assets/Tela_de_inicio.webp';
 import { useUser } from "../../hooks";
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";

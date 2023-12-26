@@ -9,11 +9,11 @@ import { useAuth } from '../contexts/authContext';
 import './../styles/fadeEffect.css';
 
 // Images
-import initalScreen from '../assets/Tela_de_inicio.png';
+import initalScreen from '../assets/Tela_de_inicio.webp';
 import registerImg from '../assets/icons/registerImg.svg';
 import loginImg from '../assets/icons/loginImg.svg';
-import PioniraLogo from '../assets/PioniraLogo.png';
-import GinoLogo from '../assets/GinoLogo.png';
+import PioniraLogo from '../assets/PioniraLogo.webp';
+import GinoLogo from '../assets/GinoLogo.webp';
 import HomeButton from '../components/HomeButton';
 import { LOGIN, REGISTER } from '../utils/constants/mouseOverConstants';
 
