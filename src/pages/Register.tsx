@@ -21,7 +21,7 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
+import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import axios from 'axios';
 import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 

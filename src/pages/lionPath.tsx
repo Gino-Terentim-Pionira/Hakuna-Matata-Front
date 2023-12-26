@@ -39,16 +39,16 @@ import lionConclusion from '../utils/scripts/LionTrail/LionConclusion';
 import lionFinalQuiz from '../utils/scripts/LionTrail/LionFinalQuiz';
 
 // Images
-import trail_bg from '../assets/scenerys/lion/Trilha_leao_e_leoa.png';
+import trail_bg from '../assets/scenerys/lion/lion_bg.webp';
 import final_lion_icon from '../assets/icons/final_lion_icon.svg';
 import couple from '../assets/sprites/lion/couple.png';
-import lion_bg from '../assets/modal/lion_bg.png';
+import lion_bg from '../assets/modal/lion_banner.webp';
 import atencao from '../assets/icons/atencao.png';
 
-import ignorance100 from "../assets/ignorance/lionPath/ignorance100.png";
-import ignorance75 from "../assets/ignorance/lionPath/ignorance75.png";
-import ignorance50 from "../assets/ignorance/lionPath/ignorance50.png";
-import ignorance25 from "../assets/ignorance/lionPath/ignorance25.png";
+import ignorance100 from "../assets/ignorance/lionPath/ignorance_100.webp";
+import ignorance75 from "../assets/ignorance/lionPath/ignorance_75.webp";
+import ignorance50 from "../assets/ignorance/lionPath/ignorance_50.webp";
+import ignorance25 from "../assets/ignorance/lionPath/ignorance_25.webp";
 import { errorCases } from '../utils/errors/errorsCases';
 import FinalUniversalQuiz from '../components/FinalUniversalQuiz/FinalUniversalQuiz';
 import { FINAL_QUIZ_SINK } from '../utils/constants/constants';

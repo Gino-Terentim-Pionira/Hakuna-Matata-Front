@@ -7,7 +7,7 @@ import RewardModal from '../modals/GenericModal';
 import Cross from '../../assets/icons/cross.svg';
 import { getLogInUrl, setItems } from '../../services/linkedin';
 import { convertImageToBase64 } from '../../utils/stringUtils';
-import badgeShare from '../../assets/socialShare/badge.png';
+import badgeShare from '../../assets/socialShare/badge.webp';
 import TypesEnum from '../../utils/enums/type';
 import PlataformsEnum from '../../utils/enums/plataform';
 import { SHARE } from '../../utils/constants/buttonConstants';

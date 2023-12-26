@@ -1,4 +1,4 @@
-import cheetah_happy from "../../../assets/sprites/cheetah/cheetah_happy.png";
+import cheetah_happy from "../../../assets/sprites/cheetah/cheetah_happy.webp";
 
 
 const cheetahConclusion = (userName: string) => {

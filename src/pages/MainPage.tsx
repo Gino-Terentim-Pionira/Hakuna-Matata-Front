@@ -19,14 +19,14 @@ import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import map1_bg from '../assets/scenerys/mainPage/map1_bg.png';
-import map2_bg from '../assets/scenerys/mainPage/map2_bg.png';
+import map1_bg from '../assets/scenerys/mainPage/map1_bg.webp';
+import map2_bg from '../assets/scenerys/mainPage/map2_bg.webp';
 import icon_cheeta from '../assets/icons/icon_cheeta.svg';
 import icon_block from '../assets/icons/icon_block.svg';
-import ignorance100 from '../assets/ignorance/mainPage/ignorance100.png';
-import ignorance75 from '../assets/ignorance/mainPage/ignorance75.png';
-import ignorance50 from '../assets/ignorance/mainPage/ignorance50.png';
-import ignorance25 from '../assets/ignorance/mainPage/ignorance25.png';
+import ignorance100 from '../assets/ignorance/mainPage/ignorance_100.webp';
+import ignorance75 from '../assets/ignorance/mainPage/ignorance_75.webp';
+import ignorance50 from '../assets/ignorance/mainPage/ignorance_50.webp';
+import ignorance25 from '../assets/ignorance/mainPage/ignorance_25.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
 import NavActions from '../components/NavigationComponents/NavActions';

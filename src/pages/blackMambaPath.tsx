@@ -33,8 +33,8 @@ import './../styles/fadeEffect.css';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import BlackMambaBackground from '../assets/scenerys/blackMamba/blackMamba.png';
-import ModalMamba from '../assets/modal/modalMamba.png';
+import BlackMambaBackground from '../assets/scenerys/blackMamba/black_mamba_bg.webp';
+import ModalMamba from '../assets/modal/mamba_banner.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
