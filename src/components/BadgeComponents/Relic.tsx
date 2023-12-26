@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { Flex, Box, Image, Text, Slide, useDisclosure, Tooltip, Button } from '@chakra-ui/react';
 
 // Images
-import badgeShare from '../../assets/socialShare/badge.png';
+import badgeShare from '../../assets/socialShare/badge.webp';
 import colorPalette from '../../styles/colorPalette';
 import { BADGE_DESCRIPTION } from '../../utils/constants/mouseOverConstants';
 import { getLogInUrl, setItems } from '../../services/linkedin';

@@ -1,7 +1,7 @@
 import { Box, Center, Image, Progress, Text } from '@chakra-ui/react';
 import React from 'react';
 import colorPalette from '../styles/colorPalette';
-import CheetahBlink from '../assets/sprites/cheetah/cheetahBlink.png';
+import CheetahBlink from '../assets/sprites/cheetah/cheetah_blink.webp';
 import fontTheme from '../styles/base';
 import { motion } from 'framer-motion';
 

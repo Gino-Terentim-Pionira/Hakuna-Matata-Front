@@ -1,4 +1,4 @@
-import cheetah from "../../../assets/sprites/cheetah/cheetah.png";
+import cheetah from "../../../assets/sprites/cheetah/cheetah.webp";
 
 
 const cheetahFreeLunch = (userName: string) => {

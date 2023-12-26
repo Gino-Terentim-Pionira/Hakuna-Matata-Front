@@ -1,4 +1,4 @@
-import monkey from "../../../assets/sprites/monkey/monkey.png";
+import monkey from "../../../assets/sprites/monkey/monkey.webp";
 
 const chatScript = (ignorance: number) => {
     const script = [

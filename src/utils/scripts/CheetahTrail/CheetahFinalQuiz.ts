@@ -1,4 +1,4 @@
-import cheetah from '../../../assets/sprites/cheetah/cheetah.png';
+import cheetah from '../../../assets/sprites/cheetah/cheetah.webp';
 import api from '../../../services/api';
 
 const checkScript = async (index: number) => {

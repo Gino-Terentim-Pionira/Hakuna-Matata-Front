@@ -1,4 +1,4 @@
-import monkey from "../../../assets/sprites/monkey/monkey.png";
+import monkey from "../../../assets/sprites/monkey/monkey.webp";
 
 const lockedPathScript = async () => {
     const script = [

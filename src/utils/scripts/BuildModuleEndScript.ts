@@ -1,4 +1,4 @@
-import cheetah from "../../assets/sprites/cheetah/cheetah.png";
+import cheetah from "../../assets/sprites/cheetah/cheetah.webp";
 import couple from "../../assets/sprites/lion/couple.png";
 
 

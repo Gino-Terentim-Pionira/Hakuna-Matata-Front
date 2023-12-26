@@ -1,5 +1,5 @@
 import React, { BaseSyntheticEvent, useEffect, useState, useRef } from 'react';
-import monkey from '../assets/sprites/monkey/newMonkeyHappy.png';
+import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import fontTheme from '../styles/base';
 import {
 	Flex,

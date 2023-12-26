@@ -23,7 +23,7 @@ import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusMo
 import colorPalette from '../../styles/colorPalette';
 
 // Images
-import WorldMap from '../../assets/WorldMap.png';
+import WorldMap from '../../assets/WorldMap.webp';
 import ApprovedIcon from '../../assets/icons/ApprovedIcon.png';
 
 type ProfileModalProps = {
