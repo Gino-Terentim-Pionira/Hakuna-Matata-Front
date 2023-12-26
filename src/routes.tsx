@@ -13,7 +13,7 @@ import Shop from './pages/Shop';
 import Inventory from './pages/Inventory';
 import CheetahPath from './pages/CheetahPath';
 import BlackMambaPath from './pages/blackMambaPath';
-import LionPath from './pages/LionPath';
+import LionPath from './pages/lionPath';
 import { RecoilRoot } from 'recoil';
 
 const useWindowSize = () => {
