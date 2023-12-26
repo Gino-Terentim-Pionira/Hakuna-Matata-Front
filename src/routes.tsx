@@ -12,8 +12,8 @@ import ResetPassword from './pages/ResetPassword';
 import Shop from './pages/Shop';
 import Inventory from './pages/Inventory';
 import CheetahPath from './pages/CheetahPath';
-import LionPath from './pages/LionPath';
 import BlackMambaPath from './pages/blackMambaPath';
+import LionPath from './pages/LionPath';
 import { RecoilRoot } from 'recoil';
 
 const useWindowSize = () => {
