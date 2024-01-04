@@ -310,12 +310,10 @@ const ShopItem: FC<ShopItemProps> = ({
 							marginTop='2rem'
 							position='absolute'
 							marginLeft='1.5rem'
-							justifyContent='space-between'
 						>
-							<Flex flexDirection='column' w='80%'>
+							<Flex flexDirection='column'>
 								<Text
 									fontSize={['0.5rem', '1.2rem', '1.5rem']}
-									w='60%'
 									fontWeight='semibold'
 									textAlign='left'
 									mb='8px'
@@ -328,11 +326,12 @@ const ShopItem: FC<ShopItemProps> = ({
 									textAlign='left'
 									overflow="auto"
 									maxH="160px"
+									paddingBottom="16px"
 								>
 									{description}
 								</Text>
 							</Flex>
-							<Flex flexDirection='column' alignSelf='flex-end'>
+							<Flex flexDirection='column' alignSelf='flex-start' marginTop="24px" marginLeft="24px">
 								<Box display='flex' flexDirection='row' marginBottom="4px">
 									<Text
 										fontFamily={fontTheme.fonts}
@@ -402,7 +401,6 @@ const ShopItem: FC<ShopItemProps> = ({
 													height='3.5rem'
 													background={IS_USER_HAS_STATUS_REQUIREMENT ? colorPalette.primaryColor : colorPalette.grayBackground}
 													color={colorPalette.buttonTextColor}
-													marginBottom="24px"
 													fontSize='1.5rem'
 													borderRadius='8px'
 													_hover={{}}
