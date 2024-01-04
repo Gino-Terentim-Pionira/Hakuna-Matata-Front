@@ -8,12 +8,11 @@ import font from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 
 
-const StatusProgress = ({ status, position, labelText, color, ignoranceFilter }: {
+const StatusProgress = ({ status, position, labelText, color }: {
     status: number,
     position: PositionProps,
     labelText: string,
     color: string,
-    ignoranceFilter: boolean
 }) => {
     return (
         <Tooltip
@@ -53,7 +52,7 @@ const StatusProgress = ({ status, position, labelText, color, ignoranceFilter }:
                     </Text>
                 </Box>
                 {
-                        ignoranceFilter && <Text
+                    <Text
                         position='absolute'
                         top='5%'
                         right='16px'
@@ -61,10 +60,10 @@ const StatusProgress = ({ status, position, labelText, color, ignoranceFilter }:
                         color={colorPalette.whiteText}
                         fontWeight='bold'
                         fontSize='14px'
-                        >
-                            {`${Math.floor(status)}%`}
-                        </Text>
-                    }
+                    >
+                        {`${Math.floor(status)}%`}
+                    </Text>
+                }
             </Box>
         </Tooltip>
     );
