@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { Flex, Box, Tabs, TabPanels, TabPanel, Image, Grid, Text, Tooltip } from '@chakra-ui/react';
-import { useUser } from '../../hooks';
+import { useUser } from '../../../../hooks';
 
 // Components
 import Relic from './Relic';
-import LoadingState from '../LoadingState';
+import LoadingState from '../../../LoadingState';
 
 // Images
-import { LOCKED_BADGE } from '../../utils/constants/mouseOverConstants';
-import useRelic from '../../hooks/useRelic';
-import rarityEnum from '../../utils/enums/rarity';
+import { LOCKED_BADGE } from '../../../../utils/constants/mouseOverConstants';
+import useRelic from '../../../../hooks/useRelic';
+import rarityEnum from '../../../../utils/enums/rarity';
 
 const RelicsCertificate = () => {
     const { relicData, getRelics } = useRelic();

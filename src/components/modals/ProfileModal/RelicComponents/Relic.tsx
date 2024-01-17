@@ -2,15 +2,15 @@ import React, { FC, useState } from 'react';
 import { Flex, Box, Image, Text, Slide, useDisclosure, Tooltip, Button } from '@chakra-ui/react';
 
 // Images
-import badgeShare from '../../assets/socialShare/badge.webp';
-import colorPalette from '../../styles/colorPalette';
-import { BADGE_DESCRIPTION } from '../../utils/constants/mouseOverConstants';
-import { getLogInUrl, setItems } from '../../services/linkedin';
-import { convertImageToBase64 } from '../../utils/stringUtils';
-import TypesEnum from '../../utils/enums/type';
-import PlataformsEnum from '../../utils/enums/plataform';
-import { SHARE } from '../../utils/constants/buttonConstants';
-import linkedin from '../../assets/icons/social/linkedin.png';
+import badgeShare from '../../../../assets/socialShare/badge.webp';
+import colorPalette from '../../../../styles/colorPalette';
+import { BADGE_DESCRIPTION } from '../../../../utils/constants/mouseOverConstants';
+import { getLogInUrl, setItems } from '../../../../services/linkedin';
+import { convertImageToBase64 } from '../../../../utils/stringUtils';
+import TypesEnum from '../../../../utils/enums/type';
+import PlataformsEnum from '../../../../utils/enums/plataform';
+import { SHARE } from '../../../../utils/constants/buttonConstants';
+import linkedin from '../../../../assets/icons/social/linkedin.png';
 
 type RelicProps = {
     _id: string;
