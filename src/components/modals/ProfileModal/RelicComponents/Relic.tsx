@@ -60,7 +60,7 @@ const Relic: FC<RelicProps> = ({
         <>
             <Tooltip
                 hasArrow
-                placement='top'
+                placement="bottom"
                 gutter={10}
                 label={BADGE_DESCRIPTION}
             >

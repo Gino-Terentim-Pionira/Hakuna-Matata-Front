@@ -99,7 +99,7 @@ const ProfileModal: FC<ProfileModalProps> = ({
                     ) : step === 2 ? (
                         renderBackgroundImage(<ProfileDataModal />)
                     ) : (
-                        renderBackgroundImage(<RelicsCertificate />)
+                        renderBackgroundImage(<RelicsCertificate />, true)
                     )}
                 </ModalBody>
             </ModalContent>

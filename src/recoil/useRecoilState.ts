@@ -34,10 +34,16 @@ export interface IUser {
 	question_id: string[];
     video_id: string[];
 	module_id: string[];
-	owned_relics: [{
-		relic_name: string,
-		date: Date
-	}];
+	equiped_relics?: {
+		first_slot: {
+			relic_name: string,
+			date: Date
+		},
+		second_slot: {
+			relic_name: string,
+			date: Date
+		}
+	};
 	custom_avatar: {
         hair: string;
         hair_color: string;
