@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 // Components
-import RelicsCertificate from './RelicComponents/RelicsCertificate';
+import Relics from './RelicComponents/Relics';
 import ProfileDataModal from './ProfileDataModal';
 import PerfilModalButton from '../../PerfilModalButton';
 import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusModal';
@@ -99,7 +99,7 @@ const ProfileModal: FC<ProfileModalProps> = ({
                     ) : step === 2 ? (
                         renderBackgroundImage(<ProfileDataModal />)
                     ) : (
-                        renderBackgroundImage(<RelicsCertificate />, true)
+                        renderBackgroundImage(<Relics />, true)
                     )}
                 </ModalBody>
             </ModalContent>

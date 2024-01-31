@@ -1,187 +1,47 @@
-import React, { FC, useState } from 'react';
-import { Flex, Box, Image, Text, Slide, useDisclosure, Tooltip, Button } from '@chakra-ui/react';
-
-// Images
-import badgeShare from '../../../../assets/socialShare/badge.webp';
-import colorPalette from '../../../../styles/colorPalette';
+import { Flex, Image, Tooltip } from '@chakra-ui/react';
 import { BADGE_DESCRIPTION } from '../../../../utils/constants/mouseOverConstants';
-import { getLogInUrl, setItems } from '../../../../services/linkedin';
-import { convertImageToBase64 } from '../../../../utils/stringUtils';
-import TypesEnum from '../../../../utils/enums/type';
-import PlataformsEnum from '../../../../utils/enums/plataform';
-import { SHARE } from '../../../../utils/constants/buttonConstants';
-import linkedin from '../../../../assets/icons/social/linkedin.png';
+import colorPalette from '../../../../styles/colorPalette';
+import React from 'react';
+import rarityEnum from '../../../../utils/enums/rarity';
 
-type RelicProps = {
-    _id: string;
-    relic_name: string;
-    description: string;
-    image: string;
+type RelicComponentType = {
+    relicImage: string;
+    width?: string;
+    height?: string;
+    color?: rarityEnum | 'default';
+    onClick?: VoidFunction
+    badgeDescription?: string;
 }
 
-const Relic: FC<RelicProps> = ({ 
-    _id, 
-    relic_name, 
-    description,
-    image
-}) => {
-    const { isOpen, onToggle } = useDisclosure();
-    const [show, setShow] = useState(false);
+export const Relic = ({ relicImage, color = 'default', width, height, onClick, badgeDescription }: RelicComponentType) => {
 
-    const changeShow = () => {
-        setShow(!show);
-    }
-
-    const showDescription = () => {
-        setTimeout(changeShow, 100);
-        onToggle();
-    }
-
-    const handleLinkedin = async () => {
-        try {
-            const response = await getLogInUrl();
-            const imgbase64 = await convertImageToBase64(badgeShare);
-            const text = `Ganhei a relíquia ${relic_name}`;
-            const description = `Relíquia ${relic_name}`;
-            setItems(
-                text,
-                description,
-                imgbase64 as string,
-                TypesEnum.RELIC,
-                _id,
-                PlataformsEnum.LINKEDIN);
-            window.location.replace(response.data.url);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    const relicColor = {
+        'Normal': 'radial-gradient(50% 50% at 50% 50%, #CFDFFF 0%, #719DF6 100%)',
+        'Lendário': 'radial-gradient(50% 50% at 50% 50%, #EBD8F8 0%, #A344E8 100%)',
+        'Místico':  'radial-gradient(50% 50% at 50% 50%, #F4E9D1 0%, #F0C05D 100%)',
+        'default': '#D9D9D9',
+    }[color]
 
     return (
-        <>
-            <Tooltip
-                hasArrow
-                placement="bottom"
-                gutter={10}
-                label={BADGE_DESCRIPTION}
+        <Tooltip
+            hasArrow
+            placement="bottom"
+            gutter={10}
+            label={badgeDescription ? badgeDescription : BADGE_DESCRIPTION }
+        >
+            <Flex
+                width={width || '106px'}
+                height={height || '106px'}
+                borderRadius="8px"
+                justifyContent="center"
+                alignItems="center"
+                border={`2px solid ${colorPalette.textColor}`}
+                bg={relicColor}
+                padding="2px"
+                onClick={onClick}
             >
-                <Box
-                    marginTop='1rem'
-                    maxW='14rem'
-                    h='11rem'
-                    display='flex'
-                    flexDirection='column'
-                    justifyContent='space-between'
-                    alignItems='center'
-                    key={_id}
-                    _hover={{
-                        cursor: 'pointer',
-                    }}
-                    onClick={showDescription}
-                >
-                    <Image
-                        boxSize='7.5rem'
-                        src={image}
-                    />
-                    <Text
-                        textDecoration='underline'
-                        fontWeight='bold'
-                        marginBottom='1rem'
-                    >{relic_name}</Text>
-                </ Box>
-            </Tooltip>
-            {
-                show ? (
-                    <Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }}>
-                        <Box onClick={showDescription} w='100%' h='100vh' />
-                        <Flex
-                            w='100%'
-                            h='16rem'
-                            bg={colorPalette.slideBackground}
-                            rounded="md"
-                            shadow="md"
-                            flexDirection='column'
-                            justifyContent='space-between'
-                            border='4px solid'
-                            borderColor={colorPalette.secondaryColor}
-                        >
-                            <Flex
-                                justifyContent='flex-end'
-                                paddingRight='20px'
-                                paddingTop='9px'
-                                fontSize='2rem'
-                                fontWeight='bold'
-                                color={colorPalette.closeButton}
-                            >
-                                <Text
-                                    onClick={showDescription}
-                                    transition='all 0.2s'
-                                    _hover={{
-                                        cursor: 'pointer',
-                                        opacity: '80%'
-                                    }}
-                                    _active={{
-                                        opacity: '50%'
-                                    }}
-                                    w='2.5rem'
-                                >
-                                    X
-                                </Text>
-                            </Flex>
-                            <Flex
-                                w='92%'
-                                marginTop='1rem'
-                                position='absolute'
-                                marginLeft='1.5rem'
-                                flexDirection='column'
-                            >
-                                <Text
-                                    fontSize={['0.5rem', '1rem', '1.3rem']}
-                                    fontWeight='bold'
-                                    textAlign='left'
-                                >
-                                    {relic_name}
-                                </Text>
-
-                                <Text
-                                    fontSize={['0.5rem', '1rem', '1.3rem']}
-                                    fontWeight='regular'
-                                    textAlign='left'
-                                    marginTop='2rem'
-
-                                >
-                                    {description}
-                                </Text>
-                            </Flex>
-
-                            <Flex
-                                justifyContent='flex-end'
-                                marginBottom='36px'
-                                marginRight='20px'
-                            >
-                                <Button
-                                    width='190px'
-                                    height='45px'
-                                    colorScheme='linkedin'
-                                    fontSize='20px'
-                                    leftIcon={
-                                        <Image 
-                                            width='24px'
-                                            height='24px'
-                                            src={linkedin} 
-                                        />
-                                    }
-                                    onClick={handleLinkedin}
-                                >
-                                    {SHARE}
-                                </Button>
-                            </Flex>
-                        </Flex>
-                    </Slide>
-                ) : null
-            }
-
-        </>
+                <Image src={relicImage} alt="Imagem da relíquia" />
+            </Flex>
+        </Tooltip>
     );
-}
-
-export default Relic;
+};
