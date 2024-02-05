@@ -89,35 +89,35 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 				}
 			};
 
-			const userValidade = (await api.get(`/user/${userId}`)).data;
+			const userValidate = (await api.get(`/user/${userId}`)).data;
 
 			if (correctAnswers === totalAnswers) {
-				await updateRelic(userValidade.owned_relics, relic, userId as string);
+				await updateRelic(userValidate.user_relics, relic, userId as string);
 				if (trail === 1) {
 					await api.patch(`/user/${routeQuiz}/${userId}`, {
 						finalQuizComplete: {
-							...userValidade.finalQuizComplete,
+							...userValidate.finalQuizComplete,
 							cheetahFinal: true,
 						},
 					});
 					
 					await api.patch(`/user/narrative/${userId}`, {
                         narrative_status: {
-                            ...userValidade.narrative_status,
+                            ...userValidate.narrative_status,
                             trail1: 3
                         },
                     });
 				} else if (trail === 2) {
 					await api.patch(`/user/${routeQuiz}/${userId}`, {
 						finalQuizComplete: {
-							...userValidade.finalQuizComplete,
+							...userValidate.finalQuizComplete,
 							lionFinal: true,
 						},
 					});
 
 					await api.patch(`/user/narrative/${userId}`, {
                         narrative_status: {
-                            ...userValidade.narrative_status,
+                            ...userValidate.narrative_status,
                             trail2: 3
                         },
                     });
@@ -134,7 +134,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	};
 
 	const updateRelic = async (
-		ownedRelics: IUser['equiped_relics'],
+		ownedRelics: IUser['user_relics'],
 		relicName: RelicsName, 
 		userId: string
 	) => {

@@ -129,42 +129,42 @@ const Relics = () => {
     }, []);
 
     return (
-        <Flex h="100%" flexDirection="column" alignItems="center">
-            {
-                relicInfoModal.isOpen &&  <RelicInfoSlide
-                    {...relicInfoModal}
-                    onClose={closeRelicInfoModal}
-                />
-            }
+        <Flex h="469px" flexDirection="column" alignItems="center">
+            <RelicInfoSlide
+                {...relicInfoModal}
+                onClose={closeRelicInfoModal}
+            />
 
             <Flex paddingTop="40px" paddingBottom="24px" columnGap="56px">
                 <Relic
                     onClick={userEquippedRelics.first_slot ? () => handleUserRelicInfoModal(userEquippedRelics.first_slot as UserRelicType, true) : undefined}
                     color={userEquippedRelics.first_slot ? userEquippedRelics.first_slot.rarity : 'default'}
                     relicImage={userEquippedRelics.first_slot ? userEquippedRelics.first_slot.image : 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_sillouete.png'}
-                    badgeDescription={userEquippedRelics.first_slot ? 'Nenhuma relíquia equipada' : undefined }
+                    badgeDescription={!userEquippedRelics.first_slot ? 'Nenhuma relíquia equipada' : undefined }
+                    isCursorActive={!!userEquippedRelics.first_slot}
                 />
                 <Relic
                     onClick={userEquippedRelics.second_slot ? () => handleUserRelicInfoModal(userEquippedRelics.second_slot as UserRelicType, true) : undefined}
                     color={userEquippedRelics.second_slot ? userEquippedRelics.second_slot.rarity : 'default'}
                     relicImage={userEquippedRelics.second_slot ? userEquippedRelics.second_slot.image : 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_sillouete.png'}
-                    badgeDescription={userEquippedRelics.second_slot ? 'Nenhuma relíquia equipada' : undefined }
+                    badgeDescription={!userEquippedRelics.second_slot ? 'Nenhuma relíquia equipada' : undefined }
+                    isCursorActive={!!userEquippedRelics.first_slot}
                 />
             </Flex>
             <Divider width="90%"  />
             {
-                relicData ?
-                    <Flex height={"50%"} justifyContent="center" alignItems="center" width="100%">
+                !relicData ?
+                    <Flex height="50%" justifyContent="center" alignItems="center" width="100%">
                         <LoadingState />
                     </Flex>
                     :
                     <Grid
                         width="90%"
-                        maxHeight="400px"
+                        height="100%"
                         overflowY="auto"
                         padding="24px 16px"
                         gridAutoFlow="row"
-                        gridTemplateColumns="repeat(5, minmax(75px, 0fr))"
+                        gridTemplateColumns="repeat(5, minmax(14.6%, 0fr))"
                         columnGap="48px"
                         rowGap="32px"
                     >
@@ -174,15 +174,26 @@ const Relics = () => {
                                     const second_slot = getEquippedRelics()?.second_slot?.relic_name;
                                     const IS_EQUIPED = first_slot === item.relic_name || second_slot === item.relic_name;
                                     return (
-                                        <Relic onClick={() => handleUserRelicInfoModal(item, IS_EQUIPED)} color={item.rarity} width="80px"
-                                               height="80px" relicImage={item.image} />
+                                        <Relic
+                                            onClick={() => handleUserRelicInfoModal(item, IS_EQUIPED)}
+                                            color={item.rarity}
+                                            width="80px"
+                                            height="80px" relicImage={item.image}
+                                            isCursorActive={true}
+                                        />
                                     );
                                 }
                             )
                         }
                         {
                             relics?.map((item) => (
-                                <Relic onClick={() => handleRelicInfoModal(item)} width="80px" height="80px" relicImage={item.image_sillouete} />
+                                <Relic
+                                    onClick={() => handleRelicInfoModal(item)}
+                                    width="80px"
+                                    height="80px"
+                                    relicImage={item.image_sillouete}
+                                    isCursorActive={true}
+                                />
                             ))
                         }
                     </Grid>

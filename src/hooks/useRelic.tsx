@@ -9,7 +9,6 @@ export const useRelic = () => {
         try {
             const res = await api.get(`/relic/${userId}`);
             setRelicData(res.data);
-            console.log(res.data);
         } catch (error) {
             console.log(error);
         }

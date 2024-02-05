@@ -1,5 +1,5 @@
 import { Flex, Image, Tooltip } from '@chakra-ui/react';
-import { BADGE_DESCRIPTION } from '../../../../utils/constants/mouseOverConstants';
+import { RELIC_DESCRIPTION } from '../../../../utils/constants/mouseOverConstants';
 import colorPalette from '../../../../styles/colorPalette';
 import React from 'react';
 import rarityEnum from '../../../../utils/enums/rarity';
@@ -11,9 +11,10 @@ type RelicComponentType = {
     color?: rarityEnum | 'default';
     onClick?: VoidFunction
     badgeDescription?: string;
+    isCursorActive?: boolean;
 }
 
-export const Relic = ({ relicImage, color = 'default', width, height, onClick, badgeDescription }: RelicComponentType) => {
+export const Relic = ({ relicImage, color = 'default', width, height, onClick, badgeDescription, isCursorActive }: RelicComponentType) => {
 
     const relicColor = {
         'Normal': 'radial-gradient(50% 50% at 50% 50%, #CFDFFF 0%, #719DF6 100%)',
@@ -27,7 +28,7 @@ export const Relic = ({ relicImage, color = 'default', width, height, onClick, b
             hasArrow
             placement="bottom"
             gutter={10}
-            label={badgeDescription ? badgeDescription : BADGE_DESCRIPTION }
+            label={badgeDescription ? badgeDescription : RELIC_DESCRIPTION }
         >
             <Flex
                 width={width || '106px'}
@@ -39,6 +40,7 @@ export const Relic = ({ relicImage, color = 'default', width, height, onClick, b
                 bg={relicColor}
                 padding="2px"
                 onClick={onClick}
+                cursor={isCursorActive ? 'pointer' : undefined}
             >
                 <Image src={relicImage} alt="Imagem da relíquia" />
             </Flex>

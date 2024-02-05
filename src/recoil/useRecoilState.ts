@@ -34,7 +34,7 @@ export interface IUser {
 	question_id: string[];
     video_id: string[];
 	module_id: string[];
-	equiped_relics?: {
+	equiped_relics: {
 		first_slot: {
 			relic_name: string,
 			date: Date
@@ -44,6 +44,10 @@ export interface IUser {
 			date: Date
 		}
 	};
+	user_relics: [{
+		relic_name: string;
+		date: Date;
+	}];
 	custom_avatar: {
         hair: string;
         hair_color: string;

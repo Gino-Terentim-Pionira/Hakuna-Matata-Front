@@ -1,4 +1,4 @@
-import { Button, Flex, Slide, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Slide, Text } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import fontTheme from '../../../../styles/base';
 import React from 'react';
@@ -30,6 +30,7 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 
 	return (
 		<Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }} >
+			<Box onClick={onClose} width="100vw" height="100vh" top="0" bg={"transparent"} />
 			<Flex
 				width="100%"
 				height="230px"
@@ -42,6 +43,7 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 				paddingLeft="40px"
 				paddingRight="40px"
 				flexDirection="column"
+				zIndex={10000}
 			>
 				<Flex marginTop="24px" fontFamily={fontTheme.fonts} color={colorPalette.textColor} justifyContent="space-between" alignItems="flex-start" width="100%" maxWidth="1500px">
 					<Flex justifyContent="center" alignItems="center">
@@ -83,10 +85,10 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 				<Flex marginTop="8px" gap="32px" fontFamily={fontTheme.fonts} color={colorPalette.textColor} justifyContent="space-between" alignItems="center" width="100%" maxWidth="1500px">
 					<Flex flexDirection="column">
 						<Text display="flex" fontSize="18px">
-							{!isHaveNoButton ? description : <>Aparentenmente essa é uma reliquia de nível (<Text color={relicColor} fontWeight="semibold" >{rarity}</Text>), Viajante!</> }
+							{!isHaveNoButton ? description : <>Aparentemente essa é uma relíquia de nível (<Text color={relicColor} fontWeight="semibold" >{rarity}</Text>), Viajante!</> }
 						</Text>
 						<Text display="flex" marginTop="16px" fontSize="18px">
-							<Text marginRight="4px" fontWeight="semibold">{!isHaveNoButton ? 'Encontrada:' : 'Dica para encontrar a relíquia'}</Text> {!isHaveNoButton ? discoveredTrail : hint}.
+							<Text marginRight="4px" fontWeight="semibold">{!isHaveNoButton ? 'Encontrada:' : 'Dica para encontrar a relíquia:'}</Text> {!isHaveNoButton ? discoveredTrail : hint}.
 						</Text>
 					</Flex>
 
