@@ -81,9 +81,9 @@ const ProfileModal: FC<ProfileModalProps> = ({
     )
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size={variant}>
+        <Modal isOpen={isOpen} onClose={onClose} size={variant} >
             <ModalOverlay />
-            <ModalContent height='80%' maxH="600px" bg={colorPalette.backgroundColor}>
+            <ModalContent height="600px" bg={colorPalette.backgroundColor}>
                 <Box w="25%" bg={colorPalette.primaryColor} h="100%" position="absolute" zIndex='0' left="0" top="0"></Box>
                 <ModalHeader margin-top='1rem'>
                     <Flex justifyContent='space-around'>

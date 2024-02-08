@@ -148,7 +148,7 @@ const Relics = () => {
                     color={userEquippedRelics.second_slot ? userEquippedRelics.second_slot.rarity : 'default'}
                     relicImage={userEquippedRelics.second_slot ? userEquippedRelics.second_slot.image : 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_sillouete.png'}
                     badgeDescription={!userEquippedRelics.second_slot ? 'Nenhuma relíquia equipada' : undefined }
-                    isCursorActive={!!userEquippedRelics.first_slot}
+                    isCursorActive={!!userEquippedRelics.second_slot}
                 />
             </Flex>
             <Divider width="90%"  />
@@ -160,7 +160,6 @@ const Relics = () => {
                     :
                     <Grid
                         width="90%"
-                        height="100%"
                         overflowY="auto"
                         padding="24px 16px"
                         gridAutoFlow="row"
