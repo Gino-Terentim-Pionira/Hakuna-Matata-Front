@@ -137,7 +137,8 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     const updateUserCoins = async () => {
         try {
             setIsLoading(true);
-            if (userQuizCoins < moduleInfo.total_coins && questionsId) {
+            const SHOULD_UPDATE_USER_FINISHED_QUESTIONS_AND_COINS = userQuizCoins < moduleInfo.total_coins && questionsId;
+            if (SHOULD_UPDATE_USER_FINISHED_QUESTIONS_AND_COINS) {
                 const _userId = sessionStorage.getItem('@pionira/userId');
                 await userServices.addQuestionsToUser(_userId as string, questionsId);
 
