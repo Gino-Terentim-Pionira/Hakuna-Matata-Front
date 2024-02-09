@@ -10,7 +10,6 @@ import { getStatusName } from '../../utils/statusUtils';
 
 // Styles
 import colorPalette from '../../styles/colorPalette';
-import api from '../../services/api';
 
 // Images
 import Cheetah from '../../assets/icons/cheetahblink.svg';
@@ -21,12 +20,6 @@ import { UserServices } from '../../services/UserServices';
 interface IStatus {
     name: string,
     points: number
-}
-
-interface userDataProps {
-    coins: number,
-    status: number[],
-    ignorance: number
 }
 
 interface IModuleQuiz {
