@@ -10,22 +10,16 @@ import { getStatusName } from '../../utils/statusUtils';
 
 // Styles
 import colorPalette from '../../styles/colorPalette';
-import api from '../../services/api';
 
 // Images
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
 import GenericQuizModal from './GenericQuizModal';
+import { UserServices } from '../../services/UserServices';
 
 interface IStatus {
     name: string,
     points: number
-}
-
-interface userDataProps {
-    coins: number,
-    status: number[],
-    ignorance: number
 }
 
 interface IModuleQuiz {
@@ -66,6 +60,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     userQuizCoins,
     remainingCoins
 }) => {
+    const userServices = new UserServices();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { getNewUserInfo, userData } = useUser();
     const length = moduleInfo.questions_id.length;
@@ -123,23 +118,6 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
         await UpdateStatus(userData, userId, status.name, status.points);
     }
 
-    const addCoinsStatus = async (value: number) => {
-        try {
-            const _userId = sessionStorage.getItem('@pionira/userId');
-            const res = await api.get<userDataProps>(`/user/${_userId}`);
-
-            if (userQuizCoins < moduleInfo.total_coins) {
-                await api.patch<userDataProps>(`/user/coins/${_userId}`, {
-                    coins: res.data.coins + value
-                });
-
-                incrementStatus(_userId as string);
-            }
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
     const updateUserQuizTime = async () => {
         try {
             const userId = sessionStorage.getItem('@pionira/userId');
@@ -152,15 +130,12 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     const updateUserCoins = async () => {
         try {
             setIsLoading(true);
-            await addCoinsStatus(coins);
-            if (questionsId) {
-                const userId = sessionStorage.getItem('@pionira/userId');
-                const length = questionsId.length;
-                for (let i = 0; i < length; i++) {
-                    await api.patch(`/user/addquestion/${userId}`, {
-                        question_id: questionsId[i]
-                    });
-                }
+            const SHOULD_UPDATE_USER_FINISHED_QUESTIONS_AND_COINS = userQuizCoins < moduleInfo.total_coins && questionsId;
+            if (SHOULD_UPDATE_USER_FINISHED_QUESTIONS_AND_COINS) {
+                const _userId = sessionStorage.getItem('@pionira/userId');
+                await userServices.addQuestionsToUser(_userId as string, questionsId);
+
+                await incrementStatus(_userId as string);
             }
             firsTimeChallenge ? validateUser() : null
             await updateUserQuizTime();
