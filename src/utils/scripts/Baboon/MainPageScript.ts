@@ -8,9 +8,13 @@ const mainPageScript = (userName: string) => {
             name: "Babuíno",
             image: monkey,
             texts: [
-                `Olá, jovem viajante. Seu nome é ${userName}, certo? Eu sou o Babuíno e preciso de sua ajuda. A Savana está sendo corrompida pela “Ignorância” e o único jeito de combatê-la é aumentando a nossa “Sabedoria”.`,
-                'Faço parte do grupo “Pioneiros” e sou responsável por treinar viajantes com grande potencial, assim como você! Junte-se a nós nesta aventura e nos ajude a livrar a Savana da “Ignorância”! Vá em frente e acesse as trilhas para conhecer os demais treinadores.',
-                'Só tome cuidado com o covil da Mamba Negra! Ela será seu desafio final nesta jornada. Antes de você ir, quero dar-lhe algumas joias, para ajudar neste começo. Tenha uma boa viagem.',
+                `Ah, que alegria ver um novo rosto sob o vasto céu da Savana. Seu nome é ${userName}, verdade? Bem-vindo! Eu sou o Babuíno, um guardião deste lugar, tão antigo quanto as estrelas que nos guiam e tão curioso quanto os ventos que nos trazem novas histórias.`,
+                "A Savana, veja bem, está envolta numa névoa de 'Ignorância', um desafio que somente corações valentes e mentes brilhantes podem enfrentar. E aqui está você, pronto para trilhar o caminho da 'Sabedoria'.",
+                "Esta será uma viagem de descoberta e conexão, onde cada passo é uma história, cada desafio uma lição. Estou aqui, como estive para muitos antes de você, para orientar e inspirar.",
+                "Nosso caminho é feito de união e partilha, onde a generosidade do conhecimento ilumina as sombras da ignorância. Escolha sua trilha, jovem viajante. É uma oportunidade para crescer, para brilhar, para se superar.",
+                "Os guardiões da Savana, cada um com sua própria sabedoria, esperam por você. E, sim, a Mamba Negra... um desafio que testará tudo o que você aprendeu. Mas lembre-se, a maior das jornadas começa com um simples passo.",
+                "E para esse primeiro passo, algumas joias de sabedoria, um pequeno presente meu para você. Vamos lá, o vento já nos chama. Que sua jornada seja rica, plena de aprendizados e repleta de conexões.",
+                "Este é o seu momento, sua chance de fazer a diferença, de ser mais um brilhante 'Pioneiro' na imensidão desta Savana."
             ]
         }
     ]
