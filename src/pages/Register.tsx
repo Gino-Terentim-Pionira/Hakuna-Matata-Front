@@ -317,6 +317,7 @@ const Register = () => {
                         validationError={validationError}
                         hasValidationError={hasValidationError}
                         loading={isLoading}
+                        hasTerms={true}
                     />
                 ) : (
                     <div>Você não devia estar aqui, chapa!</div>
