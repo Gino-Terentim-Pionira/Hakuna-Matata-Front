@@ -98,8 +98,6 @@ const Relics = () => {
             closeAlertModalInfo();
             closeRelicInfoModal();
         } catch (e) {
-            console.log(e.response.data.message);
-            console.log('AQUIIII');
             setAlertModalInfo({
                 isOpen: true,
                 body: e.response.data.message,
