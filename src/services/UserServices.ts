@@ -38,6 +38,18 @@ export class UserServices {
             skin: string
         }
     ) => {
-        await api.patch(`/user/avatar/${_userId}`, { custom_avatar })
+        await api.patch(`/user/avatar/${_userId}`, { custom_avatar });
+    }
+
+    equipUserRelic = async (_userId: string, relic_name: string) => {
+        await api.patch(`/user/equiprelic/${_userId}`, {
+            relic_name
+        });
+    }
+
+    unequipUserRelic = async (_userId: string, relicSlot: 'first_slot' | 'second_slot') => {
+        await api.patch(`/user/unequiprelic/${_userId}`, {
+            relicSlot
+        })
     }
 }
