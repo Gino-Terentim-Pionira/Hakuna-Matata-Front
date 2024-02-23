@@ -31,7 +31,7 @@ const Relics = () => {
     const [alertModalInfo, setAlertModalInfo] = useState<alertModalInfo>({
         isOpen: false,
         body: <>Você tem certeza que quer equipar essa relíquia? <strong style={{ color: colorPalette.alertText }}> Você só poderá troca-lá depois de 24h.</strong> </>,
-        onClick: () => console.log(''),
+        onClick: () => {return},
     })
     const [relicInfoModal, setRelicInfoModal] = useState({
         isOpen: false,
@@ -44,7 +44,7 @@ const Relics = () => {
         isEquiped: false,
         button: {
             label: '',
-            onClick: () => console.log(''),
+            onClick: () => {return},
             backgroundColor: ''
         },
     })
@@ -80,7 +80,6 @@ const Relics = () => {
             closeAlertModalInfo();
             closeRelicInfoModal();
         } catch (e) {
-            console.log(e);
             setAlertModalInfo({
                 isOpen: true,
                 body: e.response.data.message,
@@ -110,7 +109,9 @@ const Relics = () => {
     const closeAlertModalInfo = () => {
         setAlertModalInfo({
             isOpen: false,
-            onClick: () => console.log(''),
+            onClick: () => {
+                return;
+            },
             body: '',
         });
     }
@@ -165,7 +166,7 @@ const Relics = () => {
             isEquiped: false,
             button: {
                 label: '',
-                onClick: () => console.log('teste'),
+                onClick: () => {return},
                 backgroundColor: ''
             }
         })
@@ -183,7 +184,7 @@ const Relics = () => {
             isEquiped: false,
             button: {
                 label: '',
-                onClick: () => console.log('teste'),
+                onClick: () => {return},
                 backgroundColor: ''
             },
             isOpen: false,
@@ -209,7 +210,7 @@ const Relics = () => {
                 alertTitle="Atenção!"
                 alertBody={alertModalInfo.body}
                 isOpen={alertModalInfo.isOpen}
-                onClose={isLoading ? () => console.log('') : closeAlertModalInfo}
+                onClose={isLoading ? () => {return} : closeAlertModalInfo}
                 buttonBody={
                     <>
                         <Button isLoading={isLoading} isDisabled={isLoading} onClick={alertModalInfo.onClick}  minWidth="72px" color={colorPalette.whiteText} background={colorPalette.primaryColor}>Confirmar</Button>
