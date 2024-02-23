@@ -10,7 +10,7 @@ import {
 	Divider,
 } from '@chakra-ui/react';
 
-type CustomModalProps = {
+type TermsPolicyModalProps = {
 	isOpen: boolean;
 	onClose: VoidFunction;
 	onClickClose?: VoidFunction;
@@ -20,7 +20,7 @@ type CustomModalProps = {
     modalSize: string
 };
 
-const CustomModal: FC<CustomModalProps> = ({
+const TermsPolicyModal: FC<TermsPolicyModalProps> = ({
 	isOpen,
 	onClose,
 	onClickClose,
@@ -57,4 +57,4 @@ const CustomModal: FC<CustomModalProps> = ({
 	);
 };
 
-export default CustomModal;
+export default TermsPolicyModal;

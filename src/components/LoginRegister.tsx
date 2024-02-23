@@ -4,9 +4,9 @@ import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 import closed_eye from '../assets/icons/closed-eye.png';
 import eye from '../assets/icons/eye.png'
-import CustomModal from './modals/CustomModal';
-import TermsOfUse from './TermsComponent/TermsOfUse';
-import PrivacyPolicy from './TermsComponent/PrivacyPolicy';
+import TermsPolicyModal from './modals/TermsPolicyModal/TermsPolicyModal';
+import TermsOfUse from './modals/TermsPolicyModal/TermsComponent/TermsOfUse';
+import PrivacyPolicy from './modals/TermsPolicyModal/TermsComponent/PrivacyPolicy';
 
 type LoginRegisterProps = {
     mainText: string;
@@ -263,7 +263,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     </Link>
                 </Box>
             </Box>
-            <CustomModal 
+            <TermsPolicyModal 
                 isOpen={isOpen}
                 modalSize='md'
                 onClose={()=>{setIsOpen(false)}}
