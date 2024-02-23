@@ -269,7 +269,7 @@ const CheetahPath = () => {
                 );
                 setCompleteTrail(true);
                 if (userInfoData.narrative_status.trail1 === 3) {
-                    finalCheetahNarrative(userInfoData.userName);
+                    finalCheetahNarrative();
                 }
             } else {
                 if (userInfoData.ignorance > 80)
@@ -323,11 +323,11 @@ const CheetahPath = () => {
             userInfoData.narrative_status.trail2 == 0
         ) {
             //Verifica se é a primeira vez do usuário em uma trilha
-            const newScript = cheetahFreeLunch(userInfoData.userName);
+            const newScript = cheetahFreeLunch();
             handleNarrativeModal(newScript);
         } else if (userInfoData.narrative_status.trail1 == 0) {
             //Verifica se é a primeira vez do usuário na trilha da cheetah
-            const newScript = cheetahBeggining(userInfoData.userName);
+            const newScript = cheetahBeggining();
             handleNarrativeModal(newScript);
         } else if (userInfoData.narrative_status.trail1 != 3) { // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
             const cheetah_access = localStorage.getItem('@pionira/cheetah_access');
@@ -358,8 +358,8 @@ const CheetahPath = () => {
         modalOnOpen();
     }
 
-    const finalCheetahNarrative = (userName: string) => {
-        const newChallengeScript = cheetahConclusion(userName);
+    const finalCheetahNarrative = () => {
+        const newChallengeScript = cheetahConclusion();
         handleNarrativeModal(newChallengeScript);
     };
 
