@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Slide, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Slide, Text, Tooltip } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import fontTheme from '../../../../styles/base';
 import React from 'react';
@@ -18,6 +18,7 @@ type RelicInfoModalType = {
 		backgroundColor: string;
 		onClick: VoidFunction;
 		label: string;
+		disabledLabel?: string;
 	}
 }
 
@@ -27,7 +28,6 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 		'Lendário': '#A344E8',
 		'Místico':  '#F0C05D',
 	}[rarity]
-
 	return (
 		<Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }} >
 			<Box onClick={onClose} width="100vw" height="100vh" top="0" bg={"transparent"} />
@@ -94,11 +94,24 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 
 					{
 						!isHaveNoButton && <Flex flexDirection="column" marginRight='24px'>
-							<Button onClick={button?.onClick} width="203px" minHeight="45px" background={button?.backgroundColor} color={colorPalette.whiteText}>
+						<Tooltip
+							placement="left"
+							gutter={10}
+							label={button?.disabledLabel && button?.disabledLabel}
+						>
+							<Button 
+								onClick={button?.disabledLabel ? undefined : button?.onClick}
+								width="203px" 
+								minHeight="45px" 
+								background={button?.disabledLabel ? colorPalette.neutralGray : button?.backgroundColor}
+								color={colorPalette.whiteText}
+								cursor={button?.disabledLabel ? 'not-allowed' : 'pointer'}
+							>
 								{button?.label}
 							</Button>
+						</Tooltip>
 
-							<Button marginTop="16px" width="203px" minHeight="45px" colorScheme='linkedin' color={colorPalette.whiteText}>
+							<Button marginTop="16px" width="203px" minHeight="45px" colorScheme='linkedin' color={colorPalette.whiteText} cursor='pointer'>
 								Compartilhar
 							</Button>
 						</Flex>

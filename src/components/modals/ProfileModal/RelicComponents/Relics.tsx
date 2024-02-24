@@ -14,12 +14,15 @@ import colorPalette from '../../../../styles/colorPalette';
 import rarityEnum from '../../../../utils/enums/rarity';
 import LoadingState from '../../../LoadingState';
 import AlertModal from '../../AlertModal';
+import { getDateDifBetweenCurrentDateAnd } from '../../../../utils/algorithms/date';
 
-type alertModalInfo = {
+type AlertModalInfoType = {
     isOpen: boolean,
     body: string | ReactElement;
     onClick?: VoidFunction;
-}
+};
+
+type RelicSlotType = 'first_slot' | 'second_slot';
 
 const Relics = () => {
     const userServices = new UserServices();
@@ -28,7 +31,7 @@ const Relics = () => {
     const relics = relicData.relics;
     const userRelics = relicData.user_relics;
     const [isLoading, setIsLoading] = useState(false);
-    const [alertModalInfo, setAlertModalInfo] = useState<alertModalInfo>({
+    const [alertModalInfo, setAlertModalInfo] = useState<AlertModalInfoType>({
         isOpen: false,
         body: <>Você tem certeza que quer equipar essa relíquia? <strong style={{ color: colorPalette.alertText }}> Você só poderá troca-lá depois de 24h.</strong> </>,
         onClick: () => {return},
@@ -45,7 +48,8 @@ const Relics = () => {
         button: {
             label: '',
             onClick: () => {return},
-            backgroundColor: ''
+            backgroundColor: '',
+            disabledLabel: '',
         },
     })
 
@@ -89,7 +93,7 @@ const Relics = () => {
         setIsLoading(false);
     }
 
-    const unequipUserRelic = async (relicSlot: 'first_slot' | 'second_slot') => {
+    const unequipUserRelic = async (relicSlot: RelicSlotType) => {
         setIsLoading(true);
         try {
             await userServices.unequipUserRelic(userData._id, relicSlot);
@@ -115,7 +119,7 @@ const Relics = () => {
             body: '',
         });
     }
-    const openToUnequipAlertModalInfo = (relicSlot: 'first_slot' | 'second_slot') => {
+    const openToUnequipAlertModalInfo = (relicSlot: RelicSlotType) => {
         setAlertModalInfo({
             isOpen: true,
             onClick: () => unequipUserRelic(relicSlot),
@@ -129,8 +133,8 @@ const Relics = () => {
             body: <>Você tem certeza que quer equipar essa relíquia? <strong style={{ color: colorPalette.alertText }}> Você só poderá troca-lá depois de 24h.</strong> </>,
         });
     }
-    const handleUserRelicInfoModal = (relic: UserRelicType, isEquiped: boolean, relicSlot: 'first_slot' | 'second_slot' | 'none' ) => {
-        const buttonType = isEquiped && relicSlot !== 'none' ? {
+    const handleUserRelicInfoModal = (relic: UserRelicType, isEquiped: boolean, relicSlot: RelicSlotType ) => {
+        const buttonType = isEquiped ? {
             label: 'Desequipar',
             onClick: () => openToUnequipAlertModalInfo(relicSlot),
             backgroundColor: colorPalette.alertText
@@ -139,6 +143,9 @@ const Relics = () => {
             onClick: () => openToEquipAlertModalInfo(relic.relic_name),
             backgroundColor: colorPalette.primaryColor
         }
+
+        const disabledLabel = getRelicDisabledLabelWith(relicSlot, isEquiped);
+
         setRelicInfoModal({
             ...relicInfoModal,
             rarity: relic.rarity,
@@ -149,8 +156,21 @@ const Relics = () => {
             isOpen: true,
             isHaveNoButton: false,
             isEquiped: isEquiped,
-            button: buttonType
+            button: { ...buttonType, disabledLabel },
         })
+    }
+
+    const getRelicDisabledLabelWith = (relicSlot: RelicSlotType, isEquiped: boolean) => {
+        if(isEquiped) {
+            const relicDate = new Date(userData.equiped_relics[relicSlot]?.date)
+            const dateDif = getDateDifBetweenCurrentDateAnd(relicDate);
+            const IS_HAS_NOT_PASS_ONE_DAY = dateDif >= 24;
+
+            return !IS_HAS_NOT_PASS_ONE_DAY ? 'É preciso esperar um dia para desequipar sua relíquia' : ''
+        } else {
+            const NO_SLOT_AVAILABLE = userData.equiped_relics.first_slot.relic_name && userData.equiped_relics.second_slot.relic_name;
+            return NO_SLOT_AVAILABLE ? 'Desequipe uma das relíquias acima para equipar outra' : '';
+        }
     }
 
     const handleRelicInfoModal = (relic: RelicType) => {
@@ -167,7 +187,8 @@ const Relics = () => {
             button: {
                 label: '',
                 onClick: () => {return},
-                backgroundColor: ''
+                backgroundColor: '',
+                disabledLabel: ''
             }
         })
     }
@@ -185,7 +206,8 @@ const Relics = () => {
             button: {
                 label: '',
                 onClick: () => {return},
-                backgroundColor: ''
+                backgroundColor: '',
+                disabledLabel: '',
             },
             isOpen: false,
         })
@@ -197,7 +219,7 @@ const Relics = () => {
                 await getRelics(userData._id);
             }
         }
-        verifyRelics();
+        verifyRelics().then(() => {return});
     }, []);
 
     return (
@@ -255,9 +277,10 @@ const Relics = () => {
                                         const first_slot = getEquippedRelics()?.first_slot?.relic_name;
                                         const second_slot = getEquippedRelics()?.second_slot?.relic_name;
                                         const IS_EQUIPED = first_slot === item.relic_name || second_slot === item.relic_name;
+                                        const relicSlot = first_slot === item.relic_name ? 'first_slot' :  'second_slot'
                                         return (
                                             <Relic
-                                                onClick={() => handleUserRelicInfoModal(item, IS_EQUIPED, 'none')}
+                                                onClick={() => handleUserRelicInfoModal(item, IS_EQUIPED, relicSlot)}
                                                 color={item.rarity}
                                                 width="80px"
                                                 height="80px" relicImage={item.image}
