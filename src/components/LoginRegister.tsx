@@ -1,9 +1,12 @@
 import { Flex, Center, Box, Text, Input, Button, Link, Image, InputGroup, InputRightElement } from '@chakra-ui/react';
-import React, { ChangeEventHandler, FC, useState } from 'react';
+import React, { ChangeEventHandler, FC, useState, ReactElement } from 'react';
 import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 import closed_eye from '../assets/icons/closed-eye.png';
 import eye from '../assets/icons/eye.png'
+import TermsPolicyModal from './modals/TermsPolicyModal/TermsPolicyModal';
+import TermsOfUse from './modals/TermsPolicyModal/TermsComponent/TermsOfUse';
+import PrivacyPolicy from './modals/TermsPolicyModal/TermsComponent/PrivacyPolicy';
 
 type LoginRegisterProps = {
     mainText: string;
@@ -25,6 +28,7 @@ type LoginRegisterProps = {
     validationError?: string;
     hasValidationError?: boolean;
     loading: boolean;
+    hasTerms?: boolean;
 }
 
 const LoginRegister: FC<LoginRegisterProps> = ({
@@ -46,9 +50,13 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     buttonText,
     validationError,
     hasValidationError,
-    loading
+    loading,
+    hasTerms
 }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState("");
+    const [modalBody, setModalBody] = useState<ReactElement>();
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -98,6 +106,18 @@ const LoginRegister: FC<LoginRegisterProps> = ({
 
             </InputGroup>
         )
+    
+    const handleTermsOfUse = () => {
+        setModalTitle('Termos de Uso');
+        setModalBody(<TermsOfUse />);
+        setIsOpen(true);
+    }
+
+    const handlerPrivacyPolicy = () => {
+        setModalTitle('Política de Privacidade');
+        setModalBody(<PrivacyPolicy />);
+        setIsOpen(true);
+    }
 
     return (
         <Flex
@@ -181,11 +201,40 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         </Box>) : (
                             null
                         )}
+                    
+                    {
+                        hasTerms ? (
+                            <Flex
+                                flexDirection='column'
+                                alignSelf='flex-start'
+                                textAlign='justify'
+                                fontFamily={fontTheme.fonts}
+                                fontSize='14px'
+                                marginTop='16px'
+                            >
+                                <Text>
+                                    Ao clicar em Continuar, você concorda com nossos <Link
+                                        color={colorPalette.linkTextColor}
+                                        textDecoration='underLine'
+                                        onClick={handleTermsOfUse}
+                                    >Termos de uso</Link> e <Link
+                                        color={colorPalette.linkTextColor}
+                                        textDecoration='underLine'
+                                        onClick={handlerPrivacyPolicy}
+                                    >Política de Privacidade</Link>
+                                </Text>
+                            </Flex>
+                        ) :
+                        null
+                    }
                 </Box>
             </Flex>
 
             <Box w='70%' h='fit-content'>
-                <Center marginTop='1rem'>
+                <Center 
+                    marginTop='1rem'
+                    flexDirection='column'
+                >
                     <Button
                         width='100%'
                         height='50px'
@@ -214,6 +263,13 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     </Link>
                 </Box>
             </Box>
+            <TermsPolicyModal 
+                isOpen={isOpen}
+                modalSize='md'
+                onClose={()=>{setIsOpen(false)}}
+                modalTitle={modalTitle}
+                modalBody={modalBody}
+            />
         </Flex >
     );
 }
