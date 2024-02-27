@@ -216,10 +216,11 @@ const Relics = () => {
     useEffect(() => {
         const verifyRelics = async () => {
             if (!relicData.relics || !relicData.user_relics) {
+                setIsLoading(true);
                 await getRelics(userData._id);
             }
         }
-        verifyRelics().then(() => {return});
+        verifyRelics().then(() => setIsLoading(false));
     }, []);
 
     return (
@@ -241,7 +242,7 @@ const Relics = () => {
                 }
             />
             {
-                isLoading || !relicData ?
+                isLoading ?
                     <Flex  width="100%" height="100%" justifyContent="center" alignItems="center" >
                         <LoadingState />
                     </Flex> :
