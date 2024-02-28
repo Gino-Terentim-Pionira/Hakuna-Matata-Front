@@ -1,7 +1,8 @@
 import axios from 'axios';
+import apiUrl from '../config/config'
 
 const api = axios.create({
-    baseURL: 'https://us-central1-pionira-backend-e09bd.cloudfunctions.net/app'
+    baseURL: apiUrl
 });
 
 api.interceptors.request.use(function (config) {

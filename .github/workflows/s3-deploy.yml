@@ -2,7 +2,7 @@ name: Upload S3
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feat/config_api_url" ]
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
         run: npm install
 
       - name: Build app
-        run: npm run build
+        run: npm run build:prod
 
       - name: Upload to S3
         uses: jakejarvis/s3-sync-action@master
