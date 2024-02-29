@@ -286,6 +286,7 @@ const Relics = () => {
                                                 width="80px"
                                                 height="80px" relicImage={item.image}
                                                 isCursorActive={true}
+                                                key={item.relic_name}
                                             />
                                         );
                                     }
@@ -299,6 +300,7 @@ const Relics = () => {
                                         height="80px"
                                         relicImage={item.image_sillouete}
                                         isCursorActive={true}
+                                        key={item.relic_name}
                                     />
                                 ))
                             }
