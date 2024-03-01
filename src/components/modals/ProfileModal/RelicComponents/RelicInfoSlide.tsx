@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Slide, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Slide, Text, Tooltip } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import fontTheme from '../../../../styles/base';
 import React from 'react';
@@ -18,6 +18,7 @@ type RelicInfoModalType = {
 		backgroundColor: string;
 		onClick: VoidFunction;
 		label: string;
+		disabledLabel?: string;
 	}
 }
 
@@ -27,7 +28,6 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 		'Lendário': '#A344E8',
 		'Místico':  '#F0C05D',
 	}[rarity]
-
 	return (
 		<Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }} >
 			<Box onClick={onClose} width="100vw" height="100vh" top="0" bg={"transparent"} />
@@ -47,16 +47,16 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 			>
 				<Flex marginTop="24px" fontFamily={fontTheme.fonts} color={colorPalette.textColor} justifyContent="space-between" alignItems="flex-start" width="100%" maxWidth="1500px">
 					<Flex justifyContent="center" alignItems="center">
-						<Text display="flex" fontSize="24px" fontWeight="semibold" >
+						<Flex display="flex" fontSize="24px" fontWeight="semibold" >
 							{
-								!isHaveNoButton ? <>{title} (<Text color={relicColor}>Lendário</Text>)</> : 'Não identificado'
+								!isHaveNoButton ? <>{title} (<Text color={relicColor}>{rarity}</Text>)</> : 'Não identificado'
 							}
 
-						</Text>
+						</Flex>
 						{
-							isEquiped && <Text fontSize="14px" fontWeight="bold" color={colorPalette.correctAnswer} marginLeft="8px">
+							isEquiped && <Flex fontSize="14px" fontWeight="bold" color={colorPalette.correctAnswer} marginLeft="8px">
 								Reliquía equipada
-							</Text>
+							</Flex>
 						}
 					</Flex>
 
@@ -84,21 +84,34 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 
 				<Flex marginTop="8px" gap="32px" fontFamily={fontTheme.fonts} color={colorPalette.textColor} justifyContent="space-between" alignItems="center" width="100%" maxWidth="1500px">
 					<Flex flexDirection="column">
-						<Text display="flex" fontSize="18px">
+						<Flex display="flex" fontSize="18px">
 							{!isHaveNoButton ? description : <>Aparentemente essa é uma relíquia de nível (<Text color={relicColor} fontWeight="semibold" >{rarity}</Text>), Viajante!</> }
-						</Text>
-						<Text display="flex" marginTop="16px" fontSize="18px">
+						</Flex>
+						<Flex display="flex" marginTop="16px" fontSize="18px">
 							<Text marginRight="4px" fontWeight="semibold">{!isHaveNoButton ? 'Encontrada:' : 'Dica para encontrar a relíquia:'}</Text> {!isHaveNoButton ? discoveredTrail : hint}.
-						</Text>
+						</Flex>
 					</Flex>
 
 					{
 						!isHaveNoButton && <Flex flexDirection="column" marginRight='24px'>
-							<Button onClick={button?.onClick} width="203px" minHeight="45px" background={button?.backgroundColor} color={colorPalette.whiteText}>
+						<Tooltip
+							placement="left"
+							gutter={10}
+							label={button?.disabledLabel && button?.disabledLabel}
+						>
+							<Button 
+								onClick={button?.disabledLabel ? undefined : button?.onClick}
+								width="203px" 
+								minHeight="45px" 
+								background={button?.disabledLabel ? colorPalette.neutralGray : button?.backgroundColor}
+								color={colorPalette.whiteText}
+								cursor={button?.disabledLabel ? 'not-allowed' : 'pointer'}
+							>
 								{button?.label}
 							</Button>
+						</Tooltip>
 
-							<Button marginTop="16px" width="203px" minHeight="45px" colorScheme='linkedin' color={colorPalette.whiteText}>
+							<Button marginTop="16px" width="203px" minHeight="45px" colorScheme='linkedin' color={colorPalette.whiteText} cursor='pointer'>
 								Compartilhar
 							</Button>
 						</Flex>
