@@ -1,19 +1,32 @@
 import { atom } from "recoil";
 import rarityEnum from "../utils/enums/rarity";
 
-export interface IRelic {
-    _id: string;
-    relic_name: string;
-    description: string;
-    hint: string;
-    rarity: rarityEnum;
+export type RelicType = {
+    _id: string,
+    hint: string,
+    rarity: rarityEnum,
+    image_sillouete: string,
+    relic_name: string,
+    image: string,
+}
+
+export type UserRelicType = {
+    _id: string,
+    relic_name: string,
+    description: string,
+    rarity: rarityEnum,
     image: string;
-    image_sillouete: string;
+    path: string;
+}
+
+export interface IRelic {
+    relics?: RelicType[];
+    user_relics?: UserRelicType[]
 }
 
 const relicState = atom({
     key: "relicState",
-    default: [] as IRelic[]
+    default: {} as IRelic
 });
 
 export {
