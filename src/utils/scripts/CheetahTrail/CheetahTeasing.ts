@@ -2,14 +2,14 @@ import cheetah from "../../../assets/sprites/cheetah/cheetah.webp";
 
 
 const cheetahTeasing = () => {
-    const index = Math.floor(Math.random() * 10);
+    const index = Math.floor(Math.random() * 15);
     switch (index) {
         case 0:{
             const script0 = [
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["Vamo lá filhote. Se você se descuidar, vai comer poeira!"]
+                    texts: ["De volta à caçada? Espero que desta vez você esteja mais afiado do que as garras de um guepardo."]
                 }
             ];
         
@@ -20,7 +20,7 @@ const cheetahTeasing = () => {
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["Simbora filhote, a ignorância não vai se derrotar sozinha"]
+                    texts: ["Cada retorno é uma chance de ultrapassar seus limites. Pronto para deixar a 'Ignorância' comendo poeira?"]
                 }
             ];
         
@@ -31,7 +31,7 @@ const cheetahTeasing = () => {
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["E ai filhote, bora correr atrás do progresso!"]
+                    texts: ["Ah, vejo que o apelo da savana foi mais forte. Vamos ver se sua agilidade cresceu tanto quanto sua determinação."]
                 }
             ];
         
@@ -42,7 +42,7 @@ const cheetahTeasing = () => {
             {
                 name: "Cheetah",
                 image: cheetah,
-                texts: ["Vamos lá filhote, não vai perder o ritmo logo agora né?"]
+                texts: ["Surpreenda-me! Mostre que você pode ser mais ágil do que pensava na última vez que nos encontramos."]
             }
         ];
     
@@ -53,7 +53,7 @@ const cheetahTeasing = () => {
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["Continue em frente, sempre avançando. Não pise no freio!"]
+                    texts: ["A savana não é para os hesitantes. Pronto para correr com os decididos e enfrentar a Ignorância?"]
                 }
             ];
         
@@ -64,7 +64,7 @@ const cheetahTeasing = () => {
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["Não desista nunca! Não podemos deixar passar essa chance de alcançar a “Ignorância”!"]
+                    texts: ["A 'Ignorância' se espalha enquanto você descansa. Que tal acelerarmos o passo nesta volta?"]
                 }
             ];
         
@@ -75,7 +75,7 @@ const cheetahTeasing = () => {
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["Aí, anda logo, a “Ignorância” não vai ser combater sozinha"]
+                    texts: ["Só os mais adaptáveis sobrevivem aqui. Está preparado para evoluir ou vai ficar para trás novamente?"]
                 }
             ];
         
@@ -86,7 +86,7 @@ const cheetahTeasing = () => {
             {
                 name: "Cheetah",
                 image: cheetah,
-                texts: ["Eu aposto que você não consegue me superar nessa luta!"]
+                texts: ["Cada volta é um novo desafio. Está pronto para superar as expectativas, inclusive as suas?"]
             }
         ];
     
@@ -97,7 +97,7 @@ const cheetahTeasing = () => {
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["Bora filhote, quero ver você me provar que é capaz de acabar com a “Ignorância”!"]
+                    texts: ["Espero que tenha voltado com mais fome de sucesso do que nunca. A Savana  não pode esperar!"]
                 }
             ];
         
@@ -108,22 +108,66 @@ const cheetahTeasing = () => {
                 {
                     name: "Cheetah",
                     image: cheetah,
-                    texts: ["Corra, filhote, Corra! … Sinto que já ouvi essa frase em algum lugar"]
+                    texts: ["De volta para mais? Excelente. A verdadeira agilidade é insistir, adaptar e superar. Mostre o que aprendeu."]
                 }
             ];
         
             return script9;
-        }                
-        default:{
+        }        
+        case 10:{
             const script10 = [
                 {
-                    name: "",
+                    name: "Cheetah",
                     image: cheetah,
-                    texts: [""]
+                    texts: ["A Savana testa todos nós, mas só os verdadeiramente ágeis transformam desafios em triunfos. É sua vez."]
                 }
             ];
         
             return script10;
+        }
+        case 11:{
+            const script11 = [
+                {
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["A 'Ignorância' não tira folga, e nem nós. Vamos aumentar o ritmo e mostrar quem manda nesta savana."]
+                }
+            ];
+        
+            return script11;
+        }
+        case 12:{
+            const script12 = [
+                {
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Retornou por mais, hein? A determinação é a primeira etapa. Agora, vamos à ação e à superação."]
+                }
+            ];
+        
+            return script12;
+        }
+        case 13:{
+            const script13 = [
+                {
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Vejo um brilho de determinação nos seus olhos. Que isso se traduza em agilidade nos seus passos."]
+                }
+            ];
+        
+            return script13;
+        }
+        default:{
+            const script14 = [
+                {
+                    name: "Cheetah",
+                    image: cheetah,
+                    texts: ["Aqui estamos novamente. Pronto para provar que sua última saída foi só uma jogada estratégica para distrair a 'Ignorância' ou uma pausa produtiva para recarregar as baterias? Mostre que voltou mais afiado do que nunca!"]
+                }
+            ];
+        
+            return script14;
         }
     }
 }

@@ -51,5 +51,13 @@ export class UserServices {
         await api.patch(`/user/unequiprelic/${_userId}`, {
             relicSlot
         })
+        await api.patch(`/user/avatar/${_userId}`, { custom_avatar });
+    }
+
+    addQuestionsToUser = async (
+        _userId: string,
+        questions_id: string[]
+    ) => {
+        await api.patch(`/user/addquestions/${_userId}`, { questions_id });
     }
 }

@@ -1,17 +1,18 @@
 import cheetah from "../../../assets/sprites/cheetah/cheetah.webp";
 
 
-const cheetahBeggining = (userName: string) => {
+const cheetahBeggining = () => {
 
     const script = [
         {
             name: "Cheetah",
             image: cheetah,
             texts: [
-                `Prazer ${userName}, eu sou Cheetah, o treinador mais rápido destas bandas. Somente os mais velozes conseguem me derrotar. Será que um filhote como você vai conseguir se equiparar a mim? Eu sou responsável pela área da Agilidade e vou te ensinar a não ficar para trás com a “Ignorância”`, 
-                'Para provar a mim que você é veloz, terá que me enfrentar e passar pelo meu desafio. Assim, os desafios sempre vão estar disponíveis, maaaaas se você não estiver bem treinado sempre vai comer poeira, então se esforce, treine, trabalhe duro e quem sabe um dia se torne digno(a) de combater a “Ignorância”',
-                'Então, filhote, você deve estar ansioso(a) para começar os desafios. Mas, cuidado: sempre que você tropeçar nesta corrida contra a “Ignorância”, ela vai conseguir ficar ainda mais à nossa frente. Então, antes de responder, pense bem e não corra. Os filhotes devem avaliar bem cada passo que forem dar, para, um dia, aprenderem a correr.',
-                'E o contrário acontecerá também: a cada sucesso, a “Ignorância” fica cada vez mais para trás. Um bom treino e até mais, filhote!!'
+                "Ah, um novo rosto. Espera mesmo acompanhar o ritmo aqui? Sou Cheetah, o mentor dos desafios que requerem aprendizagem e flexibilidade. Não é apenas sobre ser rápido (embora eu seja muito), é sobre ser ágil, adaptar-se e mover-se com inteligência. Acha que tem o que é preciso?",
+                "Pela primeira vez nos encontramos, então, vamos direto ao ponto. Vencer a 'Ignorância' demanda mais do que esforço; precisa tanto de disciplina quanto de saber mudar de estratégia sem perder o foco. Eu estou aqui para moldar essa habilidade em você.",
+                "Vou te mostrar como ser leve, como mudar de direção e pensamento com a facilidade que essa jornada exige.",
+                "Você vai ganhar pontos de habilidade conforme avança, e isso vai te ajudar a medir seu progresso. Mas, para realmente provar seu valor, terá que passar pelos desafios que eu preparo. Eles vão testar sua capacidade de se adaptar! Lembre-se, a cada falha, a 'Ignorância' ganha terreno.",
+                "Mas não é só sobre vencer; é sobre aprender a se mover com propósito, antecipar e reagir. Pronto para mostrar que pode ser mais do que só mais um tentando? Antes de começar, saiba que cada acerto faz a 'Ignorância' recuar. Está aqui não por acaso. Vamos ver se consegue se destacar.",
             ]
         }
     ];
