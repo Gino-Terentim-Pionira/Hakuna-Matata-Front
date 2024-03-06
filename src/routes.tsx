@@ -15,6 +15,7 @@ import CheetahPath from './pages/CheetahPath';
 import BlackMambaPath from './pages/blackMambaPath';
 import LionPath from './pages/lionPath';
 import { RecoilRoot } from 'recoil';
+import Chat from './pages/chat';
 
 const useWindowSize = () => {
 	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
@@ -45,6 +46,7 @@ const Routes = () => {
 					}
 					<Switch>
 						<Route path='/' exact component={Home} />
+						<Route path='/chat' exact component={Chat} />
 						<Route path='/login' component={Login} />
 						<Route path='/forgotPassword' component={ForgotPassword} />
 						<Route path="/resetPassword/:id" component={ResetPassword} />
