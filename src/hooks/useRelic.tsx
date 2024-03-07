@@ -5,9 +5,9 @@ import { relicState } from "../recoil/relicRecoilState";
 export const useRelic = () => {
     const [relicData, setRelicData] = useRecoilState(relicState);
 
-    const getRelics = async () => {
+    const getRelics = async (userId: string) => {
         try {
-            const res = await api.get('/relic/');
+            const res = await api.get(`/relic/${userId}`);
             setRelicData(res.data);
         } catch (error) {
             console.log(error);

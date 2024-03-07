@@ -4,7 +4,7 @@ import { IUser } from '../recoil/useRecoilState';
 
 
 async function addRelic(
-    owned_relics: IUser['owned_relics'], 
+    owned_relics: IUser['user_relics'],
     relic: RelicsName,
     userId: string
 ) {

@@ -1,24 +1,24 @@
 import React, { useState, BaseSyntheticEvent } from 'react';
 import { Text, Flex, Button, Box, Image, Center, Input, useDisclosure } from '@chakra-ui/react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { motion } from "framer-motion"
-import { useUser } from '../../hooks';
-import api from '../../services/api';
+import { useUser } from '../../../hooks';
+import api from '../../../services/api';
 
 // Components
-import LoadingState from '../LoadingState';
+import LoadingState from '../../LoadingState';
 
 // Images
-import colorPalette from '../../styles/colorPalette';
-import Coins from '../../assets/icons/coinicon.svg'
-import fontTheme from '../../styles/base';
-import { editProfileErrorCases, errorCases } from '../../utils/errors/errorsCases';
-import AlertModal from './AlertModal';
-import { GENERIC_MODAL_TEXT } from '../../utils/constants/buttonConstants';
-import ProfileAvatarModal from './ProfileAvatarModal';
-import UserAvatar from '../UserAvatar';
-import { UserServices } from '../../services/UserServices';
+import colorPalette from '../../../styles/colorPalette';
+import Coins from '../../../assets/icons/coinicon.svg'
+import fontTheme from '../../../styles/base';
+import { editProfileErrorCases, errorCases } from '../../../utils/errors/errorsCases';
+import AlertModal from '../AlertModal';
+import { GENERIC_MODAL_TEXT } from '../../../utils/constants/buttonConstants';
+import ProfileAvatarModal from '../ProfileAvatarModal';
+import UserAvatar from '../../UserAvatar';
+import { UserServices } from '../../../services/UserServices';
 
 const ProfileDataModal = () => {
     const userServices = new UserServices();
