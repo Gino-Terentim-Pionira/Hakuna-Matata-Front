@@ -16,7 +16,7 @@ export type UserRelicType = {
     description: string,
     rarity: rarityEnum,
     image: string;
-    path: string;
+    trail: string;
 }
 
 export interface IRelic {
