@@ -150,7 +150,7 @@ const Relics = () => {
             ...relicInfoModal,
             rarity: relic.rarity,
             description: relic.description,
-            discoveredTrail: relic.path,
+            discoveredTrail: relic.trail,
             hint: '',
             title: relic.relic_name,
             isOpen: true,

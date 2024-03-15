@@ -1,6 +1,7 @@
 import { useRecoilState } from "recoil"
 import { moduleState } from "../recoil/moduleRecoilState"
 import api from "../services/api";
+import trailEnum from "../utils/enums/trail";
 
 export const useModule = () => {
     const [moduleData, setModuleData] = useRecoilState(moduleState);
@@ -9,7 +10,7 @@ export const useModule = () => {
 
     const getNewModuleInfo = async () => {
         try {
-            const res = await api.get('/module/cheetah');
+            const res = await api.get(`/module/${trailEnum.CHEETAH}`);
             setModuleData(res.data);
         } catch (error) {
             console.log('');
