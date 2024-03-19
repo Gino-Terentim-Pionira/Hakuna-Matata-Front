@@ -168,7 +168,7 @@ const Relics = () => {
 
             return !IS_HAS_NOT_PASS_ONE_DAY ? 'É preciso esperar um dia para desequipar sua relíquia' : ''
         } else {
-            const NO_SLOT_AVAILABLE = userData.equiped_relics.first_slot.relic_name && userData.equiped_relics.second_slot.relic_name;
+            const NO_SLOT_AVAILABLE = !!(userData.equiped_relics.first_slot.relic_name && userData.equiped_relics.second_slot.relic_name);
             return NO_SLOT_AVAILABLE ? 'Desequipe uma das relíquias acima para equipar outra' : '';
         }
     }

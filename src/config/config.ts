@@ -4,20 +4,10 @@ import devConfig from './dev';
 
 const env = process.env.REACT_APP_ENV;
 
-let apiUrl;
+const apiUrl = {
+    ['prod'] : productionConfig.apiUrl,
+    ['stage']: stagingConfig.apiUrl,
+    ['dev']: devConfig.apiUrl,
+};
 
-switch (env) {
-    case 'prod':
-        apiUrl = productionConfig.apiUrl;
-        break;
-
-    case 'stage':
-        apiUrl = stagingConfig.apiUrl;
-        break;
-    
-    case 'dev':
-        apiUrl = devConfig.apiUrl;
-        break;
-}
-
-export default apiUrl as string;
+export default apiUrl[env as 'prod' | 'stage' | 'dev'] as string;
