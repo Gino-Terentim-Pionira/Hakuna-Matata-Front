@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Image, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Center, Flex, Image } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -9,7 +9,6 @@ import { useAuth } from '../contexts/authContext';
 import './../styles/fadeEffect.css';
 
 // Images
-import initalScreen from '../assets/Tela_de_inicio.webp';
 import registerImg from '../assets/icons/registerImg.svg';
 import loginImg from '../assets/icons/loginImg.svg';
 import PioniraLogo from '../assets/PioniraLogo.webp';
