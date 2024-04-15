@@ -5,8 +5,8 @@ import RandomRewardModal from "../modals/RandomRewardModal";
 import Glasses from '../../assets/icons/double-glasses.png';
 import GlassesOn from '../../assets/icons/double-glasses-on.png';
 import Daily from '../../assets/icons/daily_quiz.png';
-import Horizon from '../../assets/Tela_de_inicio.webp';
 import { useUser } from "../../hooks";
+import horizon from '../../assets/horizon.webp';
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
 import NavIcon from "../NavigationComponents/NavIcon";
@@ -134,7 +134,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
           modalIsOpen={isModalOpen}
           modalOnClose={() => setIsModalOpen(false)}
           title={ALERT_QUIZ_MODAL}
-          image={Horizon}
+          image={horizon}
           confirmFunction={handleDaily}
         />
         <DailyQuiz 
