@@ -35,7 +35,8 @@ export const OracleChat = () => (
 			<Text
 				color={colorPalette.oracleWhite}
 				alignSelf="end"
-				width="297px"
+				width="100%"
+				maxWidth="297px"
 				height="fit-content"
 				background={colorPalette.primaryColor}
 				paddingX="12px"
@@ -48,7 +49,8 @@ export const OracleChat = () => (
 			<Text
 				color={colorPalette.textColor}
 				alignSelf="start"
-				width="297px"
+				width="100%"
+				maxWidth="297px"
 				height="fit-content"
 				background={colorPalette.whiteText}
 				paddingX="12px"
