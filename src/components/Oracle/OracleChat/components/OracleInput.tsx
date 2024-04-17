@@ -32,7 +32,7 @@ export const OracleInput = () => {
 			<Center height="100%">
 				{
 					questionsMock.map((item, index) => (
-					<div key={item}>
+					<Flex height="100%" key={item}>
 						<Button
 							paddingX="18px"
 							paddingY="2px"
@@ -47,7 +47,7 @@ export const OracleInput = () => {
 						{
 							(index + 1) !== questionsMock.length  && <Flex width="2px" height="100%" background={colorPalette.grayBackground} borderRadius="100px" ml="12px" mr="12px" />
 						}
-					</div>
+					</Flex>
 					))
 				}
 			</Center>
