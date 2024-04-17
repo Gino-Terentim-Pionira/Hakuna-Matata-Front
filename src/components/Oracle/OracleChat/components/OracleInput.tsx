@@ -6,7 +6,6 @@ export const OracleInput = () => {
 	const isInputReleased = false;
 	const questionsMock = ['O que é Scrum?','O que é Agile?', 'Quem ganha, Naruto ou Sasuke?', "A dona aranha realmente subiu pela parede?"];
 
-	console.log(questionsMock.length);
 	const inputReleased = () => (
 		<>
 			<Input color={colorPalette.textColor} _placeholder={{ color: colorPalette.secundaryGrey }}
@@ -33,7 +32,7 @@ export const OracleInput = () => {
 			<Center height="100%">
 				{
 					questionsMock.map((item, index) => (
-					<>
+					<div key={item}>
 						<Button
 							paddingX="18px"
 							paddingY="2px"
@@ -48,7 +47,7 @@ export const OracleInput = () => {
 						{
 							(index + 1) !== questionsMock.length  && <Flex width="2px" height="100%" background={colorPalette.grayBackground} borderRadius="100px" ml="12px" mr="12px" />
 						}
-					</>
+					</div>
 					))
 				}
 			</Center>
