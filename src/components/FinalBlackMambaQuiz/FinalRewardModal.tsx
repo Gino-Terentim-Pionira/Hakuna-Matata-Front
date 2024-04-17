@@ -29,7 +29,7 @@ import imgReward from '../../assets/icons/insignia/mambaTrailInsignia.png'
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
 import { useUser, useRelic } from '../../hooks';
-import { addRelic } from '../../services/relic';
+import RelicServices from '../../services/RelicServices';
 import RelicsName from '../../utils/enums/relicsName';
 
 interface IFinalRewardModal {
@@ -65,6 +65,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 	const [onError, setOnError] = useState(false);
 	const { userData, getNewUserInfo } = useUser();
 	const { relicData, getRelics } = useRelic();
+	const relicServices = new RelicServices();
 
 	const {
 		isOpen: finalModalIsOpen,
@@ -84,7 +85,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 			await getNewUserInfo();
 		}
 		if (relicData.length == 0) {
-			await getRelics();
+			await getRelics(userData._id);
 		}
 
 	}
@@ -122,9 +123,8 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 		try {
 			const userId = sessionStorage.getItem('@pionira/userId');
 			setIsLoading(true);
-			
 
-			await addRelic(userData.owned_relics, RelicsName.MAMBA, userId as string);
+			await relicServices.addRelic(userData.owned_relics, RelicsName.MAMBA, userId as string);
 			finalModalOnClose();
 			setIsLoading(false);
 			certificateOnOpen();

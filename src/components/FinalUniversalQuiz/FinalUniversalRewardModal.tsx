@@ -12,7 +12,7 @@ import TypesEnum from '../../utils/enums/type';
 import PlataformsEnum from '../../utils/enums/plataform';
 import { SHARE } from '../../utils/constants/buttonConstants';
 import RelicsName from '../../utils/enums/relicsName';
-import { addRelic } from '../../services/relic';
+import RelicServices from '../../services/RelicServices';
 import useRelic from '../../hooks/useRelic';
 import { IUser } from '../../recoil/useRecoilState';
 
@@ -55,6 +55,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	const [onError, setOnError] = useState(false);
 
 	const coinsRecieved = coins;
+	const relicServices = new RelicServices();
 
 	const handleLinkedin = async (shareId: string) => {
         try {
@@ -139,7 +140,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		userId: string
 	) => {
 		try {
-			await addRelic(ownedRelics, relicName, userId);
+			await relicServices.addRelic(ownedRelics, relicName, userId);
 		} catch (error) {
 			setOnError(true);
 		}

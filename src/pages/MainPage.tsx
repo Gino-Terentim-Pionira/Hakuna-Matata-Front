@@ -13,6 +13,7 @@ import SubscribedModal from '../components/modals/SubscribedModal';
 // Requisitions
 import api from '../services/api';
 import mainPageScript from '../utils/scripts/Baboon/MainPageScript';
+import RelicServices from '../services/RelicServices';
 
 //Utils
 import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
@@ -67,6 +68,7 @@ const MainPage = () => {
 		onOpen: dailyOnOpen,
 		onClose: dailyOnClose,
 	} = useDisclosure();
+	const relicServices = new RelicServices();
 
 	const { getNewUserInfo, setUserData, userData } = useUser();
 	const [script, setScript] = useState<IScript[]>([]);
@@ -340,6 +342,15 @@ const MainPage = () => {
 		getUserRequisition();
 		updateImageOnTime();
 		getNewUserInfo();
+	}, []);
+
+	useEffect(() => {
+		const checkAllRelics = async () => {
+			const response = await relicServices.checkAllRelics(userData._id);
+			console.log({response});
+		}
+
+		checkAllRelics().catch();
 	}, []);
 
 	if (isLoading) {
