@@ -3,6 +3,7 @@ import colorPalette from '../../../../styles/colorPalette';
 import fontTheme from '../../../../styles/base';
 import React from 'react';
 import rarityEnum from '../../../../utils/enums/rarity';
+import { getRelicColor } from '../../../../utils/relicsUtil';
 
 type RelicInfoModalType = {
 	isOpen: boolean;
@@ -23,11 +24,7 @@ type RelicInfoModalType = {
 }
 
 export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity, description, discoveredTrail, hint, isEquiped, button }: RelicInfoModalType) => {
-	const relicColor = {
-		'Normal': '#719DF6',
-		'Lendário': '#A344E8',
-		'Místico':  '#F0C05D',
-	}[rarity]
+	const relicColor = getRelicColor(rarity);
 	return (
 		<Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }} >
 			<Box onClick={onClose} width="100vw" height="100vh" top="0" bg={"transparent"} />

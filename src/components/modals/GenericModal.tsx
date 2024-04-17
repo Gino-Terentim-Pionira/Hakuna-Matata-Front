@@ -35,7 +35,9 @@ interface IGenericModal {
         title: string;
         titleColor: string;
         subtitle: string;
+        textBody?: string;
         icon: string;
+        iconBackground?: string;
         coins?: number;
         status?: {
             name: string,
@@ -68,7 +70,7 @@ const GenericModal: FC<IGenericModal> = ({
     isStaticModal = false
 }) => {
     const { title, titleColor, subtitle, icon, coins, status, video_names } = genericModalInfo;
-    const [ isDisabled, setIsDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const coinsValidation = coins && coins !== 0;
     const statusValidation = status && status.points > 0;
@@ -98,7 +100,7 @@ const GenericModal: FC<IGenericModal> = ({
             action && action();
         }
     }
-    
+
     return (
         <>
             <Modal isOpen={isOpen} onClose={handleClose}>
@@ -116,7 +118,7 @@ const GenericModal: FC<IGenericModal> = ({
                                 <ModalBody paddingBottom="28px" display="flex" justifyContent="space-between" alignItems='center' flexDirection='column' height='100%'>
                                     <Center flexDirection='column'>
                                         <Center
-                                            backgroundColor='#F5F5F5'
+                                            bg={genericModalInfo.iconBackground ? genericModalInfo.iconBackground : '#F5F5F5'}
                                             width='120px'
                                             height='120px'
                                             borderRadius='1000px'
@@ -129,6 +131,8 @@ const GenericModal: FC<IGenericModal> = ({
                                                 src={icon}
                                                 marginLeft={icon === Cheetah ? '8px' : undefined}
                                                 marginTop={icon === Cheetah ? '8px' : undefined}
+                                                width='88px'
+                                                height='88px'
                                             />
                                         </Center>
                                         <Box
@@ -174,27 +178,37 @@ const GenericModal: FC<IGenericModal> = ({
                                             marginBottom='55px'
                                         >
                                             {
+                                                genericModalInfo.textBody && <Text
+                                                    fontSize='18px'
+                                                    fontFamily={fontTheme.fonts}
+                                                    color='#9D9D9D'
+                                                    textAlign='center'
+                                                >
+                                                    {genericModalInfo.textBody}
+                                                </Text>
+                                            }
+                                            {
                                                 statusValidation ? (
                                                     <Flex
-                                                            alignItems='center'
-                                                            marginTop={'4px'}
+                                                        alignItems='center'
+                                                        marginTop={'4px'}
+                                                    >
+                                                        <Text
+                                                            textAlign='center'
+                                                            fontFamily={fontTheme.fonts}
+                                                            fontSize="24px"
+                                                            fontWeight='semibold'
+                                                            color={getStatusColor(status?.name as string)}
                                                         >
-                                                            <Text
-                                                                textAlign='center'
-                                                                fontFamily={fontTheme.fonts}
-                                                                fontSize="24px"
-                                                                fontWeight='semibold'
-                                                                color={getStatusColor(status?.name as string)}
-                                                            >
-                                                                + {status?.points} {status?.name}
-                                                            </Text>
-                                                            <Image
-                                                                src={plusIcon}
-                                                                alt='plusIcon'
-                                                                w='30'
-                                                                h='30'
-                                                            />
-                                                        </Flex>
+                                                            + {status?.points} {status?.name}
+                                                        </Text>
+                                                        <Image
+                                                            src={plusIcon}
+                                                            alt='plusIcon'
+                                                            w='30'
+                                                            h='30'
+                                                        />
+                                                    </Flex>
                                                 ) : null
                                             }
                                             {
@@ -225,7 +239,7 @@ const GenericModal: FC<IGenericModal> = ({
                                                     width='295px'
                                                     flexDirection='column'
                                                     textAlign='center'
-                                                    marginTop='32px'  
+                                                    marginTop='32px'
                                                     fontFamily={fontTheme.fonts}
                                                 >
                                                     <Text
@@ -233,9 +247,9 @@ const GenericModal: FC<IGenericModal> = ({
                                                         color={colorPalette.secundaryGrey}
                                                         marginBottom='8px'
                                                     >
-                                                        Para acertar as 
-                                                        <Text 
-                                                            as='span' 
+                                                        Para acertar as
+                                                        <Text
+                                                            as='span'
                                                             color={colorPalette.closeButton}
                                                             fontWeight='bold'
                                                         > questões que errou</Text>
@@ -249,7 +263,7 @@ const GenericModal: FC<IGenericModal> = ({
                                                     >
                                                         {video_names?.join(", ")}
                                                     </Text>
-                                                    
+
                                                 </Flex>
                                             }
                                         </Center>
@@ -271,31 +285,31 @@ const GenericModal: FC<IGenericModal> = ({
                                     </Button>
                                     {
                                         genericModalInfo.secondButton &&
-                                            <Button
-                                                width='300px'
-                                                height='50px'
-                                                marginTop='24px'
-                                                background={genericModalInfo.isSocial ? 'linkedin.500' : colorPalette.inactiveButton}
-                                                color={colorPalette.buttonTextColor}
-                                                fontSize='24px'
-                                                fontFamily={fontTheme.fonts}
-                                                onClick={() => handleButtonClick(secondFunction)}
-                                                loadingText={LOAD_BUTTON}
-                                                spinnerPlacement='end'
-                                                leftIcon={
-                                                    genericModalInfo.isSocial ? (
-                                                        <Image 
-                                                            width='24px'
-                                                            height='24px'
-                                                            src={linkedin} 
-                                                        />
-                                                    ) : <></>
-                                                }
-                                            >
-                                                {
-                                                    genericModalInfo.secondButton
-                                                }
-                                            </Button>
+                                        <Button
+                                            width='300px'
+                                            height='50px'
+                                            marginTop='24px'
+                                            background={genericModalInfo.isSocial ? 'linkedin.500' : colorPalette.inactiveButton}
+                                            color={colorPalette.buttonTextColor}
+                                            fontSize='24px'
+                                            fontFamily={fontTheme.fonts}
+                                            onClick={() => handleButtonClick(secondFunction)}
+                                            loadingText={LOAD_BUTTON}
+                                            spinnerPlacement='end'
+                                            leftIcon={
+                                                genericModalInfo.isSocial ? (
+                                                    <Image
+                                                        width='24px'
+                                                        height='24px'
+                                                        src={linkedin}
+                                                    />
+                                                ) : <></>
+                                            }
+                                        >
+                                            {
+                                                genericModalInfo.secondButton
+                                            }
+                                        </Button>
                                     }
                                 </ModalBody>
                             )

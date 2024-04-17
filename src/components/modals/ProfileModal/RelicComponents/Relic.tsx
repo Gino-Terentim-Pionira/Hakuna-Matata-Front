@@ -3,6 +3,7 @@ import { RELIC_DESCRIPTION } from '../../../../utils/constants/mouseOverConstant
 import colorPalette from '../../../../styles/colorPalette';
 import React from 'react';
 import rarityEnum from '../../../../utils/enums/rarity';
+import { getRelicGradient } from '../../../../utils/relicsUtil';
 
 type RelicComponentType = {
     relicImage: string;
@@ -16,12 +17,7 @@ type RelicComponentType = {
 
 export const Relic = ({ relicImage, color = 'default', width, height, onClick, badgeDescription, isCursorActive }: RelicComponentType) => {
 
-    const relicColor = {
-        'Normal': 'radial-gradient(50% 50% at 50% 50%, #CFDFFF 0%, #719DF6 100%)',
-        'Lendário': 'radial-gradient(50% 50% at 50% 50%, #EBD8F8 0%, #A344E8 100%)',
-        'Místico':  'radial-gradient(50% 50% at 50% 50%, #F4E9D1 0%, #F0C05D 100%)',
-        'default': '#D9D9D9',
-    }[color]
+    const relicColor = getRelicGradient(color);
 
     return (
         <Tooltip

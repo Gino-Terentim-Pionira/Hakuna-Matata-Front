@@ -39,6 +39,7 @@ import { share } from '../services/linkedin';
 import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
 import GenericModal from '../components/modals/GenericModal';
+import RelicsRewardModal, { IResponseRelics } from '../components/modals/RelicsRewardModal';
 
 interface IScript {
 	name: string;
@@ -47,6 +48,20 @@ interface IScript {
 }
 
 const MainPage = () => {
+	const relicMock: IResponseRelics[] = [
+		{
+			relic_name: "Sandália da Velocidade",
+			description: "Essa relíquia diminui em 10 minutos o tempo de espera para refazer um desafio",
+			rarity: 'Normal',
+			image: 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_sandal.png'
+		},
+		{
+			relic_name: "Óculos da Velocidade",
+			description: "Essa relíquia permite que você encontre 1 Joia a cada 5 minutos de vídeo assistido",
+			rarity: 'Lendário',
+			image: 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_glasses.png'
+		}
+	];
 	const history = useHistory();
 	const {
 		isOpen: tutorialIsOpen,
@@ -90,6 +105,7 @@ const MainPage = () => {
 	});
 	const [rewardOpen, setRewardOpen] = useState(false);
 	const [rewardLoading, setRewardLoading] = useState(false);
+	const [relicOpen, setRelicOpen] = useState(true);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -97,6 +113,10 @@ const MainPage = () => {
 		ignorance50,
 		ignorance25,
 	];
+
+	const handleRelicClose = () => {
+		setRelicOpen(false);
+	}
 
 	const handleErrorAlert = () => {
 		setAlert({
@@ -481,6 +501,12 @@ const MainPage = () => {
 				isOpen={openBlockedModal}
 				onClose={() => { setOpenBlockedModal(false) }}
 				subtitle="Esse horizonte ainda não pode se explorado, por enquanto..."
+			/>
+
+			<RelicsRewardModal 
+				relics={relicMock}
+				isOpen={relicOpen}
+				onClose={handleRelicClose}
 			/>
 		</>
 	);
