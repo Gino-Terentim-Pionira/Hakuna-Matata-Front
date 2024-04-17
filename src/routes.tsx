@@ -15,6 +15,7 @@ import CheetahPath from './pages/CheetahPath';
 import BlackMambaPath from './pages/blackMambaPath';
 import LionPath from './pages/lionPath';
 import { RecoilRoot } from 'recoil';
+import { Oracle } from './pages/Oracle';
 
 const useWindowSize = () => {
 	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
@@ -55,6 +56,7 @@ const Routes = () => {
 						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath} />
 						<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
 						<ProtectedRoute path='/trilha-leao' component={LionPath} />
+						<ProtectedRoute path='/oracle' component={Oracle} />
 					</Switch>
 
 				</AuthProvider >
