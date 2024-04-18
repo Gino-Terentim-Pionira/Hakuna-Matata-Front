@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import RewardModal from '../modals/GenericModal';
@@ -10,11 +10,8 @@ import { convertImageToBase64 } from '../../utils/stringUtils';
 import badgeShare from '../../assets/socialShare/badge.webp';
 import TypesEnum from '../../utils/enums/type';
 import PlataformsEnum from '../../utils/enums/plataform';
-import { SHARE } from '../../utils/constants/buttonConstants';
 import RelicsName from '../../utils/enums/relicsName';
-import { addRelic } from '../../services/relic';
-import useRelic from '../../hooks/useRelic';
-import { IUser } from '../../recoil/useRecoilState';
+import Cheetah from '../../assets/icons/cheetahblink.svg';
 
 interface IFinalUniversalRewardModal {
 	isOpen: boolean;
@@ -49,7 +46,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	trail,
 	relic
 }) => {
-	const { relicData, getRelics } = useRelic();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [onError, setOnError] = useState(false);
@@ -92,7 +88,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			const userValidate = (await api.get(`/user/${userId}`)).data;
 
 			if (correctAnswers === totalAnswers) {
-				await updateRelic(userValidate.user_relics, relic, userId as string);
 				if (trail === 1) {
 					await api.patch(`/user/${routeQuiz}/${userId}`, {
 						finalQuizComplete: {
@@ -133,18 +128,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		}
 	};
 
-	const updateRelic = async (
-		ownedRelics: IUser['user_relics'],
-		relicName: RelicsName, 
-		userId: string
-	) => {
-		try {
-			await addRelic(ownedRelics, relicName, userId);
-		} catch (error) {
-			setOnError(true);
-		}
-	};
-
 	const addCoinsStatus = async (value: number) => {
 		try {
 			const _userId = sessionStorage.getItem('@pionira/userId');
@@ -164,23 +147,14 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 		}
 	};
 
-	const verifyRelics = async () => {
-		const _userId = sessionStorage.getItem('@pionira/userId');
-		if (!relicData.relics || !relicData.user_relics) {
-			await getRelics(_userId as string);
-		}
-	}
-
 	const rewardModalInfo = () => {
 		if (correctAnswers === totalAnswers)
 			return {
 				title: 'Parabéns!!',
 				titleColor: colorPalette.inactiveButton,
-				subtitle: `Você provou por completo o seu valo e por isso lhe concedo: ${relic}!`,
-				icon: relicData?.relics?.find(item => item.relic_name == relic)?.image as string,
-				coins,
-				isSocial: true,
-				secondButton: SHARE
+				subtitle: `Você provou por completo o seu valor!`,
+				icon: Cheetah,
+				coins
 			}
 		return {
 			title: 'Que pena!',
@@ -191,10 +165,6 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			coins,
 		}
 	}
-
-	useEffect(() => {
-        verifyRelics();
-    }, []);
 
 	return (
 		<RewardModal

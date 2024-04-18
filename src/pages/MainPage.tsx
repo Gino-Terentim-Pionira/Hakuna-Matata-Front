@@ -40,6 +40,7 @@ import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
 import GenericModal from '../components/modals/GenericModal';
 import RelicsRewardModal, { IResponseRelics } from '../components/modals/RelicsRewardModal';
+import { useCheckAllRelics } from '../hooks/useCheckAllRelics';
 
 interface IScript {
 	name: string;
@@ -48,20 +49,6 @@ interface IScript {
 }
 
 const MainPage = () => {
-	const relicMock: IResponseRelics[] = [
-		{
-			relic_name: "Sandália da Velocidade",
-			description: "Essa relíquia diminui em 10 minutos o tempo de espera para refazer um desafio",
-			rarity: 'Normal',
-			image: 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_sandal.png'
-		},
-		{
-			relic_name: "Óculos da Velocidade",
-			description: "Essa relíquia permite que você encontre 1 Joia a cada 5 minutos de vídeo assistido",
-			rarity: 'Lendário',
-			image: 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_glasses.png'
-		}
-	];
 	const history = useHistory();
 	const {
 		isOpen: tutorialIsOpen,
@@ -84,6 +71,7 @@ const MainPage = () => {
 	} = useDisclosure();
 
 	const { getNewUserInfo, setUserData, userData } = useUser();
+	const { checkUserAllRelics } = useCheckAllRelics();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [onAlert, setOnAlert] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
@@ -105,7 +93,8 @@ const MainPage = () => {
 	});
 	const [rewardOpen, setRewardOpen] = useState(false);
 	const [rewardLoading, setRewardLoading] = useState(false);
-	const [relicOpen, setRelicOpen] = useState(true);
+	const [relicOpen, setRelicOpen] = useState(false);
+	const [relics, setRelics] = useState<IResponseRelics[]>([]);
 
 	const ignoranceArray = [
 		ignorance100,
@@ -238,7 +227,7 @@ const MainPage = () => {
 		getNewUserInfo();
 		setRewardOpen(false);
 		setRewardLoading(false);
-	} 
+	}
 
 	const rewardModalInfo = () => {
 		return {
@@ -248,7 +237,7 @@ const MainPage = () => {
 			icon: Cheetah,
 			coins: 3,
 		}
-	} 
+	}
 
 	const verifySocialLoginRedirect = async () => {
 		const queryParameters = new URLSearchParams(window.location.search);
@@ -263,8 +252,8 @@ const MainPage = () => {
 					setAlert({
 						title: 'Linkedin',
 						body: 'Publicação feita com sucesso! Recompensas somente no primeiro compartilhamento de cada plataforma',
-						closeFunction: () => {setOnAlert(false)},
-						buttonFunction: () => {setOnAlert(false)},
+						closeFunction: () => { setOnAlert(false) },
+						buttonFunction: () => { setOnAlert(false) },
 						buttonText: 'Voltar'
 					});
 					setOnAlert(true);
@@ -356,10 +345,19 @@ const MainPage = () => {
 	// 	}
 	// }
 
+	const checkRelics = async () => {
+		const relicsResponse = await checkUserAllRelics();
+		if (relicsResponse.length) {
+			setRelics(relicsResponse);
+			setRelicOpen(true);
+		}
+	}
+
 	useEffect(() => {
 		getUserRequisition();
 		updateImageOnTime();
 		getNewUserInfo();
+		checkRelics();
 	}, []);
 
 	if (isLoading) {
@@ -432,7 +430,7 @@ const MainPage = () => {
 							left='15.75vw'
 							top='49.5vh'
 						>
-							<TrailIcon 
+							<TrailIcon
 								image={icon_cheeta}
 								onClick={goToPath2}
 								mouseOver={CHEETAH_TRAIL}
@@ -444,7 +442,7 @@ const MainPage = () => {
 							left='50.5vw'
 							top='57.5vh'
 						>
-							<TrailIcon 
+							<TrailIcon
 								image={icon_block}
 								onClick={() => setOpenBlockedModal(true)}
 								mouseOver={BLOCKED_TRAIL}
@@ -456,7 +454,7 @@ const MainPage = () => {
 							right='7vw'
 							top='50vh'
 						>
-							<TrailIcon 
+							<TrailIcon
 								image={icon_block}
 								onClick={() => setOpenBlockedModal(true)}
 								mouseOver={BLOCKED_TRAIL}
@@ -484,7 +482,7 @@ const MainPage = () => {
 				}
 			/>
 
-			<GenericModal 
+			<GenericModal
 				isOpen={rewardOpen}
 				genericModalInfo={rewardModalInfo()}
 				loading={rewardLoading}
@@ -503,11 +501,15 @@ const MainPage = () => {
 				subtitle="Esse horizonte ainda não pode se explorado, por enquanto..."
 			/>
 
-			<RelicsRewardModal 
-				relics={relicMock}
-				isOpen={relicOpen}
-				onClose={handleRelicClose}
-			/>
+			{
+				relics.length ? (
+					<RelicsRewardModal
+						relics={relics}
+						isOpen={relicOpen}
+						onClose={handleRelicClose}
+					/>
+				) : null
+			}
 		</>
 	);
 };
