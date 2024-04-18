@@ -7,8 +7,13 @@ import NavIcon from '../NavigationComponents/NavIcon';
 import icon_shop from '../../assets/icons/icon_shop.svg';
 import { STORE } from '../../utils/constants/mouseOverConstants';
 import { useHistory } from 'react-router-dom';
+import { getStatusColor } from '../../utils/statusUtils';
 
-export const OracleHeader = () => {
+export const OracleHeader = ({
+	oracleName
+}: {
+	oracleName: string
+}) => {
 	const history = useHistory();
 
 	return (
@@ -35,8 +40,8 @@ export const OracleHeader = () => {
 				<Text fontSize="32px" height="35px" color={colorPalette.whiteText}>
 					Oráculo
 				</Text>
-				<Text marginBottom="4px" fontSize="18px" mt="4px" color={colorPalette.primaryColor}>
-					Agilidade
+				<Text marginBottom="4px" fontSize="18px" mt="4px" color={getStatusColor(oracleName.toLowerCase())}>
+					{oracleName}
 				</Text>
 			</Center>
 

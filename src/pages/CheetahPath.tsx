@@ -65,6 +65,8 @@ import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstant
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 import RelicsName from '../utils/enums/relicsName';
+import trailEnum from '../utils/enums/trail';
+import { numberCompletedModules } from '../utils/oracleUtils';
 
 interface IQuiz {
     _id: string;
@@ -484,6 +486,8 @@ const CheetahPath = () => {
                             statusText={STATUS_LEVEL(AGILITY)}
                             statusPoints={getStatusPoints(userData, AGILITY)}
                             statusColor={colorPalette.primaryColor}
+                            showOracle={numberCompletedModules(moduleData, userData.module_id) >= 1}
+                            trail={trailEnum.CHEETAH}
                         />
                     )}
             </Flex>
