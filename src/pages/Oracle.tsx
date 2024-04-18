@@ -1,12 +1,15 @@
 import React from 'react';
-import { Flex, Image } from '@chakra-ui/react';
+import { Flex, Image, useDisclosure } from '@chakra-ui/react';
 import fontTheme from '../styles/base';
 import OracleBackground from '../assets/scenerys/oracle/oracleBackground.webp';
 import CheetahOracle from '../assets/sprites/oracle/cheetahOracle.png';
 import { OracleHeader } from '../components/Oracle/OracleHeader';
 import { OracleChat } from '../components/Oracle/OracleChat/OracleChat';
+import { ShopModal } from '../components/modals/ShopModal/ShopModal';
 
 export const Oracle = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure();
+
 	return (
 		<Flex
 			height="100vh"
@@ -15,8 +18,8 @@ export const Oracle = () => {
 			alignItems="center"
 			fontFamily={fontTheme.fonts}
 		>
-			<OracleHeader />
-
+			<ShopModal isOpen={isOpen} onClose={onClose}/>
+			<OracleHeader onOpen={onOpen} />
 			<Flex
 				backgroundImage={`url(${OracleBackground})`}
 				backgroundSize="cover"

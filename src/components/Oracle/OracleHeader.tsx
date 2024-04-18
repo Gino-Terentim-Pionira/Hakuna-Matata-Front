@@ -8,7 +8,11 @@ import icon_shop from '../../assets/icons/icon_shop.svg';
 import { STORE } from '../../utils/constants/mouseOverConstants';
 import { useHistory } from 'react-router-dom';
 
-export const OracleHeader = () => {
+type OracleHeaderType = {
+	onOpen: VoidFunction;
+}
+
+export const OracleHeader = ({onOpen}: OracleHeaderType) => {
 	const history = useHistory();
 
 	return (
@@ -56,7 +60,7 @@ export const OracleHeader = () => {
 				<Flex ml="16px">
 					<NavIcon
 						image={icon_shop}
-						onClick={() => console.log('Teste')}
+						onClick={onOpen}
 						size="normal"
 						marginTop="0"
 						isMap={false}
