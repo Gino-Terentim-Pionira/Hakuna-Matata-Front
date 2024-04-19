@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Flex, Image, useDisclosure } from '@chakra-ui/react';
 import fontTheme from '../styles/base';
 import OracleBackground from '../assets/scenerys/oracle/oracleBackground.webp';
 import CheetahOracle from '../assets/sprites/oracle/cheetahOracle.png';
 import { OracleHeader } from '../components/Oracle/OracleHeader';
 import { OracleChat } from '../components/Oracle/OracleChat/OracleChat';
-import { ShopModal } from '../components/modals/ShopModal/ShopModal';
+import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
+import { OracleServices,  } from '../services/OracleServices';
+
+export type PackagesDataType =  ShopItemInfoType[];
 
 export const Oracle = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [packages, setPackages] = useState<PackagesDataType>()
+	const oracleServices = new OracleServices();
+
+	useEffect(() => {
+		const getAllPackages = async () => {
+			return await oracleServices.getAllPackges();
+		}
+
+		getAllPackages().then(
+			response  => {
+				setPackages(response)
+			}
+		);
+	}, []);
 
 	return (
 		<Flex
@@ -18,7 +35,7 @@ export const Oracle = () => {
 			alignItems="center"
 			fontFamily={fontTheme.fonts}
 		>
-			<ShopModal isOpen={isOpen} onClose={onClose}/>
+			<ShopModal packages={packages} isOpen={isOpen} onClose={onClose}/>
 			<OracleHeader onOpen={onOpen} />
 			<Flex
 				backgroundImage={`url(${OracleBackground})`}

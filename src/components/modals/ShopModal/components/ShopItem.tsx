@@ -6,12 +6,12 @@ type ShopItemTypes = {
 	image: string;
 	title: string;
 	type: string;
-	value: number;
+	value: string;
 	onClick: VoidFunction;
 }
 
 export const ShopItem = ({ image, title, type, value, onClick } : ShopItemTypes) => (
-	<Flex _hover={{cursor: 'pointer'}} w="fit-content" h="fit-content" background="blue" flexDir="column" onClick={onClick} >
+	<Flex _hover={{cursor: 'pointer'}} w="fit-content" h="fit-content"  flexDir="column" onClick={onClick} >
 		<Center padding="16px" borderRadius="8px" border={`2px solid ${colorPalette.primaryColor}`} background={colorPalette.whiteText}>
 			<Image
 				src={image}
