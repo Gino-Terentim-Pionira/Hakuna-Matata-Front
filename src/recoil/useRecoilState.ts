@@ -57,7 +57,8 @@ export interface IUser {
         eyebrow: string;
         mouth: string;
         skin: string
-    }
+    };
+	oracle_messages: number;
 }
 
 const userState = atom({

@@ -7,10 +7,12 @@ import { OracleHeader } from '../components/Oracle/OracleHeader';
 import { OracleChat } from '../components/Oracle/OracleChat/OracleChat';
 import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
 import { OracleServices,  } from '../services/OracleServices';
+import { useUser } from '../hooks';
 
 export type PackagesDataType =  ShopItemInfoType[];
 
 export const Oracle = () => {
+	const {userData, getNewUserInfo} = useUser();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>()
 	const oracleServices = new OracleServices();
@@ -19,12 +21,18 @@ export const Oracle = () => {
 		const getAllPackages = async () => {
 			return await oracleServices.getAllPackges();
 		}
+		const updateUser = async () => {
+			if(!userData._id) {
+				await getNewUserInfo()
+			}
+		}
 
+		updateUser().then(); // TODO: Handle error
 		getAllPackages().then(
 			response  => {
 				setPackages(response)
 			}
-		);
+		); // TODO: Handle error
 	}, []);
 
 	return (
@@ -37,6 +45,7 @@ export const Oracle = () => {
 		>
 			<ShopModal packages={packages} isOpen={isOpen} onClose={onClose}/>
 			<OracleHeader onOpen={onOpen} />
+
 			<Flex
 				backgroundImage={`url(${OracleBackground})`}
 				backgroundSize="cover"

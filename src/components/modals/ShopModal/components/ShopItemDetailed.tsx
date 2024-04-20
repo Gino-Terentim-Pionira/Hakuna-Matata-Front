@@ -1,18 +1,24 @@
 import React from 'react';
-import { Box, Button, Flex, Image, Slide, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Slide, Text, Tooltip } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ShopItemInfoType } from '../ShopModal';
 import fontTheme from '../../../../styles/base';
-import coinicon from '../../../../assets/icons/coinicon.svg';
+import Coinicon from '../../../../assets/icons/coinicon.svg';
+import { useUser } from '../../../../hooks';
+import { NOT_ENOUGHT_COINS } from '../../../../utils/constants/mouseOverConstants';
 
 type ShopItemDetailedTypes = {
 	isOpen: boolean;
 	onClose: VoidFunction;
 	shopItemInfo: ShopItemInfoType | undefined;
+	onClick: VoidFunction;
 }
 
 
-export const ShopItemDetailed = ({isOpen, onClose, shopItemInfo}: ShopItemDetailedTypes) => {
+export const ShopItemDetailed = ({isOpen, onClose, shopItemInfo, onClick}: ShopItemDetailedTypes) => {
+	const {userData} = useUser();
+	const IS_USE_HAS_ENOUGHT_COINS = userData.coins >= Number(shopItemInfo?.price);
+
 	return (
 		<Slide direction="bottom" in={isOpen} style={{zIndex: 1900}}>
 			<Box onClick={onClose} w='100%' h='100vh' />
@@ -76,11 +82,11 @@ export const ShopItemDetailed = ({isOpen, onClose, shopItemInfo}: ShopItemDetail
 									fontWeight="semibold"
 									color={colorPalette.secundaryGrey}
 								>
-									Suas joias: {shopItemInfo &&  shopItemInfo.price}
+									Suas joias: {userData.coins}
 								</Text>
 								<Image
 									w='28px'
-									src={coinicon}
+									src={Coinicon}
 									alt='coinicon'
 									ml='4px'
 								/>
@@ -96,25 +102,35 @@ export const ShopItemDetailed = ({isOpen, onClose, shopItemInfo}: ShopItemDetail
 								</Text>
 								<Image
 									w='32px'
-									src={coinicon}
+									src={Coinicon}
 									alt='coinicon'
 									ml='4px'
 								/>
 							</Flex>
 
-							<Button
-								w="200px"
-								height='3.5rem'
-								background={colorPalette.primaryColor}
-								color={colorPalette.buttonTextColor}
-								fontSize='1.5rem'
-								borderRadius='8px'
-								_hover={{}}
-								onClick={() => console.log("SALVE")}
-								cursor={'pointer'}
+							<Tooltip
+								label={IS_USE_HAS_ENOUGHT_COINS ? '' :  NOT_ENOUGHT_COINS}
+								placement='bottom'
+								hasArrow
+								isDisabled={IS_USE_HAS_ENOUGHT_COINS}
+								closeOnClick={false}
 							>
-								Comprar
-							</Button>
+								<Button
+									w="200px"
+									height='3.5rem'
+									background={IS_USE_HAS_ENOUGHT_COINS ? colorPalette.primaryColor : colorPalette.grayBackground}
+									color={colorPalette.buttonTextColor}
+									fontSize='1.5rem'
+									borderRadius='8px'
+									_hover={{
+										opacity: 0.7
+									}}
+									onClick={IS_USE_HAS_ENOUGHT_COINS ? onClick : undefined}
+									cursor={'pointer'}
+								>
+									Comprar
+								</Button>
+							</Tooltip>
 						</Flex>
 					</Flex>
 				</Flex>

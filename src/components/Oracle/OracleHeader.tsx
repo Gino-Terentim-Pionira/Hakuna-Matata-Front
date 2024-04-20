@@ -7,6 +7,7 @@ import NavIcon from '../NavigationComponents/NavIcon';
 import icon_shop from '../../assets/icons/icon_shop.svg';
 import { STORE } from '../../utils/constants/mouseOverConstants';
 import { useHistory } from 'react-router-dom';
+import { useUser } from '../../hooks';
 
 type OracleHeaderType = {
 	onOpen: VoidFunction;
@@ -14,6 +15,7 @@ type OracleHeaderType = {
 
 export const OracleHeader = ({onOpen}: OracleHeaderType) => {
 	const history = useHistory();
+	const { userData } = useUser();
 
 	return (
 		<Flex
@@ -47,12 +49,12 @@ export const OracleHeader = ({onOpen}: OracleHeaderType) => {
 			<Center>
 				<Flex alignItems="flex-end" flexDirection="column" color={colorPalette.oracleWhite}>
 					<Center mt="6px" height="25px">
-						<Text mr="4px" fontWeight="medium" fontSize="24px">1000</Text>
+						<Text mr="4px" fontWeight="medium" fontSize="24px">{userData.coins}</Text>
 						<Image width="44px" src={CoinIcon} alt="Icone Moeda" />
 					</Center>
 					<Center>
 						<Text fontWeight="medium" fontSize="24px">
-							15
+							{userData.oracle_messages || "0"}
 						</Text>
 						<Text ml="4px" fontSize="26px">Perguntas</Text>
 					</Center>

@@ -27,4 +27,12 @@ export class OracleServices {
 
 		return packageData;
 	};
+
+	buyOracleMessages = async (id: string, package_name: string) => {
+		const response = await api.post(this.createURL(`/packages/${id}`), {
+			package_name
+		});
+
+		return response.data;
+	}
 }

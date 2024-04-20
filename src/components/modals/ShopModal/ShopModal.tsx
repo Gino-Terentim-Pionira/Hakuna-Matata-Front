@@ -7,12 +7,15 @@ import {
 	ModalBody,
 	ModalCloseButton,
 	Text,
-	SimpleGrid, Flex,
+	SimpleGrid, Flex, Button,
 } from '@chakra-ui/react';
 import colorPalette from '../../../styles/colorPalette';
 import fontTheme from '../../../styles/base';
 import { ShopItem } from './components/ShopItem';
 import { ShopItemDetailed } from './components/ShopItemDetailed';
+import AlertModal from '../AlertModal';
+import { OracleServices } from '../../../services/OracleServices';
+import { useUser } from '../../../hooks';
 
 type ShopModalType = {
 	isOpen: boolean;
@@ -29,8 +32,22 @@ export type ShopItemInfoType = {
 	image: string;
 }
 
+type AlertModalInfoType = {
+	isOpen: boolean,
+	alertBody?: string,
+	alertTitle?: string,
+}
+
 export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
+	const {userData,getNewUserInfo} = useUser();
+	const oracleService = new OracleServices();
+	const [isAlertLoading, setIsAlertLoading] = useState(false);
 	const [shopItemInfo, setShopItemInfo] = useState<ShopItemInfoType | undefined>();
+	const [alertModalInfo, setAlertModalInfo] = useState<AlertModalInfoType>({
+		isOpen: false,
+		alertBody: '',
+		alertTitle: '',
+	});
 
 	const handleShopItemInfo = (item: ShopItemInfoType) => {
 		setShopItemInfo({
@@ -44,6 +61,36 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 
 	const closeShopItemInfo = () => {
 		setShopItemInfo(undefined)
+	}
+
+	const openAlertModalInfo = () => {
+		setAlertModalInfo({
+			isOpen: true,
+			alertBody: 'Certeza que deseja comprar esse pacotes de perguntas?',
+			alertTitle: shopItemInfo?.title,
+		})
+	}
+
+	const closeAlertModal = () => {
+		setAlertModalInfo({
+			isOpen: false,
+			alertBody: '',
+			alertTitle: '',
+		})
+	}
+
+	const buyItem = async () => {
+		const package_name = shopItemInfo ? shopItemInfo?.title : ''
+		try {
+			setIsAlertLoading(true);
+			await oracleService.buyOracleMessages(userData._id, package_name);
+			await getNewUserInfo();
+			closeAlertModal();
+		} catch (e) {
+			console.log(e);
+			// TODO: handle error
+		}
+		setIsAlertLoading(false);
 	}
 
 	return (
@@ -77,7 +124,31 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 					</SimpleGrid>
 				</ModalBody>
 			</ModalContent>
-			<ShopItemDetailed shopItemInfo={shopItemInfo} isOpen={!!shopItemInfo} onClose={closeShopItemInfo}/>
+			<ShopItemDetailed onClick={openAlertModalInfo} shopItemInfo={shopItemInfo} isOpen={!!shopItemInfo} onClose={closeShopItemInfo}/>
+			<AlertModal
+				isOpen={alertModalInfo.isOpen}
+				onClose={closeAlertModal}
+				closeOnOverlayClick={false}
+				buttonBody={ <>
+					<Button
+						onClick={closeAlertModal}
+						isDisabled={isAlertLoading}
+					>
+						Cancel
+					</Button>
+					<Button
+						color='white'
+						bg={colorPalette.primaryColor}
+						onClick={buyItem}
+						ml={3}
+						isLoading={isAlertLoading}
+					>
+						Comprar
+					</Button>
+				</>}
+				alertTitle={alertModalInfo.alertTitle}
+				alertBody={alertModalInfo.alertBody}
+			/>
 		</Modal>
 	);
 };
