@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
 	Modal,
 	ModalOverlay,
@@ -36,6 +36,7 @@ type AlertModalInfoType = {
 	isOpen: boolean,
 	alertBody?: string,
 	alertTitle?: string,
+	buttonBody?: ReactElement,
 }
 
 export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
@@ -68,6 +69,7 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 			isOpen: true,
 			alertBody: 'Certeza que deseja comprar esse pacotes de perguntas?',
 			alertTitle: shopItemInfo?.title,
+			buttonBody: undefined
 		})
 	}
 
@@ -76,6 +78,7 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 			isOpen: false,
 			alertBody: '',
 			alertTitle: '',
+			buttonBody: undefined
 		})
 	}
 
@@ -88,7 +91,19 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 			closeAlertModal();
 		} catch (e) {
 			console.log(e);
-			// TODO: handle error
+			setAlertModalInfo({
+				alertTitle: 'Error ao comprar perguntas',
+				alertBody: `Sua compra não foi processada! ${e.response.data.message || 'Error no servidor'}. Tente novamente mais tarde`,
+				buttonBody: <Button
+					color='white'
+					bg={colorPalette.primaryColor}
+					onClick={closeAlertModal}
+					ml={3}
+				>
+					Ok!
+				</Button>,
+				isOpen: true
+			})
 		}
 		setIsAlertLoading(false);
 	}
@@ -129,7 +144,7 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 				isOpen={alertModalInfo.isOpen}
 				onClose={closeAlertModal}
 				closeOnOverlayClick={false}
-				buttonBody={ <>
+				buttonBody={ alertModalInfo.buttonBody || <>
 					<Button
 						onClick={closeAlertModal}
 						isDisabled={isAlertLoading}
