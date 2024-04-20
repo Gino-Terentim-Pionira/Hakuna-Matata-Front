@@ -17,7 +17,7 @@ export type AlertModalProps = {
 	alertTitle?: string;
 	alertBody?: string | ReactElement;
 	buttonBody: ReactElement;
-	closeOnOverlayClick: boolean;
+	closeOnOverlayClick?: boolean;
 };
 
 const AlertModal: FC<AlertModalProps> = ({
