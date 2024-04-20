@@ -27,13 +27,24 @@ export interface ICommonQuestion {
     topic: string;
 }
 
+export type PackageType = {
+    package_name: string,
+    price: string,
+    messages: string,
+    type: string,
+    description: string,
+    image: string
+}
+
 export class OracleServices {
+
+    private createURL = (rec: string) => (`oracle/${rec}`);
 
     getOracleHistory = async (
         userId: string,
         trail: trailEnum
     ): Promise<IHistoryResponse> => {
-        const response = await api.post(`oracle/history/${userId}`, {
+        const response = await api.post(this.createURL(`history/${userId}`), {
             trail
         });
 
@@ -44,8 +55,31 @@ export class OracleServices {
         userId: string,
         trail: trailEnum
     ): Promise<ICommonQuestion[]> => {
-        const response = await api.post(`oracle/commonquestions/${userId}`, {
+        const response = await api.post(this.createURL(`commonquestions/${userId}`), {
             trail
+        });
+
+        return response.data;
+    }
+
+    getAllPackges = async () => {
+        const response = await api.get(this.createURL('packages'))
+
+        const packageData = response.data.map((item: PackageType) => ({
+            title: item.package_name,
+            price: item.price,
+            messages: item.messages,
+            type: item.type,
+            description: item.description,
+            image: item.image
+        }));
+
+        return packageData;
+    };
+
+    buyOracleMessages = async (id: string, package_name: string) => {
+        const response = await api.post(this.createURL(`/packages/${id}`), {
+            package_name
         });
 
         return response.data;

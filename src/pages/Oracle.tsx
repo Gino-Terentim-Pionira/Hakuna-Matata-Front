@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Image, Button } from '@chakra-ui/react';
+import { Flex, Image, Button, useDisclosure } from '@chakra-ui/react';
 import fontTheme from '../styles/base';
 import { OracleHeader } from '../components/Oracle/OracleHeader';
 import { OracleChat } from '../components/Oracle/OracleChat/OracleChat';
@@ -9,11 +9,18 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import AlertModal from '../components/modals/AlertModal';
 import colorPalette from '../styles/colorPalette';
 import { useHistory, useLocation } from 'react-router-dom';
+import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
+import { useUser } from '../hooks';
+
+export type PackagesDataType =  ShopItemInfoType[];
 
 export const Oracle = () => {
+	const {userData, getNewUserInfo} = useUser();
 	const history = useHistory();
 	const location = useLocation();
 	const oracleService = new OracleServices();
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [packages, setPackages] = useState<PackagesDataType>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [oracleObject, setOracleObject] = useState({
 		oracle_name: "",
@@ -67,6 +74,22 @@ export const Oracle = () => {
 	}
 
 	useEffect(() => {
+		const getAllPackages = async () => {
+			return await oracleService.getAllPackges();
+		}
+		const updateUser = async () => {
+			if(!userData._id) {
+				await getNewUserInfo()
+			}
+		}
+
+		updateUser().then(); // TODO: Handle error
+		getAllPackages().then(
+			response  => {
+				setPackages(response)
+			}
+		); // TODO: Handle error
+
 		getHistoryAndQuestions();
 	}, []);
 
@@ -84,8 +107,10 @@ export const Oracle = () => {
 							alignItems="center"
 							fontFamily={fontTheme.fonts}
 						>
+							<ShopModal packages={packages} isOpen={isOpen} onClose={onClose}/>
 							<OracleHeader
 								oracleName={oracleObject.oracle_name}
+								onOpen={onOpen}
 							/>
 
 							<Flex

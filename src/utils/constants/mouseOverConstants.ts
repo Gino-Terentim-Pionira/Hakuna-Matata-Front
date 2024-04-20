@@ -51,3 +51,5 @@ export const DAILY_QUIZ = "Desafio diário";
 export const ORACLE = "Consultar o Oráculo";
 
 export const NOT_ENOUGH_STATUS = (statusName: string) => `Seu nivel de ${statusName} não é o suficiente para comprar esse item!`
+
+export const  NOT_ENOUGHT_COINS = 'Você não tem moedas suficientes!';
