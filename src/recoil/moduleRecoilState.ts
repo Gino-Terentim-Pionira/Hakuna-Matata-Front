@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-interface IQuiz {
+export interface IQuiz {
     user_id: string;
     _id: string
     module_name: string;

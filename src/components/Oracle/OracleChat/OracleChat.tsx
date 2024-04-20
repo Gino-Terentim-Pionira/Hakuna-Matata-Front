@@ -1,14 +1,21 @@
 import React from 'react';
-import { Flex, Text, Box } from '@chakra-ui/react';
+import { Flex, Box } from '@chakra-ui/react';
 import { OracleInput } from './components/OracleInput';
-import colorPalette from '../../../styles/colorPalette';
+import { ICommonQuestion, IMessages } from '../../../services/OracleServices';
+import OracleMessage from './components/OracleMessage';
 
-export const OracleChat = () => (
+export const OracleChat = ({
+	commonQuestions,
+	messages
+}: {
+	commonQuestions: ICommonQuestion[],
+	messages: IMessages[]
+}) => (
 	<Flex
 		flexDir="column"
 		justifyContent="flex-end"
 		paddingX="24px"
-		paddingBottom="32px"
+		paddingBottom="20px"
 		width="700px"
 		overflowX="auto"
 		overflowY="auto"
@@ -26,41 +33,53 @@ export const OracleChat = () => (
 			display="flex"
 			flexDir="column-reverse"
 			width="100%"
+			height='90%'
 			maxHeight="783px"
 			background="transparent"
-			overflowY="auto"
 			paddingBottom="40px"
+			paddingTop="10px"
 			rowGap="32px"
+			overflowY="auto"
+			sx={{
+				"&::-webkit-scrollbar": {
+					width:"4px",
+					height: "4px",
+					borderRadius: "8px"
+				},
+				"&::-webkit-scrollbar-thumb": {
+					background: "#9D9D9D",
+					borderRadius: "10px"
+				},
+				"&::-webkit-scrollbar-thumb:hover": {
+					background: "#555",
+				},
+				"&::-moz-scrollbar": {
+					width:"4px",
+					height: "4px",
+					borderRadius: "8px"
+				},
+				"&::-moz-scrollbar-thumb": {
+					background: "#9D9D9D",
+					borderRadius: "10px"
+				},
+				"&::-moz-scrollbar-thumb:hover": {
+					background: "#555",
+				},
+			}}
 		>
-			<Text
-				color={colorPalette.textColor}
-				alignSelf="start"
-				width="100%"
-				maxWidth="297px"
-				height="fit-content"
-				background={colorPalette.whiteText}
-				paddingX="12px"
-				paddingY="8px"
-				borderRadius="8px 8px 8px 0px"
-			>
-				ndqwkndjkqwnkjdwqnjkdnqwkjndkjqnwkjdnjkwqndjkqwnjkndqwkdnqwkjdnsjankjdwqjk
-			</Text>
-
-			<Text
-				color={colorPalette.oracleWhite}
-				alignSelf="end"
-				width="100%"
-				maxWidth="297px"
-				height="fit-content"
-				background={colorPalette.primaryColor}
-				paddingX="12px"
-				paddingY="8px"
-				borderRadius="8px 8px 0px 8px"
-			>
-				ndqwkndjkqwnkjdwqnjkdnqwkjndkjqnwkjdnjkwqndjkqwnjkndqwkdnqwkjdnsjankjdwqjk
-			</Text>
+			{
+				messages.map((item, index) => (
+					<OracleMessage 
+						key={index}
+						message={item.content}
+						role={item.role}
+					/>
+				))
+			}
 
 		</Box>
-		<OracleInput />
+		<OracleInput 
+			commonQuestions={commonQuestions}
+		/>
 	</Flex>
 );

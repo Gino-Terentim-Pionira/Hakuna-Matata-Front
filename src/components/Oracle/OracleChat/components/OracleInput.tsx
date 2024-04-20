@@ -1,10 +1,14 @@
 import React from 'react';
 import { Button, Center, Flex, Input } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
+import { ICommonQuestion } from '../../../../services/OracleServices';
 
-export const OracleInput = () => {
+export const OracleInput = ({
+	commonQuestions
+}: {
+	commonQuestions: ICommonQuestion[]
+}) => {
 	const isInputReleased = false;
-	const questionsMock = ['O que é Scrum?','O que é Agile?', 'Quem ganha, Naruto ou Sasuke?', "A dona aranha realmente subiu pela parede?"];
 
 	const inputReleased = () => (
 		<Flex justifyContent="space-between" alignItems="center" width="100%" height="100%">
@@ -31,8 +35,8 @@ export const OracleInput = () => {
 		<>
 			<Center height="100%">
 				{
-					questionsMock.map((item, index) => (
-						<Flex height="100%" key={item}>
+					commonQuestions.map((item, index) => (
+						<Flex height="100%" key={item._id}>
 							<Button
 								paddingX="18px"
 								paddingY="2px"
@@ -43,10 +47,10 @@ export const OracleInput = () => {
 								fontSize="16px"
 								fontWeight="medium"
 							>
-								{item}
+								{item.question}
 							</Button>
 							{
-								(index + 1) !== questionsMock.length  && <Flex width="2px" minH="30px" height="100%" background={colorPalette.grayBackground} borderRadius="100px" ml="12px" mr="12px" />
+								(index + 1) !== commonQuestions.length  && <Flex width="2px" minH="30px" height="100%" background={colorPalette.grayBackground} borderRadius="100px" ml="12px" mr="12px" />
 							}
 						</Flex>
 					))
@@ -61,6 +65,7 @@ export const OracleInput = () => {
 			paddingX="16px"
 			width="100%"
 			overflowX="auto"
+			overflowY="hidden"
 			sx={{
 				"&::-webkit-scrollbar": {
 					width:"4px",
