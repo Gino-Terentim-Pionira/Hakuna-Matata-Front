@@ -1,15 +1,19 @@
 import React from 'react';
 import { Flex, Box } from '@chakra-ui/react';
-import { OracleInput } from './components/OracleInput';
+import { OracleInput, userMessageFunction } from './components/OracleInput';
 import { ICommonQuestion, IMessages } from '../../../services/OracleServices';
 import OracleMessage from './components/OracleMessage';
 
+
+
 export const OracleChat = ({
 	commonQuestions,
-	messages
+	messages,
+	userMessage
 }: {
 	commonQuestions: ICommonQuestion[],
-	messages: IMessages[]
+	messages: IMessages[],
+	userMessage: userMessageFunction
 }) => (
 	<Flex
 		flexDir="column"
@@ -80,6 +84,7 @@ export const OracleChat = ({
 		</Box>
 		<OracleInput 
 			commonQuestions={commonQuestions}
+			userMessage={userMessage}
 		/>
 	</Flex>
 );

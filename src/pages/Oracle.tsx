@@ -26,6 +26,8 @@ export const Oracle = () => {
 		oracle_name: "",
 		background: "",
 		image: "",
+		thread_id: "",
+		assistant_id: "",
 		messages: [] as IMessages[],
 		commonQuestions: [] as ICommonQuestion[]
 	});
@@ -45,6 +47,35 @@ export const Oracle = () => {
 		buttonText: 'Voltar'
 	});
 
+	const addUserMessage = (content: string) => {
+		setOracleObject((currentState) => (
+			{
+				...currentState,
+				messages: [{
+					role: 'user',
+					content
+				}, ...currentState.messages]
+			}
+		));
+	}
+
+	const sendOracleMessage = async (content: string) => {
+		addUserMessage(content);
+		const response = await oracleService.sendMessage(
+			userData._id,
+			oracleObject.thread_id,
+			oracleObject.assistant_id,
+			content
+		);
+		setOracleObject((currentState) => (
+			{
+				...currentState,
+				messages: [...response, ...currentState.messages]
+			}
+		));
+		await getNewUserInfo();
+	}
+
 	const getHistoryAndQuestions = async () => {
 		const trail: trailEnum = location.state.trail;
 		const userId = sessionStorage.getItem('@pionira/userId');
@@ -57,6 +88,8 @@ export const Oracle = () => {
 			oracle_name: messages.oracle.oracle_name,
 			background: messages.oracle.background,
 			image: messages.oracle.image,
+			thread_id: messages.thread_id,
+			assistant_id: messages.oracle.assistant_id,
 			messages: messages.messages,
 			commonQuestions: commonQuestionsResponse
 		});
@@ -82,7 +115,7 @@ export const Oracle = () => {
 				});
 			}
 		};
-	
+
 		fetchData();
 	}, []);
 
@@ -122,6 +155,7 @@ export const Oracle = () => {
 								<OracleChat
 									commonQuestions={oracleObject.commonQuestions}
 									messages={oracleObject.messages}
+									userMessage={sendOracleMessage}
 								/>
 							</Flex>
 						</Flex>

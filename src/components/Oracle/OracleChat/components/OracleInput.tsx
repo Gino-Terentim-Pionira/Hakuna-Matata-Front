@@ -3,10 +3,14 @@ import { Button, Center, Flex, Input } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
 
+export type userMessageFunction = (name: string) => void;
+
 export const OracleInput = ({
-	commonQuestions
+	commonQuestions,
+	userMessage
 }: {
-	commonQuestions: ICommonQuestion[]
+	commonQuestions: ICommonQuestion[],
+	userMessage: userMessageFunction
 }) => {
 	const isInputReleased = false;
 
@@ -46,6 +50,9 @@ export const OracleInput = ({
 								minH="30px"
 								fontSize="16px"
 								fontWeight="medium"
+								onClick={() => {
+									userMessage(item.question);
+								}}
 							>
 								{item.question}
 							</Button>
