@@ -15,12 +15,13 @@ export const Oracle = () => {
 	const location = useLocation();
 	const oracleService = new OracleServices();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const [oracleName, setOracleName] = useState<string>("");
-	const [oracleImages, setOracleImages] = useState({
+	const [oracleObject, setOracleObject] = useState({
+		oracle_name: "",
 		background: "",
-		image: ""
+		image: "",
+		messages: [] as IMessages[],
+		commonQuestions: [] as ICommonQuestion[]
 	});
-	const [oracleMessages, setOracleMessages] = useState<IMessages[]>([]);
 	const [alert, setAlert] = useState<{
 		onAlert: boolean,
 		title: string,
@@ -36,7 +37,6 @@ export const Oracle = () => {
 		buttonFunction: () => history.goBack(),
 		buttonText: 'Voltar'
 	});
-	const [commonQuestion, setCommonQuestion] = useState<ICommonQuestion[]>([]);
 
 	const getHistoryAndQuestions = async () => {
 		try {
@@ -44,15 +44,16 @@ export const Oracle = () => {
 			const userId = sessionStorage.getItem('@pionira/userId');
 
 			const messages = await oracleService.getOracleHistory(userId as string, trail);
-			setOracleMessages(messages.messages);
-			setOracleImages({
-				background: messages.oracle.background as string,
-				image: messages.oracle.image as string
-			});
-			setOracleName(messages.oracle.oracle_name as string);
 
 			const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
-			setCommonQuestion(commonQuestionsResponse);
+
+			setOracleObject({
+				oracle_name: messages.oracle.oracle_name,
+				background: messages.oracle.background,
+				image: messages.oracle.image,
+				messages: messages.messages,
+				commonQuestions: commonQuestionsResponse
+			});
 
 			setTimeout(() => {
 				setIsLoading(false);
@@ -83,12 +84,12 @@ export const Oracle = () => {
 							alignItems="center"
 							fontFamily={fontTheme.fonts}
 						>
-							<OracleHeader 
-								oracleName={oracleName}
+							<OracleHeader
+								oracleName={oracleObject.oracle_name}
 							/>
 
 							<Flex
-								backgroundImage={`url(${oracleImages.background})`}
+								backgroundImage={`url(${oracleObject.background})`}
 								backgroundSize="cover"
 								backgroundPosition="top"
 								backgroundRepeat="no-repeat"
@@ -99,10 +100,10 @@ export const Oracle = () => {
 								columnGap={{ sm: '24px', md: '34px', '2xl': '112px' }}
 								paddingX="16px"
 							>
-								<Image width="30%" minW="320px" maxWidth="537px" height="70%" minHeight="485px" maxHeight="800px" src={oracleImages.image} />
-								<OracleChat 
-									commonQuestions = {commonQuestion}
-									messages = {oracleMessages}
+								<Image width="30%" minW="320px" maxWidth="537px" height="70%" minHeight="485px" maxHeight="800px" src={oracleObject.image} />
+								<OracleChat
+									commonQuestions={oracleObject.commonQuestions}
+									messages={oracleObject.messages}
 								/>
 							</Flex>
 						</Flex>

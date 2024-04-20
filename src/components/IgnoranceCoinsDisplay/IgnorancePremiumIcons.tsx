@@ -15,7 +15,7 @@ import StatusProgress from "./StatusProgress";
 import QuizAlertModal from "../Quiz/QuizAlertModal";
 import { ALERT_QUIZ_MODAL } from "../../utils/constants/textConstants";
 import DailyQuiz from "../Quiz/DailyQuiz";
-import oracle from "../../assets/icons/oracle/oracle_icon.webp";
+import OracleIcon from "../../assets/icons/oracle/oracle_icon.webp";
 import { useHistory } from 'react-router-dom';
 import trailEnum from "../../utils/enums/trail";
 
@@ -145,7 +145,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
           }
           {
             showOracle && <NavIcon
-              image={oracle}
+              image={OracleIcon}
               mouseOver={ORACLE}
               onClick={handleOracle}
               size="normal"

@@ -17,7 +17,7 @@ export interface IOracle {
 export interface IHistoryResponse {
     messages: IMessages[];
     thread_id: string;
-    oracle: Partial<IOracle>
+    oracle: IOracle
 }
 
 export interface ICommonQuestion {
