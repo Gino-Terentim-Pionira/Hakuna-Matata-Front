@@ -90,7 +90,6 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 			await getNewUserInfo();
 			closeAlertModal();
 		} catch (e) {
-			console.log(e);
 			setAlertModalInfo({
 				alertTitle: 'Error ao comprar perguntas',
 				alertBody: `Sua compra não foi processada! ${e.response.data.message || 'Error no servidor'}. Tente novamente mais tarde`,

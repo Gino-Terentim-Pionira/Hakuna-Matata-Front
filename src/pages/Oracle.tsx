@@ -12,10 +12,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
 import { useUser } from '../hooks';
 
-export type PackagesDataType =  ShopItemInfoType[];
+export type PackagesDataType = ShopItemInfoType[];
 
 export const Oracle = () => {
-	const {userData, getNewUserInfo} = useUser();
+	const { userData, getNewUserInfo } = useUser();
 	const history = useHistory();
 	const location = useLocation();
 	const oracleService = new OracleServices();
@@ -46,51 +46,44 @@ export const Oracle = () => {
 	});
 
 	const getHistoryAndQuestions = async () => {
-		try {
-			const trail: trailEnum = location.state.trail;
-			const userId = sessionStorage.getItem('@pionira/userId');
+		const trail: trailEnum = location.state.trail;
+		const userId = sessionStorage.getItem('@pionira/userId');
 
-			const messages = await oracleService.getOracleHistory(userId as string, trail);
+		const messages = await oracleService.getOracleHistory(userId as string, trail);
 
-			const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
+		const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
 
-			setOracleObject({
-				oracle_name: messages.oracle.oracle_name,
-				background: messages.oracle.background,
-				image: messages.oracle.image,
-				messages: messages.messages,
-				commonQuestions: commonQuestionsResponse
-			});
+		setOracleObject({
+			oracle_name: messages.oracle.oracle_name,
+			background: messages.oracle.background,
+			image: messages.oracle.image,
+			messages: messages.messages,
+			commonQuestions: commonQuestionsResponse
+		});
 
-			setTimeout(() => {
-				setIsLoading(false);
-			}, 1000);
-		} catch (error) {
-			setAlert({
-				...alert,
-				onAlert: true
-			});
-		}
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 1000);
 	}
 
 	useEffect(() => {
-		const getAllPackages = async () => {
-			return await oracleService.getAllPackges();
-		}
-		const updateUser = async () => {
-			if(!userData._id) {
-				await getNewUserInfo()
+		const fetchData = async () => {
+			try {
+				if (!userData._id) {
+					await getNewUserInfo();
+				}
+				const packages = await oracleService.getAllPackages();
+				setPackages(packages);
+				await getHistoryAndQuestions();
+			} catch (error) {
+				setAlert({
+					...alert,
+					onAlert: true
+				});
 			}
-		}
-
-		updateUser().then(); // TODO: Handle error
-		getAllPackages().then(
-			response  => {
-				setPackages(response)
-			}
-		); // TODO: Handle error
-
-		getHistoryAndQuestions();
+		};
+	
+		fetchData();
 	}, []);
 
 	return (
@@ -107,7 +100,7 @@ export const Oracle = () => {
 							alignItems="center"
 							fontFamily={fontTheme.fonts}
 						>
-							<ShopModal packages={packages} isOpen={isOpen} onClose={onClose}/>
+							<ShopModal packages={packages} isOpen={isOpen} onClose={onClose} />
 							<OracleHeader
 								oracleName={oracleObject.oracle_name}
 								onOpen={onOpen}

@@ -62,7 +62,7 @@ export class OracleServices {
         return response.data;
     }
 
-    getAllPackges = async () => {
+    getAllPackages = async () => {
         const response = await api.get(this.createURL('packages'))
 
         const packageData = response.data.map((item: PackageType) => ({
