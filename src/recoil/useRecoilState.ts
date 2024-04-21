@@ -27,6 +27,7 @@ export interface IUser {
 	finalQuizComplete: {
 		cheetahFinal: boolean;
 		blackMamba: boolean;
+		lionFinal: boolean;
 	};
 	consecutiveDays: number;
 	luck: number;
@@ -57,7 +58,8 @@ export interface IUser {
         eyebrow: string;
         mouth: string;
         skin: string
-    }
+    };
+	oracle_messages: number;
 }
 
 const userState = atom({
