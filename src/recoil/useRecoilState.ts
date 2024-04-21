@@ -27,6 +27,7 @@ export interface IUser {
 	finalQuizComplete: {
 		cheetahFinal: boolean;
 		blackMamba: boolean;
+		lionFinal: boolean;
 	};
 	consecutiveDays: number;
 	luck: number;

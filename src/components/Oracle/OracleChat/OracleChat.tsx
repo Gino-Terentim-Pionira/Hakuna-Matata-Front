@@ -1,16 +1,22 @@
 import React from 'react';
 import { Flex, Box } from '@chakra-ui/react';
-import { OracleInput } from './components/OracleInput';
+import { OracleInput, userMessageFunction } from './components/OracleInput';
 import { ICommonQuestion, IMessages } from '../../../services/OracleServices';
 import OracleMessage from './components/OracleMessage';
 
+type OracleChatType = {
+	commonQuestions: ICommonQuestion[];
+	messages: IMessages[];
+	userMessage: userMessageFunction;
+	isInputReleased?: boolean,
+}
+
 export const OracleChat = ({
 	commonQuestions,
-	messages
-}: {
-	commonQuestions: ICommonQuestion[],
-	messages: IMessages[]
-}) => (
+	messages,
+	userMessage,
+   isInputReleased,
+}: OracleChatType) => (
 	<Flex
 		flexDir="column"
 		justifyContent="flex-end"
@@ -78,8 +84,10 @@ export const OracleChat = ({
 			}
 
 		</Box>
-		<OracleInput 
+		<OracleInput
+			isInputReleased={isInputReleased}
 			commonQuestions={commonQuestions}
+			userMessage={userMessage}
 		/>
 	</Flex>
 );

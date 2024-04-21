@@ -77,9 +77,24 @@ export class OracleServices {
         return packageData;
     };
 
-    buyOracleMessages = async (id: string, package_name: string) => {
-        const response = await api.post(this.createURL(`/packages/${id}`), {
+    buyOracleMessages = async (userId: string, package_name: string) => {
+        const response = await api.post(this.createURL(`/packages/${userId}`), {
             package_name
+        });
+
+        return response.data;
+    }
+
+    sendMessage = async (
+        userId: string,
+        thread_id: string,
+        assistant_id: string,
+        content: string
+    ): Promise<IMessages[]> => {
+        const response = await api.post(this.createURL(`/sendmessage/${userId}`), {
+            thread_id,
+            assistant_id,
+            content
         });
 
         return response.data;

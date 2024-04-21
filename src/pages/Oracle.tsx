@@ -11,13 +11,22 @@ import colorPalette from '../styles/colorPalette';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
 import { useUser } from '../hooks';
+import { IUser } from '../recoil/useRecoilState';
 
 export type PackagesDataType = ShopItemInfoType[];
+
+const FinalQuizCompleteEnum: { [key: string]: keyof IUser['finalQuizComplete'] } = {
+	'Cheetah': 'cheetahFinal',
+	'Mamba Negra': 'blackMamba',
+	'Leão e Leoa': 'lionFinal'
+}
+
 
 export const Oracle = () => {
 	const { userData, getNewUserInfo } = useUser();
 	const history = useHistory();
 	const location = useLocation();
+	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location.state.trail as trailEnum]] : false;
 	const oracleService = new OracleServices();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>();
@@ -26,6 +35,8 @@ export const Oracle = () => {
 		oracle_name: "",
 		background: "",
 		image: "",
+		thread_id: "",
+		assistant_id: "",
 		messages: [] as IMessages[],
 		commonQuestions: [] as ICommonQuestion[]
 	});
@@ -45,25 +56,40 @@ export const Oracle = () => {
 		buttonText: 'Voltar'
 	});
 
-	const getHistoryAndQuestions = async () => {
-		const trail: trailEnum = location.state.trail;
-		const userId = sessionStorage.getItem('@pionira/userId');
+	const addUserMessage = (content: string) => {
+		setOracleObject((currentState) => (
+			{
+				...currentState,
+				messages: [{
+					role: 'user',
+					content
+				}, ...currentState.messages]
+			}
+		));
+	}
 
-		const messages = await oracleService.getOracleHistory(userId as string, trail);
-
-		const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
-
-		setOracleObject({
-			oracle_name: messages.oracle.oracle_name,
-			background: messages.oracle.background,
-			image: messages.oracle.image,
-			messages: messages.messages,
-			commonQuestions: commonQuestionsResponse
-		});
-
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 1000);
+	const sendOracleMessage = async (content: string) => {
+		try {
+			addUserMessage(content);
+			const response = await oracleService.sendMessage(
+				userData._id,
+				oracleObject.thread_id,
+				oracleObject.assistant_id,
+				content
+			);
+			setOracleObject((currentState) => (
+				{
+					...currentState,
+					messages: [...response, ...currentState.messages]
+				}
+			));
+			await getNewUserInfo();
+		} catch (error) {
+			setAlert({
+				...alert,
+				onAlert: true
+			});
+		}
 	}
 
 	useEffect(() => {
@@ -82,8 +108,31 @@ export const Oracle = () => {
 				});
 			}
 		};
-	
-		fetchData();
+
+		const getHistoryAndQuestions = async () => {
+			const trail: trailEnum = location.state.trail;
+			const userId = sessionStorage.getItem('@pionira/userId');
+
+			const messages = await oracleService.getOracleHistory(userId as string, trail);
+
+			const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
+
+			setOracleObject({
+				oracle_name: messages.oracle.oracle_name,
+				background: messages.oracle.background,
+				image: messages.oracle.image,
+				thread_id: messages.thread_id,
+				assistant_id: messages.oracle.assistant_id,
+				messages: messages.messages,
+				commonQuestions: commonQuestionsResponse
+			});
+
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 1000);
+		}
+
+		fetchData().then();
 	}, []);
 
 	return (
@@ -120,8 +169,10 @@ export const Oracle = () => {
 							>
 								<Image width="30%" minW="320px" maxWidth="537px" height="70%" minHeight="485px" maxHeight="800px" src={oracleObject.image} />
 								<OracleChat
+									isInputReleased={IS_FINAL_QUIZ_COMPLETE}
 									commonQuestions={oracleObject.commonQuestions}
 									messages={oracleObject.messages}
+									userMessage={sendOracleMessage}
 								/>
 							</Flex>
 						</Flex>
