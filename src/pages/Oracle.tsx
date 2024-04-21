@@ -11,20 +11,22 @@ import colorPalette from '../styles/colorPalette';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
 import { useUser } from '../hooks';
+import { IUser } from '../recoil/useRecoilState';
 
 export type PackagesDataType = ShopItemInfoType[];
 
-const FinalQuizCompleteEnum = {
-	'Cheetah': 'cheetahFinal',
-	'Leão e Leoa': 'lionFinal',
-	'Mamba Negra': 'blackMamba'
+const FinalQuizCompleteEnum: { [key: string]: keyof IUser['finalQuizComplete'] } = {
+    'Cheetah': 'cheetahFinal',
+    'Mamba Negra': 'blackMamba',
+    'Leão e Leoa': 'lionFinal'
 }
+
 
 export const Oracle = () => {
 	const { userData, getNewUserInfo } = useUser();
 	const history = useHistory();
 	const location = useLocation();
-	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location?.state?.trail]] : false;
+	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location.state.trail as trailEnum]] : false;
 	const oracleService = new OracleServices();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>();
@@ -91,6 +93,7 @@ export const Oracle = () => {
 				}
 				const packages = await oracleService.getAllPackages();
 				setPackages(packages);
+				await getHistoryAndQuestions();
 			} catch (error) {
 				setAlert({
 					...alert,
@@ -123,7 +126,6 @@ export const Oracle = () => {
 		}
 
 		fetchData().then();
-		getHistoryAndQuestions().then();
 	}, []);
 
 	return (
