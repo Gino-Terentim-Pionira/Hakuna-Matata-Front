@@ -14,10 +14,17 @@ import { useUser } from '../hooks';
 
 export type PackagesDataType = ShopItemInfoType[];
 
+const FinalQuizCompleteEnum = {
+	'Cheetah': 'cheetahFinal',
+	'Leão e Leoa': 'lionFinal',
+	'Mamba Negra': 'blackMamba'
+}
+
 export const Oracle = () => {
 	const { userData, getNewUserInfo } = useUser();
 	const history = useHistory();
 	const location = useLocation();
+	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location?.state?.trail]] : false;
 	const oracleService = new OracleServices();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>();
@@ -76,29 +83,6 @@ export const Oracle = () => {
 		await getNewUserInfo();
 	}
 
-	const getHistoryAndQuestions = async () => {
-		const trail: trailEnum = location.state.trail;
-		const userId = sessionStorage.getItem('@pionira/userId');
-
-		const messages = await oracleService.getOracleHistory(userId as string, trail);
-
-		const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
-
-		setOracleObject({
-			oracle_name: messages.oracle.oracle_name,
-			background: messages.oracle.background,
-			image: messages.oracle.image,
-			thread_id: messages.thread_id,
-			assistant_id: messages.oracle.assistant_id,
-			messages: messages.messages,
-			commonQuestions: commonQuestionsResponse
-		});
-
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 1000);
-	}
-
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -107,7 +91,6 @@ export const Oracle = () => {
 				}
 				const packages = await oracleService.getAllPackages();
 				setPackages(packages);
-				await getHistoryAndQuestions();
 			} catch (error) {
 				setAlert({
 					...alert,
@@ -116,7 +99,31 @@ export const Oracle = () => {
 			}
 		};
 
-		fetchData();
+		const getHistoryAndQuestions = async () => {
+			const trail: trailEnum = location.state.trail;
+			const userId = sessionStorage.getItem('@pionira/userId');
+
+			const messages = await oracleService.getOracleHistory(userId as string, trail);
+
+			const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
+
+			setOracleObject({
+				oracle_name: messages.oracle.oracle_name,
+				background: messages.oracle.background,
+				image: messages.oracle.image,
+				thread_id: messages.thread_id,
+				assistant_id: messages.oracle.assistant_id,
+				messages: messages.messages,
+				commonQuestions: commonQuestionsResponse
+			});
+
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 1000);
+		}
+
+		fetchData().then();
+		getHistoryAndQuestions().then();
 	}, []);
 
 	return (
@@ -153,6 +160,7 @@ export const Oracle = () => {
 							>
 								<Image width="30%" minW="320px" maxWidth="537px" height="70%" minHeight="485px" maxHeight="800px" src={oracleObject.image} />
 								<OracleChat
+									isInputReleased={IS_FINAL_QUIZ_COMPLETE}
 									commonQuestions={oracleObject.commonQuestions}
 									messages={oracleObject.messages}
 									userMessage={sendOracleMessage}

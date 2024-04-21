@@ -4,17 +4,19 @@ import { OracleInput, userMessageFunction } from './components/OracleInput';
 import { ICommonQuestion, IMessages } from '../../../services/OracleServices';
 import OracleMessage from './components/OracleMessage';
 
-
+type OracleChatType = {
+	commonQuestions: ICommonQuestion[];
+	messages: IMessages[];
+	userMessage: userMessageFunction;
+	isInputReleased?: boolean,
+}
 
 export const OracleChat = ({
 	commonQuestions,
 	messages,
-	userMessage
-}: {
-	commonQuestions: ICommonQuestion[],
-	messages: IMessages[],
-	userMessage: userMessageFunction
-}) => (
+	userMessage,
+   isInputReleased,
+}: OracleChatType) => (
 	<Flex
 		flexDir="column"
 		justifyContent="flex-end"
@@ -82,7 +84,8 @@ export const OracleChat = ({
 			}
 
 		</Box>
-		<OracleInput 
+		<OracleInput
+			isInputReleased={isInputReleased}
 			commonQuestions={commonQuestions}
 			userMessage={userMessage}
 		/>

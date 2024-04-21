@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Center, Flex, Input } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
@@ -6,20 +6,31 @@ import { useUser } from '../../../../hooks';
 
 export type userMessageFunction = (name: string) => void;
 
+type OracleInputType = {
+	commonQuestions: ICommonQuestion[];
+	userMessage: userMessageFunction;
+	isInputReleased?: boolean
+}
 export const OracleInput = ({
 	commonQuestions,
-	userMessage
-}: {
-	commonQuestions: ICommonQuestion[],
-	userMessage: userMessageFunction
-}) => {
+	userMessage,
+	isInputReleased = false,
+}: OracleInputType) => {
 	const {userData} = useUser();
-	const isInputReleased = false;
+	const [inputReleasedMessage, setInputReleasedMessage] = useState('');
 
 	const inputReleased = () => (
 		<Flex justifyContent="space-between" alignItems="center" width="100%" height="100%">
-			<Input color={colorPalette.textColor} _placeholder={{ color: colorPalette.secundaryGrey }}
-				   _focus={{ outline: 'none' }} padding="0" placeholder="Escreva sua mensagem..." border="none" />
+			<Input
+				color={colorPalette.textColor}
+				_placeholder={{ color: colorPalette.secundaryGrey }}
+				_focus={{ outline: 'none' }}
+				padding="0"
+				placeholder="Escreva sua mensagem..."
+				border="none"
+				value={inputReleasedMessage}
+				onChange={(e) => setInputReleasedMessage(e.target.value)}
+			/>
 			<Center height="100%">
 				<Flex width="2px" height="100%" background={colorPalette.grayBackground} borderRadius="100px" mr="12px" />
 				<Button
@@ -31,6 +42,10 @@ export const OracleInput = ({
 					fontSize="16px"
 					fontWeight="medium"
 					isDisabled={userData.oracle_messages <= 0}
+					onClick={() => {
+						userMessage(inputReleasedMessage);
+						setInputReleasedMessage("");
+					}}
 				>
 					Enviar
 				</Button>
