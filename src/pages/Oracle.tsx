@@ -16,9 +16,9 @@ import { IUser } from '../recoil/useRecoilState';
 export type PackagesDataType = ShopItemInfoType[];
 
 const FinalQuizCompleteEnum: { [key: string]: keyof IUser['finalQuizComplete'] } = {
-    'Cheetah': 'cheetahFinal',
-    'Mamba Negra': 'blackMamba',
-    'Leão e Leoa': 'lionFinal'
+	'Cheetah': 'cheetahFinal',
+	'Mamba Negra': 'blackMamba',
+	'Leão e Leoa': 'lionFinal'
 }
 
 
@@ -69,20 +69,27 @@ export const Oracle = () => {
 	}
 
 	const sendOracleMessage = async (content: string) => {
-		addUserMessage(content);
-		const response = await oracleService.sendMessage(
-			userData._id,
-			oracleObject.thread_id,
-			oracleObject.assistant_id,
-			content
-		);
-		setOracleObject((currentState) => (
-			{
-				...currentState,
-				messages: [...response, ...currentState.messages]
-			}
-		));
-		await getNewUserInfo();
+		try {
+			addUserMessage(content);
+			const response = await oracleService.sendMessage(
+				userData._id,
+				oracleObject.thread_id,
+				oracleObject.assistant_id,
+				content
+			);
+			setOracleObject((currentState) => (
+				{
+					...currentState,
+					messages: [...response, ...currentState.messages]
+				}
+			));
+			await getNewUserInfo();
+		} catch (error) {
+			setAlert({
+				...alert,
+				onAlert: true
+			});
+		}
 	}
 
 	useEffect(() => {
