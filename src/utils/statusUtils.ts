@@ -1,6 +1,7 @@
 import { IUser } from "../recoil/useRecoilState";
 import { AGILITY, LEADERSHIP } from "./constants/statusConstants";
 import colorPalette from "../styles/colorPalette";
+import trailEnum from "./enums/trail";
 
 export const getStatusPoints = (userData: IUser, statusName: string) => {
     const status = userData.status.find((item) => item.name == statusName);
@@ -14,10 +15,10 @@ export const getStatusPoints = (userData: IUser, statusName: string) => {
 
 export const getStatusName = (trail: string) => {
     switch (trail) {
-        case 'cheetah':
+        case trailEnum.CHEETAH:
             return AGILITY;
 
-        case 'lion':
+        case trailEnum.LION:
             return LEADERSHIP;
     
         default:

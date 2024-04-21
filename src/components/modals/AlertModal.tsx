@@ -1,6 +1,5 @@
 import React, { FC, ReactElement, useRef } from 'react';
 import {
-	Text,
 	AlertDialog,
 	AlertDialogBody,
 	AlertDialogFooter,
@@ -9,14 +8,16 @@ import {
 	AlertDialogOverlay,
 	AlertDialogCloseButton,
 } from '@chakra-ui/react';
+import colorPalette from '../../styles/colorPalette';
 
-type AlertModalProps = {
+export type AlertModalProps = {
 	isOpen: boolean;
 	onClose: VoidFunction;
 	onClickClose?: VoidFunction;
 	alertTitle?: string;
-	alertBody?: string;
+	alertBody?: string | ReactElement;
 	buttonBody: ReactElement;
+	closeOnOverlayClick?: boolean;
 };
 
 const AlertModal: FC<AlertModalProps> = ({
@@ -26,6 +27,7 @@ const AlertModal: FC<AlertModalProps> = ({
 	alertTitle,
 	alertBody,
 	buttonBody,
+ 	closeOnOverlayClick = true
 }) => {
 	const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -34,15 +36,16 @@ const AlertModal: FC<AlertModalProps> = ({
 			isOpen={isOpen}
 			leastDestructiveRef={cancelRef}
 			onClose={onClose}
+			closeOnOverlayClick={closeOnOverlayClick}
 		>
-			<AlertDialogOverlay>
+			<AlertDialogOverlay zIndex={8000}>
 				<AlertDialogContent>
-					<AlertDialogHeader fontSize='lg' fontWeight='bold'>
+					<AlertDialogHeader color={colorPalette.textColor} fontSize='lg' fontWeight='bold'>
 						{alertTitle}
 					</AlertDialogHeader>
 					<AlertDialogCloseButton onClick={onClickClose} />
 					<AlertDialogBody>
-						<Text>{alertBody}</Text>
+						{alertBody}
 					</AlertDialogBody>
 					<AlertDialogFooter>{buttonBody}</AlertDialogFooter>
 				</AlertDialogContent>

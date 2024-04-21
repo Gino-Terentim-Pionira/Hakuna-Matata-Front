@@ -11,7 +11,7 @@ import icon_map from '../../assets/icons/icon_map.svg';
 import icon_logout from '../../assets/icons/icon_logout.svg';
 import inventory_icon from '../../assets/icons/inventory.png';
 import chat from '../../assets/icons/chat.png'
-import ProfileModal from "../modals/ProfileModal";
+import ProfileModal from "../modals/ProfileModal/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
 import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "../../utils/constants/mouseOverConstants";

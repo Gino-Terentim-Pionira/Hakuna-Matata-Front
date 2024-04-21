@@ -9,15 +9,16 @@ import { useAuth } from '../contexts/authContext';
 import './../styles/fadeEffect.css';
 
 // Images
-import initalScreen from '../assets/Tela_de_inicio.webp';
 import registerImg from '../assets/icons/registerImg.svg';
 import loginImg from '../assets/icons/loginImg.svg';
 import PioniraLogo from '../assets/PioniraLogo.webp';
 import GinoLogo from '../assets/GinoLogo.webp';
 import HomeButton from '../components/HomeButton';
 import { LOGIN, REGISTER } from '../utils/constants/mouseOverConstants';
+import VideoBackground from '../components/VideoBackground';
 
 const Home = () => {
+	const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/home.webm';
 	const { authenticated } = useAuth();
 	const history = useHistory();
 	useEffect(() => {
@@ -29,13 +30,10 @@ const Home = () => {
 		<Flex
 			className="fadeIn"
 			h='100vh'
-			style={{
-				backgroundImage: `url(${initalScreen})`,
-				backgroundSize: 'cover',
-				backgroundPositionX: 'center',
-				backgroundRepeat: 'no-repeat',
-			}}
+			position="relative"
+			overflow="hidden"
 		>
+			<VideoBackground source={BACKGROUND_URL} />
 			<Box w='100vw' mt='5%'>
 				<Center flexDir="column">
 					<Image ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
@@ -45,17 +43,17 @@ const Home = () => {
 						align='center'
 						mt="8px"
 					>
-						<HomeButton 
-						text='Entrar na Savana'
-						image={loginImg}
-						onClick={() => history.push('/login')}
-						mouseOver={LOGIN}
+						<HomeButton
+							text='Entrar na Savana'
+							image={loginImg}
+							onClick={() => history.push('/login')}
+							mouseOver={LOGIN}
 						/>
-						<HomeButton 
-						text='Criar Passaporte'
-						image={registerImg}
-						onClick={() => history.push('/register')}
-						mouseOver={REGISTER}
+						<HomeButton
+							text='Criar Passaporte'
+							image={registerImg}
+							onClick={() => history.push('/register')}
+							mouseOver={REGISTER}
 						/>
 					</Flex>
 				</Center>

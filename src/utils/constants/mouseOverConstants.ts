@@ -36,7 +36,7 @@ export const CHEETAH_FINAL = 'Desafio Final da Cheetah';
 
 export const BACK_BUTTON = 'Voltar';
 
-export const BADGE_DESCRIPTION = 'Visualizar descrição da insígnia';
+export const RELIC_DESCRIPTION = 'Visualizar descrição da relíquia';
 
 export const LOCKED_BADGE = 'Domine um desafio para merecer esta insígnia';
 
@@ -48,4 +48,8 @@ export const CHAT = "Sabedoria do Babuíno";
 
 export const DAILY_QUIZ = "Desafio diário";
 
+export const ORACLE = "Consultar o Oráculo";
+
 export const NOT_ENOUGH_STATUS = (statusName: string) => `Seu nivel de ${statusName} não é o suficiente para comprar esse item!`
+
+export const  NOT_ENOUGHT_COINS = 'Você não tem moedas suficientes!';

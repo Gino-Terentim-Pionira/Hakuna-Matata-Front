@@ -8,12 +8,12 @@ const colorPalette = {
     secondaryColor: '#0B67A1',
     confirmButton: '#FCBF49',
     inputBoder: '#EDA641',
-    textColor: '#4a4a4a',
+    textColor: '#4A4A4A',
     infoTextColor: '#757575',
     subtitleColor: '#3A3A3A',
     buttonTextColor: '#FFFFFF',
     linkTextColor: '#0A89FF',
-    correctAnswer: '#A4D932',
+    correctAnswer: '#90C718',
     incorrectAnswer: '#FF0000',
     closeButton: '#E55454',
     ignorancePurple: '#410D49',
@@ -28,7 +28,8 @@ const colorPalette = {
     whiteText: '#FEFEFE',
     darkGrey: '#999999',
     alertText: '#F47070',
-    gold: '#F2CB05'
+    gold: '#F2CB05',
+    oracleWhite: '#F5F6F9'
 }
 
 export default colorPalette;

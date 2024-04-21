@@ -5,27 +5,32 @@ import RandomRewardModal from "../modals/RandomRewardModal";
 import Glasses from '../../assets/icons/double-glasses.png';
 import GlassesOn from '../../assets/icons/double-glasses-on.png';
 import Daily from '../../assets/icons/daily_quiz.png';
-import Horizon from '../../assets/Tela_de_inicio.webp';
 import { useUser } from "../../hooks";
+import horizon from '../../assets/horizon.webp';
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
 import NavIcon from "../NavigationComponents/NavIcon";
-import { IGNORANCE_GLASS, DAILY_QUIZ } from "../../utils/constants/mouseOverConstants";
+import { IGNORANCE_GLASS, DAILY_QUIZ, ORACLE } from "../../utils/constants/mouseOverConstants";
 import StatusProgress from "./StatusProgress";
 import QuizAlertModal from "../Quiz/QuizAlertModal";
 import { ALERT_QUIZ_MODAL } from "../../utils/constants/textConstants";
 import DailyQuiz from "../Quiz/DailyQuiz";
+import OracleIcon from "../../assets/icons/oracle/oracle_icon.webp";
+import { useHistory } from 'react-router-dom';
+import trailEnum from "../../utils/enums/trail";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
   dontShowIgnorance?: boolean;
   showStatus?: boolean;
+  showOracle?: boolean;
+  trail?: trailEnum;
   statusText?: string;
   statusPoints?: number;
   statusColor?: string;
 }
 
-const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statusText, statusPoints, statusColor }: IgnoracenPremiumIconsInterface) => {
+const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showOracle, trail, statusText, statusPoints, statusColor }: IgnoracenPremiumIconsInterface) => {
   // const {
   // 	isOpen: premiumIsOpen,
   // 	onClose: premiumOnClose,
@@ -33,6 +38,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
   // 	onToggle: premiumOnToggle,
   // } = useDisclosure();
   const { userData } = useUser();
+  const history = useHistory();
   const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDifferentDay, setIsDifferentDay] = useState(false);
@@ -41,11 +47,20 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
     onClose: quizOnClose,
     onOpen: quizOnOpen,
     onToggle: quizToggle
-} = useDisclosure();
+  } = useDisclosure();
 
   const handleDaily = () => {
     setIsModalOpen(false);
     quizOnOpen();
+  }
+
+  const handleOracle = () => {
+    history.push({
+      pathname: '/oracle',
+      state: {
+        trail
+      }
+    })
   }
 
   const verifyDailyQuiz = () => {
@@ -97,10 +112,10 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
                 ignorance={ignorance}
               />
               {
-                showStatus && <StatusProgress 
-                  status={statusPoints || 0} 
+                showStatus && <StatusProgress
+                  status={statusPoints || 0}
                   position='bottom'
-                  labelText={statusText || ""} 
+                  labelText={statusText || ""}
                   color={statusColor || ""}
                 />
               }
@@ -116,28 +131,38 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, statu
             onClick={handleIgnoranceFilter}
             size="normal"
             isMap={false}
-            position="bottom"
+            position="right"
           />
           {
-            (!isIgnoranceFilterOn && isDifferentDay) && <NavIcon 
+            (!isIgnoranceFilterOn && isDifferentDay) && <NavIcon
               image={Daily}
               mouseOver={DAILY_QUIZ}
-              onClick={() => {setIsModalOpen(true)}}
+              onClick={() => { setIsModalOpen(true) }}
               size="normal"
               isMap={false}
-              position="bottom"
+              position="right"
+            />
+          }
+          {
+            showOracle && <NavIcon
+              image={OracleIcon}
+              mouseOver={ORACLE}
+              onClick={handleOracle}
+              size="normal"
+              isMap={false}
+              position="right"
             />
           }
         </Flex>
         <RandomRewardModal />
-        <QuizAlertModal 
+        <QuizAlertModal
           modalIsOpen={isModalOpen}
           modalOnClose={() => setIsModalOpen(false)}
           title={ALERT_QUIZ_MODAL}
-          image={Horizon}
+          image={horizon}
           confirmFunction={handleDaily}
         />
-        <DailyQuiz 
+        <DailyQuiz
           closeModal={quizOnClose}
           onToggle={quizToggle}
           openModal={quizIsOpen}

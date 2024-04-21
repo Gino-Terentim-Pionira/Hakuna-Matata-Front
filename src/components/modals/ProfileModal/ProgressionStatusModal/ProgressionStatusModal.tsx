@@ -4,18 +4,18 @@ import {
     Flex,
     Box
 } from "@chakra-ui/react"
-import { useUser } from '../../../hooks';
+import { useUser } from '../../../../hooks';
 
 // Components
-import LoadingState from '../../LoadingState';
-import IgnoranceProgress from '../../IgnoranceCoinsDisplay/IgnoranceProgress';
+import LoadingState from '../../../LoadingState';
+import IgnoranceProgress from '../../../IgnoranceCoinsDisplay/IgnoranceProgress';
 import StatusProgressionBar from './StatusProgressionBar';
-import { AGILITY, LEADERSHIP } from '../../../utils/constants/statusConstants';
-import { getStatusPoints } from '../../../utils/statusUtils';
+import { AGILITY, LEADERSHIP } from '../../../../utils/constants/statusConstants';
+import { getStatusPoints } from '../../../../utils/statusUtils';
 
 // Images
-import CoinsDisplay from '../../IgnoranceCoinsDisplay/CoinsDisplay';
-import UserAvatar from '../../UserAvatar';
+import CoinsDisplay from '../../../IgnoranceCoinsDisplay/CoinsDisplay';
+import UserAvatar from '../../../UserAvatar';
 
 
 const ProgressionStatusModal = () => {

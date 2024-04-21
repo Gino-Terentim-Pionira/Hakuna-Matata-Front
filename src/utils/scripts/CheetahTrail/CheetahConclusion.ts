@@ -1,17 +1,18 @@
 import cheetah_happy from "../../../assets/sprites/cheetah/cheetah_happy.webp";
 
 
-const cheetahConclusion = (userName: string) => {
+const cheetahConclusion = () => {
 
     const script = [
         {
             name: "Cheetah",
             image: cheetah_happy,
-            texts: [`Meus parabéns por ter me superado filh... AH! Acho que agora terei que parar de te chamar de “filhote” já que conseguiu me ultrapassar, né ${userName}? Depois desse árduo desafio você finalmente fez por merecer a minha marca: A insígnia da Agilidade`, 
-            "Sempre que olhar para ela lembre-se que você se superou e está cada vez mais próximo de acabar com a “Ignorância” de uma vez por todas e salvar toda a Savana!",
-            "Além de ter ganhado o meu respeito e ter se provado capaz de ultrapassar a “Ignorância”, você ganhou a minha admiração! Ver você batalhando todo dia para atingir o seu melhor me deu ainda mais forças para continuar na batalha",
-            "E aposto que motivou os outros “Pioneiros” também! Continue assim que a “Ignorância” vai comer poeira!"
-        ]
+            texts: [
+                "Veja só! Você não só enfrentou os desafios, como os superou, deixando claro que esta trilha agora é definitivamente sua. A insígnia da Agilidade que conquistou é a prova da sua evolução, da sua habilidade em adaptar-se e liderar na luta contra a 'Ignorância'.",
+                "Essa conquista é só sua, fruto do seu esforço e dedicação. Ela é o símbolo de uma jornada concluída, e também o primeiro passo para outra ainda mais importante. Agora, você se torna uma referência para os que vêm depois de você, inspirando-os a alcançar o que você alcançou.",
+                "Sua história aqui não termina; ela evolui. Você agora tem a chance de guiar, de mentorar novos viajantes, mostrando-lhes que a 'Ignorância' pode ser superada com coragem, agilidade e a vontade de nunca parar de aprender.",
+                "Sua aventura na Pionira agora é também sobre compartilhar, sobre inspirar e ser inspirado. Vamos adiante, pois a sua capacidade de fazer a diferença apenas cresceu."
+            ]
         }
     ];
 

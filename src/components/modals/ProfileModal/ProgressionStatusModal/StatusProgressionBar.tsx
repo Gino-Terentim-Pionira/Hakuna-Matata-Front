@@ -1,8 +1,8 @@
 import { Box, Flex, Center, Progress, Text, Image } from '@chakra-ui/react';
 import React from 'react'
-import fontTheme from '../../../styles/base';
-import colorPalette from '../../../styles/colorPalette';
-import icon_lock from '../../../assets/icons/icon_lock.svg'
+import fontTheme from '../../../../styles/base';
+import colorPalette from '../../../../styles/colorPalette';
+import icon_lock from '../../../../assets/icons/icon_lock.svg'
 
 const StatusProgressionBar = ({ status, label, isBlocked = false, isOnLeft, marginTop, color }: {
   status: number,

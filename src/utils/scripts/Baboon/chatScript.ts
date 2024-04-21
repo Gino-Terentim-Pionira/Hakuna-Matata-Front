@@ -5,7 +5,10 @@ const chatScript = (ignorance: number) => {
         {
             name: "Babuíno",
             image: monkey,
-            texts: [`Atualmente o seu nível de sabedoria é ${100 - ignorance}%`, `Isso significa que o nível de ignorância está em ${ignorance}%, mantenha-se forte na sua jornada!`]
+            texts: [
+                `Atualmente o seu nível de sabedoria é ${100 - ignorance}%`,
+                `Isso significa que o nível de ignorância está em ${ignorance}%, mantenha-se forte na sua jornada!`
+            ]
         }
     ]
     return script;
