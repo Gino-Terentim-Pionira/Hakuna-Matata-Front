@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
+import Markdown from 'react-markdown'
 
 const OracleMessage = ({
     message,
@@ -20,15 +21,16 @@ const OracleMessage = ({
         <Text
             color={textProps.color}
             alignSelf={textProps.alignSelf}
-            width="100%"
-            maxWidth="297px"
+            width="fit-content"
             height="fit-content"
             background={textProps.background}
-            paddingX="12px"
+            paddingX="20px"
             paddingY="8px"
             borderRadius={textProps.border}
         >
-            {message}
+            <Markdown>
+                {message}
+            </Markdown>
         </Text>
     )
 }
