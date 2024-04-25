@@ -24,9 +24,27 @@ const OracleMessage = ({
             width="fit-content"
             height="fit-content"
             background={textProps.background}
-            paddingX="20px"
+            paddingX="12px"
             paddingY="8px"
             borderRadius={textProps.border}
+            sx={{
+                "ul": {
+                    marginTop: "4px",
+                    paddingLeft: "18px",
+                    paddingRight: "18px",
+                },
+                "ol": {
+                    marginTop: "4px",
+                    paddingLeft: "18px",
+                    paddingRight: "18px",
+                    marginBottom: "4px",
+                },
+                "code": {
+                    whiteSpace: 'pre-wrap',
+                    wordWrap: 'break-word',
+                    maxWidth: '100%',
+                }
+            }}
         >
             <Markdown>
                 {message}
