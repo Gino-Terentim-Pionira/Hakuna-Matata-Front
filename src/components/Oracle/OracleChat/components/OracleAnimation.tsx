@@ -34,9 +34,9 @@ function OracleAnimation({
     const containerStyle: React.CSSProperties = {
         position: 'relative',
         width: "50%",
-        height: "80%",
+        height: "70%",
         minWidth: "320px",
-        maxWidth: "537px",
+        maxWidth: "700px",
         minHeight: "485px",
         maxHeight: "800px",
         overflow: 'hidden'
@@ -48,6 +48,7 @@ function OracleAnimation({
         left: 0,
         width: '100%',
         height: '100%',
+        objectFit: "cover"
     };
 
     return (

@@ -169,7 +169,6 @@ export const Oracle = () => {
 								width="100%"
 								justifyContent="center"
 								alignItems="flex-end"
-								columnGap={{ sm: '24px', md: '34px', '2xl': '112px' }}
 								paddingX="16px"
 							>
 								<OracleAnimation 
