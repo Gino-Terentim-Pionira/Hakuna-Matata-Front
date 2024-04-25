@@ -69,6 +69,7 @@ export const Oracle = () => {
 	}
 
 	const sendOracleMessage = async (content: string) => {
+		if(!content) return
 		try {
 			addUserMessage(content);
 			const response = await oracleService.sendMessage(
