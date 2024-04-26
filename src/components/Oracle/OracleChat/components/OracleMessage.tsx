@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import Markdown from 'react-markdown';
 import './styles/OracleMessage.css';
@@ -21,7 +21,7 @@ const OracleMessage = ({
         alignSelf: IS_USER ? "end" : "start"
     }
     return (
-        <Text
+        <Box
             display="flex"
             color={textProps.color}
             alignSelf={textProps.alignSelf}
@@ -58,7 +58,7 @@ const OracleMessage = ({
                 : <Markdown>
                     {message}
                 </Markdown>}
-        </Text>
+        </Box>
     )
 }
 
