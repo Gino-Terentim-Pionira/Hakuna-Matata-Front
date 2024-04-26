@@ -11,7 +11,8 @@ export interface IOracle {
     trail: trailEnum;
     assistant_id: string;
     background: string;
-    image: string;
+    sprite_idle: string;
+    sprite_talking: string;
 }
 
 export interface IHistoryResponse {

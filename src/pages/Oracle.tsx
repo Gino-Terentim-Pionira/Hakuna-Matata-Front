@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Image, Button, useDisclosure } from '@chakra-ui/react';
+import { Flex, Button, useDisclosure } from '@chakra-ui/react';
 import fontTheme from '../styles/base';
 import { OracleHeader } from '../components/Oracle/OracleHeader';
 import { OracleChat } from '../components/Oracle/OracleChat/OracleChat';
@@ -12,6 +12,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
 import { useUser } from '../hooks';
 import { IUser } from '../recoil/useRecoilState';
+import OracleAnimation from '../components/Oracle/OracleChat/components/OracleAnimation';
 
 export type PackagesDataType = ShopItemInfoType[];
 
@@ -31,10 +32,13 @@ export const Oracle = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [isMessageLoading, setIsMessageLoading] = useState(false);
+	const [isTalking, setIsTalking] = useState<boolean>(false);
 	const [oracleObject, setOracleObject] = useState({
 		oracle_name: "",
 		background: "",
-		image: "",
+		sprite_idle: "",
+		sprite_talking: "",
 		thread_id: "",
 		assistant_id: "",
 		messages: [] as IMessages[],
@@ -69,8 +73,11 @@ export const Oracle = () => {
 	}
 
 	const sendOracleMessage = async (content: string) => {
+		if(!content) return
 		try {
+			setIsMessageLoading(true);
 			addUserMessage(content);
+			setIsTalking(true);
 			const response = await oracleService.sendMessage(
 				userData._id,
 				oracleObject.thread_id,
@@ -83,12 +90,14 @@ export const Oracle = () => {
 					messages: [...response, ...currentState.messages]
 				}
 			));
+			setIsMessageLoading(false);
 			await getNewUserInfo();
 		} catch (error) {
 			setAlert({
 				...alert,
 				onAlert: true
 			});
+			setIsMessageLoading(false);
 		}
 	}
 
@@ -120,7 +129,8 @@ export const Oracle = () => {
 			setOracleObject({
 				oracle_name: messages.oracle.oracle_name,
 				background: messages.oracle.background,
-				image: messages.oracle.image,
+				sprite_idle: messages.oracle.sprite_idle,
+				sprite_talking: messages.oracle.sprite_talking,
 				thread_id: messages.thread_id,
 				assistant_id: messages.oracle.assistant_id,
 				messages: messages.messages,
@@ -164,15 +174,19 @@ export const Oracle = () => {
 								width="100%"
 								justifyContent="center"
 								alignItems="flex-end"
-								columnGap={{ sm: '24px', md: '34px', '2xl': '112px' }}
 								paddingX="16px"
 							>
-								<Image width="30%" minW="320px" maxWidth="537px" height="70%" minHeight="485px" maxHeight="800px" src={oracleObject.image} />
+								<OracleAnimation 
+									oracleObject={oracleObject}
+									isTalking={isTalking}
+									onEnd={() => {setIsTalking(false)}}
+								/>
 								<OracleChat
 									isInputReleased={IS_FINAL_QUIZ_COMPLETE}
 									commonQuestions={oracleObject.commonQuestions}
 									messages={oracleObject.messages}
 									userMessage={sendOracleMessage}
+									isMessageLoading={isMessageLoading}
 								/>
 							</Flex>
 						</Flex>
