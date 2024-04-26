@@ -31,6 +31,7 @@ export const Oracle = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [isMessageLoading, setIsMessageLoading] = useState(false);
 	const [oracleObject, setOracleObject] = useState({
 		oracle_name: "",
 		background: "",
@@ -71,6 +72,7 @@ export const Oracle = () => {
 	const sendOracleMessage = async (content: string) => {
 		if(!content) return
 		try {
+			setIsMessageLoading(true);
 			addUserMessage(content);
 			const response = await oracleService.sendMessage(
 				userData._id,
@@ -84,12 +86,14 @@ export const Oracle = () => {
 					messages: [...response, ...currentState.messages]
 				}
 			));
+			setIsMessageLoading(false);
 			await getNewUserInfo();
 		} catch (error) {
 			setAlert({
 				...alert,
 				onAlert: true
 			});
+			setIsMessageLoading(false);
 		}
 	}
 
@@ -174,6 +178,7 @@ export const Oracle = () => {
 									commonQuestions={oracleObject.commonQuestions}
 									messages={oracleObject.messages}
 									userMessage={sendOracleMessage}
+									isMessageLoading={isMessageLoading}
 								/>
 							</Flex>
 						</Flex>

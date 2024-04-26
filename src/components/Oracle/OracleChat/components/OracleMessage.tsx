@@ -1,13 +1,16 @@
 import React from 'react';
 import { Text } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
+import './styles/OracleMessage.css';
 
 const OracleMessage = ({
     message,
-    role
+    role,
+    isLoading,
 }: {
     message: string;
-    role: 'user' | 'assistant'
+    role: 'user' | 'assistant',
+    isLoading?: boolean
 }) => {
     const IS_USER = role === 'user';
     const textProps = {
@@ -18,17 +21,21 @@ const OracleMessage = ({
     }
     return (
         <Text
+            display="flex"
             color={textProps.color}
             alignSelf={textProps.alignSelf}
             width="100%"
-            maxWidth="297px"
+            maxWidth={ isLoading ? '100px' : '297px'}
             height="fit-content"
             background={textProps.background}
             paddingX="12px"
             paddingY="8px"
             borderRadius={textProps.border}
+            justifyContent={isLoading ? 'center' : 'start'}
         >
-            {message}
+            {isLoading ?
+                <div className="loader"></div>
+                : message}
         </Text>
     )
 }

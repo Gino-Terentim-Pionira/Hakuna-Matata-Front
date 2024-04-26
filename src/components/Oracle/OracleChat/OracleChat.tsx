@@ -9,6 +9,7 @@ type OracleChatType = {
 	messages: IMessages[];
 	userMessage: userMessageFunction;
 	isInputReleased?: boolean,
+	isMessageLoading?: boolean,
 }
 
 export const OracleChat = ({
@@ -16,6 +17,7 @@ export const OracleChat = ({
 	messages,
 	userMessage,
    isInputReleased,
+   isMessageLoading
 }: OracleChatType) => (
 	<Flex
 		flexDir="column"
@@ -73,16 +75,16 @@ export const OracleChat = ({
 				},
 			}}
 		>
+			{isMessageLoading && <OracleMessage isLoading={isMessageLoading} message="Salve" role="assistant" />}
 			{
 				messages.map((item, index) => (
-					<OracleMessage 
+					<OracleMessage
 						key={index}
 						message={item.content}
 						role={item.role}
 					/>
 				))
 			}
-
 		</Box>
 		<OracleInput
 			isInputReleased={isInputReleased}
