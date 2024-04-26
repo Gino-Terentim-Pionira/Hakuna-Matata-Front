@@ -38,7 +38,7 @@ function OracleAnimation({
         minWidth: "320px",
         maxWidth: "700px",
         minHeight: "485px",
-        maxHeight: "800px",
+        maxHeight: "850px",
         overflow: 'hidden'
     };
 
