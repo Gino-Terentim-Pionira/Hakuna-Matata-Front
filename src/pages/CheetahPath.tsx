@@ -49,7 +49,6 @@ import cheetahConclusion from '../utils/scripts/CheetahTrail/CheetahConclusion';
 import cheetahFinalQuiz from '../utils/scripts/CheetahTrail/CheetahFinalQuiz';
 
 // Images
-import trail_bg from '../assets/scenerys/cheetah/cheetah_bg.webp';
 import final_cheetah_icon from '../assets/icons/final_cheetah_icon.svg';
 import cheetah from '../assets/sprites/cheetah/cheetah.webp';
 import cheetah_bg from '../assets/modal/cheetah_banner.webp';
@@ -67,6 +66,7 @@ import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 import RelicsName from '../utils/enums/relicsName';
 import trailEnum from '../utils/enums/trail';
 import { numberCompletedModules } from '../utils/oracleUtils';
+import VideoBackground from '../components/VideoBackground';
 
 interface IQuiz {
     _id: string;
@@ -106,6 +106,7 @@ interface IScript {
 }
 
 const CheetahPath = () => {
+    const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail.webm';
     const { userData, setUserData } = useUser();
     const { getNewModuleInfo, moduleData } = useModule();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -456,15 +457,7 @@ const CheetahPath = () => {
 
     return (
         <>
-            <Image
-                src={trail_bg}
-                position='absolute'
-                h='100vh'
-                w='100%'
-                zIndex='-3'
-                left='0'
-                top='0'
-            />
+            <VideoBackground source={BACKGROUND_URL} />
             <IgnoranceFilter
                 ignoranceImage={ignoranceImage}
             />
@@ -500,28 +493,28 @@ const CheetahPath = () => {
                         >
                             <ModuleModal 
                                 left='19vw' 
-                                top='66vh' 
+                                top='74vh' 
                                 quizIndex={0} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
                                 blockedFunction={handleStatusRequirement} 
                             />
                             <ModuleModal
                                 left='45vw' 
-                                top='54vh' 
+                                top='56vh' 
                                 quizIndex={1} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(1)} 
                                 blockedFunction={handleStatusRequirement} 
                              />
                             <ModuleModal 
                                 left='68vw' 
-                                top='82vh' 
+                                top='75vh' 
                                 quizIndex={2} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(2)} 
                                 blockedFunction={handleStatusRequirement} 
                             />
                             <ModuleModal 
                                 left='89vw' 
-                                top='59vh' 
+                                top='65vh' 
                                 quizIndex={0} 
                                 isBlocked={true} 
                                 openFinalModuleNarrative={() => moduleEndNarrativeScript(0)} 
@@ -530,16 +523,16 @@ const CheetahPath = () => {
                             <Center
                                 _hover={{
                                     cursor: 'pointer',
-                                    transform: 'scale(1.1)',
+                                    transform: 'scale(2.2)',
                                 }}
                                 transition='all 0.2s ease'
-                                width='7rem'
-                                height='7rem'
+                                width='4rem'
+                                height='4rem'
                                 onClick={() => {
                                     handleChallengeNarrative();
                                 }}
                                 position='absolute'
-                                top='35vh'
+                                top='40vh'
                                 left='70vw'
                             >
                                 <Tooltip

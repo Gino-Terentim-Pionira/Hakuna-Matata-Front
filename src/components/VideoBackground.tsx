@@ -12,11 +12,11 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source }) => {
             muted
             playsInline
             style={{
-                position: "absolute",
+                position: "fixed",
                 width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                zIndex: -1,
+                height: "100vh",
+                objectFit: "fill",
+                zIndex: -3,
             }}
         >
             <source src={source} type="video/webm" />
