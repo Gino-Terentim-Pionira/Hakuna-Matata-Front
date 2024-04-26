@@ -15,3 +15,5 @@ export const CONTINUE = 'Continuar';
 export const SHARE = 'Compartilhar';
 
 export const SAVE = 'Salvar';
+
+export const CREATE_PASSAPORT = 'Criar Passaporte';

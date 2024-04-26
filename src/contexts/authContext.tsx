@@ -37,15 +37,12 @@ export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
   }, []);
 
   async function handleLogin(email: string, password: string) {
-    const result = await SignIn(email, password);
-    if (typeof result == 'string') {
-      return result;
-    }
-    sessionStorage.setItem('@pionira/token', result.token);
-    sessionStorage.setItem('@pionira/userId', result.user.id);
-    setAuthenticated(true);
-    setUserId(result.user.id);
-    history.push('/mainPage');
+      const result = await SignIn(email, password);
+      sessionStorage.setItem('@pionira/token', result.token);
+      sessionStorage.setItem('@pionira/userId', result.user.id);
+      setAuthenticated(true);
+      setUserId(result.user.id);
+      history.push('/mainPage');
   };
 
   async function handleLogout() {
