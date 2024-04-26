@@ -4,17 +4,19 @@ import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
 import { useUser } from '../../../../hooks';
 
-export type userMessageFunction = (name: string) => void;
+export type userMessageFunction = (content: string) => void;
 
 type OracleInputType = {
 	commonQuestions: ICommonQuestion[];
 	userMessage: userMessageFunction;
-	isInputReleased?: boolean
+	isInputReleased?: boolean;
+	isMessageLoading: boolean;
 }
 export const OracleInput = ({
 	commonQuestions,
 	userMessage,
 	isInputReleased = false,
+	isMessageLoading
 }: OracleInputType) => {
 	const { userData } = useUser();
 	const [inputReleasedMessage, setInputReleasedMessage] = useState('');
@@ -28,7 +30,7 @@ export const OracleInput = ({
     }
 
 	const sendMessage = () => {
-		if (userData.oracle_messages >= 1) {
+		if (userData.oracle_messages >= 1 && !isMessageLoading) {
 			userMessage(inputReleasedMessage);
 			setInputReleasedMessage("");
 		}
@@ -57,7 +59,7 @@ export const OracleInput = ({
 					height="100%"
 					fontSize="16px"
 					fontWeight="medium"
-					isDisabled={userData.oracle_messages <= 0}
+					isDisabled={userData.oracle_messages <= 0 || isMessageLoading}
 					onClick={sendMessage}
 				>
 					Enviar
@@ -81,7 +83,7 @@ export const OracleInput = ({
 								minH="30px"
 								fontSize="16px"
 								fontWeight="medium"
-								isDisabled={userData.oracle_messages <= 0}
+								isDisabled={userData.oracle_messages <= 0 || isMessageLoading}
 								onClick={() => {
 									userMessage(item.question);
 								}}
