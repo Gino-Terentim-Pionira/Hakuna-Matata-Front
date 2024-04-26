@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
+import Markdown from 'react-markdown';
 import './styles/OracleMessage.css';
 
 const OracleMessage = ({
@@ -24,18 +25,39 @@ const OracleMessage = ({
             display="flex"
             color={textProps.color}
             alignSelf={textProps.alignSelf}
-            width="100%"
-            maxWidth={ isLoading ? '100px' : '297px'}
+            width="fit-content"
+            maxWidth={isLoading ? '100px' : '297px'}
             height="fit-content"
             background={textProps.background}
             paddingX="12px"
             paddingY="8px"
             borderRadius={textProps.border}
             justifyContent={isLoading ? 'center' : 'start'}
+            flexDirection='column'
+            sx={{
+                "ul": {
+                    marginTop: "4px",
+                    paddingLeft: "18px",
+                    paddingRight: "18px",
+                },
+                "ol": {
+                    marginTop: "4px",
+                    paddingLeft: "18px",
+                    paddingRight: "18px",
+                    marginBottom: "4px",
+                },
+                "code": {
+                    whiteSpace: 'pre-wrap',
+                    wordWrap: 'break-word',
+                    maxWidth: '100%',
+                }
+            }}
         >
             {isLoading ?
                 <div className="loader"></div>
-                : message}
+                : <Markdown>
+                    {message}
+                </Markdown>}
         </Text>
     )
 }

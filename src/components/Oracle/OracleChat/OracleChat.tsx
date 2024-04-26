@@ -9,7 +9,7 @@ type OracleChatType = {
 	messages: IMessages[];
 	userMessage: userMessageFunction;
 	isInputReleased?: boolean,
-	isMessageLoading?: boolean,
+	isMessageLoading: boolean,
 }
 
 export const OracleChat = ({
@@ -90,6 +90,7 @@ export const OracleChat = ({
 			isInputReleased={isInputReleased}
 			commonQuestions={commonQuestions}
 			userMessage={userMessage}
+			isMessageLoading={isMessageLoading}
 		/>
 	</Flex>
 );
