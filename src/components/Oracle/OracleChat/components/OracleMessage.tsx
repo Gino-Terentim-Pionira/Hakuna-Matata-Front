@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Box } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import Markdown from 'react-markdown';
 import './styles/OracleMessage.css';
 
-const OracleMessage = ({
-    message,
-    role,
-    isLoading,
-}: {
+interface OracleMessageType {
     message: string;
-    role: 'user' | 'assistant',
-    isLoading?: boolean
-}) => {
+    role: 'user' | 'assistant';
+    isLoading?: boolean;
+}
+
+const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref) => {
+    const { message, role, isLoading } = props;
     const IS_USER = role === 'user';
     const textProps = {
         color: IS_USER ? colorPalette.oracleWhite : colorPalette.textColor,
@@ -22,6 +21,7 @@ const OracleMessage = ({
     }
     return (
         <Box
+            ref={ref}
             display="flex"
             color={textProps.color}
             alignSelf={textProps.alignSelf}
@@ -60,6 +60,6 @@ const OracleMessage = ({
                 </Markdown>}
         </Box>
     )
-}
+});
 
 export default OracleMessage;
