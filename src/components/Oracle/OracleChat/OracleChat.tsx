@@ -48,6 +48,7 @@ export const OracleChat = ({
 			paddingTop="10px"
 			rowGap="32px"
 			overflowY="auto"
+			transition="height 1s ease"
 			sx={{
 				"&::-webkit-scrollbar": {
 					width:"4px",
