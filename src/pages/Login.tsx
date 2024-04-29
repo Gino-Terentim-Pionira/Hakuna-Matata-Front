@@ -20,7 +20,7 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
-import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
+import { GENERIC_MODAL_TEXT, CREATE_PASSAPORT } from '../utils/constants/buttonConstants';
 
 const Login = () => {
 	const [email, setEmail] = useState<string>('');
@@ -31,6 +31,7 @@ const Login = () => {
 
 	const [alertModal, setAlertModal] = useState({
 		alertAnswer: '',
+		buttonLabel: '',
 		isOpen: false,
 		action: () => console.log()
 	});
@@ -50,31 +51,38 @@ const Login = () => {
 	const ERROR_TYPES: {
 		[key: string]: {
 			label: string,
+			buttonLabel: string,
 			action: VoidFunction
 		}
 	} = {
 		'MISSING_FIELDS_ERROR': {
 			label: errorCases.MISSING_FIELDS_ERROR,
+			buttonLabel: GENERIC_MODAL_TEXT,
 			action: onClose
 		},
 		'SERVER_ERROR': {
 			label: errorCases.SERVER_ERROR,
+			buttonLabel: GENERIC_MODAL_TEXT,
 			action: () => window.location.reload()
 		},
 		'NON_EXISTING_EMAIL_ERROR': {
 			label: errorCases.NON_EXISTING_EMAIL_ERROR,
-			action: onClose
+			buttonLabel: CREATE_PASSAPORT,
+			action: () => goToPassaport()
 		},
 		'WRONG_PASSWORD_ERROR': {
 			label: errorCases.WRONG_PASSWORD_ERROR,
+			buttonLabel: GENERIC_MODAL_TEXT,
 			action: onClose
 		},
 		'USER_IS_NOT_CONFIRMED_ERROR': {
 			label: errorCases.USER_IS_NOT_CONFIRMED_ERROR,
+			buttonLabel: GENERIC_MODAL_TEXT,
 			action: onClose
 		},
 		'FAILED_LOGIN_ERROR': {
 			label: errorCases.FAILED_LOGIN_ERROR,
+			buttonLabel: GENERIC_MODAL_TEXT,
 			action: onClose
 		}
 	}
@@ -82,6 +90,7 @@ const Login = () => {
 	const handleAlertModal = (erroTypes: string) => {
 		setAlertModal({
 			alertAnswer: ERROR_TYPES[erroTypes].label,
+			buttonLabel: ERROR_TYPES[erroTypes].buttonLabel,
 			isOpen: true,
 			action: ERROR_TYPES[erroTypes].action
 		});
@@ -91,19 +100,19 @@ const Login = () => {
 		if (email && password) {
 			try {
 				setIsLoading(true);
-				const res = await handleLogin(email, password);
-				if (typeof res == 'string') {
-					handleAlertModal(res);
-					setIsLoading(false);
-				}
-			} catch (erro) {
-				handleAlertModal('SERVER_ERROR');
+				await handleLogin(email, password);
+			} catch (error) {
+				handleAlertModal(error.response.data.error);
 				setIsLoading(false);
 			}
 		} else {
 			handleAlertModal('MISSING_FIELDS_ERROR');
 		}
 	};
+
+	const goToPassaport = () => {
+		history.push('/register');
+	}
 
 	const previousStep = () => {
 		history.push('/');
@@ -161,7 +170,7 @@ const Login = () => {
 						bg={colorPalette.primaryColor}
 						onClick={alertModal.action}
 					>
-						{GENERIC_MODAL_TEXT}
+						{alertModal.buttonLabel}
 					</Button>
 				}
 			/>
