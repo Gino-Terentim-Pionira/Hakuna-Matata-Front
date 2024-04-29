@@ -374,8 +374,9 @@ const CheetahPath = () => {
     };
 
     const handleModal = async () => {
-        quizOnOpen();
         modalOnClose();
+        closeAlert();
+        quizOnOpen();
     };
 
     const paxTax = async () => {
