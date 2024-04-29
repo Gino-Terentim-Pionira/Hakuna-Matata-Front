@@ -1,5 +1,5 @@
 import { Flex, Center, Box, Text, Input, Button, Link, Image, InputGroup, InputRightElement } from '@chakra-ui/react';
-import React, { ChangeEventHandler, FC, useState, ReactElement } from 'react';
+import React, { ChangeEventHandler, FC, useState, ReactElement, useRef, useEffect } from 'react';
 import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
 import closed_eye from '../assets/icons/closed-eye.png';
@@ -57,14 +57,30 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     const [isOpen, setIsOpen] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [modalBody, setModalBody] = useState<ReactElement>();
+    const inputRef = useRef<HTMLInputElement>(null);
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             const inputElement = event.target as HTMLInputElement;
             inputElement.blur();
-            nextStep();
+            handleNextStep();
         }
     }
+
+    const focusOnFirstInput = () => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+          }
+    }
+
+    const handleNextStep = () => {
+        nextStep();
+        focusOnFirstInput();
+    }
+
+    useEffect(() => {
+        focusOnFirstInput();
+      }, []);
 
     const renderPassword = (
         placeholder: string,
@@ -77,6 +93,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     ) => (
             <InputGroup display="flex" alignItems="center" w="60%" minWidth="250px" position="relative">
                 <Input
+                    ref={isFirstInput ? inputRef : null}
                     width="100%"
                     minWidth="250px"
                     height="60px"
@@ -241,7 +258,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         background={loading ? colorPalette.neutralGray : colorPalette.primaryColor}
                         color={colorPalette.buttonTextColor}
                         fontSize='1.7rem'
-                        onClick={nextStep}
+                        onClick={handleNextStep}
                         _hover={{}}
                         loadingText="Enviando"
                         isLoading={loading}

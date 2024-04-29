@@ -1,6 +1,6 @@
 import React, { SetStateAction, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDisclosure, Image, Flex, Button } from '@chakra-ui/react';
+import { useDisclosure, Flex, Button } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 
 // Components
@@ -19,8 +19,6 @@ import ignoranceFilterFunction from '../utils/ignorance/ignoranceFilter';
 import colorPalette from '../styles/colorPalette';
 
 // Images
-import map1_bg from '../assets/scenerys/mainPage/map1_bg.webp';
-import map2_bg from '../assets/scenerys/mainPage/map2_bg.webp';
 import icon_cheeta from '../assets/icons/icon_cheeta.svg';
 import icon_block from '../assets/icons/icon_block.svg';
 import ignorance100 from '../assets/ignorance/mainPage/ignorance_100.webp';
@@ -39,6 +37,7 @@ import { share } from '../services/linkedin';
 import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
 import GenericModal from '../components/modals/GenericModal';
+import VideoBackground from '../components/VideoBackground';
 
 interface IScript {
 	name: string;
@@ -47,6 +46,7 @@ interface IScript {
 }
 
 const MainPage = () => {
+	const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/trail_selection.webm';
 	const history = useHistory();
 	const {
 		isOpen: tutorialIsOpen,
@@ -348,27 +348,7 @@ const MainPage = () => {
 
 	return (
 		<>
-			{updateImageOnTime() ? (
-				<Image
-					src={map1_bg}
-					position='absolute'
-					h='100vh'
-					w='100%'
-					zIndex='-3'
-					left='0'
-					top='0'
-				/>
-			) : (
-					<Image
-						src={map2_bg}
-						position='absolute'
-						h='100vh'
-						w='100%'
-						zIndex='-3'
-						left='0'
-						top='0'
-					/>
-				)}
+			<VideoBackground source={BACKGROUND_URL} />
 			<IgnoranceFilter
 				ignoranceImage={ignoranceImage}
 			/>
@@ -409,7 +389,7 @@ const MainPage = () => {
 					<>
 						<Flex
 							position='absolute'
-							left='15.75vw'
+							left='18vw'
 							top='49.5vh'
 						>
 							<TrailIcon 
@@ -421,7 +401,7 @@ const MainPage = () => {
 
 						<Flex
 							position='absolute'
-							left='50.5vw'
+							left='43.5vw'
 							top='57.5vh'
 						>
 							<TrailIcon 
@@ -433,7 +413,7 @@ const MainPage = () => {
 
 						<Flex
 							position='absolute'
-							right='7vw'
+							right='2vw'
 							top='50vh'
 						>
 							<TrailIcon 
