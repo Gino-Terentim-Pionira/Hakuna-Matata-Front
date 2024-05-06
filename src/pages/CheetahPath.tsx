@@ -67,6 +67,7 @@ import RelicsName from '../utils/enums/relicsName';
 import trailEnum from '../utils/enums/trail';
 import { numberCompletedModules } from '../utils/oracleUtils';
 import VideoBackground from '../components/VideoBackground';
+import { verifyIsDayTime } from '../utils/algorithms/date';
 
 interface IQuiz {
     _id: string;
@@ -106,7 +107,8 @@ interface IScript {
 }
 
 const CheetahPath = () => {
-    const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail.webm';
+    const DAY_BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail.webm';
+    const NIGHT_BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail_night.webm';
     const { userData, setUserData } = useUser();
     const { getNewModuleInfo, moduleData } = useModule();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -458,7 +460,7 @@ const CheetahPath = () => {
 
     return (
         <>
-            <VideoBackground source={BACKGROUND_URL} />
+            <VideoBackground source={verifyIsDayTime() ? DAY_BACKGROUND_URL : NIGHT_BACKGROUND_URL} />
             <IgnoranceFilter
                 ignoranceImage={ignoranceImage}
             />
