@@ -67,6 +67,7 @@ import RelicsName from '../utils/enums/relicsName';
 import trailEnum from '../utils/enums/trail';
 import { numberCompletedModules } from '../utils/oracleUtils';
 import VideoBackground from '../components/VideoBackground';
+import { LogOut } from '../services/auth';
 
 interface IQuiz {
     _id: string;
@@ -715,11 +716,7 @@ const CheetahPath = () => {
                         ref={cancelRef}
                         color='white'
                         bg={colorPalette.primaryColor}
-                        onClick={() => {
-                            alertOnClose();
-                            sessionStorage.clear();
-                            location.reload();
-                        }}
+                        onClick={LogOut}
                     >
                         Sair
                         </Button>

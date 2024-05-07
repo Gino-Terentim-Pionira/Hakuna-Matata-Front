@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/authContext';
 const ProtectedRoute = ({ ...routesProps }: RouteProps) => {
     const { authenticated } = useAuth();
 
-    if (authenticated === false) {
+    if (!authenticated) {
         return <Redirect to="/" />;
     };
     return <Route {...routesProps} />;
