@@ -38,7 +38,7 @@ import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
 import GenericModal from '../components/modals/GenericModal';
 import VideoBackground from '../components/VideoBackground';
-import { verifyIsDayTime } from '../utils/algorithms/date';
+import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 
 interface IScript {
 	name: string;
@@ -47,8 +47,6 @@ interface IScript {
 }
 
 const MainPage = () => {
-	const DAY_BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/trail_selection.webm';
-	const NIGHT_BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/trail_selection_night.webm';
 	const history = useHistory();
 	const {
 		isOpen: tutorialIsOpen,
@@ -336,7 +334,7 @@ const MainPage = () => {
 
 	return (
 		<>
-			<VideoBackground source={verifyIsDayTime() ? DAY_BACKGROUND_URL : NIGHT_BACKGROUND_URL} />
+			<VideoBackground source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 			<IgnoranceFilter
 				ignoranceImage={ignoranceImage}
 			/>
