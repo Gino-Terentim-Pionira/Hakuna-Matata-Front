@@ -16,7 +16,7 @@ export const LOG_OUT = 'Encerrar Sessão';
 
 export const MAP = 'Voltar para seleção de trilhas';
 
-export const CHEETAH_TRAIL = 'Trilha da Cheetah';
+export const CHEETAH_TRAIL = 'Trilha do Cheetah';
 
 export const BLOCKED_TRAIL = 'Trilha Bloqueada';
 
@@ -32,7 +32,7 @@ export const BLOCKED_MODULE = 'Módulo Bloqueado';
 
 export const SURPRISE_CHEST = 'Abrir baú surpresa';
 
-export const CHEETAH_FINAL = 'Desafio Final da Cheetah';
+export const CHEETAH_FINAL = 'Desafio Final do Cheetah';
 
 export const BACK_BUTTON = 'Voltar';
 
