@@ -27,7 +27,7 @@ const ProgressionStatusModal = () => {
                 userData.status !== undefined ? (
                     <>
                         <Flex w="95%" flexDirection="row" marginTop='1.2rem' alignItems="flex-end" justifyContent="space-between">
-                            <Box w="35%" align='right'>
+                            <Box w="35%">
                                 <Stack w="100%">
                                     <StatusProgressionBar color="orange" status={getStatusPoints(userData, AGILITY)} label="Agilidade (AGI)" isOnLeft isBlocked={userData.narrative_status.trail1 < 2} />
                                     <StatusProgressionBar status={0} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked />

@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
     setUserId('');
     sessionStorage.removeItem('@pionira/token');
     sessionStorage.removeItem('@pionira/userId');
-    api.defaults.headers.Authorization = undefined;
+    api.defaults.headers.Authorization = '';
     history.push('/login');
     setTimeout(function () {
       window.location.reload();
