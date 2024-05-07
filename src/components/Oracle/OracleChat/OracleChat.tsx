@@ -27,7 +27,7 @@ export const OracleChat = ({
 			lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
 		}
 	}
-	
+
 	return (
 		<Flex
 			flexDir="column"
@@ -58,9 +58,10 @@ export const OracleChat = ({
 				paddingTop="10px"
 				rowGap="32px"
 				overflowY="auto"
+				transition="height 1s ease"
 				sx={{
 					"&::-webkit-scrollbar": {
-						width: "4px",
+						width:"4px",
 						height: "4px",
 						borderRadius: "8px"
 					},
@@ -72,7 +73,7 @@ export const OracleChat = ({
 						background: "#555",
 					},
 					"&::-moz-scrollbar": {
-						width: "4px",
+						width:"4px",
 						height: "4px",
 						borderRadius: "8px"
 					},
@@ -104,5 +105,5 @@ export const OracleChat = ({
 				isMessageLoading={isMessageLoading}
 			/>
 		</Flex>
-	)
+	);
 };

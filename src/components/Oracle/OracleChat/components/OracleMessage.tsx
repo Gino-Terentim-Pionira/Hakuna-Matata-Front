@@ -23,6 +23,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
         <Box
             ref={ref}
             display="flex"
+            className={ isLoading ? 'oracleMessageContainer' : undefined}
             color={textProps.color}
             alignSelf={textProps.alignSelf}
             width="fit-content"
@@ -34,6 +35,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
             borderRadius={textProps.border}
             justifyContent={isLoading ? 'center' : 'start'}
             flexDirection='column'
+            transition="height 1s ease"
             sx={{
                 "ul": {
                     marginTop: "4px",
