@@ -63,11 +63,11 @@ import GenericModal from '../components/modals/GenericModal';
 import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
-import RelicsName from '../utils/enums/relicsName';
 import trailEnum from '../utils/enums/trail';
 import { numberCompletedModules } from '../utils/oracleUtils';
 import VideoBackground from '../components/VideoBackground';
 import { LogOut } from '../services/auth';
+import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 
 interface IQuiz {
     _id: string;
@@ -107,7 +107,6 @@ interface IScript {
 }
 
 const CheetahPath = () => {
-    const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail.webm';
     const { userData, setUserData } = useUser();
     const { getNewModuleInfo, moduleData } = useModule();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -269,7 +268,7 @@ const CheetahPath = () => {
 
             if (isComplete) {
                 setCheetahText(
-                    `Você já alcançou o máximo da sua agilidade filhote... digo ${userInfoData.userName}! Você até agora consegue me ultrapassar! Vamos com tudo contra a ignorância!`,
+                    `Você já alcançou o máximo da sua agilidade  ${userInfoData.userName}! Vamos com tudo contra a ignorância!`,
                 );
                 setCompleteTrail(true);
                 if (userInfoData.narrative_status.trail1 === 3) {
@@ -459,7 +458,7 @@ const CheetahPath = () => {
 
     return (
         <>
-            <VideoBackground source={BACKGROUND_URL} />
+            <VideoBackground source={getBackgroundAnimation(pathEnum.CHEETAH)} />
             <IgnoranceFilter
                 ignoranceImage={ignoranceImage}
             />
@@ -733,7 +732,6 @@ const CheetahPath = () => {
                 routeQuiz={'finalcheetahquiz'}
                 userStatus={getStatusPoints(userData, AGILITY)}
                 trail={1}
-                relic={RelicsName.SANDALS}
             />
 
             <AlertModal
