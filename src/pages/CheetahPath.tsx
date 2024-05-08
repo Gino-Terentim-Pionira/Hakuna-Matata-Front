@@ -66,6 +66,7 @@ import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 import trailEnum from '../utils/enums/trail';
 import { numberCompletedModules } from '../utils/oracleUtils';
 import VideoBackground from '../components/VideoBackground';
+import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 
 interface IQuiz {
     _id: string;
@@ -105,7 +106,6 @@ interface IScript {
 }
 
 const CheetahPath = () => {
-    const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail.webm';
     const { userData, setUserData } = useUser();
     const { getNewModuleInfo, moduleData } = useModule();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -457,7 +457,7 @@ const CheetahPath = () => {
 
     return (
         <>
-            <VideoBackground source={BACKGROUND_URL} />
+            <VideoBackground source={getBackgroundAnimation(pathEnum.CHEETAH)} />
             <IgnoranceFilter
                 ignoranceImage={ignoranceImage}
             />

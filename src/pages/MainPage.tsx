@@ -38,6 +38,7 @@ import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
 import GenericModal from '../components/modals/GenericModal';
 import VideoBackground from '../components/VideoBackground';
+import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 
 interface IScript {
 	name: string;
@@ -46,7 +47,6 @@ interface IScript {
 }
 
 const MainPage = () => {
-	const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/trail_selection.webm';
 	const history = useHistory();
 	const {
 		isOpen: tutorialIsOpen,
@@ -286,19 +286,6 @@ const MainPage = () => {
 		handleLogOutAlert();
 	};
 
-	const updateImageOnTime = () => {
-		const currentDate = new Date();
-		const hour = currentDate.getHours();
-		const minutes = currentDate.getMinutes();
-		const currentSeconds = hour * 3600 + minutes * 60;
-
-		if (currentSeconds >= 25200 && currentSeconds < 66600) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
 	// To add later:
 	// const validIsPrime = async () => {
 	// 	const userId = sessionStorage.getItem('@pionira/userId');
@@ -338,7 +325,6 @@ const MainPage = () => {
 
 	useEffect(() => {
 		getUserRequisition();
-		updateImageOnTime();
 		getNewUserInfo();
 	}, []);
 
@@ -348,7 +334,7 @@ const MainPage = () => {
 
 	return (
 		<>
-			<VideoBackground source={BACKGROUND_URL} />
+			<VideoBackground source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 			<IgnoranceFilter
 				ignoranceImage={ignoranceImage}
 			/>

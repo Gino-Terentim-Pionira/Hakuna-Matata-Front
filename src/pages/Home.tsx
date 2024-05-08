@@ -16,9 +16,9 @@ import GinoLogo from '../assets/GinoLogo.webp';
 import HomeButton from '../components/HomeButton';
 import { LOGIN, REGISTER } from '../utils/constants/mouseOverConstants';
 import VideoBackground from '../components/VideoBackground';
+import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 
 const Home = () => {
-	const BACKGROUND_URL = 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/home.webm';
 	const { authenticated } = useAuth();
 	const history = useHistory();
 	useEffect(() => {
@@ -33,7 +33,7 @@ const Home = () => {
 			position="relative"
 			overflow="hidden"
 		>
-			<VideoBackground source={BACKGROUND_URL} />
+			<VideoBackground source={getBackgroundAnimation(pathEnum.HOME)} />
 			<Box w='100vw' mt='5%'>
 				<Center flexDir="column">
 					<Image ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
