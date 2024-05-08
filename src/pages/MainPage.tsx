@@ -38,6 +38,7 @@ import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
 import GenericModal from '../components/modals/GenericModal';
 import VideoBackground from '../components/VideoBackground';
+import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 
 interface IScript {
@@ -116,7 +117,7 @@ const MainPage = () => {
 			body: 'Tem certeza que você deseja sair da Savana?',
 			closeFunction: () => setOnAlert(false),
 			buttonFunction: () => {
-				quit();
+				LogOut();
 			},
 			buttonText: 'Sair'
 		});
@@ -275,12 +276,6 @@ const MainPage = () => {
 			history.push('/trilha-leao');
 		};
 	*/
-
-	const quit = async () => {
-		setOnAlert(false);
-		sessionStorage.clear();
-		location.reload();
-	};
 
 	const logout = () => {
 		handleLogOutAlert();

@@ -7,3 +7,8 @@ export async function SignIn(email: string, password: string) {
     });
     return res.data;
 }
+
+export const LogOut = () => {
+    sessionStorage.clear();
+    location.replace('/');
+}

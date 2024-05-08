@@ -39,6 +39,7 @@ import { errorCases } from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import { IUser } from '../recoil/useRecoilState';
+import { LogOut } from '../services/auth';
 
 interface IScript {
 	name: string;
@@ -560,11 +561,7 @@ const BlackMambaPath = () => {
 							ref={cancelRef}
 							color='white'
 							bg={colorPalette.primaryColor}
-							onClick={() => {
-								alertOnClose();
-								sessionStorage.clear();
-								location.reload();
-							}}
+							onClick={LogOut}
 						>
 							Sair
 						</Button>
