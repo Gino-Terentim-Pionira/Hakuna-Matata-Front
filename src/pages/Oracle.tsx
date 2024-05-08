@@ -27,7 +27,7 @@ export const Oracle = () => {
 	const { userData, getNewUserInfo } = useUser();
 	const history = useHistory();
 	const location = useLocation();
-	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location.state.trail as trailEnum]] : false;
+	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location?.state?.trail as trailEnum]] : false;
 	const oracleService = new OracleServices();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>();
