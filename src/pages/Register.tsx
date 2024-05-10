@@ -11,7 +11,7 @@ import {
     Image,
     Button,
 } from '@chakra-ui/react';
-import { validatePassword } from '../utils/validates';
+import {validateEmail, validatePassword} from '../utils/validates';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -134,16 +134,14 @@ const Register = () => {
         }
     }
 
-    const validateEmail = () => {
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-
+    const isValidEmail = () => {
         if (formEmail.length > 254) {
             setValidationError("Email muito extenso");
             setHasValidationError(true);
             return true;
         }
 
-        const valid = emailRegex.test(formEmail);
+        const valid = validateEmail(formEmail);
         if (!valid) {
             setValidationError("Formato de email inválido");
             setHasValidationError(true);
@@ -170,7 +168,7 @@ const Register = () => {
 
     const handleEmailChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setFormEmail(event.target.value);
-        validateEmail();
+        isValidEmail();
     }
 
     const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -218,7 +216,7 @@ const Register = () => {
 
         } else if (step == 2) {
 
-            const invalidName = validateEmail();
+            const invalidName = isValidEmail();
 
             if (formEmail && formDate && !invalidName) {
                 setStep(step + 1);
