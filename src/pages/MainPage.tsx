@@ -53,7 +53,6 @@ const MainPage = () => {
 		isOpen: tutorialIsOpen,
 		onClose: tutorialOnClose,
 		onOpen: tutorialOnOpen,
-		onToggle: tutorialOnToggle,
 	} = useDisclosure();
 
 	const {
@@ -362,7 +361,6 @@ const MainPage = () => {
 			<TutorialModal
 				isOpen={tutorialIsOpen}
 				onClose={tutorialFirstOnClose}
-				onToggle={tutorialOnToggle}
 			/>
 
 			<Flex margin='2vw' justifyContent='space-between'>
