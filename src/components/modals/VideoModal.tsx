@@ -11,7 +11,7 @@ import {
     Button,
     Text,
 } from "@chakra-ui/react";
-import ReactPlayer from 'react-player/lazy';
+import ReactPlayer from 'react-player';
 import { useUser } from '../../hooks';
 
 // Components
