@@ -4,7 +4,7 @@ import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
 import { useUser } from '../../../../hooks';
 
-export type userMessageFunction = (content: string) => void;
+export type userMessageFunction = (content: string) => Promise<void>;
 
 type OracleInputType = {
 	commonQuestions: ICommonQuestion[];

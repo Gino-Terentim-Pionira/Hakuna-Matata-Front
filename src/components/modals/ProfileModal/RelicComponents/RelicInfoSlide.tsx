@@ -22,11 +22,11 @@ type RelicInfoModalType = {
 	}
 }
 
-export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity, description, discoveredTrail, hint, isEquiped, button }: RelicInfoModalType) => {
+export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity, isEquiped, button }: RelicInfoModalType) => {
 	const relicColor = {
 		'Normal': '#719DF6',
 		'Lendário': '#A344E8',
-		'Místico':  '#F0C05D',
+		'Místico': '#F0C05D',
 	}[rarity]
 	return (
 		<Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }} >
@@ -84,32 +84,42 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 
 				<Flex marginTop="8px" gap="32px" fontFamily={fontTheme.fonts} color={colorPalette.textColor} justifyContent="space-between" alignItems="center" width="100%" maxWidth="1500px">
 					<Flex flexDirection="column">
-						<Flex display="flex" fontSize="18px">
-							{!isHaveNoButton ? description : <>Aparentemente essa é uma relíquia de nível (<Text color={relicColor} fontWeight="semibold" >{rarity}</Text>), Viajante!</> }
-						</Flex>
-						<Flex display="flex" marginTop="16px" fontSize="18px">
-							<Text marginRight="4px" fontWeight="semibold">{!isHaveNoButton ? 'Encontrada:' : 'Dica para encontrar a relíquia:'}</Text> {!isHaveNoButton ? discoveredTrail : hint}.
-						</Flex>
+						<Text fontSize="18px">
+							Não conseguimos identificar o que é isso. Parece uma espécie de relíquia...
+						</Text>
+						<Text marginTop="16px" fontSize="14px" fontWeight="semibold">
+							Aguarde por nova funcionalidade
+						</Text>
+						{/*  
+							TODO: Voltar código
+
+							<Flex display="flex" fontSize="18px">
+								{!isHaveNoButton ? description : <>Aparentemente essa é uma relíquia de nível (<Text color={relicColor} fontWeight="semibold" >{rarity}</Text>), Viajante!</> }
+							</Flex>
+							<Flex display="flex" marginTop="16px" fontSize="18px">
+								<Text marginRight="4px" fontWeight="semibold">{!isHaveNoButton ? 'Encontrada:' : 'Dica para encontrar a relíquia:'}</Text> {!isHaveNoButton ? discoveredTrail : hint}.
+							</Flex>
+						*/}
 					</Flex>
 
 					{
 						!isHaveNoButton && <Flex flexDirection="column" marginRight='24px'>
-						<Tooltip
-							placement="left"
-							gutter={10}
-							label={button?.disabledLabel && button?.disabledLabel}
-						>
-							<Button 
-								onClick={button?.disabledLabel ? undefined : button?.onClick}
-								width="203px" 
-								minHeight="45px" 
-								background={button?.disabledLabel ? colorPalette.neutralGray : button?.backgroundColor}
-								color={colorPalette.whiteText}
-								cursor={button?.disabledLabel ? 'not-allowed' : 'pointer'}
+							<Tooltip
+								placement="left"
+								gutter={10}
+								label={button?.disabledLabel && button?.disabledLabel}
 							>
-								{button?.label}
-							</Button>
-						</Tooltip>
+								<Button
+									onClick={button?.disabledLabel ? undefined : button?.onClick}
+									width="203px"
+									minHeight="45px"
+									background={button?.disabledLabel ? colorPalette.neutralGray : button?.backgroundColor}
+									color={colorPalette.whiteText}
+									cursor={button?.disabledLabel ? 'not-allowed' : 'pointer'}
+								>
+									{button?.label}
+								</Button>
+							</Tooltip>
 
 							<Button marginTop="16px" width="203px" minHeight="45px" colorScheme='linkedin' color={colorPalette.whiteText} cursor='pointer'>
 								Compartilhar

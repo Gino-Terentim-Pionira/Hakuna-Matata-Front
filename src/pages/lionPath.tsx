@@ -60,8 +60,7 @@ import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants
 import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
 import BlockedModal from '../components/modals/BlockedModal';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
-import RelicsName from '../utils/enums/relicsName';
-
+import { LogOut } from '../services/auth';
 
 interface IQuiz {
 	_id: string;
@@ -684,11 +683,7 @@ const LionPath = () => {
 						ref={cancelRef}
 						color='white'
 						bg={colorPalette.primaryColor}
-						onClick={() => {
-							alertOnClose();
-							sessionStorage.clear();
-							location.reload();
-						}}
+						onClick={LogOut}
 					>
 						Sair
 						</Button>
@@ -705,7 +700,6 @@ const LionPath = () => {
 				routeQuiz={'finallionquiz'}
 				userStatus={getStatusPoints(userData, LEADERSHIP)}
 				trail={2}
-				relic={RelicsName.GLASSES}
 			/>
 
 			<AlertModal

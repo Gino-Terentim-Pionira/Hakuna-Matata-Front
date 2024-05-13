@@ -28,9 +28,7 @@ import colorPalette from '../../styles/colorPalette';
 import imgReward from '../../assets/icons/insignia/mambaTrailInsignia.png'
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
-import { useUser, useRelic } from '../../hooks';
-import { addRelic } from '../../services/relic';
-import RelicsName from '../../utils/enums/relicsName';
+import { useUser } from '../../hooks';
 
 interface IFinalRewardModal {
 	isOpen: boolean;
@@ -64,7 +62,6 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const [onError, setOnError] = useState(false);
 	const { userData, getNewUserInfo } = useUser();
-	const { relicData, getRelics } = useRelic();
 
 	const {
 		isOpen: finalModalIsOpen,
@@ -82,9 +79,6 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 	const verifyInfo = async () => {
 		if (!userData._id) {
 			await getNewUserInfo();
-		}
-		if (relicData.length == 0) {
-			await getRelics();
 		}
 
 	}
@@ -120,11 +114,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 
 	const updateBlackMambaBadge = async () => {
 		try {
-			const userId = sessionStorage.getItem('@pionira/userId');
 			setIsLoading(true);
-			
-
-			await addRelic(userData.owned_relics, RelicsName.MAMBA, userId as string);
 			finalModalOnClose();
 			setIsLoading(false);
 			certificateOnOpen();
