@@ -21,9 +21,11 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import { GENERIC_MODAL_TEXT, CREATE_PASSAPORT } from '../utils/constants/buttonConstants';
+import {validateEmail} from "../utils/validates";
 
 const Login = () => {
 	const [email, setEmail] = useState<string>('');
+	const [emailError, setEmailError] = useState('');
 	const [password, setPassword] = useState<string>('');
 	const history = useHistory();
 	const { handleLogin, authenticated } = useAuth();
@@ -84,6 +86,11 @@ const Login = () => {
 			label: errorCases.FAILED_LOGIN_ERROR,
 			buttonLabel: GENERIC_MODAL_TEXT,
 			action: onClose
+		},
+		'INVALID_EMAIL': {
+			label: errorCases.INVALID_EMAIL_ERROR,
+			buttonLabel: GENERIC_MODAL_TEXT,
+			action: onClose
 		}
 	}
 
@@ -99,6 +106,11 @@ const Login = () => {
 	const _handleLogin = async () => {
 		if (email && password) {
 			try {
+				if(emailError) {
+					handleAlertModal('INVALID_EMAIL');
+					return
+				}
+
 				setIsLoading(true);
 				await handleLogin(email, password);
 			} catch (error) {
@@ -122,6 +134,21 @@ const Login = () => {
 		history.push('/forgotPassword');
 	};
 
+	const handleEmailChanges = (event: { target: { value: React.SetStateAction<string> } }) => {
+		setEmail(event.target.value);
+		isValidEmail();
+	}
+
+	const isValidEmail = () => {
+		const valid = validateEmail(email);
+		if (!valid) {
+			setEmailError("Formato de email inválido");
+			return true;
+		} else {
+			setEmailError('')
+		}
+	}
+
 	return (
 		<Flex
 			h='100vh'
@@ -138,7 +165,7 @@ const Login = () => {
 					secondPlaceholder='Senha'
 					firstValue={email}
 					firstChange={(e: BaseSyntheticEvent) =>
-						setEmail(e.target.value)
+						handleEmailChanges(e)
 					}
 					secondValue={password}
 					secondChange={(e: BaseSyntheticEvent) =>
@@ -152,6 +179,8 @@ const Login = () => {
 					forgetPasswordLink={() => goToForgotPassword()}
 					buttonText='Próximo'
 					loading={isLoading}
+					validationError={emailError}
+					hasValidationError={!!emailError}
 				/>
 
 				<Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
