@@ -20,7 +20,7 @@ const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
   const history = useHistory();
-  const [authenticated, setAuthenticated] = useState<boolean | undefined>();
+  const [authenticated, setAuthenticated] = useState<boolean | undefined>(true);
   const [userId, setUserId] = useState('');
 
   useEffect(() => {
