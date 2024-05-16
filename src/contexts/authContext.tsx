@@ -10,7 +10,7 @@ interface IAuthProvider {
 
 interface IAuthContext {
   userId: string,
-  authenticated: boolean | undefined,
+  authenticated: boolean,
   handleLogin: (email: string, password: string) => Promise<void>,
   handleLogout: () => Promise<void>
 };
@@ -20,7 +20,7 @@ const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
   const history = useHistory();
-  const [authenticated, setAuthenticated] = useState<boolean | undefined>();
+  const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [userId, setUserId] = useState('');
 
   useEffect(() => {
