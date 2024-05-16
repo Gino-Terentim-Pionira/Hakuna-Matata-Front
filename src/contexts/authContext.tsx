@@ -10,7 +10,7 @@ interface IAuthProvider {
 
 interface IAuthContext {
   userId: string,
-  authenticated: boolean | undefined,
+  authenticated: boolean,
   handleLogin: (email: string, password: string) => Promise<void>,
   handleLogout: () => Promise<void>
 };

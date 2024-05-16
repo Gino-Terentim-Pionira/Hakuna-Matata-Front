@@ -58,7 +58,6 @@ const Routes = () => {
 						<ProtectedRoute path='/trilha-leao' component={LionPath} />
 						<ProtectedRoute path='/oracle' component={Oracle} />
 					</Switch>
-
 				</AuthProvider >
 			</HashRouter >
 		</RecoilRoot>
