@@ -79,7 +79,7 @@ export class OracleServices {
     };
 
     buyOracleMessages = async (userId: string, package_name: string) => {
-        const response = await api.post(this.createURL(`/packages/${userId}`), {
+        const response = await api.post(this.createURL(`packages/${userId}`), {
             package_name
         });
 
@@ -92,7 +92,7 @@ export class OracleServices {
         assistant_id: string,
         content: string
     ): Promise<IMessages[]> => {
-        const response = await api.post(this.createURL(`/sendmessage/${userId}`), {
+        const response = await api.post(this.createURL(`sendmessage/${userId}`), {
             thread_id,
             assistant_id,
             content

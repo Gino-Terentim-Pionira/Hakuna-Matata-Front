@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Center, Flex, Input } from '@chakra-ui/react';
+import { Button, Center, Flex, Input, Tooltip } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
 import { useUser } from '../../../../hooks';
+import { NOT_ENOUGH_MESSAGES } from '../../../../utils/constants/mouseOverConstants';
 
 export type userMessageFunction = (content: string) => Promise<void>;
 
@@ -20,18 +21,19 @@ export const OracleInput = ({
 }: OracleInputType) => {
 	const { userData } = useUser();
 	const [inputReleasedMessage, setInputReleasedMessage] = useState('');
+	const IS_USER_HAS_MESSAGES = userData.oracle_messages >= 1;
 	const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const inputElement = event.target as HTMLInputElement;
-            inputElement.blur();
-            sendMessage();
-        }
-    }
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			const inputElement = event.target as HTMLInputElement;
+			inputElement.blur();
+			sendMessage(inputReleasedMessage);
+		}
+	}
 
-	const sendMessage = () => {
-		if (userData.oracle_messages >= 1 && !isMessageLoading) {
-			userMessage(inputReleasedMessage);
+	const sendMessage = (message: string) => {
+		if (IS_USER_HAS_MESSAGES && !isMessageLoading) {
+			userMessage(message);
 			setInputReleasedMessage("");
 		}
 	}
@@ -51,19 +53,28 @@ export const OracleInput = ({
 			/>
 			<Center height="100%">
 				<Flex width="2px" height="100%" background={colorPalette.grayBackground} borderRadius="100px" mr="12px" />
-				<Button
-					paddingX="18px"
-					paddingY="2px"
-					background={colorPalette.primaryColor}
-					color={colorPalette.whiteText}
-					height="100%"
-					fontSize="16px"
-					fontWeight="medium"
-					isDisabled={userData.oracle_messages <= 0 || isMessageLoading}
-					onClick={sendMessage}
+				<Tooltip
+					label={NOT_ENOUGH_MESSAGES}
+					placement='left'
+					hasArrow
+					isDisabled={IS_USER_HAS_MESSAGES}
+					closeOnClick={false}
 				>
-					Enviar
+					<Button
+						paddingX="18px"
+						paddingY="2px"
+						cursor={IS_USER_HAS_MESSAGES ? 'pointer' : 'help'}
+						background={IS_USER_HAS_MESSAGES ? colorPalette.primaryColor : colorPalette.grayBackground}
+						color={colorPalette.whiteText}
+						height="100%"
+						fontSize="16px"
+						fontWeight="medium"
+						isDisabled={isMessageLoading}
+						onClick={() => sendMessage(inputReleasedMessage)}
+					>
+						Enviar
 				</Button>
+				</Tooltip>
 			</Center>
 		</Flex>
 	);
@@ -74,22 +85,29 @@ export const OracleInput = ({
 				{
 					commonQuestions.map((item, index) => (
 						<Flex height="100%" key={item._id}>
-							<Button
-								paddingX="18px"
-								paddingY="2px"
-								background={colorPalette.primaryColor}
-								color={colorPalette.whiteText}
-								height="100%"
-								minH="30px"
-								fontSize="16px"
-								fontWeight="medium"
-								isDisabled={userData.oracle_messages <= 0 || isMessageLoading}
-								onClick={() => {
-									userMessage(item.question);
-								}}
+							<Tooltip
+								label={NOT_ENOUGH_MESSAGES}
+								placement='left'
+								hasArrow
+								isDisabled={IS_USER_HAS_MESSAGES}
+								closeOnClick={false}
 							>
-								{item.question}
-							</Button>
+								<Button
+									paddingX="18px"
+									paddingY="2px"
+									cursor={IS_USER_HAS_MESSAGES ? 'pointer' : 'help'}
+									background={IS_USER_HAS_MESSAGES ? colorPalette.primaryColor : colorPalette.grayBackground}
+									color={colorPalette.whiteText}
+									height="100%"
+									minH="30px"
+									fontSize="16px"
+									fontWeight="medium"
+									isDisabled={isMessageLoading}
+									onClick={() => sendMessage(item.question)}
+								>
+									{item.question}
+								</Button>
+							</Tooltip>
 							{
 								(index + 1) !== commonQuestions.length && <Flex width="2px" minH="30px" height="100%" background={colorPalette.grayBackground} borderRadius="100px" ml="12px" mr="12px" />
 							}
