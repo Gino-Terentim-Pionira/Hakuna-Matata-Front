@@ -26,6 +26,7 @@ import colorPalette from "../../styles/colorPalette";
 
 // Images
 import { errorCases } from '../../utils/errors/errorsCases';
+import LoadingState from "../LoadingState";
 
 interface IVideoModal {
     id: string;
@@ -33,7 +34,6 @@ interface IVideoModal {
     url: string;
     videoIsOpen: boolean,
     videoOnClose: VoidFunction,
-    videoOnToggle: VoidFunction,
     plataform?: 'vimeo' | 'youtube';
     updateQuiz: VoidFunction;
     coins: number;
@@ -42,7 +42,6 @@ interface IVideoModal {
 const VideoModal: FC<IVideoModal> = ({
     videoIsOpen,
     videoOnClose,
-    videoOnToggle,
     coins,
     id,
     name,
@@ -50,6 +49,7 @@ const VideoModal: FC<IVideoModal> = ({
     plataform = 'vimeo',
     updateQuiz
 }) => {
+    const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
     const [buttonIsLoading, setButtonIsLoading] = useState(false);
     const { userData } = useUser();
@@ -75,7 +75,7 @@ const VideoModal: FC<IVideoModal> = ({
             setButtonIsLoading(true);
             await updateVideo();
             updateQuiz();
-            videoOnToggle();
+            handleCloseModal();
             setButtonIsLoading(false);
         } catch (error) {
             setOnError(true);
@@ -89,9 +89,13 @@ const VideoModal: FC<IVideoModal> = ({
             return url.split("//")[1].split("/")[1];
     }
 
+    const handleCloseModal = () => {
+        setIsVideoLoading(true);
+        videoOnClose()
+    }
     return (
         <>
-            <Modal isOpen={videoIsOpen} onClose={videoOnClose} size="4xl">
+            <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="4xl">
                 <ModalOverlay />
                 <ModalContent height="34rem">
                     <ModalHeader display="flex" justifyContent="center" paddingBottom="0px">
@@ -110,16 +114,22 @@ const VideoModal: FC<IVideoModal> = ({
                         borderTopStartRadius='5px'
                         clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
                     />
-                    <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={() => {
-                        videoOnToggle();
-                    }} />
+                    <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={handleCloseModal} />
                     <ModalBody>
                         <Flex direction="column" alignItems="center" paddingTop="0px">
+                            {
+                                isVideoLoading &&
+                                <Flex height="320px">
+                                    <LoadingState/>
+                                </Flex>
+                            }
                             <ReactPlayer
                                 url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
                                 controls={true}
                                 onEnded={handleModal}
+                                onReady={() => setIsVideoLoading(false)}
                                 style={{
+                                    display: isVideoLoading ? 'none': 'block',
                                     marginTop: '-16px'
                                 }}
                             />
@@ -127,6 +137,7 @@ const VideoModal: FC<IVideoModal> = ({
 
                         <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
                             <Button
+                                display={isVideoLoading ? 'none': 'flex'}
                                 bgColor={colorPalette.confirmButton}
                                 width="50%"
                                 height="3rem"

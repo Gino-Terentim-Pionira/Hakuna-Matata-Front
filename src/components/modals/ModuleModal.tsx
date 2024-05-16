@@ -107,7 +107,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const { isOpen: videoIsOpen,
         onClose: videoOnClose,
         onOpen: videoOnOpen,
-        onToggle: videoOnToggle
     } = useDisclosure();
 
 
@@ -484,7 +483,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 coins={videoInfo.coins}
                 videoIsOpen={videoIsOpen}
                 videoOnClose={videoOnClose}
-                videoOnToggle={videoOnToggle}
                 updateQuiz={getNewUserInfo}
             />
         </>
