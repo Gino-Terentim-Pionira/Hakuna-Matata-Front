@@ -35,7 +35,6 @@ const ResetPassword = () => {
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
     const [validationError, setValidationError] = useState('');
-	const [hasValidationError, setHasValidationError] = useState(false);
 
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const onClose = () => setIsConfirmOpen(false);
@@ -48,12 +47,13 @@ const ResetPassword = () => {
 	const { authenticated } = useAuth();
 
 	const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        const currentPassword = event.target.value as string;
-		setPassword(currentPassword);
-        const res = validatePassword(currentPassword);
-		setValidationError(res.message);
-		setHasValidationError(res.validate);
+		setPassword(event.target.value);
     }
+
+	const isValidPassword = () => {
+		const {message} = validatePassword(password);
+		setValidationError(message);
+	}
 
 	useEffect(() => {
 		if (authenticated) {
@@ -107,7 +107,8 @@ const ResetPassword = () => {
 					firstInputType='password'
 					firstValue={password}
 					validationError={validationError}
-					hasValidationError={hasValidationError}
+					hasValidationError={!!validationError}
+					onBlur={isValidPassword}
 					firstPlaceholder='Nova senha'
 					secondChange={(e: BaseSyntheticEvent) => {
 						setConfirmPassword(e.target.value);
