@@ -27,11 +27,11 @@ export const OracleInput = ({
 			event.preventDefault();
 			const inputElement = event.target as HTMLInputElement;
 			inputElement.blur();
-			sendMessage(inputReleasedMessage);
+			send(inputReleasedMessage);
 		}
 	}
 
-	const sendMessage = (message: string) => {
+	const send = (message: string) => {
 		if (IS_USER_HAS_MESSAGES && !isMessageLoading) {
 			userMessage(message);
 			setInputReleasedMessage("");
@@ -70,7 +70,7 @@ export const OracleInput = ({
 						fontSize="16px"
 						fontWeight="medium"
 						isDisabled={isMessageLoading}
-						onClick={() => sendMessage(inputReleasedMessage)}
+						onClick={() => send(inputReleasedMessage)}
 					>
 						Enviar
 				</Button>
@@ -103,7 +103,7 @@ export const OracleInput = ({
 									fontSize="16px"
 									fontWeight="medium"
 									isDisabled={isMessageLoading}
-									onClick={() => sendMessage(item.question)}
+									onClick={() => send(item.question)}
 								>
 									{item.question}
 								</Button>
