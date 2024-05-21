@@ -17,7 +17,7 @@ const BlockedModal: FC<BlockedModalProp> = ({
 
 	return (
 		<GenericModal genericModalInfo={{
-            title: "Tenha paciência, Jovem!",
+            title: "Tenha paciência, Viajante!",
             titleColor: colorPalette.inactiveButton,
             subtitle,
             icon: stop

@@ -63,7 +63,7 @@ const ForgotPassword = () => {
 		<Center width='100%'>
 			<LoginRegister
 				mainText='Pelo visto você não consegue mais lembrar sua senha. Você pode me passar o e-mail que usou para criar o passaporte? Não sei o que é um e-mail, foram as vozes da Savana que me pediram isso.'
-				firstText='”Qual é o seu e-mail, jovem?”'
+				firstText='”Qual é o seu e-mail, viajante?”'
 				firstPlaceholder='E-mail'
 				firstValue={email}
 				firstChange={(e: BaseSyntheticEvent) =>

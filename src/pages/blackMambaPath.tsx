@@ -197,15 +197,15 @@ const BlackMambaPath = () => {
 			} else {
 				if (userInfoData.ignorance > 80)
 					setMambaText(
-						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Mamba Negra!',
+						'Tenha cuidado, viajante! Você não se preparou o suficente para vencer a Mamba Negra!',
 					);
 				else if (userInfoData.ignorance > 40)
 					setMambaText(
-						'Você está definitivamente mais forte, jovem! Mas temo que a Mamba Negra é um desafio muito grande para você!',
+						'Você está definitivamente mais forte, viajante! Mas temo que a Mamba Negra é um desafio muito grande para você!',
 					);
 				else
 					setMambaText(
-						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+						'Você está pronto, viajante! Lembre-se de toda a sua jornada para vencer esse desafio!',
 					);
 			}
 		} catch (error) {

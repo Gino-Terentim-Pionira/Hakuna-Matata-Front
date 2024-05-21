@@ -439,7 +439,7 @@ const MainPage = () => {
 			<BlockedModal
 				isOpen={openBlockedModal}
 				onClose={() => { setOpenBlockedModal(false) }}
-				subtitle="Esse horizonte ainda não pode se explorado, por enquanto..."
+				subtitle="Esse horizonte ainda não pode ser explorado, por enquanto..."
 			/>
 		</>
 	);

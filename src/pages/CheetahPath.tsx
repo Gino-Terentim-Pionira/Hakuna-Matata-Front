@@ -277,15 +277,15 @@ const CheetahPath = () => {
             } else {
                 if (userInfoData.ignorance > 80)
                     setCheetahText(
-                        'Tenha cuidado, jovem! Você não se preparou o suficente para vencer a Cheetah!',
+                        'Tenha cuidado, viajante! Você não se preparou o suficente para vencer a Cheetah!',
                     );
                 else if (userInfoData.ignorance > 40)
                     setCheetahText(
-                        'Você está definitivamente mais forte, jovem! Mas temo que a Cheetah é um desafio muito grande para você!',
+                        'Você está definitivamente mais forte, viajante! Mas temo que a Cheetah é um desafio muito grande para você!',
                     );
                 else
                     setCheetahText(
-                        'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+                        'Você está pronto, viajante! Lembre-se de toda a sua jornada para vencer esse desafio!',
                     );
             }
         } catch (error) {

@@ -159,7 +159,7 @@ const Login = () => {
 			<Center width='100%'>
 				<LoginRegister
 					mainText='Seja bem vindo de volta ao Pionira. Para entrar na Savana preciso que você me fale seu e-mail e sua senha.'
-					firstText='”Qual é o seu e-mail, jovem?”'
+					firstText='”Qual é o seu e-mail, viajante?”'
 					secondText='”E qual a sua senha?”'
 					firstPlaceholder='E-mail'
 					secondPlaceholder='Senha'
