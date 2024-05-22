@@ -93,6 +93,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
         onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void,
         isFirstInput?: boolean,
         onBlur?: VoidFunction,
+        customBorderColor?: string,
     ) => (
             <InputGroup display="flex" alignItems="center" w="60%" minWidth="250px" position="relative">
                 <Input
@@ -100,7 +101,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     width="100%"
                     minWidth="250px"
                     height="60px"
-                    borderColor={colorPalette.secundaryGrey}
+                    borderColor={customBorderColor || colorPalette.secundaryGrey}
                     marginTop='4px'
                     placeholder={placeholder}
                     type={isPasswordVisible ? undefined : type}
@@ -184,7 +185,8 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         loading,
                         handleKeyPress,
                         true,
-                        onBlur
+                        onBlur,
+                        hasValidationError ? "#F47070" : undefined
                     )}
                     <Text color="red" fontSize="15"> {validationError} </Text>
 
@@ -209,23 +211,21 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         </>
                     ) : (null)}
 
-                    {forgetPassword ? (
+                    {forgetPassword && (
                         <Box display="flex" justifyContent="flex-start" marginTop='8px'>
                             <Link
                                 color={colorPalette.linkTextColor}
                                 fontSize="1rem"
                                 textDecoration="underline"
-                                onClick={loading ? () => { return null } : forgetPasswordLink}
+                                onMouseDown={loading ? () => { return null } : forgetPasswordLink}
                                 _hover={loading ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
                             >
                                 Esqueci minha senha
                             </Link>
-                        </Box>) : (
-                            null
-                        )}
-                    
+                        </Box>)}
+
                     {
-                        hasTerms ? (
+                        hasTerms && (
                             <Flex
                                 flexDirection='column'
                                 alignSelf='flex-start'
@@ -238,17 +238,15 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                                     Ao clicar em Continuar, você concorda com nossos <Link
                                         color={colorPalette.linkTextColor}
                                         textDecoration='underLine'
-                                        onClick={handleTermsOfUse}
+                                        onMouseDown={handleTermsOfUse}
                                     >Termos de uso</Link> e <Link
                                         color={colorPalette.linkTextColor}
                                         textDecoration='underLine'
-                                        onClick={handlerPrivacyPolicy}
+                                        onMouseDown={handlerPrivacyPolicy}
                                     >Política de Privacidade</Link>
                                 </Text>
                             </Flex>
-                        ) :
-                        null
-                    }
+                        )}
                 </Box>
             </Flex>
 

@@ -176,7 +176,7 @@ const Register = () => {
 
     const nextStep = async () => {
         if (step == 3) {
-            if (formConfirmPassword && formPassword && !!validationError) {
+            if (formConfirmPassword && formPassword && !validationError) {
                 if (formPassword === formConfirmPassword) {
                     try {
                         setIsLoading(true);
@@ -236,6 +236,7 @@ const Register = () => {
             history.push('/');
         } else {
             setStep(step - 1);
+            setValidationError('');
         }
     }
 
