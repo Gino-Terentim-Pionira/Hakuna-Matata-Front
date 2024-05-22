@@ -39,40 +39,40 @@ export const eyesOptions = [{
 
 export const eyesBrowOptions = [{
     value: "Default",
-    label: "Sombrancelhas: padrão",
+    label: "Sobrancelhas: padrão",
 }, {
     value: "Angry",
-    label: "Sombrancelhas: raiva",
+    label: "Sobrancelhas: raiva",
 }, {
     value: "AngryNatural",
-    label: "Sombrancelhas: raiva 2",
+    label: "Sobrancelhas: raiva 2",
 }, {
     value: "DefaultNatural",
-    label: "Sombrancelhas: grossas",
+    label: "Sobrancelhas: grossas",
 }, {
     value: "FlatNatural",
-    label: "Sombrancelhas: retas",
+    label: "Sobrancelhas: retas",
 }, {
     value: "RaisedExcited",
-    label: "Sombrancelhas: animadas",
+    label: "Sobrancelhas: animadas",
 }, {
     value: "RaisedExcitedNatural",
-    label: "Sombrancelhas: animadas 2",
+    label: "Sobrancelhas: animadas 2",
 }, {
     value: "SadConcerned",
-    label: "Sombrancelhas: preocupadas",
+    label: "Sobrancelhas: preocupadas",
 }, {
     value: "SadConcernedNatural",
-    label: "Sombrancelhas: preocupadas 2",
+    label: "Sobrancelhas: preocupadas 2",
 }, {
     value: "UnibrowNatural",
-    label: "Sombrancelhas: monocelhas",
+    label: "Sobrancelhas: monocelhas",
 }, {
     value: "UpDown",
-    label: "Sombrancelhas: cima e baixo",
+    label: "Sobrancelhas: cima e baixo",
 }, {
     value: "UpDownNatural",
-    label: "Sombrancelhas: cima e baixo 2",
+    label: "Sobrancelhas: cima e baixo 2",
 }];
 
 export const mouthOptions = [{

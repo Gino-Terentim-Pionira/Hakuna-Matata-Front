@@ -1,9 +1,9 @@
 export const clothesOptions = [{
     value: "BlazerShirt",
-    label: "Blaze e camisa",
+    label: "Blazer e camisa",
 }, {
     value: "BlazerSweater",
-    label: "Blaze e sueter",
+    label: "Blazer e sueter",
 }, {
     value: "CollarSweater",
     label: "Sueter",

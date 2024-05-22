@@ -248,15 +248,15 @@ const LionPath = () => {
 			} else {
 				if (userInfoData.ignorance > 80)
 					setLionText(
-						'Tenha cuidado, jovem! Você não se preparou o suficente para vencer o Leão e Leoa!',
+						'Tenha cuidado, viajante! Você não se preparou o suficente para vencer o Leão e Leoa!',
 					);
 				else if (userInfoData.ignorance > 40)
 					setLionText(
-						'Você está definitivamente mais forte, jovem! Mas temo que o Leão e a Leoa é um desafio muito grande para você!',
+						'Você está definitivamente mais forte, viajante! Mas temo que o Leão e a Leoa é um desafio muito grande para você!',
 					);
 				else
 					setLionText(
-						'Você está pronto, jovem! Lembre-se de toda a sua jornada para vencer esse desafio!',
+						'Você está pronto, viajante! Lembre-se de toda a sua jornada para vencer esse desafio!',
 					);
 			}
 		} catch (error) {

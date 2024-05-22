@@ -229,7 +229,7 @@ const FinalRewardModal: FC<IFinalRewardModal> = ({
 							textAlign='center'
 							width='75%'
 						>
-							{`“Você provou por completo o seu valor aqui, jovem!
+							{`“Você provou por completo o seu valor aqui, viajante!
 							Você é merecedor da Marca da Mamba Negra”!`}
 						</Text>
 						<Image src={imgReward} h='50%' />

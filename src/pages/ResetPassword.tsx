@@ -99,7 +99,7 @@ const ResetPassword = () => {
 			<Center width='100%'>
 				<LoginRegister
 					mainText='Parece que vocês esqueceu a sua senha. Sem problemas, só colocar uma outra que não seja a mesma para redefiní-la.'
-					firstText='”Qual é a sua nova senha, jovem?”'
+					firstText='”Qual é a sua nova senha, viajante?”'
 					secondText='”Não entendi muito bem, poderia repeti-la”'
 					firstChange={(e: BaseSyntheticEvent) => {
 						handlePasswordChanged(e);

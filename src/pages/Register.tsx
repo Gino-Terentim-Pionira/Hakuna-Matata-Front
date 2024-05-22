@@ -257,8 +257,8 @@ const Register = () => {
             <Center width='100%'>
                 {step === 1 ? (
                     <LoginRegister
-                        mainText='Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, jovem.'
-                        firstText="”Qual é o seu nome, jovem?”"
+                        mainText='Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, viajante.'
+                        firstText="”Qual é o seu nome, viajante?”"
                         secondText="”E como você gostaria de ser chamado dentro da savana?”"
                         firstPlaceholder="Nome Completo"
                         secondPlaceholder="Nome de Usuário"
@@ -279,7 +279,7 @@ const Register = () => {
                 ) : step === 2 ? (
                     <LoginRegister
                         mainText='Agora preciso de outras informações adicionais. Não sei o que é isso, mas a sabedoria da Savana está me pedindo o seu e-mail.'
-                        firstText="”Qual é o seu e-mail, jovem?”"
+                        firstText="”Qual é o seu e-mail, viajante?”"
                         secondText="”Queria saber também qual a sua data de nascimento?”"
                         firstPlaceholder="Endereço de e-mail"
                         secondPlaceholder="Data de Nascimento"
@@ -299,7 +299,7 @@ const Register = () => {
                 ) : step === 3 ? (
                     <LoginRegister
                         mainText='Por último, precisamos definir uma senha para permitir a sua entrada na Savana. Lembre-se que não pode ser uma senha fácil de adivinhar, não queremos invasores na Savana.'
-                        firstText="”Qual é a sua senha, jovem?”"
+                        firstText="”Qual é a sua senha, viajante?”"
                         secondText="”Não entendi muito bem, poderia repeti-la?”"
                         firstPlaceholder="Senha"
                         secondPlaceholder="Confirmar senha"

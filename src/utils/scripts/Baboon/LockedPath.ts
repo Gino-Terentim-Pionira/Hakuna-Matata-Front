@@ -5,7 +5,7 @@ const lockedPathScript = async () => {
         {
             name: "Babuíno",
             image: monkey,
-            texts: ["Ei, jovem!",
+            texts: ["Ei, viajante!",
             "Imagino que não seja uma boa ideia seguir por essa trilha agora.",
             "O nível de ignorância que atingiu essa área é alto demais para você!",
             "Melhor aprimorar suas habilidades nas outras trilhas antes de seguirmos por aqui.",
