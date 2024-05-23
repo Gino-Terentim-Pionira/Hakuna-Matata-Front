@@ -47,6 +47,7 @@ const ResetPassword = () => {
 	const { authenticated } = useAuth();
 
 	const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+		setValidationError('');
 		setPassword(event.target.value);
     }
 
