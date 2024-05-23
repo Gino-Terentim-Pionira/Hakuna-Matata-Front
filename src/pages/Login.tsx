@@ -135,8 +135,8 @@ const Login = () => {
 	};
 
 	const handleEmailChanges = (event: { target: { value: React.SetStateAction<string> } }) => {
+		setEmailError('');
 		setEmail(event.target.value);
-		isValidEmail();
 	}
 
 	const isValidEmail = () => {
@@ -167,6 +167,7 @@ const Login = () => {
 					firstChange={(e: BaseSyntheticEvent) =>
 						handleEmailChanges(e)
 					}
+					onBlur={isValidEmail}
 					secondValue={password}
 					secondChange={(e: BaseSyntheticEvent) =>
 						setPassword(e.target.value)

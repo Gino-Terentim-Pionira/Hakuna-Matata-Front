@@ -2,12 +2,10 @@ export const validatePassword = (password: string) => {
     if (password.length < 6) {
         return {
             message: 'Senha deve ter 6 caracteres ou mais',
-            validate: true
         }
     } else {
         return {
             message: '',
-            validate: false
         }
     }
 }

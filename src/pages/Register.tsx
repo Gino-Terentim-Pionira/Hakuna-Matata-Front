@@ -37,7 +37,6 @@ const Register = () => {
     const [formPassword, setFormPassword] = useState('');
     const [formConfirmPassword, setFormConfirmPassword] = useState('');
     const [validationError, setValidationError] = useState('');
-    const [hasValidationError, setHasValidationError] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [alertModal, setAlertModal] = useState({
@@ -119,17 +118,15 @@ const Register = () => {
         }
     }
 
-    const validateName = () => {
+    const isValidName = () => {
         const firstname = formName.split(' ');
         const lastname = lastIndexValidation(firstname) as string;
 
-        if (firstname[0] === lastname || lastname === ' ') {
+        if (!formName || firstname[0] === lastname || lastname === ' ') {
             setValidationError("Preencha com seu nome completo");
-            setHasValidationError(true);
             return true;
         } else {
             setValidationError('');
-            setHasValidationError(false);
             return false;
         }
     }
@@ -137,24 +134,20 @@ const Register = () => {
     const isValidEmail = () => {
         if (formEmail.length > 254) {
             setValidationError("Email muito extenso");
-            setHasValidationError(true);
             return true;
         }
 
         const valid = validateEmail(formEmail);
         if (!valid) {
             setValidationError("Formato de email inválido");
-            setHasValidationError(true);
             return true;
         }
 
         const parts = formEmail.split("@");
         if (parts[0].length > 64) {
             setValidationError("Email muito extenso");
-            setHasValidationError(true);
             return true;
         }
-        setHasValidationError(false);
         setValidationError('');
         return false;
 
@@ -162,27 +155,28 @@ const Register = () => {
     // controlar funcs de validacao
 
     const handleNameChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setValidationError('');
         setFormName(event.target.value);
-        validateName();
     }
 
     const handleEmailChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setValidationError('');
         setFormEmail(event.target.value);
-        isValidEmail();
     }
 
     const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        const currentPassword = event.target.value as string;
-        setFormPassword(currentPassword);
-        const res = validatePassword(currentPassword);
-        setValidationError(res.message);
-        setHasValidationError(res.validate);
+        setValidationError('');
+        setFormPassword(event.target.value);
+    }
+
+    const isValidPassword = () => {
+        const IS_VALID_PASSWORD = validatePassword(formPassword);
+        setValidationError(IS_VALID_PASSWORD.message);
     }
 
     const nextStep = async () => {
         if (step == 3) {
-            const { validate } = validatePassword(formPassword);
-            if (formConfirmPassword && formPassword && !validate) {
+            if (formConfirmPassword && formPassword && !validationError) {
                 if (formPassword === formConfirmPassword) {
                     try {
                         setIsLoading(true);
@@ -222,18 +216,16 @@ const Register = () => {
                 setStep(step + 1);
             } else {
                 handleAlertModal('MISSING_FIELDS_ERROR');
-                setHasValidationError(true);
             }
 
         } else if (step == 1) {
 
-            const invalidName = validateName();
+            const invalidName = isValidName();
 
             if (formName && formUserName && !invalidName) {
                 setStep(step + 1);
             } else {
                 handleAlertModal('MISSING_FIELDS_ERROR');
-                setHasValidationError(true);
             }
 
         }
@@ -244,6 +236,7 @@ const Register = () => {
             history.push('/');
         } else {
             setStep(step - 1);
+            setValidationError('');
         }
     }
 
@@ -268,11 +261,12 @@ const Register = () => {
                         secondInputType="text"
                         firstValue={formName}
                         firstChange={(e: BaseSyntheticEvent) => handleNameChanged(e)}
+                        onBlur={isValidName}
                         secondValue={formUserName}
                         secondChange={(e: BaseSyntheticEvent) => setFormUserName(e.target.value)}
                         buttonText="Próximo"
                         validationError={validationError}
-                        hasValidationError={hasValidationError}
+                        hasValidationError={!!validationError}
                         loading={false}
                     />
 
@@ -289,11 +283,12 @@ const Register = () => {
                         secondInputType="date"
                         firstValue={formEmail}
                         firstChange={(e: BaseSyntheticEvent) => handleEmailChanged(e)}
+                        onBlur={isValidEmail}
                         secondValue={formDate}
                         secondChange={(e: BaseSyntheticEvent) => setFormDate(e.target.value)}
                         buttonText="Próximo"
                         validationError={validationError}
-                        hasValidationError={hasValidationError}
+                        hasValidationError={!!validationError}
                         loading={false}
                     />
                 ) : step === 3 ? (
@@ -309,11 +304,12 @@ const Register = () => {
                         secondInputType="password"
                         firstValue={formPassword}
                         firstChange={(e: BaseSyntheticEvent) => handlePasswordChanged(e)}
+                        onBlur={isValidPassword}
                         secondValue={formConfirmPassword}
                         secondChange={(e: BaseSyntheticEvent) => setFormConfirmPassword(e.target.value)}
                         buttonText="Próximo"
                         validationError={validationError}
-                        hasValidationError={hasValidationError}
+                        hasValidationError={!!validationError}
                         loading={isLoading}
                         hasTerms={true}
                     />
@@ -321,7 +317,7 @@ const Register = () => {
                     <div>Você não devia estar aqui, chapa!</div>
                 )}
 
-                {(step === 3 && !hasValidationError) ? (
+                {(step === 3 && !!validationError) ? (
                     <AlertModal
                         isOpen={alertModal.isOpen}
                         onClose={onClose}
