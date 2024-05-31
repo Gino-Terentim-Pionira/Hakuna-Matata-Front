@@ -1,6 +1,10 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDisclosure, Flex, Button } from '@chakra-ui/react';
+import {
+	useDisclosure,
+	Flex,
+	Button,
+} from '@chakra-ui/react';
 import { useUser } from '../hooks';
 
 // Components
@@ -54,6 +58,7 @@ const MainPage = () => {
 		onClose: tutorialOnClose,
 		onOpen: tutorialOnOpen,
 	} = useDisclosure();
+
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -279,43 +284,6 @@ const MainPage = () => {
 	const logout = () => {
 		handleLogOutAlert();
 	};
-
-	// To add later:
-	// const validIsPrime = async () => {
-	// 	const userId = sessionStorage.getItem('@pionira/userId');
-	// 	try {
-	// 		const res = await api.get(`user/${userId}`);
-	// 		const isSubscribed = res.data.isSubscribed;
-
-	// 		if (isSubscribed) {
-	// 			setIsSubscribedModal(true);
-	// 		}
-	// 		else
-	// 			premiumOnOpen();
-	// 	} catch (error) {
-	// 		setOnAlert(true);
-	// 	}
-	// }
-	// const checkSubscription = async () => {
-	// 	const userId = sessionStorage.getItem('@pionira/userId');
-	// 	try {
-	// 		const res = await api.get(`user/${userId}`);
-	// 		const subscribeId = res.data.subscribeId;
-	// 		if (subscribeId) {
-	// 			const subscription = await api.get(`user/subscription/${userId}`);
-	// 			const isSubscribed = subscription.data.response.status;
-
-	// 			if (isSubscribed === "canceled") {
-	// 				await api.patch(`user/updateSubscription/${userId}`, {
-	// 					isSubscribed: false
-	// 				})
-	// 				await getNewUserInfo();
-	// 			}
-	// 		}
-	// 	} catch (error) {
-	// 		setOnAlert(true);
-	// 	}
-	// }
 
 	useEffect(() => {
 		getUserRequisition();

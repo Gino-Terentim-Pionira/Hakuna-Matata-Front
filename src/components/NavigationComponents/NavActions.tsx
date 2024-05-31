@@ -18,6 +18,7 @@ import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "..
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
+import {TutorialTopicsModal} from "../modals/Tutorial/TutorialTopicsModal";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -42,6 +43,11 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     onToggle: narrativeOnToggle,
   } = useDisclosure();
 
+  const {
+    isOpen: tutorialTopicIsOpen,
+    onClose: tutorialTopicOnClose,
+    onOpen: tutorialTopicOnOpen,
+  } = useDisclosure();
 
   const {
     isOpen: tutorialIsOpen,
@@ -108,7 +114,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
           <NavIcon
             image={icon_tutorial}
-            onClick={tutorialOnOpen}
+            onClick={tutorialTopicOnOpen}
             size='small'
             isMap={false}
             mouseOver={TUTORIAL}
@@ -141,6 +147,8 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         isOpen={tutorialIsOpen}
         onClose={tutorialOnClose}
       />
+      <TutorialTopicsModal isOpen={tutorialTopicIsOpen} onClose={tutorialTopicOnClose} />
+
       <DefaultNarrativeModal
         isOpen={narrativeIsOpen}
         onToggle={narrativeOnToggle}
