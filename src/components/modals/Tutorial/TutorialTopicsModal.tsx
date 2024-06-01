@@ -11,10 +11,12 @@ import {
 import TutorialTopicBackground from "../../../assets/modal/tutorial_topic.png";
 import fontTheme from "../../../styles/base";
 import colorPalette from "../../../styles/colorPalette";
-import icon_shop from "../../../assets/icons/icon_shop.svg";
 import React, { useEffect, useState } from "react";
 import TutorialServices from "../../../services/TutorialServices";
 import LoadingState from "../../LoadingState";
+import {imageIconsEnum} from "../../../utils/enums/imageIconsEnum";
+import UserAvatar from "../../UserAvatar";
+import {useUser} from "../../../hooks";
 
 type TutorialTopicsModalType = {
     isOpen: boolean,
@@ -22,6 +24,7 @@ type TutorialTopicsModalType = {
 }
 
 export const TutorialTopicsModal = ({isOpen, onClose}: TutorialTopicsModalType) => {
+    const { userData } = useUser();
     const tutorialServices = new TutorialServices()
     const [tutorialTopics, setTutorialTopics] = useState([{
         name: '',
@@ -61,7 +64,7 @@ export const TutorialTopicsModal = ({isOpen, onClose}: TutorialTopicsModalType) 
             >
                 <ModalCloseButton marginTop="14px" marginRight="14px" size="32px" color={colorPalette.closeButton} />
                 <ModalHeader paddingTop="52px" fontSize="24px" fontWeight="bold" color={colorPalette.textColor} textAlign={"center"}>Descobrindo o Pionira</ModalHeader>
-                <ModalBody paddingTop="32px" paddingBottom="52px" paddingX="32px" >
+                <ModalBody paddingTop="32px" paddingBottom="52px" paddingX="24px" >
                     {
                         isLoading ? (
                             <LoadingState />
@@ -75,11 +78,16 @@ export const TutorialTopicsModal = ({isOpen, onClose}: TutorialTopicsModalType) 
                                         bg="#FBEFC9"
                                         width="100%"
                                         height="60px"
-                                        paddingX="16px"
+                                        paddingX="12px"
                                         columnGap="8px"
                                         key={index}
                                     >
-                                        <Image width="32px" height="32px" src={icon || icon_shop} alt="Icone tutorial" />
+                                        {
+                                            name === 'Perfil de usuário' ?
+                                                <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="32px" height="32px" marginBottom="4px" />
+                                                :
+                                                <Image width="32px" height="32px" src={icon || imageIconsEnum[name]} alt="Icone tutorial" />
+                                        }
                                         <Text fontSize="14px" fontWeight="500" color={colorPalette.textColor}>{name}</Text>
                                     </Flex>
                                 ))
