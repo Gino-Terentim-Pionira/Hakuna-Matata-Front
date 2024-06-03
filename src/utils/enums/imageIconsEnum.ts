@@ -8,7 +8,6 @@ import coins from '../../assets/icons/coinicon.svg';
 
 
 export const imageIconsEnum: {[key: string]: string} = {
-    'Perfil de usuário': icon_shop,
     'Loja': icon_shop,
     'Inventário': inventory_icon,
     'Óculos da ignorância': glasses,

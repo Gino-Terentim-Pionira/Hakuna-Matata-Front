@@ -12,7 +12,7 @@ import TutorialTopicBackground from "../../../assets/modal/tutorial_topic.png";
 import fontTheme from "../../../styles/base";
 import colorPalette from "../../../styles/colorPalette";
 import React, { useEffect, useState } from "react";
-import TutorialServices from "../../../services/TutorialServices";
+import TutorialServices, {ITutorialTopic} from "../../../services/TutorialServices";
 import LoadingState from "../../LoadingState";
 import {imageIconsEnum} from "../../../utils/enums/imageIconsEnum";
 import UserAvatar from "../../UserAvatar";
@@ -26,11 +26,7 @@ type TutorialTopicsModalType = {
 export const TutorialTopicsModal = ({isOpen, onClose}: TutorialTopicsModalType) => {
     const { userData } = useUser();
     const tutorialServices = new TutorialServices()
-    const [tutorialTopics, setTutorialTopics] = useState([{
-        name: '',
-        icon: '',
-        index: 0,
-    }]);
+    const [tutorialTopics, setTutorialTopics] = useState([] as ITutorialTopic[]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -39,9 +35,9 @@ export const TutorialTopicsModal = ({isOpen, onClose}: TutorialTopicsModalType) 
             return tutorialServices.getAllTutorialTopics()
         }
 
-        if(isOpen) {
-            getAllTutorialTopics().then((response) => {
-                setTutorialTopics(response.data)
+        if(isOpen && !tutorialTopics.length) {
+            getAllTutorialTopics().then((data) => {
+                setTutorialTopics(data)
             }).catch(() => {
                 setTutorialTopics([])
             }).finally(() => {
