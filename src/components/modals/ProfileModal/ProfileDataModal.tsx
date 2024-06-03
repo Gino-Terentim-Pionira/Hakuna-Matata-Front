@@ -301,7 +301,7 @@ const ProfileDataModal = () => {
                                 }
                                 <Flex alignItems="center">
                                     <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="20px">
-                                        Moedas:
+                                        Joias:
                                     </Text>
                                     <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
                                         {userData.coins}
