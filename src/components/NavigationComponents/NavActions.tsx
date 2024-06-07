@@ -1,7 +1,7 @@
 import { Flex, useDisclosure } from "@chakra-ui/react";
 import React from "react";
 
-import TutorialModal from "../modals/TutorialModal";
+import TutorialVideoModal from "../modals/TutorialModal";
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import { useUser } from '../../hooks';
 
@@ -18,7 +18,7 @@ import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "..
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
-import {TutorialTopicsModal} from "../modals/Tutorial/TutorialTopicsModal";
+import {TutorialModal} from "../modals/Tutorial/TutorialModal";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -143,11 +143,11 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
       <ProfileModal isOpen={profileIsOpen} onClose={profileOnClose} />
 
-      <TutorialModal
+      <TutorialVideoModal
         isOpen={tutorialIsOpen}
         onClose={tutorialOnClose}
       />
-      <TutorialTopicsModal isOpen={tutorialTopicIsOpen} onClose={tutorialTopicOnClose} />
+      <TutorialModal isOpen={tutorialTopicIsOpen} onClose={tutorialTopicOnClose} />
 
       <DefaultNarrativeModal
         isOpen={narrativeIsOpen}
