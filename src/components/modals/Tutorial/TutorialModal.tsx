@@ -77,10 +77,10 @@ export const TutorialModal = ({isOpen, onClose}: TutorialTopicsModalType) => {
                         <LoadingState/>
                     ) :
                     (tutorialContentSelected ?
-                        <TutorialContent tutorialContent={tutorialContentSelected} goBack={handleGoBackToTopics}/>
+                        <TutorialContent tutorialContent={tutorialContentSelected} userData={userData} goBack={handleGoBackToTopics}/>
                         :
                         <TutorialTopics tutorialTopics={tutorialTopics} userData={userData}
-                                        onClick={handleTutorialContentSelected}/>
+                                            onClick={handleTutorialContentSelected}/>
                     )}
             </ModalContent>
         </Modal>
