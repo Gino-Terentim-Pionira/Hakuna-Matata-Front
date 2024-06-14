@@ -111,7 +111,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
 
     // States
-    const { moduleData, getNewModuleInfo } = useModule();
+    const { moduleData } = useModule();
     const moduleInfo = moduleData[quizIndex];
     const { userData, getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
@@ -136,7 +136,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             await api.patch(`user/addmodule/${userId}`, {
                 module_id: moduleInfo._id
             });
-            await getNewModuleInfo();
+            await getNewUserInfo();
         } catch (error) {
             setOnError(true);
         }
@@ -218,7 +218,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     useEffect(() => {
         setTotalCoins(moduleInfo.total_coins);
         defineProperties();
-    }, [moduleInfo, statusRequirement])
+    }, [userData, statusRequirement])
 
     return (
         <>
