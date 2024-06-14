@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Flex, Image, ModalBody, ModalFooter, ModalHeader, Slide, Text} from "@chakra-ui/react";
+import {Flex, Image, ModalBody, ModalFooter, ModalHeader, Text} from "@chakra-ui/react";
 import {ITutorialContent} from "../../../../services/TutorialServices";
 import colorPalette from "../../../../styles/colorPalette";
 import {imageIconsEnum} from "../../../../utils/enums/imageIconsEnum";
@@ -64,7 +64,38 @@ export const TutorialContent = ({tutorialContent, goBack, userData}: TutorialCon
                         {tutorial_topic_name}
                     </motion.div>
                 </ModalHeader>
-                <ModalBody paddingTop="-14px" paddingBottom="52px" paddingX="30px">
+                <ModalBody
+                    paddingTop="-14px"
+                    paddingBottom="52px"
+                    paddingX="30px"
+                    overflowX="hidden"
+                    sx={{
+                        "&::-webkit-scrollbar": {
+                            width:"4px",
+                            height: "4px",
+                            borderRadius: "8px"
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                            background: "#9D9D9D",
+                            borderRadius: "10px"
+                        },
+                        "&::-webkit-scrollbar-thumb:hover": {
+                            background: "#555",
+                        },
+                        "&::-moz-scrollbar": {
+                            width:"4px",
+                            height: "4px",
+                            borderRadius: "8px"
+                        },
+                        "&::-moz-scrollbar-thumb": {
+                            background: "#9D9D9D",
+                            borderRadius: "10px"
+                        },
+                        "&::-moz-scrollbar-thumb:hover": {
+                            background: "#555",
+                        },
+                    }}
+                >
                 <motion.div key={tutorialContentIndex} initial="hidden" animate="visible" variants={motionVariants} transition={{duration: 0.5}}>
                         <Image borderRadius="8px" w="100%" h="195px" src={image} alt="Imagem do tutorial"/>
                         <Text
@@ -95,7 +126,7 @@ export const TutorialContent = ({tutorialContent, goBack, userData}: TutorialCon
                                     whiteSpace: 'pre-wrap',
                                     wordWrap: 'break-word',
                                     maxWidth: '100%',
-                                }
+                                },
                             }}
                         >
                             <Markdown>
@@ -109,7 +140,9 @@ export const TutorialContent = ({tutorialContent, goBack, userData}: TutorialCon
                     {
                         !IS_ONLY_ONE_CONTENT && (
                             <>
-                                <FaArrowLeft className="arrow" color={colorPalette.textColor} size="32" onClick={() => handlePassingContentWith("left")} />
+                                {
+                                    tutorialContentIndex !== 0 ? <FaArrowLeft className="arrow" color={colorPalette.textColor} size="32" onClick={() => handlePassingContentWith("left")} /> : <Flex width="32px" />
+                                }
                                 <Flex justify="center" columnGap="8px" width="100%" maxWidth="220px">
                                     {
                                         tutorialContent.map(({index}) => (
@@ -132,7 +165,9 @@ export const TutorialContent = ({tutorialContent, goBack, userData}: TutorialCon
                                         ))
                                     }
                                 </Flex>
-                                <FaArrowRight className="arrow" color={colorPalette.textColor} onClick={() => handlePassingContentWith("right")} size="32" />
+                                {
+                                    tutorialContentIndex !== tutorialContent.length-1 ? <FaArrowRight className="arrow" color={colorPalette.textColor} onClick={() => handlePassingContentWith("right")} size="32" /> : <Flex width="32px" />
+                                }
                             </>
                         )
                     }
