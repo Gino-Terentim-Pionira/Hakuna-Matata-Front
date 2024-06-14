@@ -114,7 +114,8 @@ const Login = () => {
 				setIsLoading(true);
 				await handleLogin(email, password);
 			} catch (error) {
-				handleAlertModal(error.response.data.error);
+				const errorMessage = error.response?.data.error || 'SERVER_ERROR';
+				handleAlertModal(errorMessage);
 				setIsLoading(false);
 			}
 		} else {

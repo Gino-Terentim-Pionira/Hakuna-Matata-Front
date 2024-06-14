@@ -223,7 +223,7 @@ const MainPage = () => {
 		getNewUserInfo();
 		setRewardOpen(false);
 		setRewardLoading(false);
-	} 
+	}
 
 	const rewardModalInfo = () => {
 		return {
@@ -233,7 +233,7 @@ const MainPage = () => {
 			icon: Cheetah,
 			coins: 3,
 		}
-	} 
+	}
 
 	const verifySocialLoginRedirect = async () => {
 		const queryParameters = new URLSearchParams(window.location.search);
@@ -248,8 +248,8 @@ const MainPage = () => {
 					setAlert({
 						title: 'Linkedin',
 						body: 'Publicação feita com sucesso! Recompensas somente no primeiro compartilhamento de cada plataforma',
-						closeFunction: () => {setOnAlert(false)},
-						buttonFunction: () => {setOnAlert(false)},
+						closeFunction: () => { setOnAlert(false) },
+						buttonFunction: () => { setOnAlert(false) },
 						buttonText: 'Voltar'
 					});
 					setOnAlert(true);
@@ -290,89 +290,91 @@ const MainPage = () => {
 		getNewUserInfo();
 	}, []);
 
-	if (isLoading) {
-		return <LoadingOverlay />
-	}
-
 	return (
 		<>
-			<VideoBackground source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
-			<IgnoranceFilter
-				ignoranceImage={ignoranceImage}
-			/>
-			<Flex
-				width='92.5%'
-				justifyContent='space-between'
-				alignItems='flex-start'
-				margin='auto'
-			>
-				<NavActions logout={logout} dontShowMap />
-				{narrativeIsOpen ? null : (
-					<IgnorancePremiumIcons ignorance={userData.ignorance} />
-				)}
-			</Flex>
-
-			{script.length > 0 ? (
-				//verifica se o script possui algum conteúdo
-				<NarrativeModal
-					isOpen={narrativeIsOpen}
-					script={script}
-					onToggle={narrativeOnToggle}
-				/>
-			) : null}
-
-			<DailyReward
-				isOpen={dailyIsOpen}
-				onOpen={dailyOnOpen}
-				onClose={dailyOnClose}
-			/>
-			<TutorialModal
-				isOpen={tutorialIsOpen}
-				onClose={tutorialFirstOnClose}
-			/>
-
-			<Flex margin='2vw' justifyContent='space-between'>
-				{narrativeIsOpen ? null : (
+			{
+				isLoading ? <LoadingOverlay /> : (
 					<>
+						<VideoBackground source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
+						<IgnoranceFilter
+							ignoranceImage={ignoranceImage}
+						/>
 						<Flex
-							position='absolute'
-							left='18vw'
-							top='49.5vh'
+							width='92.5%'
+							justifyContent='space-between'
+							alignItems='flex-start'
+							margin='auto'
 						>
-							<TrailIcon 
-								image={icon_cheeta}
-								onClick={goToPath2}
-								mouseOver={CHEETAH_TRAIL}
-							/>
+							<NavActions logout={logout} dontShowMap />
+							{narrativeIsOpen ? null : (
+								<IgnorancePremiumIcons ignorance={userData.ignorance} />
+							)}
 						</Flex>
 
-						<Flex
-							position='absolute'
-							left='43.5vw'
-							top='57.5vh'
-						>
-							<TrailIcon 
-								image={icon_block}
-								onClick={() => setOpenBlockedModal(true)}
-								mouseOver={BLOCKED_TRAIL}
+						{script.length > 0 ? (
+							//verifica se o script possui algum conteúdo
+							<NarrativeModal
+								isOpen={narrativeIsOpen}
+								script={script}
+								onToggle={narrativeOnToggle}
 							/>
-						</Flex>
+						) : null}
 
-						<Flex
-							position='absolute'
-							right='2vw'
-							top='50vh'
-						>
-							<TrailIcon 
-								image={icon_block}
-								onClick={() => setOpenBlockedModal(true)}
-								mouseOver={BLOCKED_TRAIL}
-							/>
-						</Flex>
+						<DailyReward
+							isOpen={dailyIsOpen}
+							onOpen={dailyOnOpen}
+							onClose={dailyOnClose}
+						/>
+						<TutorialModal
+							isOpen={tutorialIsOpen}
+							onClose={tutorialFirstOnClose}
+						/>
 
+						<Flex margin='2vw' justifyContent='space-between'>
+							{narrativeIsOpen ? null : (
+								<>
+									<Flex
+										position='absolute'
+										left='18vw'
+										top='49.5vh'
+									>
+										<TrailIcon
+											image={icon_cheeta}
+											onClick={goToPath2}
+											mouseOver={CHEETAH_TRAIL}
+										/>
+									</Flex>
+
+									<Flex
+										position='absolute'
+										left='43.5vw'
+										top='57.5vh'
+									>
+										<TrailIcon
+											image={icon_block}
+											onClick={() => setOpenBlockedModal(true)}
+											mouseOver={BLOCKED_TRAIL}
+										/>
+									</Flex>
+
+									<Flex
+										position='absolute'
+										right='2vw'
+										top='50vh'
+									>
+										<TrailIcon
+											image={icon_block}
+											onClick={() => setOpenBlockedModal(true)}
+											mouseOver={BLOCKED_TRAIL}
+										/>
+									</Flex>
+
+								</>
+							)}
+						</Flex>
 					</>
-				)}
-			</Flex>
+				)
+			}
 
 
 			<AlertModal
@@ -391,7 +393,7 @@ const MainPage = () => {
 				}
 			/>
 
-			<GenericModal 
+			<GenericModal
 				isOpen={rewardOpen}
 				genericModalInfo={rewardModalInfo()}
 				loading={rewardLoading}

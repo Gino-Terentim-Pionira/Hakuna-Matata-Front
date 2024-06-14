@@ -216,17 +216,17 @@ const LionPath = () => {
 	}
 
 	const handleNarrativeModal = (script: IScript[]) => {
-        setScript(script);
-        narrativeOnOpen();
-    }
+		setScript(script);
+		narrativeOnOpen();
+	}
 
 	const getUser = async () => {
 		try {
 			let userInfoData;
 			const _userId = sessionStorage.getItem('@pionira/userId');
 			if (moduleData.length === 0) {
-                await getNewModuleInfo();
-            }
+				await getNewModuleInfo();
+			}
 
 			if (!userData._id) {
 				const { data } = await api.get(`/user/${_userId}`);
@@ -300,21 +300,21 @@ const LionPath = () => {
 			//Verifica se é a primeira vez do usuário na trilha do leao
 			const newScript = await lionBeggining();
 			handleNarrativeModal(newScript);
-		} else if (userInfoData.narrative_status.trail2 != 3){ // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
-            const lion_access =  localStorage.getItem('@pionira/lion_access');
-            if (lion_access) {
-                const number_access = parseInt(lion_access);
-                if (number_access < 3) {
-                    localStorage.setItem('@pionira/lion_access', `${number_access + 1}`);
-                } else {
-                    localStorage.setItem('@pionira/lion_access', '0');
-                    const newScript = lionTeasing();
+		} else if (userInfoData.narrative_status.trail2 != 3) { // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
+			const lion_access = localStorage.getItem('@pionira/lion_access');
+			if (lion_access) {
+				const number_access = parseInt(lion_access);
+				if (number_access < 3) {
+					localStorage.setItem('@pionira/lion_access', `${number_access + 1}`);
+				} else {
+					localStorage.setItem('@pionira/lion_access', '0');
+					const newScript = lionTeasing();
 					handleNarrativeModal(newScript);
-                }
-            } else {
-                localStorage.setItem('@pionira/lion_access', '1');
-            }
-        } 
+				}
+			} else {
+				localStorage.setItem('@pionira/lion_access', '1');
+			}
+		}
 	};
 
 
@@ -324,11 +324,11 @@ const LionPath = () => {
 	};
 
 	const handleChallengeNarrative = async () => {
-        if (!completeTrail) {
-            await challengeNarrative();
-        }
-        modalOnOpen();
-    }
+		if (!completeTrail) {
+			await challengeNarrative();
+		}
+		modalOnOpen();
+	}
 
 	const finalLionNarrative = (userName: string) => {
 		const newChallengeScript = lionConclusion(userName);
@@ -408,19 +408,19 @@ const LionPath = () => {
 	}
 
 	const handleStatusRequirement = () => {
-        setBlockedMessage(`Seu nível de ${LEADERSHIP} não é suficiente!`);
-        setIsBlockedOpen(true);
-    }
+		setBlockedMessage(`Seu nível de ${LEADERSHIP} não é suficiente!`);
+		setIsBlockedOpen(true);
+	}
 
-    const handleBlockedModule = () => {
-        setBlockedMessage("Esse treinamento ainda não está disponível!");
-        setIsBlockedOpen(true);
-    }
+	const handleBlockedModule = () => {
+		setBlockedMessage("Esse treinamento ainda não está disponível!");
+		setIsBlockedOpen(true);
+	}
 
-    const moduleEndNarrativeScript = (quizIndex: number) => {
-        const script = buildModuleEndScript('Leão e Leoa', moduleData[quizIndex].final_message);
-        handleNarrativeModal(script)
-    }
+	const moduleEndNarrativeScript = (quizIndex: number) => {
+		const script = buildModuleEndScript('Leão e Leoa', moduleData[quizIndex].final_message);
+		handleNarrativeModal(script)
+	}
 
 	useEffect(() => {
 		getUser();
@@ -428,242 +428,256 @@ const LionPath = () => {
 		getQuiz();
 	}, []);
 
-	if (isLoading) {
-		return <LoadingOverlay />
-	}
-
 	return (
 		<>
-			<Image
-				src={trail_bg}
-				position='absolute'
-				h='100vh'
-				w='100%'
-				zIndex='-3'
-				left='0'
-				top='0'
-			/>
-			<Image
-				src={ignoranceImage}
-				position='absolute'
-				h='100vh'
-				w='100%'
-				zIndex='-3'
-				left='0'
-				top='0'
-			/>
-
-			<Flex
-				width='92.5%'
-				justifyContent='space-between'
-				alignItems='flex-start'
-				margin='auto'
-			>
-				{narrativeIsOpen ? null : (
-					<NavActions logout={logout} />
-				)}
-
-				{narrativeIsOpen ? null : (
-					<IgnorancePremiumIcons ignorance={userData.ignorance} />
-				)}
-			</Flex>
-
-			{narrativeIsOpen ? null : (
-				<>
-					<Flex
-						margin='2vw'
-						justifyContent='space-between'
-					>
-						<ModuleModal 
-							left='8vw' 
-							top='65vh' 
-							quizIndex={0} 
-							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
-							blockedFunction={handleStatusRequirement} 
-						/>
-						<ModuleModal 
-							left='22vw' 
-							top='88vh' 
-							quizIndex={1} 
-							openFinalModuleNarrative={() => moduleEndNarrativeScript(1)}
-							blockedFunction={handleStatusRequirement} 
-						/>
-						<ModuleModal 
-							left='58vw' 
-							top='85vh' 
-							quizIndex={2} 
-							openFinalModuleNarrative={() => moduleEndNarrativeScript(2)}
-							blockedFunction={handleStatusRequirement}
-						/>
-						<ModuleModal 
-							left='79vw' 
-							top='55vh' 
-							quizIndex={0}
-							openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
-							isBlocked={true} 
-							blockedFunction={handleBlockedModule}
-						/>
-						<Center
-							_hover={{
-								cursor: 'pointer',
-								transform: 'scale(1.1)',
-							}}
-							transition='all 0.2s ease'
-							width='7rem'
-							height='7rem'
-							onClick={() => {
-								handleChallengeNarrative();
-							}}
+			{
+				isLoading ? <LoadingOverlay /> : (
+					<>
+						<Image
+							src={trail_bg}
 							position='absolute'
-							top='60vh'
-							left='40vw'
-						>
-							<Image
-								src={final_lion_icon}
-								width='90%'
-								height='90%'
-							/>
-						</Center>
-					</Flex>
+							h='100vh'
+							w='100%'
+							zIndex='-3'
+							left='0'
+							top='0'
+						/>
+						<Image
+							src={ignoranceImage}
+							position='absolute'
+							h='100vh'
+							w='100%'
+							zIndex='-3'
+							left='0'
+							top='0'
+						/>
 
-					<Modal
-						isOpen={modalIsOpen}
-						onClose={modalOnClose}
-						size='4xl'
-					>
-						<ModalOverlay />
-						<ModalContent
-							height='34rem'
-							fontFamily={fontTheme.fonts}
+						<Flex
+							width='92.5%'
+							justifyContent='space-between'
+							alignItems='flex-start'
+							margin='auto'
 						>
-							<Box
-								w='25%'
-								bg={colorPalette.primaryColor}
-								h='25rem'
-								position='absolute'
-								zIndex='-1'
-								left='0'
-								top='0'
-								borderTopStartRadius='5px'
-								clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
-							/>
-							{completeTrail ? (
-								<>
-									<ModalBody
-										d='flex'
-										mt='-1rem'
-										flexDirection='column'
-										alignItems='center'
-										justifyContent='space-between'
+							{narrativeIsOpen ? null : (
+								<NavActions logout={logout} />
+							)}
+
+							{narrativeIsOpen ? null : (
+								<IgnorancePremiumIcons ignorance={userData.ignorance} />
+							)}
+						</Flex>
+
+						{narrativeIsOpen ? null : (
+							<>
+								<Flex
+									margin='2vw'
+									justifyContent='space-between'
+								>
+									<ModuleModal
+										left='8vw'
+										top='65vh'
+										quizIndex={0}
+										openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
+										blockedFunction={handleStatusRequirement}
+									/>
+									<ModuleModal
+										left='22vw'
+										top='88vh'
+										quizIndex={1}
+										openFinalModuleNarrative={() => moduleEndNarrativeScript(1)}
+										blockedFunction={handleStatusRequirement}
+									/>
+									<ModuleModal
+										left='58vw'
+										top='85vh'
+										quizIndex={2}
+										openFinalModuleNarrative={() => moduleEndNarrativeScript(2)}
+										blockedFunction={handleStatusRequirement}
+									/>
+									<ModuleModal
+										left='79vw'
+										top='55vh'
+										quizIndex={0}
+										openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
+										isBlocked={true}
+										blockedFunction={handleBlockedModule}
+									/>
+									<Center
+										_hover={{
+											cursor: 'pointer',
+											transform: 'scale(1.1)',
+										}}
+										transition='all 0.2s ease'
+										width='7rem'
+										height='7rem'
+										onClick={() => {
+											handleChallengeNarrative();
+										}}
+										position='absolute'
+										top='60vh'
+										left='40vw'
 									>
-										<Flex
-											w='65%'
-											h='100%'
-											justifyContent='space-between'
-											flexDirection='column'
-											marginBottom='0.8rem'
-										>
-											<Text
-												w='100%'
-												marginTop='5rem'
-												fontSize='2rem'
-												lineHeight='9vh'
-												textAlign='center'
-												fontWeight='normal'
-											>
-												"{lionText}"
+										<Image
+											src={final_lion_icon}
+											width='90%'
+											height='90%'
+										/>
+									</Center>
+								</Flex>
+
+								<Modal
+									isOpen={modalIsOpen}
+									onClose={modalOnClose}
+									size='4xl'
+								>
+									<ModalOverlay />
+									<ModalContent
+										height='34rem'
+										fontFamily={fontTheme.fonts}
+									>
+										<Box
+											w='25%'
+											bg={colorPalette.primaryColor}
+											h='25rem'
+											position='absolute'
+											zIndex='-1'
+											left='0'
+											top='0'
+											borderTopStartRadius='5px'
+											clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+										/>
+										{completeTrail ? (
+											<>
+												<ModalBody
+													d='flex'
+													mt='-1rem'
+													flexDirection='column'
+													alignItems='center'
+													justifyContent='space-between'
+												>
+													<Flex
+														w='65%'
+														h='100%'
+														justifyContent='space-between'
+														flexDirection='column'
+														marginBottom='0.8rem'
+													>
+														<Text
+															w='100%'
+															marginTop='5rem'
+															fontSize='2rem'
+															lineHeight='9vh'
+															textAlign='center'
+															fontWeight='normal'
+														>
+															"{lionText}"
 												</Text>
-											<Button
-												bgColor={colorPalette.secondaryColor}
-												width='45%'
-												alignSelf='center'
-												color={colorPalette.buttonTextColor}
-												height='4rem'
-												fontSize='1.4rem'
-												_hover={{
-													transform: 'scale(1.1)',
-												}}
-												onClick={modalOnClose}
-											>
-												Okay!
+														<Button
+															bgColor={colorPalette.secondaryColor}
+															width='45%'
+															alignSelf='center'
+															color={colorPalette.buttonTextColor}
+															height='4rem'
+															fontSize='1.4rem'
+															_hover={{
+																transform: 'scale(1.1)',
+															}}
+															onClick={modalOnClose}
+														>
+															Okay!
 												</Button>
-										</Flex>
-									</ModalBody>
-								</>
-							) : (
-									<>
-										<ModalHeader
-											d='flex'
-											justifyContent='center'
-											mt='1.4rem'
-										>
-											<Text
-												ml='2.3rem'
-												w='75%'
-												fontSize='1.4rem'
-												textAlign='center'
-												fontWeight='normal'
-											>
-												{lionText}
-											</Text>
-											<ModalCloseButton
-												color={colorPalette.closeButton}
-												size='lg'
-											/>
-										</ModalHeader>
+													</Flex>
+												</ModalBody>
+											</>
+										) : (
+												<>
+													<ModalHeader
+														d='flex'
+														justifyContent='center'
+														mt='1.4rem'
+													>
+														<Text
+															ml='2.3rem'
+															w='75%'
+															fontSize='1.4rem'
+															textAlign='center'
+															fontWeight='normal'
+														>
+															{lionText}
+														</Text>
+														<ModalCloseButton
+															color={colorPalette.closeButton}
+															size='lg'
+														/>
+													</ModalHeader>
 
-										<ModalBody
-											d='flex'
-											mt='-1rem'
-											flexDirection='column'
-											alignItems='center'
-											justifyContent='space-between'
-										>
-											<Image
-												src={lion_bg}
-												w='65%'
-												h='75%'
-											/>
+													<ModalBody
+														d='flex'
+														mt='-1rem'
+														flexDirection='column'
+														alignItems='center'
+														justifyContent='space-between'
+													>
+														<Image
+															src={lion_bg}
+															w='65%'
+															h='75%'
+														/>
 
-											<Flex
-												w='65%'
-												justifyContent='space-between'
-												marginBottom='0.8rem'
-											>
-												<Button
-													bgColor={colorPalette.confirmButton}
-													width='45%'
-													height='4rem'
-													fontSize='1.2rem'
-													_hover={{
-														transform: 'scale(1.1)',
-													}}
-													onClick={checkStatus}
-												>
-													Vamos nessa!
+														<Flex
+															w='65%'
+															justifyContent='space-between'
+															marginBottom='0.8rem'
+														>
+															<Button
+																bgColor={colorPalette.confirmButton}
+																width='45%'
+																height='4rem'
+																fontSize='1.2rem'
+																_hover={{
+																	transform: 'scale(1.1)',
+																}}
+																onClick={checkStatus}
+															>
+																Vamos nessa!
 												</Button>
-												<Button
-													bgColor={colorPalette.closeButton}
-													width='45%'
-													height='4rem'
-													fontSize='1.2rem'
-													_hover={{
-														transform: 'scale(1.1)',
-													}}
-													onClick={modalOnClose}
-												>
-													Ainda não estou pronto!
+															<Button
+																bgColor={colorPalette.closeButton}
+																width='45%'
+																height='4rem'
+																fontSize='1.2rem'
+																_hover={{
+																	transform: 'scale(1.1)',
+																}}
+																onClick={modalOnClose}
+															>
+																Ainda não estou pronto!
 												</Button>
-											</Flex>
-										</ModalBody>
-									</>
-								)}
-						</ModalContent>
-					</Modal>
-				</>
-			)}
+														</Flex>
+													</ModalBody>
+												</>
+											)}
+									</ModalContent>
+								</Modal>
+							</>
+						)}
 
-			{script.length > 0 && 
+						<FinalUniversalQuiz
+							openModal={quizIsOpen}
+							closeModal={quizOnClose}
+							quiz={quiz}
+							questions={questions}
+							imgName={couple}
+							routeQuestions={'lionquestions'}
+							routeQuiz={'finallionquiz'}
+							userStatus={getStatusPoints(userData, LEADERSHIP)}
+							trail={2}
+						/>
+					</>
+				)
+			}
+
+			{script.length > 0 &&
 				//verifica se o script possui algum conteúdo
 				<NarrativeModal
 					isOpen={narrativeIsOpen}
@@ -688,18 +702,6 @@ const LionPath = () => {
 						Sair
 						</Button>
 				}
-			/>
-
-			<FinalUniversalQuiz
-				openModal={quizIsOpen}
-				closeModal={quizOnClose}
-				quiz={quiz}
-				questions={questions}
-				imgName={couple}
-				routeQuestions={'lionquestions'}
-				routeQuiz={'finallionquiz'}
-				userStatus={getStatusPoints(userData, LEADERSHIP)}
-				trail={2}
 			/>
 
 			<AlertModal
@@ -776,10 +778,10 @@ const LionPath = () => {
 			/>
 
 			<BlockedModal
-                isOpen={isBlockedOpen}
-                onClose={() => { setIsBlockedOpen(false) }}
-                subtitle={blockedMessage}
-            />
+				isOpen={isBlockedOpen}
+				onClose={() => { setIsBlockedOpen(false) }}
+				subtitle={blockedMessage}
+			/>
 
 		</>
 	);

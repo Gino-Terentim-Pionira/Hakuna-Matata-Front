@@ -9,12 +9,8 @@ export const useModule = () => {
     // Criar outros quizes
 
     const getNewModuleInfo = async () => {
-        try {
-            const res = await api.get(`/module/${trailEnum.CHEETAH}`);
-            setModuleData(res.data);
-        } catch (error) {
-            console.log('');
-        }
+        const res = await api.get(`/module/${trailEnum.CHEETAH}`);
+        setModuleData(res.data);
     }
     return {
         moduleData,
