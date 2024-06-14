@@ -8,7 +8,7 @@ const api = axios.create({
 api.interceptors.request.use(function (config) {
     const token = sessionStorage.getItem('@pionira/token');
     config.headers['authorization'] = token;
-    
+
     return config;
 });
 

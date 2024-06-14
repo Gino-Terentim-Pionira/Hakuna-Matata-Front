@@ -168,7 +168,8 @@ const ProfileDataModal = () => {
                 });
                 verifyErrorType('SUCCES_CASE_EDIT');
             } catch (error) {
-                verifyErrorType(error.response.data.message);
+                const errorMessage = error.response?.data.message || 'SERVER_ERROR';
+                verifyErrorType(errorMessage);
                 setUserDataMirror({
                     userName: userData.userName,
                     fullName: `${userData.first_name} ${userData.last_name}`,
