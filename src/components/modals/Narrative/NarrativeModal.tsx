@@ -1,6 +1,5 @@
 import React, { FC, useState, SetStateAction } from 'react';
-import { useDisclosure  } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
+import { useDisclosure } from '@chakra-ui/react';
 import { useUser } from '../../../hooks';
 
 // Components
@@ -12,6 +11,7 @@ import api from '../../../services/api';
 import { FREE_LUNCH_SOURCE } from '../../../utils/constants/constants';
 import DefaultNarrativeModal from './DefaultNarrativeModal';
 import { AGILITY, LEADERSHIP } from '../../../utils/constants/statusConstants';
+import { TutorialModal } from '../Tutorial/TutorialModal';
 
 interface IScript {
     name: string,
@@ -37,12 +37,21 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
     script,
     narrative
 }) => {
-    const history = useHistory();
     const { userData, setUserData, getNewUserInfo } = useUser();
     const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
 
     const freeCoins = FREE_LUNCH_SOURCE;
     const [freeStatus, setFreeStatus] = useState<IStatus>();
+    const {
+        isOpen: tutorialIsOpen,
+        onClose: tutorialOnClose,
+        onOpen: tutorialOnOpen,
+    } = useDisclosure();
+
+    const handleCloseTutorial = () => {
+        tutorialOnClose();
+        lunchOnOpen();
+    }
 
     //logic for checking and switching if first time is set to true
     const updateNarrative = async () => {
@@ -85,7 +94,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     });
                 }
                 await getNewUserInfo();
-                lunchOnOpen();
+                tutorialOnOpen();
             } else if (user.narrative_status.trail1 == 0 && narrative == 'cheetah') { //Verifica se é a primeira vez do usuário na trilha da cheetah
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
@@ -94,7 +103,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     }
                 });
                 await getNewUserInfo();
-                history.go(0);
             } else if (user.narrative_status.trail2 == 0 && narrative == 'lion') { //Verifica se é a primeira vez do usuário na trilha do leao e da leoa
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
@@ -103,7 +111,6 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                     }
                 });
                 await getNewUserInfo();
-                history.go(0);
             } else if (user.narrative_status.trail1 == 3 && narrative == 'cheetah') { //Verifica se o usuário terminou o desafio da trilha
                 await api.patch(`/user/narrative/${_userId}`, {
                     narrative_status: {
@@ -138,6 +145,11 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 coins={freeCoins}
                 score={freeStatus}
                 onClose={() => { lunchOnClose() }}
+            />
+            <TutorialModal 
+                isOpen={tutorialIsOpen}
+                onClose={handleCloseTutorial}
+                selectedTopic={'Trilhas'}
             />
         </>
     )
