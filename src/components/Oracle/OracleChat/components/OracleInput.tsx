@@ -127,7 +127,6 @@ export const OracleInput = ({
 					placement="left" 
 					hasArrow={true}
 				>
-
 					<Flex justifyContent="space-between" alignItems="center" width="100%" height="100%">
 						<Input
 							color={colorPalette.textColor}

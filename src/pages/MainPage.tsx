@@ -150,19 +150,16 @@ const MainPage = () => {
 		else if (diffDays > 1) {
 			dailyOnClose();
 
-			try {
-				const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-					'@pionira/userId',
-				);
-				await api.patch(`/user/lastCollected/${_userId}`, {
-					consecutiveDays: 0,
-					lastCollected: currentDate.getTime(),
-					coins: coins,
-				});
-				await getNewUserInfo();
-			} catch (error) {
-				handleErrorAlert();
-			}
+			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+				'@pionira/userId',
+			);
+			await api.patch(`/user/lastCollected/${_userId}`, {
+				consecutiveDays: 0,
+				lastCollected: currentDate.getTime(),
+				coins: coins,
+			});
+			await getNewUserInfo();
+			handleErrorAlert();
 		}
 	};
 
@@ -177,45 +174,14 @@ const MainPage = () => {
 		setIgnoranceImage(filterBackgroung);
 	};
 
-	const getUserRequisition = async () => {
-		if (userData._id) {
-			setIgnoranceFilter(userData.ignorance, ignoranceArray);
-			setTimeout(() => {
-				setIsLoading(false);
-			}, 500)
-			return
-		};
-		try {
-			setIsLoading(true);
-			const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-				'@pionira/userId',
-			);
-			const res = await api.get(`/user/${_userId}`);
-			setUserData(res.data);
 
-			setIgnoranceFilter(res.data.ignorance, ignoranceArray);
-
-			if (res.data.isFirstTimeAppLaunching) {
-				tutorialOnOpen();
-			}
-
-			await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
-			await verifySocialLoginRedirect();
-
-			setTimeout(() => {
-				setIsLoading(false);
-			}, 1000)
-		} catch (error) {
-			handleErrorAlert();
-		}
-	};
 
 	const socialShareCoins = async () => {
 		setRewardLoading(true);
 		await api.patch(`/user/coins/${userData._id}`, {
 			coins: userData.coins + 3,
 		});
-		getNewUserInfo();
+		await getNewUserInfo();
 		setRewardOpen(false);
 		setRewardLoading(false);
 	} 
@@ -318,8 +284,41 @@ const MainPage = () => {
 	// }
 
 	useEffect(() => {
-		getUserRequisition();
-		getNewUserInfo();
+		const getUserRequisition = async () => {
+			if (userData._id) {
+				setIgnoranceFilter(userData.ignorance, ignoranceArray);
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 500)
+				return
+			};
+			try {
+				setIsLoading(true);
+				const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+					'@pionira/userId',
+				);
+				const res = await api.get(`/user/${_userId}`);
+				setUserData(res.data);
+
+				setIgnoranceFilter(res.data.ignorance, ignoranceArray);
+
+				if (res.data.isFirstTimeAppLaunching) {
+					tutorialOnOpen();
+				}
+
+				await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
+				await verifySocialLoginRedirect();
+				await getNewUserInfo();
+			} catch (error) {
+				handleErrorAlert();
+			}
+		};
+
+		getUserRequisition().finally(() => {
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 1000)
+		});
 	}, []);
 
 	if (isLoading) {

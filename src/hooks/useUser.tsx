@@ -10,20 +10,16 @@ export const useUser = () => {
     const userServices = new UserServices()
 
     const getNewUserInfo = async () => {
-        try {
-            const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-                '@pionira/userId',
-            );
-            const res = await api.get(`/user/${_userId}`);
-            const resAvatar = await userServices.getUserAvatar(_userId as string);
-            const user: IUser = {
-                ...res.data,
-                custom_avatar: resAvatar.data
-            }
-            setUserData(user);
-        } catch (error) {
-            console.log('');
+        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+            '@pionira/userId',
+        );
+        const res = await api.get(`/user/${_userId}`);
+        const resAvatar = await userServices.getUserAvatar(_userId as string);
+        const user: IUser = {
+            ...res.data,
+            custom_avatar: resAvatar.data
         }
+        setUserData(user);
     }
 
     return {
