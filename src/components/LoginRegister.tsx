@@ -20,6 +20,7 @@ type LoginRegisterProps = {
     secondValue?: string;
     firstChange: ChangeEventHandler;
     secondChange?: ChangeEventHandler;
+    onBlur?: VoidFunction;
     nextStep: VoidFunction;
     previousStep: VoidFunction;
     buttonText: string;
@@ -51,7 +52,8 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     validationError,
     hasValidationError,
     loading,
-    hasTerms
+    hasTerms,
+    onBlur,
 }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -82,14 +84,16 @@ const LoginRegister: FC<LoginRegisterProps> = ({
         focusOnFirstInput();
       }, []);
 
-    const renderPassword = (
+    const renderInput = (
         placeholder: string,
         type: string,
         value: string,
         onChange: VoidFunction,
         loading: boolean,
         onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void,
-        isFirstInput?: boolean
+        isFirstInput?: boolean,
+        onBlur?: VoidFunction,
+        customBorderColor?: string,
     ) => (
             <InputGroup display="flex" alignItems="center" w="60%" minWidth="250px" position="relative">
                 <Input
@@ -97,7 +101,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     width="100%"
                     minWidth="250px"
                     height="60px"
-                    borderColor={colorPalette.secundaryGrey}
+                    borderColor={customBorderColor || colorPalette.secundaryGrey}
                     marginTop='4px'
                     placeholder={placeholder}
                     type={isPasswordVisible ? undefined : type}
@@ -105,6 +109,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     onChange={onChange}
                     disabled={loading}
                     onKeyDown={onKeyDown}
+                    onBlur={onBlur}
                     focusBorderColor={hasValidationError && isFirstInput ? "#F47070" : "#4161ed"}
                 />
                 {
@@ -172,14 +177,16 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     >
                         {firstText}
                     </Text>
-                    {renderPassword(
+                    {renderInput(
                         firstPlaceholder as string,
                         firstInputType as string,
                         firstValue as string,
                         firstChange as VoidFunction,
                         loading,
                         handleKeyPress,
-                        true
+                        true,
+                        onBlur,
+                        hasValidationError ? "#F47070" : undefined
                     )}
                     <Text color="red" fontSize="15"> {validationError} </Text>
 
@@ -193,7 +200,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                             >
                                 {secondText}
                             </Text>
-                            {renderPassword(
+                            {renderInput(
                                 secondPlaceholder as string,
                                 secondInputType as string,
                                 secondValue as string,
@@ -204,23 +211,21 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         </>
                     ) : (null)}
 
-                    {forgetPassword ? (
+                    {forgetPassword && (
                         <Box display="flex" justifyContent="flex-start" marginTop='8px'>
                             <Link
                                 color={colorPalette.linkTextColor}
                                 fontSize="1rem"
                                 textDecoration="underline"
-                                onClick={loading ? () => { return null } : forgetPasswordLink}
+                                onMouseDown={loading ? () => { return null } : forgetPasswordLink}
                                 _hover={loading ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
                             >
                                 Esqueci minha senha
                             </Link>
-                        </Box>) : (
-                            null
-                        )}
-                    
+                        </Box>)}
+
                     {
-                        hasTerms ? (
+                        hasTerms && (
                             <Flex
                                 flexDirection='column'
                                 alignSelf='flex-start'
@@ -233,17 +238,15 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                                     Ao clicar em Continuar, você concorda com nossos <Link
                                         color={colorPalette.linkTextColor}
                                         textDecoration='underLine'
-                                        onClick={handleTermsOfUse}
+                                        onMouseDown={handleTermsOfUse}
                                     >Termos de uso</Link> e <Link
                                         color={colorPalette.linkTextColor}
                                         textDecoration='underLine'
-                                        onClick={handlerPrivacyPolicy}
+                                        onMouseDown={handlerPrivacyPolicy}
                                     >Política de Privacidade</Link>
                                 </Text>
                             </Flex>
-                        ) :
-                        null
-                    }
+                        )}
                 </Box>
             </Flex>
 

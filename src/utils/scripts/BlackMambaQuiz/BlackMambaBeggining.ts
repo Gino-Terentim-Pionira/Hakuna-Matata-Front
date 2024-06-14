@@ -7,8 +7,8 @@ const blackMambaBeggining = async () => {
         {
             name: "Babuíno",
             image: babuino,
-            texts: ["Espere jovem, esse lugar me parece familiar… Uma floresta volumosa… com folhas escuras… esse ar intimidador…",
-                "É isso mesmo jovem, era o que eu temia… você encontrou o covil da Mamba Negra! Ela dominou todas as habilidades possíveis para conseguir impedir a ignorância…",
+            texts: ["Espere viajante, esse lugar me parece familiar… Uma floresta volumosa… com folhas escuras… esse ar intimidador…",
+                "É isso mesmo viajante, era o que eu temia… você encontrou o covil da Mamba Negra! Ela dominou todas as habilidades possíveis para conseguir impedir a ignorância…",
             ]
         },
         {

@@ -21,9 +21,11 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import { GENERIC_MODAL_TEXT, CREATE_PASSAPORT } from '../utils/constants/buttonConstants';
+import {validateEmail} from "../utils/validates";
 
 const Login = () => {
 	const [email, setEmail] = useState<string>('');
+	const [emailError, setEmailError] = useState('');
 	const [password, setPassword] = useState<string>('');
 	const history = useHistory();
 	const { handleLogin, authenticated } = useAuth();
@@ -84,6 +86,11 @@ const Login = () => {
 			label: errorCases.FAILED_LOGIN_ERROR,
 			buttonLabel: GENERIC_MODAL_TEXT,
 			action: onClose
+		},
+		'INVALID_EMAIL': {
+			label: errorCases.INVALID_EMAIL_ERROR,
+			buttonLabel: GENERIC_MODAL_TEXT,
+			action: onClose
 		}
 	}
 
@@ -99,10 +106,16 @@ const Login = () => {
 	const _handleLogin = async () => {
 		if (email && password) {
 			try {
+				if(emailError) {
+					handleAlertModal('INVALID_EMAIL');
+					return
+				}
+
 				setIsLoading(true);
 				await handleLogin(email, password);
 			} catch (error) {
-				handleAlertModal(error.response.data.error);
+				const errorMessage = error.response?.data.error || 'SERVER_ERROR';
+				handleAlertModal(errorMessage);
 				setIsLoading(false);
 			}
 		} else {
@@ -122,6 +135,21 @@ const Login = () => {
 		history.push('/forgotPassword');
 	};
 
+	const handleEmailChanges = (event: { target: { value: React.SetStateAction<string> } }) => {
+		setEmailError('');
+		setEmail(event.target.value);
+	}
+
+	const isValidEmail = () => {
+		const valid = validateEmail(email);
+		if (!valid) {
+			setEmailError("Formato de email inválido");
+			return true;
+		} else {
+			setEmailError('')
+		}
+	}
+
 	return (
 		<Flex
 			h='100vh'
@@ -132,14 +160,15 @@ const Login = () => {
 			<Center width='100%'>
 				<LoginRegister
 					mainText='Seja bem vindo de volta ao Pionira. Para entrar na Savana preciso que você me fale seu e-mail e sua senha.'
-					firstText='”Qual é o seu e-mail, jovem?”'
+					firstText='”Qual é o seu e-mail, viajante?”'
 					secondText='”E qual a sua senha?”'
 					firstPlaceholder='E-mail'
 					secondPlaceholder='Senha'
 					firstValue={email}
 					firstChange={(e: BaseSyntheticEvent) =>
-						setEmail(e.target.value)
+						handleEmailChanges(e)
 					}
+					onBlur={isValidEmail}
 					secondValue={password}
 					secondChange={(e: BaseSyntheticEvent) =>
 						setPassword(e.target.value)
@@ -152,6 +181,8 @@ const Login = () => {
 					forgetPasswordLink={() => goToForgotPassword()}
 					buttonText='Próximo'
 					loading={isLoading}
+					validationError={emailError}
+					hasValidationError={!!emailError}
 				/>
 
 				<Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />

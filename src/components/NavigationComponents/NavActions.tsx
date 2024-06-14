@@ -47,7 +47,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     isOpen: tutorialIsOpen,
     onClose: tutorialOnClose,
     onOpen: tutorialOnOpen,
-    onToggle: tutorialOnToggle,
   } = useDisclosure();
 
   const history = useHistory();
@@ -141,7 +140,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
       <TutorialModal
         isOpen={tutorialIsOpen}
         onClose={tutorialOnClose}
-        onToggle={tutorialOnToggle}
       />
       <DefaultNarrativeModal
         isOpen={narrativeIsOpen}

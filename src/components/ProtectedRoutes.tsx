@@ -1,16 +1,19 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-
-// Requisitions
 import { useAuth } from '../contexts/authContext';
 
-const ProtectedRoute = ({ ...routesProps }: RouteProps) => {
-    const { authenticated } = useAuth();
+const ProtectedRoute = ({ ...routeProps }: RouteProps) => {
+  const { authenticated } = useAuth();
 
-    if (!authenticated) {
-        return <Redirect to="/" />;
-    };
-    return <Route {...routesProps} />;
-}
+  if (authenticated === null) {
+    return null;
+  }
+
+  if (!authenticated) {
+    return <Redirect to="/login" />;
+  }
+
+  return <Route {...routeProps} />;
+};
 
 export default ProtectedRoute;

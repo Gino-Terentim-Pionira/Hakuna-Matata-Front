@@ -11,7 +11,7 @@ import {
     Image,
     Button,
 } from '@chakra-ui/react';
-import { validatePassword } from '../utils/validates';
+import {validateEmail, validatePassword} from '../utils/validates';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -37,7 +37,6 @@ const Register = () => {
     const [formPassword, setFormPassword] = useState('');
     const [formConfirmPassword, setFormConfirmPassword] = useState('');
     const [validationError, setValidationError] = useState('');
-    const [hasValidationError, setHasValidationError] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [alertModal, setAlertModal] = useState({
@@ -119,44 +118,36 @@ const Register = () => {
         }
     }
 
-    const validateName = () => {
+    const isValidName = () => {
         const firstname = formName.split(' ');
         const lastname = lastIndexValidation(firstname) as string;
 
-        if (firstname[0] === lastname || lastname === ' ') {
+        if (!formName || firstname[0] === lastname || lastname === ' ') {
             setValidationError("Preencha com seu nome completo");
-            setHasValidationError(true);
             return true;
         } else {
             setValidationError('');
-            setHasValidationError(false);
             return false;
         }
     }
 
-    const validateEmail = () => {
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-
+    const isValidEmail = () => {
         if (formEmail.length > 254) {
             setValidationError("Email muito extenso");
-            setHasValidationError(true);
             return true;
         }
 
-        const valid = emailRegex.test(formEmail);
+        const valid = validateEmail(formEmail);
         if (!valid) {
             setValidationError("Formato de email inválido");
-            setHasValidationError(true);
             return true;
         }
 
         const parts = formEmail.split("@");
         if (parts[0].length > 64) {
             setValidationError("Email muito extenso");
-            setHasValidationError(true);
             return true;
         }
-        setHasValidationError(false);
         setValidationError('');
         return false;
 
@@ -164,27 +155,28 @@ const Register = () => {
     // controlar funcs de validacao
 
     const handleNameChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setValidationError('');
         setFormName(event.target.value);
-        validateName();
     }
 
     const handleEmailChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setValidationError('');
         setFormEmail(event.target.value);
-        validateEmail();
     }
 
     const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        const currentPassword = event.target.value as string;
-        setFormPassword(currentPassword);
-        const res = validatePassword(currentPassword);
-        setValidationError(res.message);
-        setHasValidationError(res.validate);
+        setValidationError('');
+        setFormPassword(event.target.value);
+    }
+
+    const isValidPassword = () => {
+        const IS_VALID_PASSWORD = validatePassword(formPassword);
+        setValidationError(IS_VALID_PASSWORD.message);
     }
 
     const nextStep = async () => {
         if (step == 3) {
-            const { validate } = validatePassword(formPassword);
-            if (formConfirmPassword && formPassword && !validate) {
+            if (formConfirmPassword && formPassword && !validationError) {
                 if (formPassword === formConfirmPassword) {
                     try {
                         setIsLoading(true);
@@ -218,24 +210,22 @@ const Register = () => {
 
         } else if (step == 2) {
 
-            const invalidName = validateEmail();
+            const invalidName = isValidEmail();
 
             if (formEmail && formDate && !invalidName) {
                 setStep(step + 1);
             } else {
                 handleAlertModal('MISSING_FIELDS_ERROR');
-                setHasValidationError(true);
             }
 
         } else if (step == 1) {
 
-            const invalidName = validateName();
+            const invalidName = isValidName();
 
             if (formName && formUserName && !invalidName) {
                 setStep(step + 1);
             } else {
                 handleAlertModal('MISSING_FIELDS_ERROR');
-                setHasValidationError(true);
             }
 
         }
@@ -246,6 +236,7 @@ const Register = () => {
             history.push('/');
         } else {
             setStep(step - 1);
+            setValidationError('');
         }
     }
 
@@ -259,8 +250,8 @@ const Register = () => {
             <Center width='100%'>
                 {step === 1 ? (
                     <LoginRegister
-                        mainText='Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, jovem.'
-                        firstText="”Qual é o seu nome, jovem?”"
+                        mainText='Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, viajante.'
+                        firstText="”Qual é o seu nome, viajante?”"
                         secondText="”E como você gostaria de ser chamado dentro da savana?”"
                         firstPlaceholder="Nome Completo"
                         secondPlaceholder="Nome de Usuário"
@@ -270,18 +261,19 @@ const Register = () => {
                         secondInputType="text"
                         firstValue={formName}
                         firstChange={(e: BaseSyntheticEvent) => handleNameChanged(e)}
+                        onBlur={isValidName}
                         secondValue={formUserName}
                         secondChange={(e: BaseSyntheticEvent) => setFormUserName(e.target.value)}
                         buttonText="Próximo"
                         validationError={validationError}
-                        hasValidationError={hasValidationError}
+                        hasValidationError={!!validationError}
                         loading={false}
                     />
 
                 ) : step === 2 ? (
                     <LoginRegister
                         mainText='Agora preciso de outras informações adicionais. Não sei o que é isso, mas a sabedoria da Savana está me pedindo o seu e-mail.'
-                        firstText="”Qual é o seu e-mail, jovem?”"
+                        firstText="”Qual é o seu e-mail, viajante?”"
                         secondText="”Queria saber também qual a sua data de nascimento?”"
                         firstPlaceholder="Endereço de e-mail"
                         secondPlaceholder="Data de Nascimento"
@@ -291,17 +283,18 @@ const Register = () => {
                         secondInputType="date"
                         firstValue={formEmail}
                         firstChange={(e: BaseSyntheticEvent) => handleEmailChanged(e)}
+                        onBlur={isValidEmail}
                         secondValue={formDate}
                         secondChange={(e: BaseSyntheticEvent) => setFormDate(e.target.value)}
                         buttonText="Próximo"
                         validationError={validationError}
-                        hasValidationError={hasValidationError}
+                        hasValidationError={!!validationError}
                         loading={false}
                     />
                 ) : step === 3 ? (
                     <LoginRegister
                         mainText='Por último, precisamos definir uma senha para permitir a sua entrada na Savana. Lembre-se que não pode ser uma senha fácil de adivinhar, não queremos invasores na Savana.'
-                        firstText="”Qual é a sua senha, jovem?”"
+                        firstText="”Qual é a sua senha, viajante?”"
                         secondText="”Não entendi muito bem, poderia repeti-la?”"
                         firstPlaceholder="Senha"
                         secondPlaceholder="Confirmar senha"
@@ -311,11 +304,12 @@ const Register = () => {
                         secondInputType="password"
                         firstValue={formPassword}
                         firstChange={(e: BaseSyntheticEvent) => handlePasswordChanged(e)}
+                        onBlur={isValidPassword}
                         secondValue={formConfirmPassword}
                         secondChange={(e: BaseSyntheticEvent) => setFormConfirmPassword(e.target.value)}
                         buttonText="Próximo"
                         validationError={validationError}
-                        hasValidationError={hasValidationError}
+                        hasValidationError={!!validationError}
                         loading={isLoading}
                         hasTerms={true}
                     />
@@ -323,7 +317,7 @@ const Register = () => {
                     <div>Você não devia estar aqui, chapa!</div>
                 )}
 
-                {(step === 3 && !hasValidationError) ? (
+                {(step === 3 && !!validationError) ? (
                     <AlertModal
                         isOpen={alertModal.isOpen}
                         onClose={onClose}

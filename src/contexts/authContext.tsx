@@ -3,24 +3,22 @@ import api from '../services/api';
 import { useHistory } from 'react-router-dom';
 import { SignIn } from '../services/auth';
 
-
 interface IAuthProvider {
   children: React.ReactNode
 };
 
 interface IAuthContext {
   userId: string,
-  authenticated: boolean | undefined,
+  authenticated: boolean | null,
   handleLogin: (email: string, password: string) => Promise<void>,
   handleLogout: () => Promise<void>
 };
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
-
 export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
   const history = useHistory();
-  const [authenticated, setAuthenticated] = useState<boolean | undefined>();
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [userId, setUserId] = useState('');
 
   useEffect(() => {
@@ -37,12 +35,12 @@ export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
   }, []);
 
   async function handleLogin(email: string, password: string) {
-      const result = await SignIn(email, password);
-      sessionStorage.setItem('@pionira/token', result.token);
-      sessionStorage.setItem('@pionira/userId', result.user.id);
-      setAuthenticated(true);
-      setUserId(result.user.id);
-      history.push('/mainPage');
+    const result = await SignIn(email, password);
+    sessionStorage.setItem('@pionira/token', result.token);
+    sessionStorage.setItem('@pionira/userId', result.user.id);
+    setAuthenticated(true);
+    setUserId(result.user.id);
+    history.push('/mainPage');
   };
 
   async function handleLogout() {
@@ -58,7 +56,9 @@ export const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ userId, handleLogin, handleLogout, authenticated }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ userId, handleLogin, handleLogout, authenticated }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 
