@@ -2,6 +2,11 @@ import { IUser } from "../recoil/useRecoilState";
 import { AGILITY, LEADERSHIP } from "./constants/statusConstants";
 import colorPalette from "../styles/colorPalette";
 import trailEnum from "./enums/trail";
+import { STATUS_POINTS_TO_UNLOCK_FINAL_QUIZ } from "./constants/constants";
+
+export const hasEnougthStatusForFinalQuiz = (userData: IUser, statusName: string) => {
+    return getStatusPoints(userData, statusName) >= STATUS_POINTS_TO_UNLOCK_FINAL_QUIZ;
+}
 
 export const getStatusPoints = (userData: IUser, statusName: string) => {
     const status = userData.status.find((item) => item.name == statusName);
