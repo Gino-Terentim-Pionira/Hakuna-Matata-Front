@@ -8,7 +8,7 @@ import {
 import { useUser } from '../hooks';
 
 // Components
-import TutorialModal from '../components/modals/TutorialModal';
+import WelcomeVideoModal from '../components/modals/WelcomeVideoModal';
 import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
 import AlertModal from '../components/modals/AlertModal';
 import DailyReward from '../components/modals/DailyRewardModal';
@@ -54,9 +54,9 @@ interface IScript {
 const MainPage = () => {
 	const history = useHistory();
 	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
+		isOpen: welcomeVideoIsOpen,
+		onClose: welcomeVideoOnClose,
+		onOpen: welcomeVideoOnOpen,
 	} = useDisclosure();
 
 
@@ -138,7 +138,7 @@ const MainPage = () => {
 				narrativeOnOpen();
 			}
 
-			tutorialOnClose();
+			welcomeVideoOnClose();
 		} catch (error) {
 			handleErrorAlert();
 		}
@@ -201,7 +201,7 @@ const MainPage = () => {
 			setIgnoranceFilter(res.data.ignorance, ignoranceArray);
 
 			if (res.data.isFirstTimeAppLaunching) {
-				tutorialOnOpen();
+				welcomeVideoOnOpen();
 			}
 
 			await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
@@ -325,8 +325,8 @@ const MainPage = () => {
 							onOpen={dailyOnOpen}
 							onClose={dailyOnClose}
 						/>
-						<TutorialModal
-							isOpen={tutorialIsOpen}
+						<WelcomeVideoModal
+							isOpen={welcomeVideoIsOpen}
 							onClose={tutorialFirstOnClose}
 						/>
 
