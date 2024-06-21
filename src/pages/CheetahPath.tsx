@@ -337,7 +337,7 @@ const CheetahPath = () => {
         if (!completeTrail) {
             await challengeNarrative();
         }
-        if (hasEnougthStatusForFinalQuiz(userData, AGILITY)) modalOnOpen();
+        if (hasEnougthStatusForFinalQuiz(userData, AGILITY) == 'enoughStatus') modalOnOpen();
     }
 
     const finalCheetahNarrative = () => {

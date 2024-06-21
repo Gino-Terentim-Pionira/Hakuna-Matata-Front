@@ -6,7 +6,7 @@ import { STATUS_POINTS_TO_UNLOCK_FINAL_QUIZ } from '../../constants/constants';
 
 const cheetahFinalQuiz = async (userData: IUser) => {
 
-	const notEnougthStatus = [
+	const notEnoughStatus = [
 		[
 			{
 				name: 'Cheetah',
@@ -30,7 +30,7 @@ const cheetahFinalQuiz = async (userData: IUser) => {
 		]
 	];
 
-	const enougthStatus = [
+	const enoughStatus = [
 		{
 			name: 'Cheetah',
 			image: cheetah,
@@ -43,12 +43,12 @@ const cheetahFinalQuiz = async (userData: IUser) => {
 		}
 	];
 
-	if (hasEnougthStatusForFinalQuiz(userData, AGILITY)) {
-		return enougthStatus;
-	} else {
-		const randomIndex = Math.floor(Math.random() * notEnougthStatus.length);
-		return notEnougthStatus[randomIndex];
+	const IS_USER_HAS_ENOUGH_STATUS = {
+		"notEnoughStatus": notEnoughStatus[Math.floor(Math.random() * notEnoughStatus.length)],
+		"enoughStatus": enoughStatus
 	}
+
+	return IS_USER_HAS_ENOUGH_STATUS [hasEnougthStatusForFinalQuiz(userData, AGILITY)];
 };
 
 export default cheetahFinalQuiz;
