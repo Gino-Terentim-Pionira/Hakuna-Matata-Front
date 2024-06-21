@@ -23,6 +23,17 @@ class TutorialServices {
         const response  = await api.get(`tutorial/contents/${topic_name}`);
         return response.data
     }
+
+    checkFirstVisualization = (topic_name: string) => {
+        const firstView = localStorage.getItem(`@pionira/tutorial/${topic_name}`);
+
+        if (!firstView) {
+            const currentDate = new Date();
+            localStorage.setItem(`@pionira/tutorial/${topic_name}`, currentDate.toDateString());
+            return true;
+        }
+        return false;
+    }
 }
 
 export default  TutorialServices;

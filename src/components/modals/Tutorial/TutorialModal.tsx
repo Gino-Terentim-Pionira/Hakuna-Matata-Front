@@ -16,12 +16,13 @@ import {TutorialContent} from "./components/TutorialContent";
 
 type TutorialTopicsModalType = {
     isOpen: boolean,
-    onClose: VoidFunction
+    onClose: VoidFunction,
+    selectedTopic?: string | undefined
 }
 
-export const TutorialModal = ({isOpen, onClose}: TutorialTopicsModalType) => {
+export const TutorialModal = ({isOpen, onClose, selectedTopic}: TutorialTopicsModalType) => {
     const { userData } = useUser();
-    const tutorialServices = new TutorialServices()
+    const tutorialServices = new TutorialServices();
     const [tutorialTopics, setTutorialTopics] = useState([] as ITutorialTopic[]);
     const [isLoading, setIsLoading] = useState(false);
     const [tutorialContentSelected, setTutorialContentSelected] = useState<ITutorialContent[] | undefined>();
@@ -49,6 +50,8 @@ export const TutorialModal = ({isOpen, onClose}: TutorialTopicsModalType) => {
             return tutorialServices.getAllTutorialTopics()
         }
 
+        if(!isOpen) handleGoBackToTopics();
+
         if(isOpen && !tutorialTopics.length) {
             getAllTutorialTopics().then((data) => {
                 setTutorialTopics(data)
@@ -59,6 +62,10 @@ export const TutorialModal = ({isOpen, onClose}: TutorialTopicsModalType) => {
             })
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        if (selectedTopic) handleTutorialContentSelected(selectedTopic as string);
+    }, [selectedTopic]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
