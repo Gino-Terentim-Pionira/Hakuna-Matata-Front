@@ -286,8 +286,6 @@ const MainPage = () => {
 
 	useEffect(() => {
 		const getUserRequisition = async () => {
-			await getNewUserInfo();
-
 			if (userData._id) {
 				setIgnoranceFilter(userData.ignorance, ignoranceArray);
 				setTimeout(() => {
