@@ -55,3 +55,5 @@ export const NOT_ENOUGH_STATUS = (statusName: string) => `Seu nivel de ${statusN
 export const  NOT_ENOUGHT_COINS = 'Você não tem moedas suficientes!';
 
 export const NOT_ENOUGH_MESSAGES = 'É necessário comprar um pacote de perguntas na loja para falar com o Oráculo';
+
+export const ORACLE_INPUT_BLOCK = 'É necessário finalizar o Desafio Final da trilha para poder conversar livremente com o Oráculo';
