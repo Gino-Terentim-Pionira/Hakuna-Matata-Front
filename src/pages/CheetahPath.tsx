@@ -232,46 +232,6 @@ const CheetahPath = () => {
         narrativeOnOpen();
     }
 
-    const getUser = async () => {
-        try {
-            let userInfoData;
-            const _userId = sessionStorage.getItem('@pionira/userId');
-            if (moduleData.length === 0) {
-                await getNewModuleInfo();
-            }
-            if (!userData._id) {
-                const { data } = await api.get(`/user/${_userId}`);
-                setUserData(data);
-                userInfoData = data;
-            } else userInfoData = userData;
-
-            setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
-            const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
-            await checkNarrative();
-            await getFinalQuiz();
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 1000)
-
-            if (isComplete) {
-                setCheetahText(
-                    `Você já alcançou o máximo da sua agilidade  ${userInfoData.userName}! Vamos com tudo contra a ignorância!`,
-                );
-                setCompleteTrail(true);
-                if (userInfoData.narrative_status.trail1 === 3) {
-                    finalCheetahNarrative();
-                }
-            } else {
-                setCheetahText(
-                    'Você está pronto, viajante! Lembre-se de toda a sua jornada para vencer esse desafio!',
-                );
-            }
-        } catch (error) {
-            console.log('oi')
-            setOnError(true);
-        }
-    };
-
     const getFinalQuiz = async () => {
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
             '@pionira/userId',
@@ -409,7 +369,54 @@ const CheetahPath = () => {
     }
 
     useEffect(() => {
-        getUser();
+        const getUser = async () => {
+            try {
+                let userInfoData;
+                const _userId = sessionStorage.getItem('@pionira/userId');
+                if (moduleData.length === 0) {
+                    await getNewModuleInfo();
+                }
+                if (!userData._id) {
+                    const { data } = await api.get(`/user/${_userId}`);
+                    setUserData(data);
+                    userInfoData = data;
+                } else userInfoData = userData;
+
+                setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
+                const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
+                await checkNarrative();
+                await getFinalQuiz();
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 1000)
+
+                if (isComplete) {
+                    setCheetahText(
+                        `Você já alcançou o máximo da sua agilidade  ${userInfoData.userName}! Vamos com tudo contra a ignorância!`,
+                    );
+                    setCompleteTrail(true);
+                    if (userInfoData.narrative_status.trail1 === 3) {
+                        finalCheetahNarrative();
+                    }
+                } else {
+                    if (userInfoData.ignorance > 80)
+                        setCheetahText(
+                            'Tenha cuidado, viajante! Você não se preparou o suficente para vencer a Cheetah!',
+                        );
+                    else if (userInfoData.ignorance > 40)
+                        setCheetahText(
+                            'Você está definitivamente mais forte, viajante! Mas temo que a Cheetah é um desafio muito grande para você!',
+                        );
+                    else
+                        setCheetahText(
+                            'Você está pronto, viajante! Lembre-se de toda a sua jornada para vencer esse desafio!',
+                        );
+                }
+            } catch (error) {
+                setOnError(true);
+            }
+        };
+        getUser().then();
     }, []);
 
     return (
