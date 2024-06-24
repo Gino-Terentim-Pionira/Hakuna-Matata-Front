@@ -74,17 +74,6 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
     }));
   }
 
-  const verifyDailyQuiz = () => {
-    const item = localStorage.getItem("@pionira/dailyQuiz");
-    if (item) {
-      const currentDate = new Date();
-      const storedDate = new Date(item);
-      setIsDifferentDay(currentDate.toDateString() !== storedDate.toDateString());
-    } else {
-      setIsDifferentDay(true);
-    }
-  }
-
   const handleFirstView = (topic_name: string, action: VoidFunction) => {
     if (tutorialServices.checkFirstVisualization(topic_name)) {
       setOnCloseTutorial(() => action);
@@ -110,6 +99,16 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
   }
 
   useEffect(() => {
+    const verifyDailyQuiz = () => {
+      const item = localStorage.getItem("@pionira/dailyQuiz");
+      if (item) {
+        const currentDate = new Date();
+        const storedDate = new Date(item);
+        setIsDifferentDay(currentDate.toDateString() !== storedDate.toDateString());
+      } else {
+        setIsDifferentDay(true);
+      }
+    }
     verifyDailyQuiz();
   }, []);
 
@@ -212,5 +211,4 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
     </>
   )
 };
-
 export default IgnorancePremiumIcons;
