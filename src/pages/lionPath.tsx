@@ -670,7 +670,6 @@ const LionPath = () => {
 							imgName={couple}
 							routeQuestions={'lionquestions'}
 							routeQuiz={'finallionquiz'}
-							userStatus={getStatusPoints(userData, LEADERSHIP)}
 							trail={2}
 						/>
 					</>
