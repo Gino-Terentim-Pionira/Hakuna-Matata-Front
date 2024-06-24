@@ -31,11 +31,38 @@ export const TutorialTopics = ({tutorialTopics, userData, onClick}: TutorialTopi
             >
                 Descobrindo o Pionira
             </ModalHeader>
-            <ModalBody paddingTop="32px" paddingBottom="52px" paddingX="24px">
+            <ModalBody paddingTop="32px" paddingBottom="52px" paddingX="24px"
+                sx={{
+                    "&::-webkit-scrollbar": {
+                        width:"4px",
+                        height: "4px",
+                        borderRadius: "8px"
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        background: "#9D9D9D",
+                        borderRadius: "10px"
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                        background: "#555",
+                    },
+                    "&::-moz-scrollbar": {
+                        width:"4px",
+                        height: "4px",
+                        borderRadius: "8px"
+                    },
+                    "&::-moz-scrollbar-thumb": {
+                        background: "#9D9D9D",
+                        borderRadius: "10px"
+                    },
+                    "&::-moz-scrollbar-thumb:hover": {
+                        background: "#555",
+                    },
+                }}
+            >
                 <motion.div initial="hidden" animate="visible" variants={defaultVariant} transition={{duration: 0.5}}>
                     <Grid templateColumns='repeat(2, 1fr)' gap="24px">
                         {
-                            tutorialTopics.map(({name, icon, index}) => (
+                            tutorialTopics.map(({name, icon}) => (
                                 <Flex
                                     border={`2px solid ${colorPalette.textColor}`}
                                     alignItems="center"
@@ -45,7 +72,7 @@ export const TutorialTopics = ({tutorialTopics, userData, onClick}: TutorialTopi
                                     height="60px"
                                     paddingX="12px"
                                     columnGap="8px"
-                                    key={index}
+                                    key={name}
                                     transition='all 200ms ease'
                                     onClick={() => onClick(name)}
                                     _hover={{

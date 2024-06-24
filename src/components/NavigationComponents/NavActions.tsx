@@ -1,7 +1,6 @@
 import { Flex, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-import TutorialVideoModal from "../modals/TutorialModal";
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import { useUser } from '../../hooks';
 import TutorialServices from "../../services/TutorialServices";
@@ -51,12 +50,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     isOpen: tutorialTopicIsOpen,
     onClose: tutorialTopicOnClose,
     onOpen: tutorialTopicOnOpen,
-  } = useDisclosure();
-
-  const {
-    isOpen: tutorialIsOpen,
-    onClose: tutorialOnClose,
-    onOpen: tutorialOnOpen,
   } = useDisclosure();
 
   const history = useHistory();
@@ -167,10 +160,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
       <ProfileModal isOpen={profileIsOpen} onClose={profileOnClose} />
 
-      <TutorialVideoModal
-        isOpen={tutorialIsOpen}
-        onClose={tutorialOnClose}
-      />
       <TutorialModal isOpen={tutorialTopicIsOpen} onClose={handleTutorialClose} selectedTopic={selectedTopic} />
 
       <DefaultNarrativeModal
