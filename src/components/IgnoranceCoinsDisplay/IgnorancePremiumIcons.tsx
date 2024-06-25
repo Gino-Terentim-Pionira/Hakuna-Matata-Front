@@ -18,6 +18,8 @@ import DailyQuiz from "../Quiz/DailyQuiz";
 import OracleIcon from "../../assets/icons/oracle/oracle_icon.webp";
 import { useHistory } from 'react-router-dom';
 import trailEnum from "../../utils/enums/trail";
+import { TutorialModal } from "../modals/Tutorial/TutorialModal";
+import TutorialServices from "../../services/TutorialServices";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -37,16 +39,25 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
   // 	onOpen: premiumOnOpen,
   // 	onToggle: premiumOnToggle,
   // } = useDisclosure();
+  const tutorialServices = new TutorialServices();
   const { userData } = useUser();
   const history = useHistory();
   const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDifferentDay, setIsDifferentDay] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
+  const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
 
   const { isOpen: quizIsOpen,
     onClose: quizOnClose,
     onOpen: quizOnOpen,
     onToggle: quizToggle
+  } = useDisclosure();
+
+  const {
+    isOpen: tutorialIsOpen,
+    onClose: tutorialOnClose,
+    onOpen: tutorialOnOpen,
   } = useDisclosure();
 
   const handleDaily = () => {
@@ -55,12 +66,36 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
   }
 
   const handleOracle = () => {
-    history.push({
+    handleFirstView('Oráculo', () => history.push({
       pathname: '/oracle',
       state: {
         trail
       }
-    })
+    }));
+  }
+
+  const handleFirstView = (topic_name: string, action: VoidFunction) => {
+    if (tutorialServices.checkFirstVisualization(topic_name)) {
+      setOnCloseTutorial(() => action);
+      setSelectedTopic(topic_name);
+      tutorialOnOpen();
+    } else {
+      action();
+    }
+  }
+
+  const handleTutorialClose = () => {
+    tutorialOnClose();
+    if (onCloseTutorial) onCloseTutorial();
+    setOnCloseTutorial(undefined);
+  }
+
+  const handleIgnoranceGlasses = () => {
+    handleFirstView('Óculos da ignorância', handleIgnoranceFilter);
+  }
+
+  const handleDailyQuiz = () => {
+    handleFirstView('Desafio diário', () => setIsModalOpen(true));
   }
 
   useEffect(() => {
@@ -127,7 +162,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
           <NavIcon
             image={isIgnoranceFilterOn ? GlassesOn : Glasses}
             mouseOver={IGNORANCE_GLASS}
-            onClick={handleIgnoranceFilter}
+            onClick={handleIgnoranceGlasses}
             size="normal"
             isMap={false}
             position="right"
@@ -136,7 +171,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
             (!isIgnoranceFilterOn && isDifferentDay) && <NavIcon
               image={Daily}
               mouseOver={DAILY_QUIZ}
-              onClick={() => { setIsModalOpen(true) }}
+              onClick={handleDailyQuiz}
               size="normal"
               isMap={false}
               position="right"
@@ -172,7 +207,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
         onClose={premiumOnClose}
         onToggle={premiumOnToggle}
       /> */}
-
+      <TutorialModal isOpen={tutorialIsOpen} onClose={handleTutorialClose} selectedTopic={selectedTopic} />
     </>
   )
 };

@@ -1,0 +1,12 @@
+.arrow {
+    transition: all 200ms ease;
+}
+.arrow:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.arrow:active {
+    cursor: pointer;
+    transform: scale(1);
+}

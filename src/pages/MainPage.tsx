@@ -1,10 +1,14 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDisclosure, Flex, Button } from '@chakra-ui/react';
+import {
+	useDisclosure,
+	Flex,
+	Button,
+} from '@chakra-ui/react';
 import { useUser } from '../hooks';
 
 // Components
-import TutorialModal from '../components/modals/TutorialModal';
+import WelcomeVideoModal from '../components/modals/WelcomeVideoModal';
 import NarrativeModal from '../components/modals/Narrative/NarrativeModal';
 import AlertModal from '../components/modals/AlertModal';
 import DailyReward from '../components/modals/DailyRewardModal';
@@ -50,10 +54,11 @@ interface IScript {
 const MainPage = () => {
 	const history = useHistory();
 	const {
-		isOpen: tutorialIsOpen,
-		onClose: tutorialOnClose,
-		onOpen: tutorialOnOpen,
+		isOpen: welcomeVideoIsOpen,
+		onClose: welcomeVideoOnClose,
+		onOpen: welcomeVideoOnOpen,
 	} = useDisclosure();
+
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -133,7 +138,7 @@ const MainPage = () => {
 				narrativeOnOpen();
 			}
 
-			tutorialOnClose();
+			welcomeVideoOnClose();
 		} catch (error) {
 			handleErrorAlert();
 		}
@@ -247,43 +252,6 @@ const MainPage = () => {
 		handleLogOutAlert();
 	};
 
-	// To add later:
-	// const validIsPrime = async () => {
-	// 	const userId = sessionStorage.getItem('@pionira/userId');
-	// 	try {
-	// 		const res = await api.get(`user/${userId}`);
-	// 		const isSubscribed = res.data.isSubscribed;
-
-	// 		if (isSubscribed) {
-	// 			setIsSubscribedModal(true);
-	// 		}
-	// 		else
-	// 			premiumOnOpen();
-	// 	} catch (error) {
-	// 		setOnAlert(true);
-	// 	}
-	// }
-	// const checkSubscription = async () => {
-	// 	const userId = sessionStorage.getItem('@pionira/userId');
-	// 	try {
-	// 		const res = await api.get(`user/${userId}`);
-	// 		const subscribeId = res.data.subscribeId;
-	// 		if (subscribeId) {
-	// 			const subscription = await api.get(`user/subscription/${userId}`);
-	// 			const isSubscribed = subscription.data.response.status;
-
-	// 			if (isSubscribed === "canceled") {
-	// 				await api.patch(`user/updateSubscription/${userId}`, {
-	// 					isSubscribed: false
-	// 				})
-	// 				await getNewUserInfo();
-	// 			}
-	// 		}
-	// 	} catch (error) {
-	// 		setOnAlert(true);
-	// 	}
-	// }
-
 	useEffect(() => {
 		const getUserRequisition = async () => {
 			if (userData._id) {
@@ -304,7 +272,7 @@ const MainPage = () => {
 				setIgnoranceFilter(res.data.ignorance, ignoranceArray);
 
 				if (res.data.isFirstTimeAppLaunching) {
-					tutorialOnOpen();
+					welcomeVideoOnOpen();
 				}
 
 				await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
@@ -357,8 +325,8 @@ const MainPage = () => {
 							onOpen={dailyOnOpen}
 							onClose={dailyOnClose}
 						/>
-						<TutorialModal
-							isOpen={tutorialIsOpen}
+						<WelcomeVideoModal
+							isOpen={welcomeVideoIsOpen}
 							onClose={tutorialFirstOnClose}
 						/>
 

@@ -1,9 +1,9 @@
 import { Flex, useDisclosure } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 
-import TutorialModal from "../modals/TutorialModal";
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import { useUser } from '../../hooks';
+import TutorialServices from "../../services/TutorialServices";
 
 import icon_tutorial from '../../assets/icons/icon_tutorial.svg';
 import icon_shop from '../../assets/icons/icon_shop.svg';
@@ -18,6 +18,7 @@ import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "..
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
+import {TutorialModal} from "../modals/Tutorial/TutorialModal";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -27,8 +28,11 @@ interface NavActionsInterface {
 const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const { userData } = useUser();
   const { handlePath } = usePath();
+  const tutorialServices = new TutorialServices();
   const { isIgnoranceFilterOn } = useIgnoranceFilter();
-  const scriptChat = () => chatScript(userData.ignorance)
+  const scriptChat = () => chatScript(userData.ignorance);
+  const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
+  const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
 
   const {
     isOpen: profileIsOpen,
@@ -42,25 +46,44 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     onToggle: narrativeOnToggle,
   } = useDisclosure();
 
-
   const {
-    isOpen: tutorialIsOpen,
-    onClose: tutorialOnClose,
-    onOpen: tutorialOnOpen,
+    isOpen: tutorialTopicIsOpen,
+    onClose: tutorialTopicOnClose,
+    onOpen: tutorialTopicOnOpen,
   } = useDisclosure();
 
   const history = useHistory();
 
   const handleStore = () => {
-    handlePath('/shop');
+    handleFirstView('Loja', () => handlePath('/shop'));
   }
 
   const handleInventory = () => {
-    handlePath('/inventory');
+    handleFirstView('Inventário', () => handlePath('/inventory'));
   }
 
   const handleChat = () => {
     narrativeOnOpen();
+  }
+
+  const handleFirstView = (topic_name: string, action: VoidFunction) => {
+    if (tutorialServices.checkFirstVisualization(topic_name)) {
+      setOnCloseTutorial(() => action);
+      setSelectedTopic(topic_name);
+      tutorialTopicOnOpen();
+    } else {
+      action();
+    }
+  }
+
+  const handleProfileOpen = () => {
+    handleFirstView('Perfil de usuário', profileOnOpen);
+  }
+
+  const handleTutorialClose = () => {
+    tutorialTopicOnClose();
+    if (onCloseTutorial) onCloseTutorial();
+    setOnCloseTutorial(undefined);
   }
 
   return (
@@ -76,7 +99,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         <Flex flexDirection='column' align='center'>
           <NavIcon
             image="profile"
-            onClick={profileOnOpen}
+            onClick={handleProfileOpen}
             size='normal'
             isMap={false}
             mouseOver={USER_PROFILE}
@@ -108,7 +131,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
           <NavIcon
             image={icon_tutorial}
-            onClick={tutorialOnOpen}
+            onClick={tutorialTopicOnOpen}
             size='small'
             isMap={false}
             mouseOver={TUTORIAL}
@@ -137,10 +160,8 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
       <ProfileModal isOpen={profileIsOpen} onClose={profileOnClose} />
 
-      <TutorialModal
-        isOpen={tutorialIsOpen}
-        onClose={tutorialOnClose}
-      />
+      <TutorialModal isOpen={tutorialTopicIsOpen} onClose={handleTutorialClose} selectedTopic={selectedTopic} />
+
       <DefaultNarrativeModal
         isOpen={narrativeIsOpen}
         onToggle={narrativeOnToggle}
