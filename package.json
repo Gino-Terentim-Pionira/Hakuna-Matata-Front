@@ -29,7 +29,7 @@
 		"typescript": "^3.9.5"
 	},
 	"scripts": {
-		"start": "REACT_APP_ENV=dev react-scripts start",
+		"start": "REACT_APP_ENV=dev REACT_APP_TEST_ENV=teste react-scripts start",
 		"build": "react-scripts build",
 		"build:prod": "REACT_APP_ENV=prod react-scripts build",
 		"build:stage": "REACT_APP_ENV=stage react-scripts build",
