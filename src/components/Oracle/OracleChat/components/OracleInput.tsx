@@ -124,7 +124,7 @@ export const OracleInput = ({
 				alignItems="center"
 			>
 				<Tooltip 
-					label={isInputReleased ? NOT_ENOUGH_MESSAGES : ORACLE_INPUT_BLOCK} 
+					label={IS_USER_HAS_MESSAGES ? ORACLE_INPUT_BLOCK : NOT_ENOUGH_MESSAGES} 
 					isDisabled={isInputReleased && IS_USER_HAS_MESSAGES} 
 					placement="left" 
 					hasArrow={true}

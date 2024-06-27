@@ -3,7 +3,8 @@ import trailEnum from '../utils/enums/trail';
 
 export interface IMessages {
     role: 'user' | 'assistant',
-    content: string
+    content: string,
+    isNew?: boolean
 }
 
 export interface IOracle {
