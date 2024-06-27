@@ -308,7 +308,7 @@ const LionPath = () => {
 				if (number_access < 3) {
 					setTrailAccess(trailAccessEnum.LION, `${number_access + 1}`);
 				} else {
-					setTrailAccess(trailAccessEnum.LION, '0');
+					setTrailAccess(trailAccessEnum.LION, '1');
 					const newScript = lionTeasing();
 					handleNarrativeModal(newScript);
 				}

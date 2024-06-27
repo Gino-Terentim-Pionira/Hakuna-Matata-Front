@@ -279,7 +279,7 @@ const CheetahPath = () => {
                 if (number_access < 3) {
                     setTrailAccess(trailAccessEnum.CHEETAH, `${number_access + 1}`);
                 } else {
-                    setTrailAccess(trailAccessEnum.CHEETAH, '0');
+                    setTrailAccess(trailAccessEnum.CHEETAH, '1');
                     const newScript = cheetahTeasing();
                     handleNarrativeModal(newScript);
                 }
