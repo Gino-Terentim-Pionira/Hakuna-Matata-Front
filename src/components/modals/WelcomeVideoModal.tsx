@@ -17,12 +17,15 @@ import fontTheme from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 import LoadingState from "../LoadingState";
 
-type ITutorialModal = {
+type IWelcomeVideoModal =
+ {
     isOpen: boolean,
     onClose: VoidFunction,
 }
 
-const TutorialModal: FC<ITutorialModal> = ({ isOpen, onClose}) => {
+const WelcomeVideoModal: 
+FC<IWelcomeVideoModal> 
+= ({ isOpen, onClose}) => {
     const [isLoad, setIsLoad] = useState(true);
     const handleCloseModal = () => {
             setIsLoad(true);
@@ -72,4 +75,4 @@ const TutorialModal: FC<ITutorialModal> = ({ isOpen, onClose}) => {
     )
 };
 
-export default TutorialModal;
+export default WelcomeVideoModal;

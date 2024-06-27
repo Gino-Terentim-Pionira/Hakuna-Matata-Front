@@ -19,7 +19,6 @@ import AlertModal from '../modals/AlertModal';
 import api from '../../services/api';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
-import { shiftCharacters, shuffleString } from '../../utils/algorithms/shuffleString';
 import { FINAL_QUIZ_SINK, WINSDOM_SOURCE } from '../../utils/constants/constants';
 
 interface IQuestions {
@@ -58,7 +57,6 @@ interface IQuizComponent {
 	imgName: string;
 	routeQuiz: string;
 	routeQuestions: string;
-	userStatus: number;
 	trail: number;
 }
 
@@ -70,7 +68,6 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	imgName,
 	routeQuiz,
 	routeQuestions,
-	userStatus,
 	trail
 }) => {
 	const { isOpen, onOpen } = useDisclosure();
@@ -219,28 +216,6 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 		setIsConfirmOpen(true);
 	};
 
-	const handleQuestionDescription = () => {
-		if(userStatus < 20) {
-			return shuffleString(questions[step]?.description, 'hard');
-		} else if (userStatus < 80) {
-			return shuffleString(questions[step]?.description, 'medium');
-		} else {
-			return questions[step]?.description
-		}
-		
-	}
-
-
-	const handleAlternative = (string: string) => {
-		if(userStatus < 20) {
-			return shiftCharacters(string, 'hard');
-		} else if (userStatus < 80) {
-			return shiftCharacters(string, 'medium');
-		} else {
-			return string;
-		}
-	}
-
 	useEffect(() => {
 		if (!delayButton) {
 			const timeout = setTimeout(() => {
@@ -316,7 +291,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 											fontFamily={fontTheme.fonts}
 											fontSize={{xl: '20px', lg: '18px', md: '16px', sm: '14px'}}
 										>
-											{handleQuestionDescription()}
+											{questions[step]?.description}
 										</Text>
 									</Flex>
 
@@ -356,7 +331,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 															fontSize='20px'
 														>
 															{
-																handleAlternative(item)
+																item
 															}
 														</Text>
 													</Flex>

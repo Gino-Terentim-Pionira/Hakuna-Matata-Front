@@ -25,7 +25,6 @@ import { useModule } from '../hooks';
 //styles
 import colorPalette from '../styles/colorPalette';
 import './../styles/fadeEffect.css';
-import atencao from '../assets/icons/atencao.png';
 
 // Components
 import AlertModal from '../components/modals/AlertModal';
@@ -37,9 +36,8 @@ import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import IgnoranceFilter from '../components/IgnoranceFilter';
 import { CHEETAH_FINAL } from '../utils/constants/mouseOverConstants';
-import { STATUS_LEVEL, AGILITY, STATUS_WARNING } from '../utils/constants/statusConstants';
-import { CONTINUE, GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
-import { getStatusPoints } from '../utils/statusUtils';
+import { STATUS_LEVEL, AGILITY } from '../utils/constants/statusConstants';
+import { getStatusPoints, hasEnougthStatusForFinalQuiz } from '../utils/statusUtils';
 
 // Requisitions
 import api from '../services/api';
@@ -59,8 +57,6 @@ import ignorance25 from '../assets/ignorance/cheetahPath/ignorance_25.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import BlockedModal from '../components/modals/BlockedModal';
-import GenericModal from '../components/modals/GenericModal';
-import { WAIT_TITLE, ALERT_CODE_SUBTITLE } from '../utils/constants/textConstants';
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 import trailEnum from '../utils/enums/trail';
@@ -122,7 +118,6 @@ const CheetahPath = () => {
     const [onError, setOnError] = useState(false);
     const [completeTrail, setCompleteTrail] = useState(false);
     const [isBlockedOpen, setIsBlockedOpen] = useState(false);
-    const [statusAlert, setStatusAlert] = useState(false);
 
     const ignoranceArray = [
         ignorance100,
@@ -204,16 +199,6 @@ const CheetahPath = () => {
         return res;
     };
 
-    const statusAlertInfo = {
-        title: WAIT_TITLE,
-        titleColor: colorPalette.progressOrange,
-        subtitle: STATUS_WARNING(AGILITY),
-        icon: atencao,
-        firstButton: CONTINUE,
-        secondButton: GENERIC_MODAL_TEXT,
-        alert: ALERT_CODE_SUBTITLE
-    }
-
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const alertOnClose = () => setIsConfirmOpen(false);
     const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
@@ -246,55 +231,6 @@ const CheetahPath = () => {
         setScript(script);
         narrativeOnOpen();
     }
-
-    const getUser = async () => {
-        try {
-            let userInfoData;
-            const _userId = sessionStorage.getItem('@pionira/userId');
-            if (moduleData.length === 0) {
-                await getNewModuleInfo();
-            }
-            if (!userData._id) {
-                const { data } = await api.get(`/user/${_userId}`);
-                setUserData(data);
-                userInfoData = data;
-            } else userInfoData = userData;
-
-            setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
-            const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
-            await checkNarrative();
-            await getFinalQuiz();
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 1000)
-
-            if (isComplete) {
-                setCheetahText(
-                    `Você já alcançou o máximo da sua agilidade  ${userInfoData.userName}! Vamos com tudo contra a ignorância!`,
-                );
-                setCompleteTrail(true);
-                if (userInfoData.narrative_status.trail1 === 3) {
-                    finalCheetahNarrative();
-                }
-            } else {
-                if (userInfoData.ignorance > 80)
-                    setCheetahText(
-                        'Tenha cuidado, viajante! Você não se preparou o suficente para vencer a Cheetah!',
-                    );
-                else if (userInfoData.ignorance > 40)
-                    setCheetahText(
-                        'Você está definitivamente mais forte, viajante! Mas temo que a Cheetah é um desafio muito grande para você!',
-                    );
-                else
-                    setCheetahText(
-                        'Você está pronto, viajante! Lembre-se de toda a sua jornada para vencer esse desafio!',
-                    );
-            }
-        } catch (error) {
-            console.log('oi')
-            setOnError(true);
-        }
-    };
 
     const getFinalQuiz = async () => {
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
@@ -353,7 +289,7 @@ const CheetahPath = () => {
     };
 
     const challengeNarrative = async () => {
-        const newChallengeScript = await cheetahFinalQuiz();
+        const newChallengeScript = await cheetahFinalQuiz(userData);
         handleNarrativeModal(newChallengeScript);
     };
 
@@ -361,7 +297,7 @@ const CheetahPath = () => {
         if (!completeTrail) {
             await challengeNarrative();
         }
-        modalOnOpen();
+        if (hasEnougthStatusForFinalQuiz(userData, AGILITY) == 'enoughStatus') modalOnOpen();
     }
 
     const finalCheetahNarrative = () => {
@@ -417,23 +353,6 @@ const CheetahPath = () => {
         if (!payLoading) isAlertOnClose();
     }
 
-    const handleStatusAlert = () => {
-        setStatusAlert(false);
-        alertQuizConfirm();
-    }
-
-    const closeStatusAlert = () => {
-        setStatusAlert(false);
-    }
-
-    const checkStatus = () => {
-        if (getStatusPoints(userData, AGILITY) < 80) {
-            setStatusAlert(true);
-        } else {
-            alertQuizConfirm();
-        }
-    }
-
     const handleStatusRequirement = () => {
         setBlockedMessage(`Seu nível de ${AGILITY} não é suficiente!`);
         setIsBlockedOpen(true);
@@ -450,7 +369,54 @@ const CheetahPath = () => {
     }
 
     useEffect(() => {
-        getUser();
+        const getUser = async () => {
+            try {
+                let userInfoData;
+                const _userId = sessionStorage.getItem('@pionira/userId');
+                if (moduleData.length === 0) {
+                    await getNewModuleInfo();
+                }
+                if (!userData._id) {
+                    const { data } = await api.get(`/user/${_userId}`);
+                    setUserData(data);
+                    userInfoData = data;
+                } else userInfoData = userData;
+
+                setIgnoranceFilter(userInfoData.ignorance, ignoranceArray);
+                const isComplete = userInfoData.finalQuizComplete.cheetahFinal;
+                await checkNarrative();
+                await getFinalQuiz();
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 1000)
+
+                if (isComplete) {
+                    setCheetahText(
+                        `Você já alcançou o máximo da sua agilidade  ${userInfoData.userName}! Vamos com tudo contra a ignorância!`,
+                    );
+                    setCompleteTrail(true);
+                    if (userInfoData.narrative_status.trail1 === 3) {
+                        finalCheetahNarrative();
+                    }
+                } else {
+                    if (userInfoData.ignorance > 80)
+                        setCheetahText(
+                            'Tenha cuidado, viajante! Você não se preparou o suficente para vencer a Cheetah!',
+                        );
+                    else if (userInfoData.ignorance > 40)
+                        setCheetahText(
+                            'Você está definitivamente mais forte, viajante! Mas temo que a Cheetah é um desafio muito grande para você!',
+                        );
+                    else
+                        setCheetahText(
+                            'Você está pronto, viajante! Lembre-se de toda a sua jornada para vencer esse desafio!',
+                        );
+                }
+            } catch (error) {
+                setOnError(true);
+            }
+        };
+        getUser().then();
     }, []);
 
     return (
@@ -669,7 +635,7 @@ const CheetahPath = () => {
                                                                 _hover={{
                                                                     transform: 'scale(1.1)',
                                                                 }}
-                                                                onClick={checkStatus}
+                                                                onClick={alertQuizConfirm}
                                                             >
                                                                 Vamos nessa!
                                                 </Button>
@@ -702,7 +668,6 @@ const CheetahPath = () => {
                                     imgName={cheetah}
                                     routeQuestions={'cheetahquestions'}
                                     routeQuiz={'finalcheetahquiz'}
-                                    userStatus={getStatusPoints(userData, AGILITY)}
                                     trail={1}
                                 />
                             </>
@@ -804,17 +769,6 @@ const CheetahPath = () => {
                 isOpen={isBlockedOpen}
                 onClose={() => { setIsBlockedOpen(false) }}
                 subtitle={blockedMessage}
-            />
-
-            <GenericModal
-                genericModalInfo={statusAlertInfo}
-                isOpen={statusAlert}
-                confirmFunction={handleStatusAlert}
-                secondFunction={closeStatusAlert}
-                closeFunction={closeStatusAlert}
-                isStaticModal={true}
-                loading={false}
-                error={false}
             />
         </>
     );
