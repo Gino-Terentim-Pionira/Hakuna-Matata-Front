@@ -64,6 +64,7 @@ import { numberCompletedModules } from '../utils/oracleUtils';
 import VideoBackground from '../components/VideoBackground';
 import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
+import { getTrailAccess, trailAccessEnum, setTrailAccess } from '../utils/localStorageUtils';
 
 interface IQuiz {
     _id: string;
@@ -272,18 +273,18 @@ const CheetahPath = () => {
             const newScript = cheetahBeggining();
             handleNarrativeModal(newScript);
         } else if (userInfoData.narrative_status.trail1 != 3) { // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
-            const cheetah_access = localStorage.getItem('@pionira/cheetah_access');
+            const cheetah_access = getTrailAccess(trailAccessEnum.CHEETAH);
             if (cheetah_access) {
                 const number_access = parseInt(cheetah_access);
                 if (number_access < 3) {
-                    localStorage.setItem('@pionira/cheetah_access', `${number_access + 1}`);
+                    setTrailAccess(trailAccessEnum.CHEETAH, `${number_access + 1}`);
                 } else {
-                    localStorage.setItem('@pionira/cheetah_access', '0');
+                    setTrailAccess(trailAccessEnum.CHEETAH, '1');
                     const newScript = cheetahTeasing();
                     handleNarrativeModal(newScript);
                 }
             } else {
-                localStorage.setItem('@pionira/cheetah_access', '1');
+                setTrailAccess(trailAccessEnum.CHEETAH, '1');
             }
         }
     };

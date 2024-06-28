@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState} from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
 	useDisclosure,
@@ -44,6 +44,8 @@ import GenericModal from '../components/modals/GenericModal';
 import VideoBackground from '../components/VideoBackground';
 import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
+import { motion } from 'framer-motion';
+import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 
 interface IScript {
 	name: string;
@@ -252,6 +254,12 @@ const MainPage = () => {
 		handleLogOutAlert();
 	};
 
+	const checkFirstTrailAcess = (trail: trailAccessEnum) => {
+		const trailFirstAcess = getTrailAccess(trail);
+
+		return !trailFirstAcess;
+	}
+
 	useEffect(() => {
 		const getUserRequisition = async () => {
 			if (userData._id) {
@@ -338,11 +346,16 @@ const MainPage = () => {
 										left='18vw'
 										top='49.5vh'
 									>
-										<TrailIcon
-											image={icon_cheeta}
-											onClick={goToPath2}
-											mouseOver={CHEETAH_TRAIL}
-										/>
+										<motion.div
+											animate={checkFirstTrailAcess(trailAccessEnum.CHEETAH) ? { scale: [0.8, 1, 0.8] } : false}
+											transition={{ loop: Infinity }}
+										>
+											<TrailIcon
+												image={icon_cheeta}
+												onClick={goToPath2}
+												mouseOver={CHEETAH_TRAIL}
+											/>
+										</motion.div>
 									</Flex>
 
 									<Flex

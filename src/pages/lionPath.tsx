@@ -61,6 +61,7 @@ import lionTeasing from '../utils/scripts/LionTrail/LionTeasing';
 import BlockedModal from '../components/modals/BlockedModal';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 import { LogOut } from '../services/auth';
+import { getTrailAccess, trailAccessEnum, setTrailAccess } from '../utils/localStorageUtils';
 
 interface IQuiz {
 	_id: string;
@@ -301,18 +302,18 @@ const LionPath = () => {
 			const newScript = await lionBeggining();
 			handleNarrativeModal(newScript);
 		} else if (userInfoData.narrative_status.trail2 != 3) { // Se não for a primera vez e se não for o diálogo final, começará a contagem de acessos
-			const lion_access = localStorage.getItem('@pionira/lion_access');
+			const lion_access = getTrailAccess(trailAccessEnum.LION);
 			if (lion_access) {
 				const number_access = parseInt(lion_access);
 				if (number_access < 3) {
-					localStorage.setItem('@pionira/lion_access', `${number_access + 1}`);
+					setTrailAccess(trailAccessEnum.LION, `${number_access + 1}`);
 				} else {
-					localStorage.setItem('@pionira/lion_access', '0');
+					setTrailAccess(trailAccessEnum.LION, '1');
 					const newScript = lionTeasing();
 					handleNarrativeModal(newScript);
 				}
 			} else {
-				localStorage.setItem('@pionira/lion_access', '1');
+				setTrailAccess(trailAccessEnum.LION, '1');
 			}
 		}
 	};
