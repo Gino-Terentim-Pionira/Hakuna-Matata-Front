@@ -84,10 +84,16 @@ export const Oracle = () => {
 				oracleObject.assistant_id,
 				content
 			);
+
+			const newMessages = response.map((message: IMessages) => ({
+				...message,
+				isNew: true
+			}));
+
 			setOracleObject((currentState) => (
 				{
 					...currentState,
-					messages: [...response, ...currentState.messages]
+					messages: [...newMessages, ...currentState.messages]
 				}
 			));
 			setIsMessageLoading(false);

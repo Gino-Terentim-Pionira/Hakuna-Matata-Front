@@ -94,6 +94,8 @@ export const OracleChat = ({
 							key={index}
 							message={item.content}
 							role={item.role}
+							isLastMessage={index === 0}
+							isNew={item.isNew}
 						/>
 					))
 				}
