@@ -1,8 +1,9 @@
 import React, { forwardRef, useEffect, useState } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Tooltip } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import Markdown from 'react-markdown';
 import './styles/OracleMessage.css';
+import { PiCopyBold } from "react-icons/pi";
 
 interface OracleMessageType {
     message: string;
@@ -23,15 +24,19 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
         alignSelf: IS_USER ? "end" : "start"
     };
     const [displayMessage, setDisplayMessage] = useState<string>("");
+    const [displayCopy, setDisplayCopy] = useState(true);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         if (IS_ANIMATED_RESPONSE) {
+            setDisplayCopy(false);
             let i = 0;
             const intervalId = setInterval(() => {
                 setDisplayMessage(message.slice(0, i));
                 i++;
                 if (i > message.length) {
                     clearInterval(intervalId);
+                    setDisplayCopy(true);
                 }
             }, 30);
             return () => clearInterval(intervalId);
@@ -40,22 +45,29 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
         }
     }, [message]);
 
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(message).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reseta a mensagem após 2 segundos
+        });
+    };
+
     return (
         <Box
             ref={ref}
             display="flex"
-            className={ isLoading ? 'oracleMessageContainer' : undefined}
+            className={isLoading ? 'oracleMessageContainer' : undefined}
             color={textProps.color}
             alignSelf={textProps.alignSelf}
             width="fit-content"
-            maxWidth={isLoading ? '100px' : '297px'}
+            maxWidth={isLoading ? '100px' : ''}
             height="fit-content"
             background={textProps.background}
             paddingX="12px"
             paddingY="8px"
             borderRadius={textProps.border}
             justifyContent={isLoading ? 'center' : 'start'}
-            flexDirection='column'
+            flexDirection='row'
             transition="height 1s ease"
             sx={{
                 "ul": {
@@ -78,9 +90,33 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
         >
             {isLoading ?
                 <div className="loader"></div>
-                : <Markdown>
-                    {(IS_ANIMATED_RESPONSE) ? displayMessage : message}
-                </Markdown>}
+                : <Box maxWidth='357px' >
+                    <Markdown>
+                        {(IS_ANIMATED_RESPONSE) ? displayMessage : message}
+                    </Markdown>
+                </Box>}
+            {
+                (!IS_USER && !isLoading) ?
+                    <Tooltip
+                        label={copied ? 'Copiado com sucesso!' : 'Clique para copiar'}
+                        closeOnClick={false}
+                        hasArrow
+                        placement='right'
+                    >
+                        <Box
+                            width='24px'
+                            height='24px'
+                            marginLeft='16px'
+                            color={colorPalette.grayBackground}
+                            onClick={copyToClipboard}
+                            cursor='pointer'
+                            visibility={displayCopy ? 'visible' : 'hidden'}
+                        >
+                            <PiCopyBold size='24px 24px' />
+                        </Box>
+                    </Tooltip>
+                    : null
+            }
         </Box>
     )
 });
