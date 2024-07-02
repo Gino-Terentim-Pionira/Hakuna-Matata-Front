@@ -83,26 +83,26 @@ export const hairOptions = [{
 
 export const hairColor = [{
     value: "Auburn",
-    label: "Castanho claro",
+    label: "Cor do cabelo e barba: Castanho claro",
 }, {
     value: "Black",
-    label: "Preto",
+    label: "Cor do cabelo e barba: Preto",
 }, {
     value: "Blonde",
-    label: "Loiro",
+    label: "Cor do cabelo e barba: Loiro",
 }, {
     value: "BlondeGolden",
-    label: "Loiro escuro",
+    label: "Cor do cabelo e barba: Loiro escuro",
 }, {
     value: "Brown",
-    label: "Castanho",
+    label: "Cor do cabelo e barba: Castanho",
 }, {
     value: "BrownDark",
-    label: "Castanho escuro",
+    label: "Cor do cabelo e barba: Castanho escuro",
 }, {
     value: "Platinum",
-    label: "Platinado",
+    label: "Cor do cabelo e barba: Platinado",
 }, {
     value: "Red",
-    label: "Ruivo",
+    label: "Cor do cabelo e barba: Ruivo",
 }];

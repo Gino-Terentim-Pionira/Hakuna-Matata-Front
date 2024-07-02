@@ -29,7 +29,7 @@ export const TutorialTopics = ({tutorialTopics, userData, onClick}: TutorialTopi
                 color={colorPalette.textColor}
                 textAlign={"center"}
             >
-                Descobrindo o Pionira
+                Descobrindo a Pionira
             </ModalHeader>
             <ModalBody paddingTop="32px" paddingBottom="52px" paddingX="24px"
                 sx={{
