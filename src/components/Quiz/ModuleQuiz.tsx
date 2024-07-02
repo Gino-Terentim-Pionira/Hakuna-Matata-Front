@@ -16,6 +16,7 @@ import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
 import GenericQuizModal from './GenericQuizModal';
 import { UserServices } from '../../services/UserServices';
+import UnlockAnimation from '../modals/UnlockAnimation';
 
 interface IStatus {
     name: string,
@@ -42,7 +43,6 @@ interface IModuleQuiz {
         _id: string;
     };
     validateUser: VoidFunction;
-    firsTimeChallenge: boolean;
     userQuizCoins: number;
     openFinalModuleNarrative: VoidFunction;
     remainingCoins: number;
@@ -55,7 +55,6 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     moduleInfo,
     onToggle,
     validateUser,
-    firsTimeChallenge,
     openFinalModuleNarrative,
     userQuizCoins,
     remainingCoins
@@ -75,6 +74,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
     const [videos, setVideos] = useState<string[]>([]);
+    const [animationIsOpen, setAnimationIsOpen] = useState(false);
 
     const onCorrect = (question_id: string) => {
         const questionUserId = userData.question_id;
@@ -104,6 +104,12 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
 
     const onEndQuiz = (passed: boolean) => {
         setPassed(passed);
+        setCoins(prevCoins => {
+            if (prevCoins >= remainingCoins) {
+                setAnimationIsOpen(true);
+            }
+            return prevCoins;
+        });
         onOpen();
     }
 
@@ -137,11 +143,13 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
 
                 await incrementStatus(_userId as string);
             }
-            firsTimeChallenge ? validateUser() : null
             await updateUserQuizTime();
             await getNewUserInfo();
             onClose();
-            coins >= remainingCoins ? openFinalModuleNarrative() : null
+            if (coins >= remainingCoins) {
+                validateUser();
+                openFinalModuleNarrative();
+            }
         } catch (error) {
             setOnError(true);
         }
@@ -177,25 +185,26 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     }
 
     return (
-    <>
-        <GenericQuizModal 
-            openModal={openModal}
-            closeModal={closeModal}
-            onToggle={onToggle}
-            questions_id={moduleInfo.questions_id}
-            onCorrect={onCorrect}
-            onWrong={onWrong}
-            onEndQuiz={onEndQuiz}
-            correctAnswers={correctAnswers}
-        />
-        <RewardModal
-            isOpen={isOpen}
-            genericModalInfo={rewardModalInfo()}
-            confirmFunction={updateUserCoins}
-            loading={isLoading}
-            error={onError}
-        />
-    </>
+        <>
+            <UnlockAnimation isOpen={animationIsOpen} onClose={()=>{setAnimationIsOpen(false)}} />
+            <GenericQuizModal
+                openModal={openModal}
+                closeModal={closeModal}
+                onToggle={onToggle}
+                questions_id={moduleInfo.questions_id}
+                onCorrect={onCorrect}
+                onWrong={onWrong}
+                onEndQuiz={onEndQuiz}
+                correctAnswers={correctAnswers}
+            />
+            <RewardModal
+                isOpen={isOpen}
+                genericModalInfo={rewardModalInfo()}
+                confirmFunction={updateUserCoins}
+                loading={isLoading}
+                error={onError}
+            />
+        </>
     );
 }
 
