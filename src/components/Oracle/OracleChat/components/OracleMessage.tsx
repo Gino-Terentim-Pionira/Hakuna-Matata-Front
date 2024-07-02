@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import Markdown from 'react-markdown';
@@ -8,17 +8,38 @@ interface OracleMessageType {
     message: string;
     role: 'user' | 'assistant';
     isLoading?: boolean;
+    isLastMessage?: boolean;
+    isNew?: boolean
 }
 
 const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref) => {
-    const { message, role, isLoading } = props;
+    const { message, role, isLoading, isLastMessage, isNew } = props;
     const IS_USER = role === 'user';
+    const IS_ANIMATED_RESPONSE = isLastMessage && !IS_USER && !isLoading && isNew;
     const textProps = {
         color: IS_USER ? colorPalette.oracleWhite : colorPalette.textColor,
         background: IS_USER ? colorPalette.primaryColor : colorPalette.whiteText,
         border: IS_USER ? "8px 8px 0px 8px" : "8px 8px 8px 0px",
         alignSelf: IS_USER ? "end" : "start"
-    }
+    };
+    const [displayMessage, setDisplayMessage] = useState<string>("");
+
+    useEffect(() => {
+        if (IS_ANIMATED_RESPONSE) {
+            let i = 0;
+            const intervalId = setInterval(() => {
+                setDisplayMessage(message.slice(0, i));
+                i++;
+                if (i > message.length) {
+                    clearInterval(intervalId);
+                }
+            }, 30);
+            return () => clearInterval(intervalId);
+        } else {
+            setDisplayMessage(message);
+        }
+    }, [message]);
+
     return (
         <Box
             ref={ref}
@@ -58,7 +79,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
             {isLoading ?
                 <div className="loader"></div>
                 : <Markdown>
-                    {message}
+                    {(IS_ANIMATED_RESPONSE) ? displayMessage : message}
                 </Markdown>}
         </Box>
     )

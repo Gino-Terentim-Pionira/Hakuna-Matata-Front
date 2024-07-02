@@ -46,7 +46,7 @@ const VideoModal: FC<IVideoModal> = ({
     id,
     name,
     url,
-    plataform = 'vimeo',
+    plataform = 'youtube',
     updateQuiz
 }) => {
     const [isVideoLoading, setIsVideoLoading] = useState(true);
