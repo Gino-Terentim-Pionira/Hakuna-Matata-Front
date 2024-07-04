@@ -11,7 +11,7 @@ const UnlockAnimation = (
         animation
     }: {
         isOpen: boolean,
-        onClose: () => void,
+        onClose: VoidFunction,
         animation: string
     },
 ) => {
@@ -24,7 +24,7 @@ const UnlockAnimation = (
         } else if (!isOpen && videoRef.current) {
             videoRef.current.pause();
         }
-    }, [isOpen]);
+    }, [isOpen, animation]);
 
     return (
         <AnimatePresence>
@@ -59,7 +59,7 @@ const UnlockAnimation = (
                             height='753px'
                             onEnded={onClose}
                         >
-                            <source src={animation} type="video/webm" />
+                            <source key={animation} src={animation} type="video/webm" />
                         </video>
                     </Box>
                 </motion.div>
