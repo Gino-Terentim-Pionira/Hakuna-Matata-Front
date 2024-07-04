@@ -17,6 +17,7 @@ import Cross from '../../assets/icons/cross.svg';
 import GenericQuizModal from './GenericQuizModal';
 import { UserServices } from '../../services/UserServices';
 import UnlockAnimation from '../modals/UnlockAnimation';
+import { FINISHED_MODULE } from '../../utils/constants/constants';
 
 interface IStatus {
     name: string,
@@ -186,7 +187,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
 
     return (
         <>
-            <UnlockAnimation isOpen={animationIsOpen} onClose={()=>{setAnimationIsOpen(false)}} />
+            <UnlockAnimation animation={FINISHED_MODULE} isOpen={animationIsOpen} onClose={()=>{setAnimationIsOpen(false)}} />
             <GenericQuizModal
                 openModal={openModal}
                 closeModal={closeModal}

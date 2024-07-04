@@ -3,9 +3,18 @@ import { Box } from '@chakra-ui/react';
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from 'framer-motion';
 import colorPalette from '../../styles/colorPalette';
-import finishedModule from '../../assets/animations/finished_module.webm';
 
-const UnlockAnimation = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+const UnlockAnimation = (
+    {
+        isOpen,
+        onClose,
+        animation
+    }: {
+        isOpen: boolean,
+        onClose: () => void,
+        animation: string
+    },
+) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -27,9 +36,9 @@ const UnlockAnimation = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => 
                     transition={{ duration: 0.2 }}
                     style={{
                         position: 'fixed',
-                        top:0,
-                        left:0,
-                        right:0,
+                        top: 0,
+                        left: 0,
+                        right: 0,
                         width: '100vw',
                         height: '100vh',
                         zIndex: 9999,
@@ -50,7 +59,7 @@ const UnlockAnimation = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => 
                             height='753px'
                             onEnded={onClose}
                         >
-                            <source src={finishedModule} type="video/webm" />
+                            <source src={animation} type="video/webm" />
                         </video>
                     </Box>
                 </motion.div>

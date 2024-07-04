@@ -65,7 +65,6 @@ import VideoBackground from '../components/VideoBackground';
 import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { getTrailAccess, trailAccessEnum, setTrailAccess } from '../utils/localStorageUtils';
-import UnlockAnimation from '../components/modals/UnlockAnimation';
 
 interface IQuiz {
     _id: string;
@@ -212,7 +211,6 @@ const CheetahPath = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [payLoading, setPayLoading] = useState<boolean>(false);
     const [blockedMessage, setBlockedMessage] = useState<string>('');
-    const [animationIsOpen, setAnimationIsOpen] = useState(false);
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -431,9 +429,6 @@ const CheetahPath = () => {
                         <IgnoranceFilter
                             ignoranceImage={ignoranceImage}
                         />
-
-                        <UnlockAnimation isOpen={animationIsOpen} onClose={()=>{setAnimationIsOpen(false)}} />
-
                         <Flex
                             width='92.5%'
                             justifyContent='space-between'
