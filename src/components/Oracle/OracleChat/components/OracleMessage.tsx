@@ -4,6 +4,7 @@ import colorPalette from '../../../../styles/colorPalette';
 import Markdown from 'react-markdown';
 import './styles/OracleMessage.css';
 import { PiCopyBold } from "react-icons/pi";
+import { COPIED, COPY } from '../../../../utils/constants/textConstants';
 
 interface OracleMessageType {
     message: string;
@@ -98,7 +99,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
             {
                 (!IS_USER && !isLoading) ?
                     <Tooltip
-                        label={copied ? 'Copiado com sucesso!' : 'Clique para copiar'}
+                        label={copied ? COPIED : COPY}
                         closeOnClick={false}
                         hasArrow
                         placement='right'
@@ -112,7 +113,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
                             cursor='pointer'
                             visibility={displayCopy ? 'visible' : 'hidden'}
                         >
-                            <PiCopyBold size='24px 24px' />
+                            <PiCopyBold size='24' />
                         </Box>
                     </Tooltip>
                     : null
