@@ -25,19 +25,27 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
         alignSelf: IS_USER ? "end" : "start"
     };
     const [displayMessage, setDisplayMessage] = useState<string>("");
-    const [displayCopy, setDisplayCopy] = useState(true);
-    const [copied, setCopied] = useState(false);
+    const [copyButtonInfo, setCopyButtonInfo] = useState({
+        displayCopy: true,
+        isCopied: false
+    });
 
     useEffect(() => {
         if (IS_ANIMATED_RESPONSE) {
-            setDisplayCopy(false);
+            setCopyButtonInfo({
+                ...copyButtonInfo,
+                displayCopy: false
+            });
             let i = 0;
             const intervalId = setInterval(() => {
                 setDisplayMessage(message.slice(0, i));
                 i++;
                 if (i > message.length) {
                     clearInterval(intervalId);
-                    setDisplayCopy(true);
+                    setCopyButtonInfo({
+                        ...copyButtonInfo,
+                        displayCopy: true
+                    });
                 }
             }, 30);
             return () => clearInterval(intervalId);
@@ -48,8 +56,14 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(message).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000); // Reseta a mensagem após 2 segundos
+            setCopyButtonInfo({
+                ...copyButtonInfo,
+                isCopied: true
+            });
+            setTimeout(() => setCopyButtonInfo({
+                ...copyButtonInfo,
+                isCopied: false
+            }), 2000);
         });
     };
 
@@ -99,7 +113,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
             {
                 (!IS_USER && !isLoading) ?
                     <Tooltip
-                        label={copied ? COPIED : COPY}
+                        label={copyButtonInfo.isCopied ? COPIED : COPY}
                         closeOnClick={false}
                         hasArrow
                         placement='right'
@@ -111,7 +125,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
                             color={colorPalette.grayBackground}
                             onClick={copyToClipboard}
                             cursor='pointer'
-                            visibility={displayCopy ? 'visible' : 'hidden'}
+                            visibility={copyButtonInfo.displayCopy ? 'visible' : 'hidden'}
                         >
                             <PiCopyBold size='24' />
                         </Box>
