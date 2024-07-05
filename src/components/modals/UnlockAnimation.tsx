@@ -48,15 +48,14 @@ const UnlockAnimation = (
                     }}
                 >
                     <Box alignSelf='flex-end' onClick={onClose} cursor="pointer">
-                        <IoClose size='75' color={colorPalette.closeButton} />
+                        <IoClose size='72' color={colorPalette.closeButton} />
                     </Box>
                     <Box alignSelf='center' justifySelf='center'>
                         <video
                             ref={videoRef}
                             autoPlay
                             playsInline
-                            width='890px'
-                            height='753px'
+                            width='1000px'
                             onEnded={onClose}
                         >
                             <source key={animation} src={animation} type="video/webm" />

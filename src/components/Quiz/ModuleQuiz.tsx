@@ -17,7 +17,7 @@ import Cross from '../../assets/icons/cross.svg';
 import GenericQuizModal from './GenericQuizModal';
 import { UserServices } from '../../services/UserServices';
 import UnlockAnimation from '../modals/UnlockAnimation';
-import { FINISHED_MODULE, ORACLE_UPDATED, ORACLE_AVAILABLE } from '../../utils/constants/constants';
+import { S3_VIDEO_FINISHED_MODULE, S3_VIDEO_ORACLE_UPDATED, S3_VIDEO_ORACLE_AVAILABLE } from '../../utils/constants/constants';
 import { numberCompletedModules } from '../../utils/oracleUtils';
 import { IQuiz } from '../../recoil/moduleRecoilState';
 
@@ -65,13 +65,13 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     const [onError, setOnError] = useState(false);
     const [videos, setVideos] = useState<string[]>([]);
     const [animationInfo, setAnimationInfo] = useState({
-        animation_url: FINISHED_MODULE,
+        animation_url: S3_VIDEO_FINISHED_MODULE,
         isOpen: false,
         onClose: () => onCloseFirstAnimation()
     });
 
     const onCloseFirstAnimation = () => {
-        const second_animation_url = numberCompletedModules(moduleData, userData.module_id) ? ORACLE_UPDATED : ORACLE_AVAILABLE;
+        const second_animation_url = numberCompletedModules(moduleData, userData.module_id) ? S3_VIDEO_ORACLE_UPDATED : S3_VIDEO_ORACLE_AVAILABLE;
         setAnimationInfo(prevState => ({
             ...prevState,
             isOpen: false

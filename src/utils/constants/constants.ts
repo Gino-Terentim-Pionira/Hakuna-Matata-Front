@@ -16,10 +16,8 @@ export const WINSDOM_SOURCE = 4;
 
 export const STATUS_POINTS_TO_UNLOCK_FINAL_QUIZ = 90;
 
-// S3 Assets
+export const S3_VIDEO_FINISHED_MODULE = 'https://pionira.s3.sa-east-1.amazonaws.com/animations/finished_module.webm';
 
-export const FINISHED_MODULE = 'https://pionira.s3.sa-east-1.amazonaws.com/animations/finished_module.webm';
+export const S3_VIDEO_ORACLE_AVAILABLE = 'https://pionira.s3.sa-east-1.amazonaws.com/animations/oracle_available.webm';
 
-export const ORACLE_AVAILABLE = 'https://pionira.s3.sa-east-1.amazonaws.com/animations/oracle_available.webm';
-
-export const ORACLE_UPDATED = 'https://pionira.s3.sa-east-1.amazonaws.com/animations/oracle_updated.webm';
+export const S3_VIDEO_ORACLE_UPDATED = 'https://pionira.s3.sa-east-1.amazonaws.com/animations/oracle_updated.webm';
