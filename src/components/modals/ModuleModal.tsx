@@ -116,7 +116,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const { userData, getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [buttonValidation, setButtonValidation] = useState(false);
-    const [isFirstTimeChallenge, setIsFirstTimeChallenge] = useState(true);
     const [totalCoins, setTotalCoins] = useState(0);
     const [onError, setOnError] = useState(false);
     const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0 });
@@ -368,7 +367,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                     closeModal={quizOnClose}
                     moduleInfo={moduleInfo}
                     onToggle={quizToggle}
-                    firsTimeChallenge={isFirstTimeChallenge}
                     validateUser={confirmationValidation}
                     userQuizCoins={totalCoins - remainingCoins}
                     remainingCoins={remainingCoins}
@@ -431,7 +429,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                     </div>
                                     <Flex justifyContent='space-around'>
                                         <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => {
-                                            setIsFirstTimeChallenge(false);
                                             closeConfirmationModal();
                                         }}>
                                             Realizar desafio denovo!

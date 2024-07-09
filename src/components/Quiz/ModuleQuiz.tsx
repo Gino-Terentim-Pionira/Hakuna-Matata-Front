@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
-import { useUser } from '../../hooks';
+import { useUser, useModule } from '../../hooks';
 import { updateModuleCooldown } from '../../services/moduleCooldown';
 
 // Components
@@ -16,6 +16,10 @@ import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
 import GenericQuizModal from './GenericQuizModal';
 import { UserServices } from '../../services/UserServices';
+import UnlockAnimation from '../modals/UnlockAnimation';
+import { S3_VIDEO_FINISHED_MODULE, S3_VIDEO_ORACLE_UPDATED, S3_VIDEO_ORACLE_AVAILABLE } from '../../utils/constants/constants';
+import { numberCompletedModules } from '../../utils/oracleUtils';
+import { IQuiz } from '../../recoil/moduleRecoilState';
 
 interface IStatus {
     name: string,
@@ -26,23 +30,8 @@ interface IModuleQuiz {
     openModal: boolean;
     closeModal: VoidFunction;
     onToggle: VoidFunction;
-    moduleInfo: {
-        questions_id: [{
-            _id: string,
-            description: string,
-            alternatives: string[],
-            answer: number,
-            coins: number,
-            score_point: number,
-            video_name: string,
-        }];
-        dificulty: string;
-        total_coins: number;
-        trail: string;
-        _id: string;
-    };
+    moduleInfo: IQuiz;
     validateUser: VoidFunction;
-    firsTimeChallenge: boolean;
     userQuizCoins: number;
     openFinalModuleNarrative: VoidFunction;
     remainingCoins: number;
@@ -55,7 +44,6 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     moduleInfo,
     onToggle,
     validateUser,
-    firsTimeChallenge,
     openFinalModuleNarrative,
     userQuizCoins,
     remainingCoins
@@ -63,6 +51,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     const userServices = new UserServices();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { getNewUserInfo, userData } = useUser();
+    const { moduleData } = useModule();
     const length = moduleInfo.questions_id.length;
     const [coins, setCoins] = useState(0);
     const [status, setStatus] = useState<IStatus>({
@@ -75,10 +64,34 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
     const [videos, setVideos] = useState<string[]>([]);
+    const [animationInfo, setAnimationInfo] = useState({
+        animation_url: S3_VIDEO_FINISHED_MODULE,
+        isOpen: false,
+        onClose: () => onCloseFirstAnimation()
+    });
+
+    const onCloseFirstAnimation = () => {
+        const second_animation_url = numberCompletedModules(moduleData, userData.module_id) ? S3_VIDEO_ORACLE_UPDATED : S3_VIDEO_ORACLE_AVAILABLE;
+        setAnimationInfo(prevState => ({
+            ...prevState,
+            isOpen: false
+        }));
+
+        setTimeout(() => {
+            setAnimationInfo({
+                isOpen: true,
+                animation_url: second_animation_url,
+                onClose: () => setAnimationInfo(prevState => ({
+                    ...prevState,
+                    isOpen: false
+                }))
+            });
+        }, 30);
+    };
 
     const onCorrect = (question_id: string) => {
         const questionUserId = userData.question_id;
-        const currentQuestion = moduleInfo.questions_id.find((item) => item._id == question_id);
+        const currentQuestion = moduleInfo.questions_id.find((item) => item._id === question_id);
         const questionsCoins = currentQuestion?.coins as number;
         const questionStatus = currentQuestion?.score_point as number;
 
@@ -94,29 +107,38 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
 
             setQuestionsId([...questionsId, question_id]);
         }
-    }
+    };
 
     const onWrong = (question_id: string) => {
-        const currentQuestion = moduleInfo.questions_id.find((item) => item._id == question_id);
+        const currentQuestion = moduleInfo.questions_id.find((item) => item._id === question_id);
         const video_name = currentQuestion?.video_name as string;
         updateVideoArray(videos, video_name);
-    }
+    };
 
     const onEndQuiz = (passed: boolean) => {
         setPassed(passed);
+        setCoins(prevCoins => {
+            if (prevCoins >= remainingCoins) {
+                setAnimationInfo(prevState => ({
+                    ...prevState,
+                    isOpen: true
+                }));
+            }
+            return prevCoins;
+        });
         onOpen();
-    }
+    };
 
     const updateVideoArray = (videoArray: string[], video_name: string) => {
-        const hasVideoname = videoArray.find((item) => item == video_name);
+        const hasVideoname = videoArray.find((item) => item === video_name);
         if (!hasVideoname) {
             setVideos([...videoArray, video_name]);
         }
-    }
+    };
 
     const incrementStatus = async (userId: string) => {
         await UpdateStatus(userData, userId, status.name, status.points);
-    }
+    };
 
     const updateUserQuizTime = async () => {
         try {
@@ -125,27 +147,29 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
         } catch (error) {
             setOnError(true);
         }
-    }
+    };
 
     const updateUserCoins = async () => {
         try {
             setIsLoading(true);
-            const SHOULD_UPDATE_USER_FINISHED_QUESTIONS_AND_COINS = userQuizCoins < moduleInfo.total_coins && questionsId;
+            const SHOULD_UPDATE_USER_FINISHED_QUESTIONS_AND_COINS = userQuizCoins < moduleInfo.total_coins && questionsId.length > 0;
             if (SHOULD_UPDATE_USER_FINISHED_QUESTIONS_AND_COINS) {
                 const _userId = sessionStorage.getItem('@pionira/userId');
                 await userServices.addQuestionsToUser(_userId as string, questionsId);
 
                 await incrementStatus(_userId as string);
             }
-            firsTimeChallenge ? validateUser() : null
             await updateUserQuizTime();
             await getNewUserInfo();
             onClose();
-            coins >= remainingCoins ? openFinalModuleNarrative() : null
+            if (coins >= remainingCoins) {
+                validateUser();
+                openFinalModuleNarrative();
+            }
         } catch (error) {
             setOnError(true);
         }
-    }
+    };
 
     const rewardModalInfo = () => {
         if (userQuizCoins >= moduleInfo.total_coins)
@@ -154,7 +178,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
                 titleColor: colorPalette.inactiveButton,
                 subtitle: 'Você já conseguiu provar todo o seu valor nesse desafio! Pode seguir adiante com sua jornada, caro viajante!',
                 icon: Cheetah
-            }
+            };
         if (passed)
             return {
                 title: 'Quiz finalizado!',
@@ -164,7 +188,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
                 coins,
                 status,
                 video_names: videos
-            }
+            };
         return {
             title: 'Que pena!',
             titleColor: colorPalette.closeButton,
@@ -173,30 +197,31 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
             coins,
             status,
             video_names: videos
-        }
-    }
+        };
+    };
 
     return (
-    <>
-        <GenericQuizModal 
-            openModal={openModal}
-            closeModal={closeModal}
-            onToggle={onToggle}
-            questions_id={moduleInfo.questions_id}
-            onCorrect={onCorrect}
-            onWrong={onWrong}
-            onEndQuiz={onEndQuiz}
-            correctAnswers={correctAnswers}
-        />
-        <RewardModal
-            isOpen={isOpen}
-            genericModalInfo={rewardModalInfo()}
-            confirmFunction={updateUserCoins}
-            loading={isLoading}
-            error={onError}
-        />
-    </>
+        <>
+            <UnlockAnimation animation={animationInfo.animation_url} isOpen={animationInfo.isOpen} onClose={animationInfo.onClose} key={animationInfo.animation_url} />
+            <GenericQuizModal
+                openModal={openModal}
+                closeModal={closeModal}
+                onToggle={onToggle}
+                questions_id={moduleInfo.questions_id}
+                onCorrect={onCorrect}
+                onWrong={onWrong}
+                onEndQuiz={onEndQuiz}
+                correctAnswers={correctAnswers}
+            />
+            <RewardModal
+                isOpen={isOpen}
+                genericModalInfo={rewardModalInfo()}
+                confirmFunction={updateUserCoins}
+                loading={isLoading}
+                error={onError}
+            />
+        </>
     );
-}
+};
 
 export default ModuleQuiz;

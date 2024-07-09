@@ -429,7 +429,6 @@ const CheetahPath = () => {
                         <IgnoranceFilter
                             ignoranceImage={ignoranceImage}
                         />
-
                         <Flex
                             width='92.5%'
                             justifyContent='space-between'
