@@ -111,26 +111,25 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
                     </Markdown>
                 </Box>}
             {
-                (!IS_USER && !isLoading) ?
-                    <Tooltip
-                        label={copyButtonInfo.isCopied ? COPIED : COPY}
-                        closeOnClick={false}
-                        hasArrow
-                        placement='right'
+                (!IS_USER && !isLoading) &&
+                <Tooltip
+                    label={copyButtonInfo.isCopied ? COPIED : COPY}
+                    closeOnClick={false}
+                    hasArrow
+                    placement='right'
+                >
+                    <Box
+                        width='24px'
+                        height='24px'
+                        marginLeft='16px'
+                        color={colorPalette.grayBackground}
+                        onClick={copyToClipboard}
+                        cursor='pointer'
+                        visibility={copyButtonInfo.displayCopy ? 'visible' : 'hidden'}
                     >
-                        <Box
-                            width='24px'
-                            height='24px'
-                            marginLeft='16px'
-                            color={colorPalette.grayBackground}
-                            onClick={copyToClipboard}
-                            cursor='pointer'
-                            visibility={copyButtonInfo.displayCopy ? 'visible' : 'hidden'}
-                        >
-                            <PiCopyBold size='24' />
-                        </Box>
-                    </Tooltip>
-                    : null
+                        <PiCopyBold size='24' />
+                    </Box>
+                </Tooltip>
             }
         </Box>
     )
