@@ -29,8 +29,8 @@ export const COINS = 'Quantidade atual de Joias';
 export const MODULE_INFO = (type: 'blocked' | 'incomplete' | 'complete', totalAnsweredQuestions: number | null, totalQuestions: number | null) => {
     const module_info = {
         'blocked' : {
-            description: "Resolver modulo anterior para acessar!",
-            availabilityInfo: "Modulo bloqueado",
+            description: "Resolva o módulo anterior para acessar!",
+            availabilityInfo: "Módulo bloqueado",
             availabilityColor: colorPalette.closeButton
         },
         'incomplete' : {

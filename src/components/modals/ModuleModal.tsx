@@ -194,10 +194,18 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         const totalNumberOfQuestions = moduleInfo.questions_id.length;
 
         if (isBlocked || !statusRequirement) {
-            setIconInfo({
-                ...iconInfo,
-                ...MODULE_INFO('blocked', 0,0)
-            })
+            if(quizIndex === 0) {
+                setIconInfo({
+                    label: "Módulo indisponível",
+                    ...MODULE_INFO('blocked', 0,0),
+                    description: "Este módulo não está disponível ainda, aguarde para mais atualizações..."
+                })
+            } else {
+                setIconInfo({
+                    ...iconInfo,
+                    ...MODULE_INFO('blocked', 0,0)
+                })
+            }
             setImage(button_blocked);
         } else if (buttonValidation || userData.module_id?.includes(moduleInfo._id)) {
             setIconInfo({
