@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './global.css';
 import { BrowserRouter as HashRouter, Route, Switch } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoutes';
 import { AuthProvider } from './contexts/authContext';
