@@ -15,7 +15,8 @@ type NavIconProps = {
     isMap?: boolean;
     mouseOver: string;
     marginTop?: string;
-    position?: PositionProps
+    position?: PositionProps;
+    cursor?: string;
 }
 
 const NavIcon: FC<NavIconProps> = ({
@@ -25,7 +26,8 @@ const NavIcon: FC<NavIconProps> = ({
     isMap,
     mouseOver,
     marginTop,
-    position
+    position,
+    cursor = 'pointer'
 }) => {
     const { userData } = useUser();
 
@@ -53,7 +55,7 @@ const NavIcon: FC<NavIconProps> = ({
         >
             <Center
                 _hover={{
-                    cursor: 'pointer',
+                    cursor: cursor,
                     transform: 'scale(1.1)',
                 }}
                 transition='all 0.2s ease'
