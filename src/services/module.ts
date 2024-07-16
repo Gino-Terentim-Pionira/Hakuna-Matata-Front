@@ -7,4 +7,8 @@ async function getDailyModule() {
     return response;
 }
 
-export { getDailyModule };
+const getUserAnsweredQuestions = async (module_name: string) => {
+    return await api.get(`/module/userCompleteQuestions/${module_name}`);
+}
+
+export { getDailyModule, getUserAnsweredQuestions };

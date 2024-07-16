@@ -1,5 +1,7 @@
 // Mouseover Texts
 
+import colorPalette from "../../styles/colorPalette";
+
 export const LOGIN = 'Fazer Login';
 
 export const REGISTER = 'Fazer Cadastro';
@@ -24,11 +26,27 @@ export const WISDOM = 'Seu progresso na luta contra a Ignorância';
 
 export const COINS = 'Quantidade atual de Joias';
 
-export const INCOMPLETE_MODULE = (name: string) => `Módulo ${name}: incompleto`;
+export const MODULE_INFO = (type: 'blocked' | 'incomplete' | 'complete', totalAnsweredQuestions: number | null, totalQuestions: number | null) => {
+    const module_info = {
+        'blocked' : {
+            description: "Resolva o módulo anterior para acessar!",
+            availabilityInfo: "Módulo bloqueado",
+            availabilityColor: colorPalette.closeButton
+        },
+        'incomplete' : {
+            description: `${totalAnsweredQuestions}/${totalQuestions} questões acertadas!`,
+            availabilityInfo: "Acesso liberado",
+            availabilityColor: colorPalette.inactiveButton
+        },
+        'complete' : {
+            description: `${totalAnsweredQuestions}/${totalQuestions} questões acertadas!`,
+            availabilityInfo: "100% concluído",
+            availabilityColor: colorPalette.correctAnswer
+        }
+    }
 
-export const COMPLETE_MODULE = (name: string) => `Módulo ${name}: completo`;
-
-export const BLOCKED_MODULE = 'Módulo Bloqueado';
+    return module_info[type];
+}
 
 export const SURPRISE_CHEST = 'Abrir baú surpresa';
 

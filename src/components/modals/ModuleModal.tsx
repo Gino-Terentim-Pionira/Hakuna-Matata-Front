@@ -39,8 +39,9 @@ import button_blocked from '../../assets/icons/button_blocked.png';
 import colorPalette from '../../styles/colorPalette';
 import { errorCases } from '../../utils/errors/errorsCases';
 import VideoIcon from '../../assets/icons/video.png';
-import { BLOCKED_MODULE, COMPLETE_MODULE, INCOMPLETE_MODULE } from '../../utils/constants/mouseOverConstants';
-import { getStatusPoints, getStatusNick } from '../../utils/statusUtils';
+import { MODULE_INFO } from '../../utils/constants/mouseOverConstants';
+import { getStatusPoints } from '../../utils/statusUtils';
+import { getUserAnsweredQuestions } from "../../services/module";
 
 interface IModuleModal {
     quizIndex: number;
@@ -120,7 +121,12 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [onError, setOnError] = useState(false);
     const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0 });
     const [remainingCoins, setRemainingCoins] = useState(0);
-    const [label, setLabel] = useState<string>();
+    const [iconInfo, setIconInfo] = useState({
+        label: moduleInfo.module_name,
+        description: "",
+        availabilityInfo: "",
+        availabilityColor: ""
+    })
     const [image, setImage] = useState<string>();
 
     const moduleStatusName = moduleInfo.status_requirement.status_name;
@@ -184,39 +190,59 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         videoOnOpen();
     }
 
-    const defineProperties = () => {
+    const defineProperties = async () => {
+        const totalNumberOfQuestions = moduleInfo.questions_id.length;
+
         if (isBlocked || !statusRequirement) {
-            setLabel(BLOCKED_MODULE);
+            if(quizIndex === 0) {
+                setIconInfo({
+                    label: "Módulo indisponível",
+                    ...MODULE_INFO('blocked', 0,0),
+                    description: "Este módulo não está disponível ainda, aguarde para mais atualizações..."
+                })
+            } else {
+                setIconInfo({
+                    ...iconInfo,
+                    ...MODULE_INFO('blocked', 0,0)
+                })
+            }
             setImage(button_blocked);
         } else if (buttonValidation || userData.module_id?.includes(moduleInfo._id)) {
-            setLabel(COMPLETE_MODULE(moduleInfo.module_name));
+            setIconInfo({
+                ...iconInfo,
+                ...MODULE_INFO('complete', totalNumberOfQuestions,totalNumberOfQuestions),
+            })
             setImage(button_on);
         } else {
-            setLabel(INCOMPLETE_MODULE(moduleInfo.module_name));
+            let totalNumberOfAnsweredQuesitons = 0;
+            try {
+                const response = await getUserAnsweredQuestions(moduleInfo.module_name);
+                totalNumberOfAnsweredQuesitons = response.data
+            } catch (e) {
+                totalNumberOfAnsweredQuesitons = 0
+            }
+
+            setIconInfo({
+                ...iconInfo,
+                ...MODULE_INFO('incomplete', totalNumberOfAnsweredQuesitons,totalNumberOfQuestions),
+            })
             setImage(button_off);
         }
     }
 
     const renderTooltip = () => {
-        if (userStatus >= moduleStatus)
-            return <>
-                <p>{label}</p>
-                {!isBlocked && <p style={{ fontWeight: 'bold', color: colorPalette.correctAnswer }}>
-                    Acesso liberado
-                </p>}
-            </>
-        else
-            return <>
-                <p>{label}</p>
-                {!isBlocked && <p>Para acessar: <span style={{ fontWeight: 'bold', color: colorPalette.closeButton }}>
-                    {(moduleStatus)}% {getStatusNick(moduleStatusName)}
-                </span></p>}
-            </>
+        return <>
+            <p style={{ fontWeight: 'bold'}} >{iconInfo.label}</p>
+            <p style={{ fontSize: '12px', marginTop: '2px'}} >{iconInfo.description}</p>
+            <p style={{ fontWeight: 'bold', color: iconInfo.availabilityColor, marginTop: '8px' }}>
+                {iconInfo.availabilityInfo}
+            </p>
+        </>
     }
 
     useEffect(() => {
         setTotalCoins(moduleInfo.total_coins);
-        defineProperties();
+        defineProperties().finally();
     }, [userData, statusRequirement])
 
     return (
@@ -226,7 +252,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 placement='top'
                 gutter={12}
                 label={renderTooltip()}
-
             >
                 <Flex
                     position="absolute"
