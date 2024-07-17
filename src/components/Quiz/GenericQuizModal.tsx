@@ -1,4 +1,4 @@
-import { Flex, Text, Modal, ModalOverlay, ModalContent, Box, ModalBody, ModalCloseButton, Center } from '@chakra-ui/react';
+import { Flex, Text, Modal, ModalOverlay, ModalContent, Box, ModalBody, Center } from '@chakra-ui/react';
 import React, { FC, useState, useEffect } from 'react';
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
