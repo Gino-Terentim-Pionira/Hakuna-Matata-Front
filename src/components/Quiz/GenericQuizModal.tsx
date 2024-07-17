@@ -114,7 +114,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
 
     return (
         <>
-            <Modal isOpen={openModal} onClose={closeModal} size='full' >
+            <Modal isOpen={openModal} onClose={closeModal} size='full' closeOnEsc={false} >
                 <ModalOverlay />
                 <ModalContent margin="0" display='flex' justifyContent='center' alignItems='center' >
                     <Box
@@ -130,7 +130,6 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                     />
 
                     <ModalBody display='flex' w='100%' alignItems='center' flexDirection='column' >
-                        <ModalCloseButton color={colorPalette.closeButton} />
                         <Flex w='94%' h='97.5vh' flexDirection='column' alignItems='center' justifyContent='space-between' >
                             <Flex w='100%' flexDirection='column'>
                                 <Text marginTop='0.5rem' fontFamily={fontTheme.fonts} fontSize='30' fontWeight='bold' color={colorPalette.secondaryColor} >Q {step + 1}/{length}</Text>
