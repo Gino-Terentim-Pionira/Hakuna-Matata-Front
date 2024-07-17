@@ -56,7 +56,8 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
         lunchOnOpen();
     }
 
-    const handleCloseFreeLunch = async (trail: trailEnum, user: IUser) => {
+    const handleCloseFreeLunch = async (trail: trailEnum) => {
+        const user = userData;
         const narrateiveObject = {
             'Cheetah': {
                 trail1: 2,
@@ -81,6 +82,12 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
         lunchOnClose();
     }
 
+    const handleMainFreeLunch = async (userId: string) => {
+        await api.patch(`/user/updateFirstTime/${userId}`, {
+            isFirstTimeAppLaunching: false,
+        });
+    }
+
     //logic for checking and switching if first time is set to true
     const updateNarrative = async () => {
         try {
@@ -93,12 +100,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             } else user = userData;
 
             if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
-                const handleMainFreeLunch = async () => {
-                    await api.patch(`/user/updateFirstTime/${user._id}`, {
-                        isFirstTimeAppLaunching: false,
-                    });
-                }
-                setFreeLunchClose(() => handleMainFreeLunch);
+                setFreeLunchClose(() => handleMainFreeLunch.bind(null, user._id));
                 lunchOnOpen();
             } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha  
                 if (narrative === 'cheetah') {
@@ -106,19 +108,13 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                         name: AGILITY,
                         points: 20
                     });
-                    const handleCheetahFreeLunch = () => {
-                        handleCloseFreeLunch(trailEnum.CHEETAH, user)
-                    }
-                    setFreeLunchClose(() => handleCheetahFreeLunch);
+                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.CHEETAH, user));
                 } else if (narrative === 'lion') {
                     setFreeStatus({
                         name: LEADERSHIP,
                         points: 20
                     });
-                    const handleLionFreeLunch = () => {
-                        handleCloseFreeLunch(trailEnum.LION, user)
-                    }
-                    setFreeLunchClose(() => handleLionFreeLunch);
+                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.LION, user));
                 }
                 await getNewUserInfo();
                 tutorialOnOpen();
