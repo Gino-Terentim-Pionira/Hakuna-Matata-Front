@@ -127,7 +127,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         availabilityInfo: "",
         availabilityColor: ""
     })
-    const [image, setImage] = useState<string>();
+    const [image, setImage] = useState(button_off);
 
     const moduleStatusName = moduleInfo.status_requirement.status_name;
     const userStatus = getStatusPoints(userData, moduleStatusName);
