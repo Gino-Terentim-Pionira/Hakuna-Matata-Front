@@ -108,13 +108,13 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                         name: AGILITY,
                         points: 20
                     });
-                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.CHEETAH, user));
+                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.CHEETAH));
                 } else if (narrative === 'lion') {
                     setFreeStatus({
                         name: LEADERSHIP,
                         points: 20
                     });
-                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.LION, user));
+                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.LION));
                 }
                 await getNewUserInfo();
                 tutorialOnOpen();
