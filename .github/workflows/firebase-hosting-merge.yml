@@ -6,7 +6,6 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - stage
-      - fix/free_lunch_loop
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
