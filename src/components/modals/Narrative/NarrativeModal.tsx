@@ -41,7 +41,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
 }) => {
     const { userData, setUserData, getNewUserInfo } = useUser();
     const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
-    const [freeLunchClose, setFreeLunchClose] = useState<VoidFunction>(() => lunchOnClose());
+    const [freeLunchClose, setFreeLunchClose] = useState<() => Promise<void>>(async () => lunchOnClose());
 
     const freeCoins = FREE_LUNCH_SOURCE;
     const [freeStatus, setFreeStatus] = useState<IStatus>();
