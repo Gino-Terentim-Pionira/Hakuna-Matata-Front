@@ -59,7 +59,7 @@ export const OracleHeader = ({
 						<Text fontWeight="medium" fontSize="24px">
 							{userData.oracle_messages || "0"}
 						</Text>
-						<Text ml="4px" fontSize="26px">Perguntas</Text>
+						<Text ml="4px" fontSize="26px">Tokens</Text>
 					</Center>
 				</Flex>
 				<Flex ml="16px">

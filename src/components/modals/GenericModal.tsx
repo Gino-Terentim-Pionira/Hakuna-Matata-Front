@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, {FC, ReactElement, useState} from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -35,7 +35,7 @@ interface IGenericModal {
         title: string;
         titleColor: string;
         subtitle: string;
-        icon: string;
+        icon: string | ReactElement;
         coins?: number;
         status?: {
             name: string,
@@ -125,11 +125,13 @@ const GenericModal: FC<IGenericModal> = ({
                                             justifyContent="center"
                                             alignItems="center"
                                         >
-                                            <Image
-                                                src={icon}
-                                                marginLeft={icon === Cheetah ? '8px' : undefined}
-                                                marginTop={icon === Cheetah ? '8px' : undefined}
-                                            />
+                                            {
+                                                typeof icon === 'string' ? <Image
+                                                    src={icon}
+                                                    marginLeft={icon === Cheetah ? '8px' : undefined}
+                                                    marginTop={icon === Cheetah ? '8px' : undefined}
+                                                /> : icon
+                                            }
                                         </Center>
                                         <Box
                                             marginTop='8px'

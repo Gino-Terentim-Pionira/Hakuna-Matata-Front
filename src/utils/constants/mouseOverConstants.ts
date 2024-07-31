@@ -68,10 +68,12 @@ export const DAILY_QUIZ = "Desafio diário";
 
 export const ORACLE = "Consultar o Oráculo";
 
+export const BLOCKED_ORACLE = "Complete o primeiro módulo para desbloquear o Oráculo!";
+
 export const NOT_ENOUGH_STATUS = (statusName: string) => `Seu nivel de ${statusName} não é o suficiente para comprar esse item!`
 
 export const  NOT_ENOUGHT_COINS = 'Você não tem moedas suficientes!';
 
-export const NOT_ENOUGH_MESSAGES = 'É necessário comprar um pacote de perguntas na loja para falar com o Oráculo';
+export const NOT_ENOUGH_MESSAGES = 'É necessário comprar um pacote de tokens na loja para falar com o Oráculo';
 
 export const ORACLE_INPUT_BLOCK = 'É necessário finalizar o Desafio Final da trilha para poder conversar livremente com o Oráculo';

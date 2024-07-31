@@ -189,10 +189,11 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
                 status,
                 video_names: videos
             };
+        const oracle_text = numberCompletedModules(moduleData, userData.module_id) ? 'aprimorar' : 'desbloquear';
         return {
             title: 'Que pena!',
             titleColor: colorPalette.closeButton,
-            subtitle: `Você errou ${length - correctAnswers} de ${length} questões! Tente novamente em 30 minutos`,
+            subtitle: `Você errou ${length - correctAnswers} de ${length} questões, acerte todas as questões para ${oracle_text} o Oráculo! Tente novamente em 30 minutos`,
             icon: Cross,
             coins,
             status,

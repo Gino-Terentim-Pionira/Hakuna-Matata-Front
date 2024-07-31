@@ -315,7 +315,7 @@ const MainPage = () => {
 						>
 							<NavActions logout={logout} dontShowMap />
 							{narrativeIsOpen ? null : (
-								<IgnorancePremiumIcons ignorance={userData.ignorance} />
+								<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
 							)}
 						</Flex>
 

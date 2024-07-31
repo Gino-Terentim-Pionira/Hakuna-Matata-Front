@@ -12,6 +12,8 @@ import { FREE_LUNCH_SOURCE } from '../../../utils/constants/constants';
 import DefaultNarrativeModal from './DefaultNarrativeModal';
 import { AGILITY, LEADERSHIP } from '../../../utils/constants/statusConstants';
 import { TutorialModal } from '../Tutorial/TutorialModal';
+import trailEnum from '../../../utils/enums/trail';
+import { IUser } from '../../../recoil/useRecoilState';
 
 interface IScript {
     name: string,
@@ -39,6 +41,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
 }) => {
     const { userData, setUserData, getNewUserInfo } = useUser();
     const { isOpen: lunchIsOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure();
+    const [freeLunchClose, setFreeLunchClose] = useState<() => Promise<void>>(async () => lunchOnClose());
 
     const freeCoins = FREE_LUNCH_SOURCE;
     const [freeStatus, setFreeStatus] = useState<IStatus>();
@@ -53,10 +56,42 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
         lunchOnOpen();
     }
 
+    const handleCloseFreeLunch = async (trail: trailEnum) => {
+        const user = userData;
+        const narrateiveObject = {
+            'Cheetah': {
+                trail1: 2,
+                trail2: user.narrative_status.trail2
+            },
+            'Leão e Leoa': {
+                trail1: user.narrative_status.trail1,
+                trail2: 2
+            }
+            ,'Mamba Negra': {
+                trail1: user.narrative_status.trail1,
+                trail2: user.narrative_status.trail2
+            }
+        }
+        await api.patch(`/user/narrative/${user._id}`, {
+            narrative_status: {
+                ...user.narrative_status,
+                ...narrateiveObject[trail]
+            }
+        });
+
+        lunchOnClose();
+    }
+
+    const handleMainFreeLunch = async (userId: string) => {
+        await api.patch(`/user/updateFirstTime/${userId}`, {
+            isFirstTimeAppLaunching: false,
+        });
+    }
+
     //logic for checking and switching if first time is set to true
     const updateNarrative = async () => {
         try {
-            let user;
+            let user: IUser;
             const _userId: SetStateAction<string> | null = sessionStorage.getItem('@pionira/userId');
             if (!userData._id) {
                 const res = await api.get(`/user/${_userId}`);
@@ -65,33 +100,21 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
             } else user = userData;
 
             if (user.isFirstTimeAppLaunching) { //Verifica se é a primeira vez do usuário na plataforma
-                await api.patch(`/user/updateFirstTime/${user._id}`, {
-                    isFirstTimeAppLaunching: false,
-                });
+                setFreeLunchClose(() => handleMainFreeLunch.bind(null, user._id));
                 lunchOnOpen();
-            } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha                
+            } else if (user.narrative_status.trail1 === 0 && user.narrative_status.trail2 === 0) { //Verifica se é a primeira vez do uso em qualquer trilha  
                 if (narrative === 'cheetah') {
                     setFreeStatus({
                         name: AGILITY,
                         points: 20
                     });
-                    await api.patch(`/user/narrative/${_userId}`, {
-                        narrative_status: {
-                            ...user.narrative_status,
-                            trail1: 2
-                        }
-                    });
+                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.CHEETAH));
                 } else if (narrative === 'lion') {
                     setFreeStatus({
                         name: LEADERSHIP,
                         points: 20
                     });
-                    await api.patch(`/user/narrative/${_userId}`, {
-                        narrative_status: {
-                            ...user.narrative_status,
-                            trail2: 2
-                        }
-                    });
+                    setFreeLunchClose(() => handleCloseFreeLunch.bind(null, trailEnum.LION));
                 }
                 await getNewUserInfo();
                 tutorialOnOpen();
@@ -144,7 +167,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
                 isOpen={lunchIsOpen}
                 coins={freeCoins}
                 score={freeStatus}
-                onClose={() => { lunchOnClose() }}
+                onClose={freeLunchClose}
             />
             <TutorialModal 
                 isOpen={tutorialIsOpen}

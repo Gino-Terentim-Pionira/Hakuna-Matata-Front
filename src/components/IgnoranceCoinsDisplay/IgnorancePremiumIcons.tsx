@@ -10,7 +10,7 @@ import horizon from '../../assets/horizon.webp';
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
 import CoinsDisplay from "./CoinsDisplay";
 import NavIcon from "../NavigationComponents/NavIcon";
-import { IGNORANCE_GLASS, DAILY_QUIZ, ORACLE } from "../../utils/constants/mouseOverConstants";
+import { IGNORANCE_GLASS, DAILY_QUIZ, ORACLE, BLOCKED_ORACLE } from "../../utils/constants/mouseOverConstants";
 import StatusProgress from "./StatusProgress";
 import QuizAlertModal from "../Quiz/QuizAlertModal";
 import { ALERT_QUIZ_MODAL } from "../../utils/constants/textConstants";
@@ -30,9 +30,10 @@ interface IgnoracenPremiumIconsInterface {
   statusText?: string;
   statusPoints?: number;
   statusColor?: string;
+  dontShowOracle?: boolean;
 }
 
-const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showOracle, trail, statusText, statusPoints, statusColor }: IgnoracenPremiumIconsInterface) => {
+const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showOracle, trail, statusText, statusPoints, statusColor, dontShowOracle }: IgnoracenPremiumIconsInterface) => {
   // const {
   // 	isOpen: premiumIsOpen,
   // 	onClose: premiumOnClose,
@@ -178,14 +179,15 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
             />
           }
           {
-            showOracle && <NavIcon
-              image={OracleIcon}
-              mouseOver={ORACLE}
-              onClick={handleOracle}
-              size="normal"
-              isMap={false}
-              position="right"
-            />
+            !dontShowOracle && <NavIcon
+                  cursor={showOracle ? 'pointer': 'not-allowed'}
+                  image={OracleIcon}
+                  mouseOver={showOracle ? ORACLE : BLOCKED_ORACLE}
+                  onClick={showOracle ? handleOracle : ()=>null}
+                  size="normal"
+                  isMap={false}
+                  position="right"
+              />
           }
         </Flex>
         <RandomRewardModal />

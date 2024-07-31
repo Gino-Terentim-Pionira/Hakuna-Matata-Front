@@ -13,8 +13,8 @@ import ResetPassword from './pages/ResetPassword';
 import Shop from './pages/Shop';
 import Inventory from './pages/Inventory';
 import CheetahPath from './pages/CheetahPath';
-import BlackMambaPath from './pages/blackMambaPath';
-import LionPath from './pages/lionPath';
+// import BlackMambaPath from './pages/blackMambaPath';
+// import LionPath from './pages/lionPath';
 import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
 
@@ -55,8 +55,10 @@ const Routes = () => {
 						<ProtectedRoute path='/inventory' component={Inventory} />
 						<ProtectedRoute path='/mainPage' component={MainPage} />
 						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath} />
-						<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
-						<ProtectedRoute path='/trilha-leao' component={LionPath} />
+						{/*
+							<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
+							<ProtectedRoute path='/trilha-leao' component={LionPath} />
+						*/}
 						<ProtectedRoute path='/oracle' component={Oracle} />
 					</Switch>
 				</AuthProvider >
