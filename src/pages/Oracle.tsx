@@ -44,7 +44,12 @@ export const Oracle = () => {
 		sprite_talking: "",
 		thread_id: "",
 		assistant_id: "",
-		messages: [] as IMessages[],
+		messages: [
+			{
+				role: 'assistant',
+				content: 'Seja bem vindo(a) à caverna do Oráculo. Você ganhou 1 Token gratuito para sua primeira consulta! No que posso te ajudar?'
+			}
+		] as IMessages[],
 		commonQuestions: [] as ICommonQuestion[]
 	});
 	const [alert, setAlert] = useState<{
@@ -135,16 +140,20 @@ export const Oracle = () => {
 
 			const commonQuestionsResponse = await oracleService.getCommonQuestions(userId as string, trail);
 
-			setOracleObject({
-				oracle_name: messages.oracle.oracle_name,
-				background: messages.oracle.background,
-				sprite_idle: messages.oracle.sprite_idle,
-				sprite_talking: messages.oracle.sprite_talking,
-				thread_id: messages.thread_id,
-				assistant_id: messages.oracle.assistant_id,
-				messages: messages.messages,
-				commonQuestions: commonQuestionsResponse
-			});
+			setOracleObject((currentState) => (
+				{
+					oracle_name: messages.oracle.oracle_name,
+					background: messages.oracle.background,
+					sprite_idle: messages.oracle.sprite_idle,
+					sprite_talking: messages.oracle.sprite_talking,
+					thread_id: messages.thread_id,
+					assistant_id: messages.oracle.assistant_id,
+					messages: [...messages.messages, ...currentState.messages],
+					commonQuestions: commonQuestionsResponse
+				}
+			));
+
+			await getNewUserInfo();
 
 			setTimeout(() => {
 				setIsLoading(false);
