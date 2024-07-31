@@ -17,7 +17,7 @@ import { UpdateStatus } from '../../services/updateStatus';
 
 interface IFreeLunch {
     isOpen: boolean;
-    onClose: VoidFunction;
+    onClose: () => Promise<void>;
     coins: number;
     score?: {
         name: string;
@@ -81,7 +81,7 @@ const FreeLunch: FC<IFreeLunch> = ({
             setIsLoading(true);
             await addCoinsStatus(coinsRecieved);
             setIsLoading(false);
-            onClose();
+            await onClose();
         } catch (error) {
             setOnError(true);
         }
