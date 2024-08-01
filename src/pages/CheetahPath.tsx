@@ -209,6 +209,7 @@ const CheetahPath = () => {
 
     const [script, setScript] = useState<IScript[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
     const [payLoading, setPayLoading] = useState<boolean>(false);
     const [blockedMessage, setBlockedMessage] = useState<string>('');
 
@@ -422,10 +423,10 @@ const CheetahPath = () => {
 
     return (
         <>
+            <VideoBackground isLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.CHEETAH)} />
             {
-                isLoading ? <LoadingOverlay /> : (
+                (isLoading || isAnimationLoading) ? <LoadingOverlay /> : (
                     <>
-                        <VideoBackground source={getBackgroundAnimation(pathEnum.CHEETAH)} />
                         <IgnoranceFilter
                             ignoranceImage={ignoranceImage}
                         />

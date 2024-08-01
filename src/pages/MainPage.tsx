@@ -81,6 +81,7 @@ const MainPage = () => {
 	const [ignoranceImage, setIgnoranceImage] = useState('');
 	const [isSubscribedModal, setIsSubscribedModal] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
 	const [openBlockedModal, setOpenBlockedModal] = useState<boolean>(false);
 	const [alert, setAlert] = useState<{
 		title: string,
@@ -300,93 +301,97 @@ const MainPage = () => {
 
 	return (
 		<>
+			<VideoBackground isLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 			{
-				isLoading ? <LoadingOverlay /> : (
+				(isLoading || isAnimationLoading) ? (
 					<>
-						<VideoBackground source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
-						<IgnoranceFilter
-							ignoranceImage={ignoranceImage}
-						/>
-						<Flex
-							width='92.5%'
-							justifyContent='space-between'
-							alignItems='flex-start'
-							margin='auto'
-						>
-							<NavActions logout={logout} dontShowMap />
-							{narrativeIsOpen ? null : (
-								<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
-							)}
-						</Flex>
-
-						{script.length > 0 ? (
-							//verifica se o script possui algum conteúdo
-							<NarrativeModal
-								isOpen={narrativeIsOpen}
-								script={script}
-								onToggle={narrativeOnToggle}
+						<LoadingOverlay />
+					</>
+				) : (
+						<>
+							<IgnoranceFilter
+								ignoranceImage={ignoranceImage}
 							/>
-						) : null}
+							<Flex
+								width='92.5%'
+								justifyContent='space-between'
+								alignItems='flex-start'
+								margin='auto'
+							>
+								<NavActions logout={logout} dontShowMap />
+								{narrativeIsOpen ? null : (
+									<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
+								)}
+							</Flex>
 
-						<DailyReward
-							isOpen={dailyIsOpen}
-							onOpen={dailyOnOpen}
-							onClose={dailyOnClose}
-						/>
-						<WelcomeVideoModal
-							isOpen={welcomeVideoIsOpen}
-							onClose={tutorialFirstOnClose}
-						/>
+							{script.length > 0 ? (
+								//verifica se o script possui algum conteúdo
+								<NarrativeModal
+									isOpen={narrativeIsOpen}
+									script={script}
+									onToggle={narrativeOnToggle}
+								/>
+							) : null}
 
-						<Flex margin='2vw' justifyContent='space-between'>
-							{narrativeIsOpen ? null : (
-								<>
-									<Flex
-										position='absolute'
-										left='18vw'
-										top='49.5vh'
-									>
-										<motion.div
-											animate={checkFirstTrailAcess(trailAccessEnum.CHEETAH) ? { scale: [0.8, 1, 0.8] } : false}
-											transition={{ loop: Infinity }}
+							<DailyReward
+								isOpen={dailyIsOpen}
+								onOpen={dailyOnOpen}
+								onClose={dailyOnClose}
+							/>
+							<WelcomeVideoModal
+								isOpen={welcomeVideoIsOpen}
+								onClose={tutorialFirstOnClose}
+							/>
+
+							<Flex margin='2vw' justifyContent='space-between'>
+								{narrativeIsOpen ? null : (
+									<>
+										<Flex
+											position='absolute'
+											left='18vw'
+											top='49.5vh'
+										>
+											<motion.div
+												animate={checkFirstTrailAcess(trailAccessEnum.CHEETAH) ? { scale: [0.8, 1, 0.8] } : false}
+												transition={{ loop: Infinity }}
+											>
+												<TrailIcon
+													image={icon_cheeta}
+													onClick={goToPath2}
+													mouseOver={CHEETAH_TRAIL}
+												/>
+											</motion.div>
+										</Flex>
+
+										<Flex
+											position='absolute'
+											left='43.5vw'
+											top='57.5vh'
 										>
 											<TrailIcon
-												image={icon_cheeta}
-												onClick={goToPath2}
-												mouseOver={CHEETAH_TRAIL}
+												image={icon_block}
+												onClick={() => setOpenBlockedModal(true)}
+												mouseOver={BLOCKED_TRAIL}
 											/>
-										</motion.div>
-									</Flex>
+										</Flex>
 
-									<Flex
-										position='absolute'
-										left='43.5vw'
-										top='57.5vh'
-									>
-										<TrailIcon
-											image={icon_block}
-											onClick={() => setOpenBlockedModal(true)}
-											mouseOver={BLOCKED_TRAIL}
-										/>
-									</Flex>
+										<Flex
+											position='absolute'
+											right='2vw'
+											top='50vh'
+										>
+											<TrailIcon
+												image={icon_block}
+												onClick={() => setOpenBlockedModal(true)}
+												mouseOver={BLOCKED_TRAIL}
+											/>
+										</Flex>
 
-									<Flex
-										position='absolute'
-										right='2vw'
-										top='50vh'
-									>
-										<TrailIcon
-											image={icon_block}
-											onClick={() => setOpenBlockedModal(true)}
-											mouseOver={BLOCKED_TRAIL}
-										/>
-									</Flex>
-
-								</>
-							)}
-						</Flex>
-					</>
-				)
+									</>
+								)}
+							</Flex>
+						</>
+					)
 			}
 
 
