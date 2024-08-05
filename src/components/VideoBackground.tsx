@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 
 type VideoBackgroundProps = {
     source: string;
@@ -6,21 +6,6 @@ type VideoBackgroundProps = {
 }
 
 const VideoBackground: FC<VideoBackgroundProps> = ({ source, isLoading }) => {
-
-    useEffect(() => {
-        const video = document.getElementById('background-video') as HTMLVideoElement;
-        if (video) {
-            const handleCanPlayThrough = () => {
-                isLoading();
-            };
-
-            video.addEventListener('canplaythrough', handleCanPlayThrough);
-
-            return () => {
-                video.removeEventListener('canplaythrough', handleCanPlayThrough);
-            };
-        }
-    }, [source]);
 
     return (
         <video
@@ -36,6 +21,7 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source, isLoading }) => {
                 objectFit: "fill",
                 zIndex: -3,
             }}
+            onLoadedData={()=>isLoading()}
         >
             <source src={source} type="video/webm" />
         </video>
