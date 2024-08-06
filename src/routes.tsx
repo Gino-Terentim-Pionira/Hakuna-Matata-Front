@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './global.css';
-import { BrowserRouter as HashRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as HashRouter, Route, Switch, useLocation } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoutes';
 import { AuthProvider } from './contexts/authContext';
 import CantUseApplication from './components/CantUseApplication';
@@ -17,6 +17,7 @@ import CheetahPath from './pages/CheetahPath';
 // import LionPath from './pages/lionPath';
 import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
+import { useSoundtrack } from "./hooks/useSoundtrack";
 
 const useWindowSize = () => {
 	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
@@ -32,37 +33,67 @@ const useWindowSize = () => {
 	return size;
 }
 
-const Routes = () => {
+const AudioManager = () => {
+	const location = useLocation();
+	const { playSoundtrack, audio } = useSoundtrack();
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [actualLocation, setActualLocation] = useState(location.pathname);
 
+	useEffect(() => {
+		const handleClick = (event: MouseEvent) => {
+			if(!isPlaying) {
+				playSoundtrack();
+				setIsPlaying(true)
+			} else {
+				if(actualLocation === location.pathname) {
+				 console.log(event)
+				} else {
+					console.log("trocou de musica")
+					setActualLocation(location.pathname);
+				}
+			}
+		};
+
+		document.addEventListener('click', handleClick);
+
+		return () => {
+			document.removeEventListener('click', handleClick);
+		};
+	}, [location, audio, isPlaying, actualLocation]);
+
+	return null;
+};
+const Routes = () => {
 	const [height, width] = useWindowSize();
 
 	return (
 		<RecoilRoot>
 			<HashRouter basename="/">
+				<AudioManager />
 				<AuthProvider>
 					{
 						height < 550 || width < 600 ? (
-							<CantUseApplication />
+							<CantUseApplication/>
 						) : null
 					}
 					<Switch>
-						<Route path='/' exact component={Home} />
-						<Route path='/login' component={Login} />
-						<Route path='/forgotPassword' component={ForgotPassword} />
-						<Route path="/resetPassword/:id" component={ResetPassword} />
-						<Route path='/register' component={Register} />
-						<ProtectedRoute path='/shop' component={Shop} />
-						<ProtectedRoute path='/inventory' component={Inventory} />
-						<ProtectedRoute path='/mainPage' component={MainPage} />
-						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath} />
+						<Route path='/' exact component={Home}/>
+						<Route path='/login' component={Login}/>
+						<Route path='/forgotPassword' component={ForgotPassword}/>
+						<Route path="/resetPassword/:id" component={ResetPassword}/>
+						<Route path='/register' component={Register}/>
+						<ProtectedRoute path='/shop' component={Shop}/>
+						<ProtectedRoute path='/inventory' component={Inventory}/>
+						<ProtectedRoute path='/mainPage' component={MainPage}/>
+						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath}/>
 						{/*
 							<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
 							<ProtectedRoute path='/trilha-leao' component={LionPath} />
 						*/}
-						<ProtectedRoute path='/oracle' component={Oracle} />
+						<ProtectedRoute path='/oracle' component={Oracle}/>
 					</Switch>
-				</AuthProvider >
-			</HashRouter >
+				</AuthProvider>
+			</HashRouter>
 		</RecoilRoot>
 	);
 };
