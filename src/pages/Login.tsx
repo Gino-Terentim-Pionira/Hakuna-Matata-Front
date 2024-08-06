@@ -2,6 +2,7 @@ import React, { BaseSyntheticEvent, useEffect, useState, useRef } from 'react';
 import LoginRegister from '../components/LoginRegister';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
+import { useSoundtrack } from "../hooks/useSoundtrack";
 import { errorCases } from '../utils/errors/errorsCases';
 import {
 	Flex,
@@ -27,6 +28,7 @@ const Login = () => {
 	const [email, setEmail] = useState<string>('');
 	const [emailError, setEmailError] = useState('');
 	const [password, setPassword] = useState<string>('');
+	const { changeSoundtrack } = useSoundtrack()
 	const history = useHistory();
 	const { handleLogin, authenticated } = useAuth();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -113,6 +115,7 @@ const Login = () => {
 
 				setIsLoading(true);
 				await handleLogin(email, password);
+				changeSoundtrack("/mainPage");
 			} catch (error) {
 				const errorMessage = error.response?.data.error || 'SERVER_ERROR';
 				handleAlertModal(errorMessage);

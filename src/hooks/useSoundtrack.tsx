@@ -1,34 +1,39 @@
-import { useRef } from 'react';
+import { soundtrackEnum } from "../utils/enums/soundtrackEnums";
 
 export const useSoundtrack = () => {
-    const audio = useRef(new Audio("https://pionira.s3.sa-east-1.amazonaws.com/soundtrack/audio.mp3")) ;
+    const audio = document.getElementById('audio') as HTMLAudioElement;
+
+    const changeVolumeSoundtrack = () => {
+        audio.volume = 0.05;
+    }
 
     const playSoundtrack = () => {
         if (audio) {
-            (audio.current as HTMLAudioElement).volume = 0.2;
-            (audio.current as HTMLAudioElement).play();
+            changeVolumeSoundtrack();
+            audio.play();
         }
     }
 
     const pauseSoundtrack = () => {
-        (audio.current as HTMLAudioElement).volume = 0.2;
-        (audio.current as HTMLAudioElement).pause();
+        changeVolumeSoundtrack();
+        audio.pause();
     }
 
-    const changeSoundtrack = (url: string) => {
-        (audio.current as HTMLAudioElement).volume = 0.2;
-        (audio.current as HTMLAudioElement).src = url;
+    const changeSoundtrack = (path: string) => {
+        audio.src =  soundtrackEnum[path] ;
+        pauseSoundtrack()
+        playSoundtrack()
     }
 
     const muteSoundtrack = () => {
-        (audio.current as HTMLAudioElement).volume = 0;
+        audio.volume = 0;
     }
 
     return {
-        audio: audio.current as HTMLAudioElement,
+        audio: audio as HTMLAudioElement,
         playSoundtrack,
         pauseSoundtrack,
         changeSoundtrack,
-        muteSoundtrack
+        muteSoundtrack,
     }
 }

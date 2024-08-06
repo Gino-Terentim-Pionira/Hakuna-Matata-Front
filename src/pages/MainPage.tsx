@@ -46,6 +46,7 @@ import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
+import { useSoundtrack } from "../hooks/useSoundtrack";
 
 interface IScript {
 	name: string;
@@ -76,6 +77,7 @@ const MainPage = () => {
 	} = useDisclosure();
 
 	const { getNewUserInfo, setUserData, userData } = useUser();
+	const { changeSoundtrack } = useSoundtrack();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [onAlert, setOnAlert] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
@@ -241,7 +243,9 @@ const MainPage = () => {
 	*/
 
 	const goToPath2 = () => {
-		history.push('/trilha-cheetah');
+		const path = '/trilha-cheetah';
+		history.push(path);
+		changeSoundtrack(path);
 	};
 
 	/*

@@ -16,6 +16,7 @@ import { TutorialTopics } from "./components/TutorialTopics";
 import { TutorialContent } from "./components/TutorialContent";
 import cheetahBlink from "../../../assets/icons/cheetahblink.svg";
 import WelcomeVideoModal from "../WelcomeVideoModal";
+import { useSoundtrack } from "../../../hooks/useSoundtrack";
 
 type TutorialTopicsModalType = {
     isOpen: boolean,
@@ -25,6 +26,7 @@ type TutorialTopicsModalType = {
 
 export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopicsModalType) => {
     const { userData } = useUser();
+    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
     const tutorialServices = new TutorialServices();
     const [tutorialTopics, setTutorialTopics] = useState([
         {
@@ -46,6 +48,7 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
         try {
             if (tutorialName == tutorialTopics[0].name) {
                 welcomeVideoOnOpen();
+                pauseSoundtrack();
             } else {
                 setIsLoading(true);
                 const tutorialContent = await tutorialServices.getContentsByTopic(tutorialName);
@@ -62,6 +65,11 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
 
     const handleGoBackToTopics = () => {
         setTutorialContentSelected(undefined)
+    }
+
+    const handleWelcomeVideoOnClose = () => {
+        playSoundtrack()
+        welcomeVideoOnClose()
     }
 
     useEffect(() => {
@@ -113,7 +121,7 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
                 </ModalContent>
             </Modal>
 
-            <WelcomeVideoModal isOpen={welcomeVideoIsOpen} onClose={welcomeVideoOnClose} />
+            <WelcomeVideoModal isOpen={welcomeVideoIsOpen} onClose={handleWelcomeVideoOnClose} />
         </>
     )
 }

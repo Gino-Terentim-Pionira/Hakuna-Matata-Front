@@ -15,6 +15,7 @@ import {
     Tooltip
 } from "@chakra-ui/react";
 import { useUser, useModule } from '../../hooks';
+import { useSoundtrack } from "../../hooks/useSoundtrack";
 import { AxiosResponse } from 'axios';
 
 // Components
@@ -120,6 +121,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [totalCoins, setTotalCoins] = useState(0);
     const [onError, setOnError] = useState(false);
     const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0 });
+    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
     const [remainingCoins, setRemainingCoins] = useState(0);
     const [iconInfo, setIconInfo] = useState({
         label: moduleInfo.module_name,
@@ -188,6 +190,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const handleVideoModal = (id: string, name: string, url: string, coins: number) => {
         setVideoInfo({ id, name, url, coins });
         videoOnOpen();
+        pauseSoundtrack();
     }
 
     const defineProperties = async () => {
@@ -228,6 +231,11 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             })
             setImage(button_off);
         }
+    }
+
+    const handleOnCloseVideo = () => {
+        playSoundtrack()
+        videoOnClose()
     }
 
     const renderTooltip = () => {
@@ -504,7 +512,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 url={videoInfo.url}
                 coins={videoInfo.coins}
                 videoIsOpen={videoIsOpen}
-                videoOnClose={videoOnClose}
+                videoOnClose={handleOnCloseVideo}
                 updateQuiz={getNewUserInfo}
             />
         </>

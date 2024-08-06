@@ -19,6 +19,7 @@ import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
 import {TutorialModal} from "../modals/Tutorial/TutorialModal";
+import { useSoundtrack } from "../../hooks/useSoundtrack";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -33,6 +34,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const scriptChat = () => chatScript(userData.ignorance);
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
+  const { changeSoundtrack } = useSoundtrack();
 
   const {
     isOpen: profileIsOpen,
@@ -84,6 +86,11 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     tutorialTopicOnClose();
     if (onCloseTutorial) onCloseTutorial();
     setOnCloseTutorial(undefined);
+  }
+
+  const handleMapNavigation = () => {
+    changeSoundtrack('/mainPage');
+    history.push('/mainPage')
   }
 
   return (
@@ -150,7 +157,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
           !dontShowMap &&
           <NavIcon
             image={icon_map}
-            onClick={() => history.push('/mainPage')}
+            onClick={handleMapNavigation}
             size='big'
             isMap={true}
             mouseOver={MAP}
