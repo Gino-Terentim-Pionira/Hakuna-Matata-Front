@@ -423,7 +423,7 @@ const CheetahPath = () => {
 
     return (
         <>
-            <VideoBackground isLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.CHEETAH)} />
+            <VideoBackground handleLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.CHEETAH)} />
             {
                 (isLoading || isAnimationLoading) ? <LoadingOverlay /> : (
                     <>

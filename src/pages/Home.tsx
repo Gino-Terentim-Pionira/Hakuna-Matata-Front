@@ -33,7 +33,7 @@ const Home = () => {
 			position="relative"
 			overflow="hidden"
 		>
-			<VideoBackground isLoading={()=>null} source={getBackgroundAnimation(pathEnum.HOME)} />
+			<VideoBackground source={getBackgroundAnimation(pathEnum.HOME)} />
 			<Box w='100vw' mt='5%'>
 				<Center flexDir="column">
 					<Image ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />

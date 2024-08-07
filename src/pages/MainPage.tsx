@@ -301,7 +301,7 @@ const MainPage = () => {
 
 	return (
 		<>
-			<VideoBackground isLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
+			<VideoBackground handleLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 			{
 				(isLoading || isAnimationLoading) ? (
 					<LoadingOverlay />
