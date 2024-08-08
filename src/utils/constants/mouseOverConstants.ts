@@ -16,6 +16,10 @@ export const TUTORIAL = 'Acessar Tutorial';
 
 export const LOG_OUT = 'Encerrar Sessão';
 
+export const MUTE_SOUNDTRACK = 'Mutar som';
+
+export const UNMUTE_SOUNDTRACK = 'Desmutar som';
+
 export const MAP = 'Voltar para seleção de trilhas';
 
 export const CHEETAH_TRAIL = 'Trilha do Cheetah';

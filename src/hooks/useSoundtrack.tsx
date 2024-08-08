@@ -29,11 +29,16 @@ export const useSoundtrack = () => {
         audio.volume = 0;
     }
 
+    const unmuteSoundtrack = () => {
+        audio.volume = 0.05;
+    }
+
     return {
         audio: audio as HTMLAudioElement,
         playSoundtrack,
         pauseSoundtrack,
         changeSoundtrack,
         muteSoundtrack,
+        unmuteSoundtrack
     }
 }

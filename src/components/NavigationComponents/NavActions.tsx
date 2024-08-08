@@ -1,4 +1,4 @@
-import { Flex, useDisclosure } from "@chakra-ui/react";
+import {Box, Flex, useDisclosure} from "@chakra-ui/react";
 import React, { useState } from "react";
 
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
@@ -14,7 +14,16 @@ import chat from '../../assets/icons/chat.png'
 import ProfileModal from "../modals/ProfileModal/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
-import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "../../utils/constants/mouseOverConstants";
+import {
+  USER_PROFILE,
+  STORE,
+  INVENTORY,
+  TUTORIAL,
+  LOG_OUT,
+  MAP,
+  CHAT,
+  UNMUTE_SOUNDTRACK, MUTE_SOUNDTRACK
+} from "../../utils/constants/mouseOverConstants";
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
@@ -34,7 +43,8 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const scriptChat = () => chatScript(userData.ignorance);
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
-  const { changeSoundtrack } = useSoundtrack();
+  const { changeSoundtrack, muteSoundtrack, unmuteSoundtrack, audio } = useSoundtrack();
+  const [isSoundtrackMuted, setIsSoundtrackMuted] = useState(false);
 
   const {
     isOpen: profileIsOpen,
@@ -93,24 +103,43 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     history.push('/mainPage')
   }
 
+  const handleSoundtrackButton = () => {
+    if(audio.volume > 0) {
+      muteSoundtrack();
+      setIsSoundtrackMuted(true);
+    } else {
+      unmuteSoundtrack();
+      setIsSoundtrackMuted(false);
+    }
+  }
+
   return (
     <>
       <Flex
-        maxWidth='4.5rem'
+        maxWidth='fit-content'
         marginTop='1.5rem'
         flexDirection='column'
         justify='space-between'
-        alignItems='center'
         h='85.5vh'
       >
-        <Flex flexDirection='column' align='center'>
-          <NavIcon
-            image="profile"
-            onClick={handleProfileOpen}
-            size='normal'
-            isMap={false}
-            mouseOver={USER_PROFILE}
-          />
+        <Flex flexDirection='column' align='flex-start'>
+          <Flex columnGap='8px' align='center'>
+            <NavIcon
+              image="profile"
+              onClick={handleProfileOpen}
+              size='normal'
+              isMap={false}
+              mouseOver={USER_PROFILE}
+            />
+
+            <NavIcon
+                image={isSoundtrackMuted ? 'soundtrackUnmute' : 'soundtrackMute'}
+                onClick={handleSoundtrackButton}
+                size='small'
+                isMap={false}
+                mouseOver={isSoundtrackMuted ? UNMUTE_SOUNDTRACK : MUTE_SOUNDTRACK}
+            />
+          </Flex>
 
           {!isIgnoranceFilterOn && <NavIcon
             image={icon_shop}
@@ -136,21 +165,23 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
             mouseOver={CHAT}
           />}
 
-          <NavIcon
-            image={icon_tutorial}
-            onClick={tutorialTopicOnOpen}
-            size='small'
-            isMap={false}
-            mouseOver={TUTORIAL}
-          />
+          <Box marginLeft="7px">
+            <NavIcon
+                image={icon_tutorial}
+                onClick={tutorialTopicOnOpen}
+                size='small'
+                isMap={false}
+                mouseOver={TUTORIAL}
+            />
 
-          <NavIcon
-            image={icon_logout}
-            onClick={logout}
-            size='small'
-            isMap={false}
-            mouseOver={LOG_OUT}
-          />
+            <NavIcon
+                image={icon_logout}
+                onClick={logout}
+                size='small'
+                isMap={false}
+                mouseOver={LOG_OUT}
+            />
+          </Box>
         </Flex>
 
         {
