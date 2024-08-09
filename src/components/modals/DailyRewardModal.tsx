@@ -35,7 +35,6 @@ const DailyRewardModal: FC<IDailyReward> = ({
             await addDailyRewardStatus(coins);
             await getNewUserInfo();
             setIsLoading(false);
-            onClose();
         } catch (error) {
             setOnError(true);
         }
@@ -71,9 +70,10 @@ const DailyRewardModal: FC<IDailyReward> = ({
         <RewardModal
             isOpen={isOpen}
             genericModalInfo={rewardModalInfo}
-            confirmFunction={updateUserDailyReward}
+            confirmFunction={onClose}
             error={onError}
             loading={isLoading}
+            initFunction={updateUserDailyReward}
         />
     )
 }

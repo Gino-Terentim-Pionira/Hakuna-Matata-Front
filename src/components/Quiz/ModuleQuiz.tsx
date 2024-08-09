@@ -161,11 +161,11 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
             }
             await updateUserQuizTime();
             await getNewUserInfo();
-            onClose();
             if (coins >= remainingCoins) {
                 validateUser();
                 openFinalModuleNarrative();
             }
+            setIsLoading(false);
         } catch (error) {
             setOnError(true);
         }
@@ -217,7 +217,8 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
             <RewardModal
                 isOpen={isOpen}
                 genericModalInfo={rewardModalInfo()}
-                confirmFunction={updateUserCoins}
+                confirmFunction={onClose}
+                initFunction={updateUserCoins}
                 loading={isLoading}
                 error={onError}
             />

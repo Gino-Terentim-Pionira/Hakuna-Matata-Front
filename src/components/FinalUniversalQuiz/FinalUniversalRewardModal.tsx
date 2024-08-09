@@ -91,7 +91,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
                     });
 				}
 			} 
-			window.location.reload();
+			setIsLoading(false);
 		} catch (error) {
 			setOnError(true);
 		}
@@ -142,9 +142,10 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			genericModalInfo={rewardModalInfo()}
 			loading={isLoading}
 			error={onError}
-			confirmFunction={async () => {
-				await updateUserCoins()
+			confirmFunction={() => {
+				window.location.reload();
 			}}
+			initFunction={updateUserCoins}
 		/>
 	);
 };
