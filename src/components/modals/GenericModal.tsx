@@ -1,4 +1,4 @@
-import React, {FC, ReactElement, useState} from 'react';
+import React, { FC, ReactElement, useState, useEffect } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -15,7 +15,6 @@ import {
 
 // Components
 import AlertModal from './AlertModal';
-import LoadingState from '../LoadingState';
 
 // Styles
 import fontTheme from '../../styles/base';
@@ -53,7 +52,8 @@ interface IGenericModal {
     closeFunction?: VoidFunction;
     loading: boolean;
     error: boolean;
-    isStaticModal?: boolean
+    isStaticModal?: boolean;
+    initFunction?: VoidFunction;
 }
 
 
@@ -65,10 +65,11 @@ const GenericModal: FC<IGenericModal> = ({
     closeFunction,
     loading,
     error,
-    isStaticModal = false
+    isStaticModal = false,
+    initFunction
 }) => {
     const { title, titleColor, subtitle, icon, coins, status, video_names } = genericModalInfo;
-    const [ isDisabled, setIsDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const coinsValidation = coins && coins !== 0;
     const statusValidation = status && status.points > 0;
@@ -98,210 +99,208 @@ const GenericModal: FC<IGenericModal> = ({
             action && action();
         }
     }
-    
+
+    useEffect(() => {
+        if (isOpen && initFunction) {
+            initFunction();
+        }
+    }, [isOpen]);
+
     return (
         <>
             <Modal isOpen={isOpen} onClose={handleClose}>
                 <ModalOverlay />
                 <ModalContent fontSize={fontTheme.fonts} minHeight="437px" h='fit-content' w='418px'  >
                     <ModalCloseButton color={colorPalette.closeButton} size='lg' />
-                    {
-                        loading ?
-                            (
-                                <Center w='100%' h='50vh'>
-                                    <LoadingState />
-                                </Center>
-                            )
-                            : (
-                                <ModalBody paddingBottom="28px" display="flex" justifyContent="space-between" alignItems='center' flexDirection='column' height='100%'>
-                                    <Center flexDirection='column'>
-                                        <Center
-                                            backgroundColor='#F5F5F5'
-                                            width='120px'
-                                            height='120px'
-                                            borderRadius='1000px'
-                                            marginTop='48px'
-                                            alignSelf='center'
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            {
-                                                typeof icon === 'string' ? <Image
-                                                    src={icon}
-                                                    marginLeft={icon === Cheetah ? '8px' : undefined}
-                                                    marginTop={icon === Cheetah ? '8px' : undefined}
-                                                /> : icon
-                                            }
-                                        </Center>
-                                        <Box
-                                            marginTop='8px'
-                                            lineHeight='22px'
-                                            width='300px'
-                                            textAlign="center"
+                    <ModalBody paddingBottom="28px" display="flex" justifyContent="space-between" alignItems='center' flexDirection='column' height='100%'>
+                        <Center flexDirection='column'>
+                            <Center
+                                backgroundColor='#F5F5F5'
+                                width='120px'
+                                height='120px'
+                                borderRadius='1000px'
+                                marginTop='48px'
+                                alignSelf='center'
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                {
+                                    typeof icon === 'string' ? <Image
+                                        src={icon}
+                                        marginLeft={icon === Cheetah ? '8px' : undefined}
+                                        marginTop={icon === Cheetah ? '8px' : undefined}
+                                    /> : icon
+                                }
+                            </Center>
+                            <Box
+                                marginTop='8px'
+                                lineHeight='22px'
+                                width='300px'
+                                textAlign="center"
+                            >
+                                <Text
+                                    fontSize='20px'
+                                    fontWeight='bold'
+                                    fontFamily={fontTheme.fonts}
+                                    color={titleColor}
+                                >
+                                    {title}
+                                </Text>
+                                <Text
+                                    fontSize='18px'
+                                    fontFamily={fontTheme.fonts}
+                                    color='#9D9D9D'
+                                    textAlign='center'
+                                    marginTop='8px'
+                                >
+                                    {subtitle}
+                                </Text>
+                                {
+                                    genericModalInfo.alert && <Text
+                                        textAlign='center'
+                                        fontFamily={fontTheme.fonts}
+                                        fontSize="14px"
+                                        fontWeight='semibold'
+                                        color={colorPalette.alertText}
+                                        marginTop='16px'
+                                    >
+                                        {genericModalInfo.alert}
+                                    </Text>
+                                }
+                            </Box>
+                            <Center
+                                flexDirection='column'
+                                marginTop='16px'
+                                minHeight='40px'
+                                marginBottom='55px'
+                            >
+                                {
+                                    statusValidation ? (
+                                        <Flex
+                                            alignItems='center'
+                                            marginTop={'4px'}
                                         >
                                             <Text
-                                                fontSize='20px'
-                                                fontWeight='bold'
-                                                fontFamily={fontTheme.fonts}
-                                                color={titleColor}
-                                            >
-                                                {title}
-                                            </Text>
-                                            <Text
-                                                fontSize='18px'
-                                                fontFamily={fontTheme.fonts}
-                                                color='#9D9D9D'
                                                 textAlign='center'
-                                                marginTop='8px'
+                                                fontFamily={fontTheme.fonts}
+                                                fontSize="24px"
+                                                fontWeight='semibold'
+                                                color={getStatusColor(status?.name as string)}
                                             >
-                                                {subtitle}
+                                                + {status?.points} {status?.name}
                                             </Text>
-                                            {
-                                                genericModalInfo.alert && <Text
-                                                    textAlign='center'
-                                                    fontFamily={fontTheme.fonts}
-                                                    fontSize="14px"
-                                                    fontWeight='semibold'
-                                                    color={colorPalette.alertText}
-                                                    marginTop='16px'
-                                                >
-                                                    {genericModalInfo.alert}
-                                                </Text>
-                                            }
-                                        </Box>
-                                        <Center
-                                            flexDirection='column'
-                                            marginTop='16px'
-                                            minHeight='40px'
-                                            marginBottom='55px'
+                                            <Image
+                                                src={plusIcon}
+                                                alt='plusIcon'
+                                                w='30'
+                                                h='30'
+                                            />
+                                        </Flex>
+                                    ) : null
+                                }
+                                {
+                                    coinsValidation ? <Flex
+                                        alignItems='center'
+                                        marginTop={statusValidation ? '8px' : undefined}
+                                    >
+                                        <Text
+                                            textAlign='center'
+                                            fontFamily={fontTheme.fonts}
+                                            fontSize="24px"
+                                            fontWeight='semibold'
+                                            color={colorPalette.gold}
                                         >
-                                            {
-                                                statusValidation ? (
-                                                    <Flex
-                                                            alignItems='center'
-                                                            marginTop={'4px'}
-                                                        >
-                                                            <Text
-                                                                textAlign='center'
-                                                                fontFamily={fontTheme.fonts}
-                                                                fontSize="24px"
-                                                                fontWeight='semibold'
-                                                                color={getStatusColor(status?.name as string)}
-                                                            >
-                                                                + {status?.points} {status?.name}
-                                                            </Text>
-                                                            <Image
-                                                                src={plusIcon}
-                                                                alt='plusIcon'
-                                                                w='30'
-                                                                h='30'
-                                                            />
-                                                        </Flex>
-                                                ) : null
-                                            }
-                                            {
-                                                coinsValidation ? <Flex
-                                                    alignItems='center'
-                                                    marginTop={statusValidation ? '8px' : undefined}
-                                                >
-                                                    <Text
-                                                        textAlign='center'
-                                                        fontFamily={fontTheme.fonts}
-                                                        fontSize="24px"
-                                                        fontWeight='semibold'
-                                                        color={colorPalette.gold}
-                                                    >
-                                                        + {coins} Joias
+                                            + {coins} Joias
                                                     </Text>
-                                                    <Image
-                                                        src={Coins}
-                                                        alt='Coins'
-                                                        w='30'
-                                                        h='30'
-                                                        marginLeft='5px'
-                                                    />
-                                                </Flex> : null
-                                            }
-                                            {
-                                                videosValidation && <Flex
-                                                    width='295px'
-                                                    flexDirection='column'
-                                                    textAlign='center'
-                                                    marginTop='32px'  
-                                                    fontFamily={fontTheme.fonts}
-                                                >
-                                                    <Text
-                                                        fontSize='18px'
-                                                        color={colorPalette.secundaryGrey}
-                                                        marginBottom='8px'
-                                                    >
-                                                        Para acertar as 
-                                                        <Text 
-                                                            as='span' 
-                                                            color={colorPalette.closeButton}
-                                                            fontWeight='bold'
-                                                        > questões que errou</Text>
+                                        <Image
+                                            src={Coins}
+                                            alt='Coins'
+                                            w='30'
+                                            h='30'
+                                            marginLeft='5px'
+                                        />
+                                    </Flex> : null
+                                }
+                                {
+                                    videosValidation && <Flex
+                                        width='295px'
+                                        flexDirection='column'
+                                        textAlign='center'
+                                        marginTop='32px'
+                                        fontFamily={fontTheme.fonts}
+                                    >
+                                        <Text
+                                            fontSize='18px'
+                                            color={colorPalette.secundaryGrey}
+                                            marginBottom='8px'
+                                        >
+                                            Para acertar as
+                                                        <Text
+                                                as='span'
+                                                color={colorPalette.closeButton}
+                                                fontWeight='bold'
+                                            > questões que errou</Text>
                                                         , veja esses vídeos novamente:
                                                     </Text>
 
-                                                    <Text
-                                                        color={colorPalette.secundaryGrey}
-                                                        fontSize='16px'
-                                                        fontWeight='bold'
-                                                    >
-                                                        {video_names?.join(", ")}
-                                                    </Text>
-                                                    
-                                                </Flex>
-                                            }
-                                        </Center>
-                                    </Center>
-                                    <Button
-                                        width='300px'
-                                        height='50px'
-                                        background={colorPalette.primaryColor}
-                                        color={colorPalette.buttonTextColor}
-                                        fontSize='24px'
-                                        fontFamily={fontTheme.fonts}
-                                        onClick={() => handleButtonClick(confirmFunction)}
-                                        loadingText={LOAD_BUTTON}
-                                        spinnerPlacement='end'
-                                    >
-                                        {
-                                            defineButtonText()
-                                        }
-                                    </Button>
-                                    {
-                                        genericModalInfo.secondButton &&
-                                            <Button
-                                                width='300px'
-                                                height='50px'
-                                                marginTop='24px'
-                                                background={genericModalInfo.isSocial ? 'linkedin.500' : colorPalette.inactiveButton}
-                                                color={colorPalette.buttonTextColor}
-                                                fontSize='24px'
-                                                fontFamily={fontTheme.fonts}
-                                                onClick={() => handleButtonClick(secondFunction)}
-                                                loadingText={LOAD_BUTTON}
-                                                spinnerPlacement='end'
-                                                leftIcon={
-                                                    genericModalInfo.isSocial ? (
-                                                        <Image 
-                                                            width='24px'
-                                                            height='24px'
-                                                            src={linkedin} 
-                                                        />
-                                                    ) : <></>
-                                                }
-                                            >
-                                                {
-                                                    genericModalInfo.secondButton
-                                                }
-                                            </Button>
-                                    }
-                                </ModalBody>
-                            )
-                    }
+                                        <Text
+                                            color={colorPalette.secundaryGrey}
+                                            fontSize='16px'
+                                            fontWeight='bold'
+                                        >
+                                            {video_names?.join(", ")}
+                                        </Text>
+
+                                    </Flex>
+                                }
+                            </Center>
+                        </Center>
+                        <Button
+                            isLoading={loading}
+                            width='300px'
+                            height='50px'
+                            background={colorPalette.primaryColor}
+                            color={colorPalette.buttonTextColor}
+                            fontSize='24px'
+                            fontFamily={fontTheme.fonts}
+                            onClick={() => handleButtonClick(confirmFunction)}
+                            loadingText={LOAD_BUTTON}
+                            spinnerPlacement='end'
+                        >
+                            {
+                                defineButtonText()
+                            }
+                        </Button>
+                        {
+                            genericModalInfo.secondButton &&
+                            <Button
+                                isLoading={loading}
+                                width='300px'
+                                height='50px'
+                                marginTop='24px'
+                                background={genericModalInfo.isSocial ? 'linkedin.500' : colorPalette.inactiveButton}
+                                color={colorPalette.buttonTextColor}
+                                fontSize='24px'
+                                fontFamily={fontTheme.fonts}
+                                onClick={() => handleButtonClick(secondFunction)}
+                                loadingText={LOAD_BUTTON}
+                                spinnerPlacement='end'
+                                leftIcon={
+                                    genericModalInfo.isSocial ? (
+                                        <Image
+                                            width='24px'
+                                            height='24px'
+                                            src={linkedin}
+                                        />
+                                    ) : <></>
+                                }
+                            >
+                                {
+                                    genericModalInfo.secondButton
+                                }
+                            </Button>
+                        }
+                    </ModalBody>
                 </ModalContent>
             </Modal>
             <AlertModal
