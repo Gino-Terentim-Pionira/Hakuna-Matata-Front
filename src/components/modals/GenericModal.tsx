@@ -102,6 +102,7 @@ const GenericModal: FC<IGenericModal> = ({
 
     useEffect(() => {
         if (isOpen && initFunction) {
+            setIsDisabled(false);
             initFunction();
         }
     }, [isOpen]);
