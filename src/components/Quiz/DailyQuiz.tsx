@@ -151,7 +151,10 @@ const DailyQuiz: FC<IDailyQuiz> = ({
         <RewardModal
             isOpen={isOpen}
             genericModalInfo={rewardModalInfo()}
-            confirmFunction={()=>history.go(0)}
+            confirmFunction={()=>{
+                onClose();
+                history.go(0);
+            }}
             loading={isLoading}
             error={onError}
             initFunction={updateUserCoins}
