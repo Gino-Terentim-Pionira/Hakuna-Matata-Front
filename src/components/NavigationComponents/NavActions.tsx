@@ -22,13 +22,13 @@ import {
   LOG_OUT,
   MAP,
   CHAT,
-  UNMUTE_SOUNDTRACK, MUTE_SOUNDTRACK
 } from "../../utils/constants/mouseOverConstants";
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
 import {TutorialModal} from "../modals/Tutorial/TutorialModal";
 import { useSoundtrack } from "../../hooks/useSoundtrack";
+import { NavSoundtrackIcon } from "./NavSoundtrackIcon";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -43,9 +43,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const scriptChat = () => chatScript(userData.ignorance);
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
-  const { changeSoundtrack, muteSoundtrack, unmuteSoundtrack, audio } = useSoundtrack();
-  const isSoundtrackMuted = localStorage.getItem("isSoundtrackMuted");
-  const [isAudioMuted, setIsAudioMuted] = useState(isSoundtrackMuted === "true");
+  const { changeSoundtrack } = useSoundtrack();
 
   const {
     isOpen: profileIsOpen,
@@ -104,14 +102,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     history.push('/mainPage')
   }
 
-  const handleSoundtrackButton = () => {
-    if(audio.volume > 0) {
-      muteSoundtrack(() => setIsAudioMuted(true));
-    } else {
-      unmuteSoundtrack(() => setIsAudioMuted(false));
-    }
-  }
-
   return (
     <>
       <Flex
@@ -131,13 +121,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
               mouseOver={USER_PROFILE}
             />
 
-            <NavIcon
-                image={isAudioMuted ? 'soundtrackUnmute' : 'soundtrackMute'}
-                onClick={handleSoundtrackButton}
-                size='small'
-                isMap={false}
-                mouseOver={isAudioMuted ? UNMUTE_SOUNDTRACK : MUTE_SOUNDTRACK}
-            />
+            <NavSoundtrackIcon />
           </Flex>
 
           {!isIgnoranceFilterOn && <NavIcon

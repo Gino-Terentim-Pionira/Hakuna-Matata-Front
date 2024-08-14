@@ -17,6 +17,7 @@ import colorPalette from "../styles/colorPalette";
 // Images
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
+import { NavSoundtrackIcon } from "../components/NavigationComponents/NavSoundtrackIcon";
 
 const ForgotPassword = () => {
 	const history = useHistory();
@@ -60,7 +61,9 @@ const ForgotPassword = () => {
 		fontFamily={fontTheme.fonts}
 		fontWeight='regular'
 	>
-		<Center width='100%'>
+			<NavSoundtrackIcon position="absolute" left="16px" top="12px" />
+	
+			<Center width='100%'>
 			<LoginRegister
 				mainText='Pelo visto você não consegue mais lembrar sua senha. Você pode me passar o e-mail que usou para criar o passaporte? Não sei o que é um e-mail, foram as vozes da Savana que me pediram isso.'
 				firstText='”Qual é o seu e-mail, viajante?”'
