@@ -44,7 +44,8 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
   const { changeSoundtrack, muteSoundtrack, unmuteSoundtrack, audio } = useSoundtrack();
-  const [isSoundtrackMuted, setIsSoundtrackMuted] = useState(false);
+  const isSoundtrackMuted = localStorage.getItem("isSoundtrackMuted");
+  const [isAudioMuted, setIsAudioMuted] = useState(isSoundtrackMuted === "true");
 
   const {
     isOpen: profileIsOpen,
@@ -105,11 +106,9 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
   const handleSoundtrackButton = () => {
     if(audio.volume > 0) {
-      muteSoundtrack();
-      setIsSoundtrackMuted(true);
+      muteSoundtrack(() => setIsAudioMuted(true));
     } else {
-      unmuteSoundtrack();
-      setIsSoundtrackMuted(false);
+      unmuteSoundtrack(() => setIsAudioMuted(false));
     }
   }
 
@@ -133,11 +132,11 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
             />
 
             <NavIcon
-                image={isSoundtrackMuted ? 'soundtrackUnmute' : 'soundtrackMute'}
+                image={isAudioMuted ? 'soundtrackUnmute' : 'soundtrackMute'}
                 onClick={handleSoundtrackButton}
                 size='small'
                 isMap={false}
-                mouseOver={isSoundtrackMuted ? UNMUTE_SOUNDTRACK : MUTE_SOUNDTRACK}
+                mouseOver={isAudioMuted ? UNMUTE_SOUNDTRACK : MUTE_SOUNDTRACK}
             />
           </Flex>
 

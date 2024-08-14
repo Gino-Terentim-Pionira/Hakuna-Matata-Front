@@ -16,9 +16,9 @@ export const TUTORIAL = 'Acessar Tutorial';
 
 export const LOG_OUT = 'Encerrar Sessão';
 
-export const MUTE_SOUNDTRACK = 'Mutar som';
+export const MUTE_SOUNDTRACK = 'Desativar som';
 
-export const UNMUTE_SOUNDTRACK = 'Desmutar som';
+export const UNMUTE_SOUNDTRACK = 'Ativar som';
 
 export const MAP = 'Voltar para seleção de trilhas';
 
