@@ -26,6 +26,7 @@ import colorPalette from "../../styles/colorPalette";
 // Images
 import { errorCases } from '../../utils/errors/errorsCases';
 import LoadingState from "../LoadingState";
+import { OnProgressProps } from "react-player/base";
 
 interface IVideoModal {
     id: string;
@@ -52,6 +53,8 @@ const VideoModal: FC<IVideoModal> = ({
 }) => {
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
+    const [videoDuration, setVideoDuration] = useState(0);
+    const [hasTriggered, setHasTriggered] = useState(false);
     const { userData } = useUser();
 
     const updateVideo = async () => {
@@ -89,6 +92,21 @@ const VideoModal: FC<IVideoModal> = ({
         setIsVideoLoading(true);
         videoOnClose()
     }
+
+    const handleDuration = (duration: number) => {
+        setVideoDuration(duration);
+    };
+
+    const handleProgress = async (state: OnProgressProps) => {
+        const currentTime = state.playedSeconds;
+        const timeRemaining = videoDuration - currentTime;
+
+        if (timeRemaining <= 300 && !hasTriggered) {
+            setHasTriggered(true);
+            await handleFinishedVideo()
+        }
+    };
+
     return (
         <>
             <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="6xl">
@@ -114,6 +132,8 @@ const VideoModal: FC<IVideoModal> = ({
                             <ReactPlayer
                                 url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
                                 controls={true}
+                                onDuration={handleDuration}
+                                onProgress={handleProgress}
                                 onEnded={handleFinishedVideo}
                                 width="100%"
                                 height="550px"
