@@ -112,6 +112,10 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
         }
     }, [delayButton]);
 
+    useEffect(() => {
+        setStep(0);
+    }, [openModal])
+
     return (
         <>
             <Modal isOpen={openModal} onClose={closeModal} size='full' closeOnEsc={false} >
