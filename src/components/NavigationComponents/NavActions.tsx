@@ -98,8 +98,8 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   }
 
   const handleMapNavigation = () => {
-    changeSoundtrack('/mainPage');
-    history.push('/mainPage')
+    const path = '/mainPage';
+    changeSoundtrack(path, () => history.push(path));
   }
 
   return (

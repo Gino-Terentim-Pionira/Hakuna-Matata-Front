@@ -1,25 +1,29 @@
 import { useLocation } from "react-router-dom";
 import { useSoundtrack } from "../hooks/useSoundtrack";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import React from "react";
 import {soundtrackEnum} from "../utils/enums/soundtrackEnums";
 
 export const SoundtrackManager = () => {
     const location = useLocation();
-    const { playSoundtrack } = useSoundtrack();
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const { playSoundtrack, soundtrackData, setSoundtrackData } = useSoundtrack();
     const defaultSrc = soundtrackEnum[location.pathname];
 
     useEffect(() => {
         const handleCanPlayThrough = () => {
-            setIsLoaded(true);
+            setSoundtrackData({
+                ...soundtrackData,
+                isLoaded: true
+            })
         };
 
         const handleClick = () => {
-            if (isLoaded && !isPlaying) {
+            if (soundtrackData.isLoaded && !soundtrackData.isPlaying) {
                 playSoundtrack();
-                setIsPlaying(true);
+                setSoundtrackData({
+                    ...soundtrackData,
+                    isPlaying: true,
+                })
             }
         };
 
@@ -36,7 +40,7 @@ export const SoundtrackManager = () => {
                 document.removeEventListener('click', handleClick);
             }
         };
-    }, [isLoaded, isPlaying]);
+    }, [soundtrackData]);
 
     return (
         <audio id="audio" loop>

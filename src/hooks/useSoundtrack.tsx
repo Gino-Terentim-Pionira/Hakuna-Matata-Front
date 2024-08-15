@@ -1,8 +1,11 @@
 import { soundtrackEnum } from "../utils/enums/soundtrackEnums";
+import { useRecoilState } from "recoil";
+import { soundtrackState } from "../recoil/soundtrackRecoilState";
 
 export const useSoundtrack = () => {
     const audio = document.getElementById('audio') as HTMLAudioElement;
     const isSoundtrackMuted = localStorage.getItem("isSoundtrackMuted");
+    const [soundtrackData, setSoundtrackData] = useRecoilState(soundtrackState);
 
     const changeVolumeSoundtrack = () => {
         audio.volume = 0.2;
@@ -24,17 +27,18 @@ export const useSoundtrack = () => {
         audio.pause();
     }
 
-    const changeSoundtrack = (path: string) => {
+    const changeSoundtrack = (path: string, fallback?: VoidFunction) => {
         audio.src =  soundtrackEnum[path] ;
-        pauseSoundtrack()
-        playSoundtrack()
+        pauseSoundtrack();
+        playSoundtrack();
+        fallback && fallback();
     }
 
     const muteSoundtrack = (fallback?: VoidFunction) => {
         if (audio) {
             localStorage.setItem("isSoundtrackMuted", "true");
             audio.volume = 0;
-            fallback && fallback()
+            fallback && fallback();
         }
     }
 
@@ -42,7 +46,7 @@ export const useSoundtrack = () => {
         if (audio) {
             localStorage.setItem("isSoundtrackMuted", "false");
             changeVolumeSoundtrack();
-            fallback && fallback()
+            fallback && fallback();
         }
     }
 
@@ -52,6 +56,8 @@ export const useSoundtrack = () => {
         pauseSoundtrack,
         changeSoundtrack,
         muteSoundtrack,
-        unmuteSoundtrack
+        unmuteSoundtrack,
+        soundtrackData,
+        setSoundtrackData
     }
 }

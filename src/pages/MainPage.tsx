@@ -244,8 +244,7 @@ const MainPage = () => {
 
 	const goToPath2 = () => {
 		const path = '/trilha-cheetah';
-		history.push(path);
-		changeSoundtrack(path);
+		changeSoundtrack(path, () => history.push(path));
 	};
 
 	/*

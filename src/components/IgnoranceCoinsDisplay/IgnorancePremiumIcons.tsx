@@ -20,6 +20,7 @@ import { useHistory } from 'react-router-dom';
 import trailEnum from "../../utils/enums/trail";
 import { TutorialModal } from "../modals/Tutorial/TutorialModal";
 import TutorialServices from "../../services/TutorialServices";
+import { useSoundtrack } from "../../hooks/useSoundtrack";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -48,6 +49,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
   const [isDifferentDay, setIsDifferentDay] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
+  const { changeSoundtrack } = useSoundtrack();
 
   const { isOpen: quizIsOpen,
     onClose: quizOnClose,
@@ -67,12 +69,13 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
   }
 
   const handleOracle = () => {
-    handleFirstView('Oráculo', () => history.push({
-      pathname: '/oracle',
-      state: {
-        trail
-      }
-    }));
+    handleFirstView('Oráculo', () =>
+        changeSoundtrack('/oracle', () => history.push({
+          pathname: '/oracle',
+          state: {
+            trail
+          }
+        })));
   }
 
   const handleFirstView = (topic_name: string, action: VoidFunction) => {
