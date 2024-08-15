@@ -3,7 +3,6 @@ import {
     Modal,
     ModalOverlay,
     ModalContent,
-    Box,
     ModalBody,
     ModalCloseButton,
     Flex,
@@ -32,29 +31,23 @@ FC<IWelcomeVideoModal>
             onClose()
     }
     return (
-        <Modal isOpen={isOpen} onClose={handleCloseModal} size="4xl">
+        <Modal isOpen={isOpen} onClose={handleCloseModal} size="6xl">
             <ModalOverlay/>
-            <ModalContent height="34rem">
-                <ModalHeader display="flex" justifyContent="center" paddingBottom="0px">
-                    <Text marginTop='18px' color={colorPalette.textColor} fontFamily={fontTheme.fonts}
-                          fontWeight="semibold" fontSize="3.7rem">Seja bem-vindo!</Text>
+            <ModalContent paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
+                <ModalHeader paddingTop="0" paddingBottom="0px">
+                    <Text fontFamily={fontTheme.fonts} fontWeight="semibold" color={colorPalette.primaryColor} fontSize="40px">
+                        Seja bem vindo!
+                    </Text>
+                    <Text ml="4px" mt="-2px" fontFamily={fontTheme.fonts} fontWeight="medium" color={colorPalette.secundaryGrey} fontSize="18px">
+                        Antes de começar sua jornada, algumas palavras de boas vindas do idealizador Gino Terentim!
+                    </Text>
                 </ModalHeader>
-                <Box
-                    w="25%"
-                    bg={colorPalette.primaryColor}
-                    h="55vh"
-                    position="absolute"
-                    zIndex="-1"
-                    left="0"
-                    top="0"
-                    borderTopStartRadius='5px'
-                    clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"/>
-                <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={handleCloseModal}/>
-                <ModalBody marginTop="16px">
+                <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={handleCloseModal} />
+                <ModalBody mt="24px">
                     <Flex direction="column" alignItems="center" paddingTop="0px">
                             {
                                 isLoad &&
-                                <Flex height="280px">
+                                <Flex height="550px">
                                     <LoadingState/>
                                 </Flex>
                             }
@@ -62,11 +55,12 @@ FC<IWelcomeVideoModal>
                                 url='https://www.youtube.com/watch?v=NPcGhuJ_zXk'
                                 controls={true}
                                 playing={true}
+                                width="100%"
+                                height="550px"
+                                onReady={() => setIsLoad(false)}
                                 style={{
                                     display: isLoad ? 'none': 'block',
-                                    marginTop: '-16px'
                                 }}
-                                onReady={() => setIsLoad(false)}
                             />
                     </Flex>
                 </ModalBody>
