@@ -24,6 +24,7 @@ const TimeModal: FC<ITimeModal> = ({ timeIsOpen, timeOnClose }) => {
     }
     return (
         <GenericModal 
+            isStaticModal={true}
             isOpen={timeIsOpen}
             confirmFunction={handleStore}
             secondFunction={timeOnClose}

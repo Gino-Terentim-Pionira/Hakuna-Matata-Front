@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 
 // Components
-import Relics from './RelicComponents/Relics';
 import ProfileDataModal from './ProfileDataModal';
 import PerfilModalButton from '../../PerfilModalButton';
 import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusModal';
@@ -86,20 +85,17 @@ const ProfileModal: FC<ProfileModalProps> = ({
             <ModalContent height="600px" bg={colorPalette.backgroundColor}>
                 <Box w="25%" bg={colorPalette.primaryColor} h="100%" position="absolute" zIndex='0' left="0" top="0"></Box>
                 <ModalHeader margin-top='1rem'>
-                    <Flex justifyContent='space-around'>
+                    <Flex justifyContent='space-evenly'>
                             <PerfilModalButton onClick={() => setStep(1)} label='Status' isSelected={step === 1} />
                             <PerfilModalButton onClick={() => setStep(2)} label='Dados' isSelected={step === 2} />
-                            <PerfilModalButton onClick={() => setStep(3)} label="Relíquias"  isSelected={step === 3 } />
                     </Flex>
                 </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody zIndex='1'>
                     {step === 1 ? (
                         renderBackgroundImage(<ProgressionStatusModal />, true)
-                    ) : step === 2 ? (
-                        renderBackgroundImage(<ProfileDataModal />)
                     ) : (
-                        renderBackgroundImage(<Relics />, true)
+                        renderBackgroundImage(<ProfileDataModal />)
                     )}
                 </ModalBody>
             </ModalContent>

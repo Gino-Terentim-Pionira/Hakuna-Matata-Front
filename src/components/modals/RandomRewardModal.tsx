@@ -56,7 +56,6 @@ const RandomRewardModal = () => {
         try {
             setIsLoading(true);
             await addCoinsStatus(coins);
-            onClose();
             setRandomNumber(false);
             setIsLoading(false);
         } catch (error) {
@@ -115,9 +114,10 @@ const RandomRewardModal = () => {
             <RewardModal
             isOpen={isOpen}
             genericModalInfo={rewardModalInfo}
-            confirmFunction={updateUserCoins}
+            confirmFunction={onClose}
             error={onError}
             loading={isLoading}
+            initFunction={updateUserCoins}
             />
         </>
     );
