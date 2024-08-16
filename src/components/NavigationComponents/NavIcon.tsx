@@ -1,15 +1,15 @@
 import { Center, Image, Tooltip } from '@chakra-ui/react';
 import React, { FC } from 'react';
-
 import icon_map from '../../assets/icons/icon_map.svg';
 import icon_map_opened from '../../assets/icons/icon_map_opened.svg';
 import colorPalette from '../../styles/colorPalette';
 import { PositionProps } from '../../utils/props';
 import UserAvatar from '../UserAvatar';
 import { useUser } from '../../hooks';
+import { PiSpeakerSimpleHighFill, PiSpeakerSimpleSlashFill } from "react-icons/pi";
 
 type NavIconProps = {
-    image: string | 'profile';
+    image: string | 'profile' | 'soundtrackMute' | 'soundtrackUnmute';
     onClick: VoidFunction;
     size: 'big' | 'normal' | 'small';
     isMap?: boolean;
@@ -31,18 +31,40 @@ const NavIcon: FC<NavIconProps> = ({
 }) => {
     const { userData } = useUser();
 
-    const defineSize = () => {
-        switch (size) {
-            case 'big':
-                return '6.55rem'
-                break;
+    const defineSize: {[key: string]: string} = {
+        'big': '6.55rem',
+        'normal': '4.5rem',
+        'small': '3.75rem'
+    }
 
-            case 'normal':
-                return '4.5rem'
-                break;
-            case 'small':
-                return '3.75rem'
-                break;
+    const renderIcon = () => {
+        if(image === 'soundtrackMute') {
+           return <PiSpeakerSimpleSlashFill color={colorPalette.closeButton} size={39} />
+        } else if(image === 'soundtrackUnmute') {
+            return <PiSpeakerSimpleHighFill size={39} />
+        } else {
+            return (
+                image === 'profile' ?
+                    <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="52px" height="52px" marginBottom="4px" />
+                    :
+                    <Image
+                        maxW={isMap ? '' : '50px'}
+                        src={image}
+                        marginBottom='.1rem'
+                        onMouseOverCapture={(e) => {
+                            if (isMap) {
+                                (e.currentTarget.src = icon_map_opened)
+                            }
+                        }
+                        }
+                        onMouseOut={(e) => {
+                            if (isMap) {
+                                (e.currentTarget.src = icon_map)
+                            }
+                        }
+                        }
+                    />
+            )
         }
     }
 
@@ -62,33 +84,12 @@ const NavIcon: FC<NavIconProps> = ({
                 mt={marginTop || '8px'}
                 border={`2px solid ${colorPalette.blackBorder}`}
                 borderRadius='4.5rem'
-                width={defineSize()}
-                height={defineSize()}
+                width={defineSize[size]}
+                height={defineSize[size]}
                 bg='white'
                 onClick={onClick}
             >
-                {
-                    image === 'profile' ?
-                        <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="52px" height="52px" marginBottom="4px" />
-                        :
-                        <Image
-                            maxW={isMap ? '' : '50px'}
-                            src={image}
-                            marginBottom='.1rem'
-                            onMouseOverCapture={(e) => {
-                                if (isMap) {
-                                    (e.currentTarget.src = icon_map_opened)
-                                }
-                            }
-                            }
-                            onMouseOut={(e) => {
-                                if (isMap) {
-                                    (e.currentTarget.src = icon_map)
-                                }
-                            }
-                            }
-                        />
-                }
+                { renderIcon() }
             </Center>
         </Tooltip>
     )

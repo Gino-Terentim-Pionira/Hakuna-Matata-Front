@@ -15,6 +15,7 @@ import { IUser } from '../recoil/useRecoilState';
 import OracleAnimation from '../components/Oracle/OracleChat/components/OracleAnimation';
 import GenericModal from "../components/modals/GenericModal";
 import { PiWarningFill } from "react-icons/pi";
+import { useSoundtrack } from "../hooks/useSoundtrack";
 
 export type PackagesDataType = ShopItemInfoType[];
 
@@ -24,13 +25,13 @@ const FinalQuizCompleteEnum: { [key: string]: keyof IUser['finalQuizComplete'] }
 	'Leão e Leoa': 'lionFinal'
 }
 
-
 export const Oracle = () => {
 	const { userData, getNewUserInfo } = useUser();
 	const history = useHistory();
 	const location = useLocation();
 	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location?.state?.trail as trailEnum]] : false;
 	const oracleService = new OracleServices();
+	const { changeSoundtrack } = useSoundtrack();
 	const { isOpen: isShopModalOpen, onOpen: onOpenShopModal, onClose: onCloseShopModal } = useDisclosure();
 	const [packages, setPackages] = useState<PackagesDataType>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -52,6 +53,7 @@ export const Oracle = () => {
 		] as IMessages[],
 		commonQuestions: [] as ICommonQuestion[]
 	});
+
 	const [alert, setAlert] = useState<{
 		onAlert: boolean,
 		title: string,
@@ -64,7 +66,7 @@ export const Oracle = () => {
 		title: 'Ops!',
 		body: 'O Oráculo não está disponível no momento. Volte mais tarde!',
 		closeFunction: () => history.goBack(),
-		buttonFunction: () => history.goBack(),
+		buttonFunction:() => history.goBack(),
 		buttonText: 'Voltar'
 	});
 
@@ -116,6 +118,7 @@ export const Oracle = () => {
 	}
 
 	useEffect(() => {
+		changeSoundtrack('/oracle');
 		const fetchData = async () => {
 			try {
 				if (!userData._id) {

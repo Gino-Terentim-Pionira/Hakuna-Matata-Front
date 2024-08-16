@@ -22,6 +22,7 @@ import colorPalette from '../styles/colorPalette';
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import { GENERIC_MODAL_TEXT, CREATE_PASSAPORT } from '../utils/constants/buttonConstants';
 import {validateEmail} from "../utils/validates";
+import { NavSoundtrackIcon } from "../components/NavigationComponents/NavSoundtrackIcon";
 
 const Login = () => {
 	const [email, setEmail] = useState<string>('');
@@ -157,6 +158,7 @@ const Login = () => {
 			fontFamily={fontTheme.fonts}
 			fontWeight='regular'
 		>
+			<NavSoundtrackIcon position="absolute" left="16px" top="12px" />
 			<Center width='100%'>
 				<LoginRegister
 					mainText='Seja bem vindo de volta ao Pionira. Para entrar na Savana preciso que você me fale seu e-mail e sua senha.'

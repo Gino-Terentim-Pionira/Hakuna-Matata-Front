@@ -3,6 +3,7 @@ import { Box } from '@chakra-ui/react';
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from 'framer-motion';
 import colorPalette from '../../styles/colorPalette';
+import { useSoundtrack } from "../../hooks/useSoundtrack";
 
 const UnlockAnimation = (
     {
@@ -16,12 +17,15 @@ const UnlockAnimation = (
     },
 ) => {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const { muteSoundtrack, unmuteSoundtrack } = useSoundtrack();
 
     useEffect(() => {
         if (isOpen && videoRef.current) {
+            muteSoundtrack();
             videoRef.current.currentTime = 0;
             videoRef.current.play();
         } else if (!isOpen && videoRef.current) {
+            unmuteSoundtrack();
             videoRef.current.pause();
         }
     }, [isOpen, animation]);
