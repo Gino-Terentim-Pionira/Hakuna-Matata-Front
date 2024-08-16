@@ -6,7 +6,6 @@ import {
     ModalHeader,
     ModalBody,
     ModalCloseButton,
-    Box,
     Flex,
     Button,
     Text,
@@ -27,10 +26,12 @@ import colorPalette from "../../styles/colorPalette";
 // Images
 import { errorCases } from '../../utils/errors/errorsCases';
 import LoadingState from "../LoadingState";
+import { OnProgressProps } from "react-player/base";
 
 interface IVideoModal {
     id: string;
     name: string;
+    description: string;
     url: string;
     videoIsOpen: boolean,
     videoOnClose: VoidFunction,
@@ -45,13 +46,15 @@ const VideoModal: FC<IVideoModal> = ({
     coins,
     id,
     name,
+    description,
     url,
     plataform = 'youtube',
     updateQuiz
 }) => {
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
-    const [buttonIsLoading, setButtonIsLoading] = useState(false);
+    const [videoDuration, setVideoDuration] = useState(0);
+    const [hasTriggered, setHasTriggered] = useState(false);
     const { userData } = useUser();
 
     const updateVideo = async () => {
@@ -70,16 +73,12 @@ const VideoModal: FC<IVideoModal> = ({
     }
 
     // Verifica qual modal abrir
-    const handleModal = async () => {
+    const handleFinishedVideo = async () => {
         try {
-            setButtonIsLoading(true);
             await updateVideo();
             updateQuiz();
-            handleCloseModal();
-            setButtonIsLoading(false);
         } catch (error) {
             setOnError(true);
-            setButtonIsLoading(false);
         }
     }
 
@@ -93,65 +92,56 @@ const VideoModal: FC<IVideoModal> = ({
         setIsVideoLoading(true);
         videoOnClose()
     }
+
+    const handleDuration = (duration: number) => {
+        setVideoDuration(duration);
+    };
+
+    const handleProgress = async (state: OnProgressProps) => {
+        const currentTime = state.playedSeconds;
+        const timeRemaining = videoDuration - currentTime;
+
+        if (timeRemaining <= 300 && !hasTriggered) {
+            setHasTriggered(true);
+            await handleFinishedVideo()
+        }
+    };
+
     return (
         <>
-            <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="4xl">
+            <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="6xl">
                 <ModalOverlay />
-                <ModalContent height="34rem">
-                    <ModalHeader display="flex" justifyContent="center" paddingBottom="0px">
-                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" color={colorPalette.textColor} fontSize="3.7rem">
+                <ModalContent paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
+                    <ModalHeader paddingTop="0" paddingBottom="0px">
+                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" color={colorPalette.primaryColor} fontSize="40px">
                             {name}
                         </Text>
+                        <Text ml="4px" mt="-2px" fontFamily={fontTheme.fonts} fontWeight="medium" color={colorPalette.secundaryGrey} fontSize="18px">
+                            {description}
+                        </Text>
                     </ModalHeader>
-                    <Box
-                        w="25%"
-                        bg={colorPalette.primaryColor}
-                        h="55vh"
-                        position="absolute"
-                        zIndex="-1"
-                        left="0"
-                        top="0"
-                        borderTopStartRadius='5px'
-                        clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
-                    />
                     <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={handleCloseModal} />
-                    <ModalBody>
+                    <ModalBody mt="24px">
                         <Flex direction="column" alignItems="center" paddingTop="0px">
                             {
                                 isVideoLoading &&
-                                <Flex height="320px">
+                                <Flex height="550px">
                                     <LoadingState/>
                                 </Flex>
                             }
                             <ReactPlayer
                                 url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
                                 controls={true}
-                                onEnded={handleModal}
+                                onDuration={handleDuration}
+                                onProgress={handleProgress}
+                                onEnded={handleFinishedVideo}
+                                width="100%"
+                                height="550px"
                                 onReady={() => setIsVideoLoading(false)}
                                 style={{
                                     display: isVideoLoading ? 'none': 'block',
-                                    marginTop: '-16px'
                                 }}
                             />
-                        </Flex>
-
-                        <Flex justifyContent="center" alignItems='flex-end' marginTop="1rem">
-                            <Button
-                                display={isVideoLoading ? 'none': 'flex'}
-                                bgColor={colorPalette.confirmButton}
-                                width="50%"
-                                height="3rem"
-                                isLoading={buttonIsLoading}
-                                onClick={!buttonIsLoading ? () => handleModal() : () => console.log()}
-                            >
-                                <Text
-                                    fontFamily={fontTheme.fonts}
-                                    fontWeight="semibold"
-                                    fontSize="2rem"
-                                >
-                                    Concluído
-                                    </Text>
-                            </Button>
                         </Flex>
                     </ModalBody>
                 </ModalContent >

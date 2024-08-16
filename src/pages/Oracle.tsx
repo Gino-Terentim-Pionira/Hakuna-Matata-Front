@@ -15,7 +15,7 @@ import { IUser } from '../recoil/useRecoilState';
 import OracleAnimation from '../components/Oracle/OracleChat/components/OracleAnimation';
 import GenericModal from "../components/modals/GenericModal";
 import { PiWarningFill } from "react-icons/pi";
-import {useSoundtrack} from "../hooks/useSoundtrack";
+import { useSoundtrack } from "../hooks/useSoundtrack";
 
 export type PackagesDataType = ShopItemInfoType[];
 
@@ -65,8 +65,8 @@ export const Oracle = () => {
 		onAlert: false,
 		title: 'Ops!',
 		body: 'O Oráculo não está disponível no momento. Volte mais tarde!',
-		closeFunction: () => changeSoundtrack('/trilha-cheetah', () => history.goBack()),
-		buttonFunction: () => changeSoundtrack('/trilha-cheetah', () => history.goBack()),
+		closeFunction: () => history.goBack(),
+		buttonFunction:() => history.goBack(),
 		buttonText: 'Voltar'
 	});
 
@@ -118,6 +118,7 @@ export const Oracle = () => {
 	}
 
 	useEffect(() => {
+		changeSoundtrack('/oracle');
 		const fetchData = async () => {
 			try {
 				if (!userData._id) {

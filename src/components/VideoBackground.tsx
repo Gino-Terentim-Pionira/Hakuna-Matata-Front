@@ -2,11 +2,14 @@ import React, { FC } from 'react';
 
 type VideoBackgroundProps = {
     source: string;
+    handleLoading?: VoidFunction
 }
 
-const VideoBackground: FC<VideoBackgroundProps> = ({ source }) => {
+const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading }) => {
+
     return (
         <video
+            id="background-video"
             autoPlay
             loop
             muted
@@ -18,6 +21,7 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source }) => {
                 objectFit: "fill",
                 zIndex: -3,
             }}
+            onLoadedData={()=>handleLoading ? handleLoading() : null}
         >
             <source src={source} type="video/webm" />
         </video>

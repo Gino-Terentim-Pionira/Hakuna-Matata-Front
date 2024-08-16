@@ -9,7 +9,6 @@ import { STORE } from '../../utils/constants/mouseOverConstants';
 import { useHistory } from 'react-router-dom';
 import { getStatusColor } from '../../utils/statusUtils';
 import { useUser } from '../../hooks';
-import {useSoundtrack} from "../../hooks/useSoundtrack";
 
 export const OracleHeader = ({
 	oracleName,
@@ -20,7 +19,6 @@ export const OracleHeader = ({
 }) => {
 	const history = useHistory();
 	const { userData } = useUser();
-	const { changeSoundtrack } = useSoundtrack();
 
 	return (
 		<Flex
@@ -39,7 +37,7 @@ export const OracleHeader = ({
 				width="44px"
 				src={SideArrow}
 				alt="Voltar para página anterior"
-				onClick={() => changeSoundtrack('/trilha-cheetah', () => history.goBack())}
+				onClick={() => history.goBack()}
 			/>
 
 			<Center display="flex" flexDirection="column">

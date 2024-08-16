@@ -99,8 +99,7 @@ const DailyQuiz: FC<IDailyQuiz> = ({
             setIsLoading(true);
             await addCoinsStatus(coins);
             await getNewUserInfo();
-            onClose();
-            history.go(0);
+            setIsLoading(false);
         } catch (error) {
             setOnError(true);
         }
@@ -152,9 +151,13 @@ const DailyQuiz: FC<IDailyQuiz> = ({
         <RewardModal
             isOpen={isOpen}
             genericModalInfo={rewardModalInfo()}
-            confirmFunction={updateUserCoins}
+            confirmFunction={()=>{
+                onClose();
+                history.go(0);
+            }}
             loading={isLoading}
             error={onError}
+            initFunction={updateUserCoins}
         />
     </>
     );
