@@ -30,7 +30,10 @@ export const useSoundtrack = () => {
     const changeSoundtrack = (path: string, fallback?: VoidFunction) => {
         audio.src =  soundtrackEnum[path] ;
         pauseSoundtrack();
-        playSoundtrack();
+
+        if(soundtrackData.isPlaying)
+            playSoundtrack();
+
         fallback && fallback();
     }
 
