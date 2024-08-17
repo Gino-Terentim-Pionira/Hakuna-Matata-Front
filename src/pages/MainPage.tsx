@@ -267,8 +267,8 @@ const MainPage = () => {
 	}
 
 	useEffect(() => {
-		if(audio.src !== soundtrackEnum['/trilha-cheetah'])
-			changeSoundtrack("/trilha-cheetah");
+		if(audio.src !== soundtrackEnum['/mainPage'])
+			changeSoundtrack("/mainPage");
 
 		const getUserRequisition = async () => {
 			if (userData._id) {
