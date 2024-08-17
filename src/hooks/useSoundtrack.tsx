@@ -27,14 +27,15 @@ export const useSoundtrack = () => {
         audio.pause();
     }
 
-    const changeSoundtrack = (path: string, fallback?: VoidFunction) => {
-        audio.src =  soundtrackEnum[path] ;
-        pauseSoundtrack();
+    const changeSoundtrack = (path: string) => {
+        if(audio.src !== soundtrackEnum[path]) {
+            audio.src = soundtrackEnum[path] ;
+            sessionStorage.setItem('lastSoundtrack', soundtrackEnum[path]);
 
-        if(soundtrackData.isPlaying)
-            playSoundtrack();
-
-        fallback && fallback();
+            pauseSoundtrack();
+            if(soundtrackData.isPlaying)
+                playSoundtrack();
+        }
     }
 
     const muteSoundtrack = (fallback?: VoidFunction) => {
