@@ -28,9 +28,10 @@ export const useSoundtrack = () => {
     }
 
     const changeSoundtrack = (path: string, fallback?: VoidFunction) => {
-        audio.src =  soundtrackEnum[path] ;
-        pauseSoundtrack();
+        audio.src = soundtrackEnum[path] ;
+        sessionStorage.setItem('lastSoundtrack', soundtrackEnum[path]);
 
+        pauseSoundtrack();
         if(soundtrackData.isPlaying)
             playSoundtrack();
 

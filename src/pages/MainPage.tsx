@@ -46,7 +46,7 @@ import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
-import { useSoundtrack } from "../hooks/useSoundtrack";
+import { useSoundtrack } from '../hooks/useSoundtrack';
 import {soundtrackEnum} from "../utils/enums/soundtrackEnums";
 
 interface IScript {

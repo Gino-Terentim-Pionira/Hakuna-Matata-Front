@@ -21,6 +21,7 @@ import icon_shop from '../assets/icons/icon_shop.svg';
 import { errorCases } from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
 import BackButton from '../components/BackButton';
+import { useSoundtrack } from "../hooks/useSoundtrack";
 
 
 const Shop = () => {
@@ -29,6 +30,7 @@ const Shop = () => {
 	const [shopItem, setShopItem] = useState([]);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
+	const { audio } = useSoundtrack();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const getShopItens = async () => {
@@ -53,6 +55,9 @@ const Shop = () => {
 	};
 
 	useEffect(() => {
+		const lastSoundtrack = sessionStorage.getItem("lastSoundtrack");
+		audio.src = lastSoundtrack ?? '';
+
 		getShopItens();
 	}, []);
 	return (

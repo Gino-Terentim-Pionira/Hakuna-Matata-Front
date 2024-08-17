@@ -22,10 +22,12 @@ import icon_inventory from '../assets/icons/icon_inventory.svg';
 import { errorCases } from '../utils/errors/errorsCases';
 import BackButton from '../components/BackButton';
 import { getStatusPoints } from '../utils/statusUtils';
+import { useSoundtrack } from "../hooks/useSoundtrack";
 
 const Shop = () => {
 	const { handleBack } = usePath();
 	const { getNewUserInfo, userData } = useUser();
+	const { soundtrackData, audio } = useSoundtrack();
 	const [shopItem, setShopItem] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
 	const [onError, setOnError] = useState(false);
@@ -59,6 +61,9 @@ const Shop = () => {
 	};
 
 	useEffect(() => {
+		const lastSoundtrack = sessionStorage.getItem("lastSoundtrack");
+		audio.src = lastSoundtrack ?? '';
+
 		getShopItens();
 	}, []);
 	return (

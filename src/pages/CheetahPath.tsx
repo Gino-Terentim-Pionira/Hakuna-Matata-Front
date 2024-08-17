@@ -65,7 +65,7 @@ import VideoBackground from '../components/VideoBackground';
 import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { getTrailAccess, trailAccessEnum, setTrailAccess } from '../utils/localStorageUtils';
-import {useSoundtrack} from "../hooks/useSoundtrack";
+import { useSoundtrack } from '../hooks/useSoundtrack';
 import {soundtrackEnum} from "../utils/enums/soundtrackEnums";
 
 interface IQuiz {
