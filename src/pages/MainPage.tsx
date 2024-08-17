@@ -47,7 +47,6 @@ import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/background
 import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
-import {soundtrackEnum} from "../utils/enums/soundtrackEnums";
 
 interface IScript {
 	name: string;
@@ -78,7 +77,7 @@ const MainPage = () => {
 	} = useDisclosure();
 
 	const { getNewUserInfo, setUserData, userData } = useUser();
-	const { changeSoundtrack, muteSoundtrack, unmuteSoundtrack, audio } = useSoundtrack();
+	const { changeSoundtrack, muteSoundtrack, unmuteSoundtrack } = useSoundtrack();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [onAlert, setOnAlert] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
@@ -267,8 +266,7 @@ const MainPage = () => {
 	}
 
 	useEffect(() => {
-		if(audio.src !== soundtrackEnum['/mainPage'])
-			changeSoundtrack("/mainPage");
+		changeSoundtrack("/mainPage");
 
 		const getUserRequisition = async () => {
 			if (userData._id) {

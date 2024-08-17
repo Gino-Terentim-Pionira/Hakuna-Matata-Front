@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
-import { Button, Center, Image, SimpleGrid } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Box, Flex, Spacer, Text} from '@chakra-ui/layout';
+import {Button, Center, Image, SimpleGrid} from '@chakra-ui/react';
+import {useHistory} from 'react-router-dom';
 import usePath from '../hooks/usePath';
 
 // Components
@@ -10,7 +10,7 @@ import PurchasedItems from '../components/PurchasedItems';
 
 // Requisitions
 import api from '../services/api';
-import { useUser } from '../hooks';
+import {useUser} from '../hooks';
 
 // Styles
 import fontTheme from '../styles/base';
@@ -18,10 +18,10 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import icon_shop from '../assets/icons/icon_shop.svg';
-import { errorCases } from '../utils/errors/errorsCases';
+import {errorCases} from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
 import BackButton from '../components/BackButton';
-import { useSoundtrack } from "../hooks/useSoundtrack";
+import {useSoundtrack} from "../hooks/useSoundtrack";
 
 
 const Shop = () => {
@@ -30,7 +30,7 @@ const Shop = () => {
 	const [shopItem, setShopItem] = useState([]);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
-	const { audio } = useSoundtrack();
+	const { audio, soundtrackData } = useSoundtrack();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const getShopItens = async () => {
@@ -55,8 +55,9 @@ const Shop = () => {
 	};
 
 	useEffect(() => {
-		const lastSoundtrack = sessionStorage.getItem("lastSoundtrack");
-		audio.src = lastSoundtrack ?? '';
+		if(!soundtrackData.isPlaying) {
+			audio.src = sessionStorage.getItem("lastSoundtrack") as string;
+		}
 
 		getShopItens();
 	}, []);

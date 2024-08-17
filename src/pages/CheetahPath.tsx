@@ -66,7 +66,6 @@ import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { getTrailAccess, trailAccessEnum, setTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
-import {soundtrackEnum} from "../utils/enums/soundtrackEnums";
 
 interface IQuiz {
     _id: string;
@@ -214,7 +213,7 @@ const CheetahPath = () => {
     const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
     const [payLoading, setPayLoading] = useState<boolean>(false);
     const [blockedMessage, setBlockedMessage] = useState<string>('');
-    const { changeSoundtrack, audio } = useSoundtrack();
+    const { changeSoundtrack} = useSoundtrack();
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -374,8 +373,7 @@ const CheetahPath = () => {
     }
 
     useEffect(() => {
-        if(audio.src !== soundtrackEnum['/trilha-cheetah'])
-            changeSoundtrack('/trilha-cheetah')
+        changeSoundtrack('/trilha-cheetah')
 
         const getUser = async () => {
             try {
