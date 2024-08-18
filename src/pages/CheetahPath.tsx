@@ -214,6 +214,7 @@ const CheetahPath = () => {
     const [payLoading, setPayLoading] = useState<boolean>(false);
     const [blockedMessage, setBlockedMessage] = useState<string>('');
     const { changeSoundtrack} = useSoundtrack();
+    const [canDoFinalQuiz, setCanDoFinalQuiz] = useState(false);
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -301,7 +302,12 @@ const CheetahPath = () => {
         if (!completeTrail) {
             await challengeNarrative();
         }
-        if (hasEnougthStatusForFinalQuiz(userData, AGILITY) == 'enoughStatus') modalOnOpen();
+        if (hasEnougthStatusForFinalQuiz(userData, AGILITY) == 'enoughStatus') {
+            setCanDoFinalQuiz(true);
+        } else {
+            setCheetahText(`Seu nível de ${AGILITY} não é suficiente! É necessário 90% ou mais de ${AGILITY} para acessar o Desafio Final.`);
+        }
+        modalOnOpen();
     }
 
     const finalCheetahNarrative = () => {
@@ -373,7 +379,7 @@ const CheetahPath = () => {
     }
 
     useEffect(() => {
-        changeSoundtrack('/trilha-cheetah')
+        changeSoundtrack('/trilha-cheetah');
 
         const getUser = async () => {
             try {
@@ -398,7 +404,7 @@ const CheetahPath = () => {
 
                 if (isComplete) {
                     setCheetahText(
-                        `Você já alcançou o máximo da sua agilidade  ${userInfoData.userName}! Vamos com tudo contra a ignorância!`,
+                        `"Você já alcançou o máximo da sua agilidade  ${userInfoData.userName}! Vamos com tudo contra a ignorância!"`,
                     );
                     setCompleteTrail(true);
                     if (userInfoData.narrative_status.trail1 === 3) {
@@ -543,7 +549,7 @@ const CheetahPath = () => {
                                             borderTopStartRadius='5px'
                                             clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
                                         />
-                                        {completeTrail ? (
+                                        {completeTrail || !canDoFinalQuiz ? (
                                             <>
                                                 <ModalBody
                                                     d='flex'
@@ -567,7 +573,7 @@ const CheetahPath = () => {
                                                             textAlign='center'
                                                             fontWeight='normal'
                                                         >
-                                                            "{cheetahText}"
+                                                            {cheetahText}
                                                 </Text>
                                                         <Button
                                                             bgColor={

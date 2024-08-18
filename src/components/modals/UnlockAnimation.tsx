@@ -17,15 +17,15 @@ const UnlockAnimation = (
     },
 ) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const { muteSoundtrack, unmuteSoundtrack } = useSoundtrack();
+    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
 
     useEffect(() => {
         if (isOpen && videoRef.current) {
-            muteSoundtrack();
+            pauseSoundtrack();
             videoRef.current.currentTime = 0;
             videoRef.current.play();
         } else if (!isOpen && videoRef.current) {
-            unmuteSoundtrack();
+            playSoundtrack();
             videoRef.current.pause();
         }
     }, [isOpen, animation]);
