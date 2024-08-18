@@ -46,6 +46,7 @@ import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
+import { useSoundtrack } from '../hooks/useSoundtrack';
 
 interface IScript {
 	name: string;
@@ -76,6 +77,7 @@ const MainPage = () => {
 	} = useDisclosure();
 
 	const { getNewUserInfo, setUserData, userData } = useUser();
+	const { changeSoundtrack, muteSoundtrack, unmuteSoundtrack } = useSoundtrack();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [onAlert, setOnAlert] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
@@ -141,6 +143,7 @@ const MainPage = () => {
 				narrativeOnOpen();
 			}
 
+			unmuteSoundtrack();
 			welcomeVideoOnClose();
 		} catch (error) {
 			handleErrorAlert();
@@ -242,7 +245,8 @@ const MainPage = () => {
 	*/
 
 	const goToPath2 = () => {
-		history.push('/trilha-cheetah');
+		const path = '/trilha-cheetah';
+		history.push(path);
 	};
 
 	/*
@@ -262,6 +266,8 @@ const MainPage = () => {
 	}
 
 	useEffect(() => {
+		changeSoundtrack("/mainPage");
+
 		const getUserRequisition = async () => {
 			if (userData._id) {
 				setIgnoranceFilter(userData.ignorance, ignoranceArray);
@@ -282,6 +288,7 @@ const MainPage = () => {
 
 				if (res.data.isFirstTimeAppLaunching) {
 					welcomeVideoOnOpen();
+					muteSoundtrack();
 				}
 
 				await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
@@ -401,6 +408,7 @@ const MainPage = () => {
 				buttonBody={
 					<Button
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={alert.buttonFunction}
 					>

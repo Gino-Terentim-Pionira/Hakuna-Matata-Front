@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
-import { Button, Center, Image, SimpleGrid } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
-import { useUser } from '../hooks';
+import React, {useEffect, useState} from 'react';
+import {Box, Flex, Spacer, Text} from '@chakra-ui/layout';
+import {Button, Center, Image, SimpleGrid} from '@chakra-ui/react';
+import {useHistory} from 'react-router-dom';
+import {useUser} from '../hooks';
 import usePath from '../hooks/usePath';
 
 // Components
@@ -19,13 +19,15 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import icon_inventory from '../assets/icons/icon_inventory.svg';
-import { errorCases } from '../utils/errors/errorsCases';
+import {errorCases} from '../utils/errors/errorsCases';
 import BackButton from '../components/BackButton';
-import { getStatusPoints } from '../utils/statusUtils';
+import {getStatusPoints} from '../utils/statusUtils';
+import {useSoundtrack} from "../hooks/useSoundtrack";
 
 const Shop = () => {
 	const { handleBack } = usePath();
 	const { getNewUserInfo, userData } = useUser();
+	const { soundtrackData, audio } = useSoundtrack();
 	const [shopItem, setShopItem] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
 	const [onError, setOnError] = useState(false);
@@ -59,6 +61,10 @@ const Shop = () => {
 	};
 
 	useEffect(() => {
+		if(!soundtrackData.isPlaying) {
+			audio.src = sessionStorage.getItem("lastSoundtrack") as string;
+		}
+
 		getShopItens();
 	}, []);
 	return (
@@ -183,6 +189,7 @@ const Shop = () => {
 				buttonBody={
 					<Button
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={() => window.location.reload()}
 					>

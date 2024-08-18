@@ -107,7 +107,7 @@ export const TutorialContent = ({ tutorialContent, goBack, userData }: TutorialC
                         {name}
                     </Text>
                     <Box
-                        fontSize="16px"
+                        fontSize="18px"
                         color={colorPalette.textColor}
                         marginTop="8px"
                         sx={{

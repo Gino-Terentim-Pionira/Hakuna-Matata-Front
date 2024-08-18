@@ -17,6 +17,7 @@ import CheetahPath from './pages/CheetahPath';
 // import LionPath from './pages/lionPath';
 import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
+import { SoundtrackManager } from "./components/SoundtrackManager";
 
 const useWindowSize = () => {
 	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
@@ -33,36 +34,36 @@ const useWindowSize = () => {
 }
 
 const Routes = () => {
-
 	const [height, width] = useWindowSize();
 
 	return (
 		<RecoilRoot>
 			<HashRouter basename="/">
+				<SoundtrackManager />
 				<AuthProvider>
 					{
 						height < 550 || width < 600 ? (
-							<CantUseApplication />
+							<CantUseApplication/>
 						) : null
 					}
 					<Switch>
-						<Route path='/' exact component={Home} />
-						<Route path='/login' component={Login} />
-						<Route path='/forgotPassword' component={ForgotPassword} />
-						<Route path="/resetPassword/:id" component={ResetPassword} />
-						<Route path='/register' component={Register} />
-						<ProtectedRoute path='/shop' component={Shop} />
-						<ProtectedRoute path='/inventory' component={Inventory} />
-						<ProtectedRoute path='/mainPage' component={MainPage} />
-						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath} />
+						<Route path='/' exact component={Home}/>
+						<Route path='/login' component={Login}/>
+						<Route path='/forgotPassword' component={ForgotPassword}/>
+						<Route path="/resetPassword/:id" component={ResetPassword}/>
+						<Route path='/register' component={Register}/>
+						<ProtectedRoute path='/shop' component={Shop}/>
+						<ProtectedRoute path='/inventory' component={Inventory}/>
+						<ProtectedRoute path='/mainPage' component={MainPage}/>
+						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath}/>
 						{/*
 							<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
 							<ProtectedRoute path='/trilha-leao' component={LionPath} />
 						*/}
-						<ProtectedRoute path='/oracle' component={Oracle} />
+						<ProtectedRoute path='/oracle' component={Oracle}/>
 					</Switch>
-				</AuthProvider >
-			</HashRouter >
+				</AuthProvider>
+			</HashRouter>
 		</RecoilRoot>
 	);
 };

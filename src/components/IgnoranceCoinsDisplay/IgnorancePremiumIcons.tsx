@@ -68,11 +68,11 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
 
   const handleOracle = () => {
     handleFirstView('Oráculo', () => history.push({
-      pathname: '/oracle',
-      state: {
-        trail
-      }
-    }));
+          pathname: '/oracle',
+          state: {
+            trail
+          }
+        }));
   }
 
   const handleFirstView = (topic_name: string, action: VoidFunction) => {

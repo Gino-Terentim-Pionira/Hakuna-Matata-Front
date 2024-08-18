@@ -69,6 +69,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
         isOpen: false,
         onClose: () => onCloseFirstAnimation()
     });
+    const HAS_USER_FINISHED_MODULE = remainingCoins == 0;
 
     const onCloseFirstAnimation = () => {
         const second_animation_url = numberCompletedModules(moduleData, userData.module_id) ? S3_VIDEO_ORACLE_UPDATED : S3_VIDEO_ORACLE_AVAILABLE;
@@ -118,7 +119,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     const onEndQuiz = (passed: boolean) => {
         setPassed(passed);
         setCoins(prevCoins => {
-            if (prevCoins >= remainingCoins) {
+            if (!HAS_USER_FINISHED_MODULE && prevCoins >= remainingCoins) {
                 setAnimationInfo(prevState => ({
                     ...prevState,
                     isOpen: true
@@ -171,7 +172,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
     };
 
     const handleOnCloseReward = () => {
-        if (coins >= remainingCoins) {
+        if (!HAS_USER_FINISHED_MODULE && coins >= remainingCoins) {
             openFinalModuleNarrative();
         }
         onClose();

@@ -24,6 +24,7 @@ import colorPalette from '../styles/colorPalette';
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import axios from 'axios';
 import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
+import {NavSoundtrackIcon} from "../components/NavigationComponents/NavSoundtrackIcon";
 
 const Register = () => {
 
@@ -247,6 +248,7 @@ const Register = () => {
             fontFamily={fontTheme.fonts}
             fontWeight='regular'
         >
+            <NavSoundtrackIcon position="absolute" left="16px" top="12px" />
             <Center width='100%'>
                 {step === 1 ? (
                     <LoginRegister
@@ -328,6 +330,7 @@ const Register = () => {
                             <Button
                                 ref={cancelRef}
                                 color='white'
+                                _hover={{ bg: colorPalette.primaryColor }}
                                 bg={colorPalette.primaryColor}
                                 onClick={alertModal.action}
                             >
@@ -347,6 +350,7 @@ const Register = () => {
                             <Button
                                 ref={cancelRef}
                                 color='white'
+                                _hover={{ bg: colorPalette.primaryColor }}
                                 bg={colorPalette.primaryColor}
                                 onClick={alertModal.action}
                             >

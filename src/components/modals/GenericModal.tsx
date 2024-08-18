@@ -87,7 +87,7 @@ const GenericModal: FC<IGenericModal> = ({
     }
 
     const handleClose = () => {
-        if (!isDisabled || isStaticModal) { // Um modal estático não precisará da limitação dos cliques pois não dá recompensa
+        if ((!isDisabled || isStaticModal) && !loading ) { // Um modal estático não precisará da limitação dos cliques pois não dá recompensa
             setIsDisabled(true);
             closeFunction ? closeFunction() : confirmFunction();
         }
@@ -260,6 +260,7 @@ const GenericModal: FC<IGenericModal> = ({
                             isLoading={loading}
                             width='300px'
                             height='50px'
+                            _hover={{ bg: colorPalette.primaryColor }}
                             background={colorPalette.primaryColor}
                             color={colorPalette.buttonTextColor}
                             fontSize='24px'
@@ -313,6 +314,7 @@ const GenericModal: FC<IGenericModal> = ({
                 buttonBody={
                     <Button
                         color='white'
+                        _hover={{ bg: colorPalette.primaryColor }}
                         bg={colorPalette.primaryColor}
                         onClick={() => window.location.reload()}
                     >

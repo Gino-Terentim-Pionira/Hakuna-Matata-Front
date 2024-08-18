@@ -312,6 +312,7 @@ const CertificateModal: FC<ICertificate> = ({ isOpen, trail, name }) => {
 				buttonBody={
 					<Button
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={() => window.location.reload()}
 					>

@@ -1,4 +1,4 @@
-import { Flex, useDisclosure } from "@chakra-ui/react";
+import {Box, Flex, useDisclosure} from "@chakra-ui/react";
 import React, { useState } from "react";
 
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
@@ -14,11 +14,20 @@ import chat from '../../assets/icons/chat.png'
 import ProfileModal from "../modals/ProfileModal/ProfileModal";
 import NavIcon from "./NavIcon";
 import { useHistory } from "react-router-dom";
-import { USER_PROFILE, STORE, INVENTORY, TUTORIAL, LOG_OUT, MAP, CHAT } from "../../utils/constants/mouseOverConstants";
+import {
+  USER_PROFILE,
+  STORE,
+  INVENTORY,
+  TUTORIAL,
+  LOG_OUT,
+  MAP,
+  CHAT,
+} from "../../utils/constants/mouseOverConstants";
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
 import {TutorialModal} from "../modals/Tutorial/TutorialModal";
+import { NavSoundtrackIcon } from "./NavSoundtrackIcon";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -86,24 +95,32 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     setOnCloseTutorial(undefined);
   }
 
+  const handleMapNavigation = () => {
+    const path = '/mainPage';
+    history.push(path)
+  }
+
   return (
     <>
       <Flex
-        maxWidth='4.5rem'
+        maxWidth='fit-content'
         marginTop='1.5rem'
         flexDirection='column'
         justify='space-between'
-        alignItems='center'
         h='85.5vh'
       >
-        <Flex flexDirection='column' align='center'>
-          <NavIcon
-            image="profile"
-            onClick={handleProfileOpen}
-            size='normal'
-            isMap={false}
-            mouseOver={USER_PROFILE}
-          />
+        <Flex flexDirection='column' align='flex-start'>
+          <Flex columnGap='8px' align='center'>
+            <NavIcon
+              image="profile"
+              onClick={handleProfileOpen}
+              size='normal'
+              isMap={false}
+              mouseOver={USER_PROFILE}
+            />
+
+            <NavSoundtrackIcon />
+          </Flex>
 
           {!isIgnoranceFilterOn && <NavIcon
             image={icon_shop}
@@ -129,28 +146,30 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
             mouseOver={CHAT}
           />}
 
-          <NavIcon
-            image={icon_tutorial}
-            onClick={tutorialTopicOnOpen}
-            size='small'
-            isMap={false}
-            mouseOver={TUTORIAL}
-          />
+          <Box marginLeft="7px">
+            <NavIcon
+                image={icon_tutorial}
+                onClick={tutorialTopicOnOpen}
+                size='small'
+                isMap={false}
+                mouseOver={TUTORIAL}
+            />
 
-          <NavIcon
-            image={icon_logout}
-            onClick={logout}
-            size='small'
-            isMap={false}
-            mouseOver={LOG_OUT}
-          />
+            <NavIcon
+                image={icon_logout}
+                onClick={logout}
+                size='small'
+                isMap={false}
+                mouseOver={LOG_OUT}
+            />
+          </Box>
         </Flex>
 
         {
           !dontShowMap &&
           <NavIcon
             image={icon_map}
-            onClick={() => history.push('/mainPage')}
+            onClick={handleMapNavigation}
             size='big'
             isMap={true}
             mouseOver={MAP}
