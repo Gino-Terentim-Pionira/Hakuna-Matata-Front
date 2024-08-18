@@ -20,6 +20,7 @@ import UnlockAnimation from '../modals/UnlockAnimation';
 import { S3_VIDEO_FINISHED_MODULE, S3_VIDEO_ORACLE_UPDATED, S3_VIDEO_ORACLE_AVAILABLE } from '../../utils/constants/constants';
 import { numberCompletedModules } from '../../utils/oracleUtils';
 import { IQuiz } from '../../recoil/moduleRecoilState';
+import { useSoundtrack } from '../../hooks/useSoundtrack';
 
 interface IStatus {
     name: string,
@@ -70,6 +71,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
         onClose: () => onCloseFirstAnimation()
     });
     const HAS_USER_FINISHED_MODULE = remainingCoins == 0;
+    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
 
     const onCloseFirstAnimation = () => {
         const second_animation_url = numberCompletedModules(moduleData, userData.module_id) ? S3_VIDEO_ORACLE_UPDATED : S3_VIDEO_ORACLE_AVAILABLE;
@@ -82,10 +84,13 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
             setAnimationInfo({
                 isOpen: true,
                 animation_url: second_animation_url,
-                onClose: () => setAnimationInfo(prevState => ({
-                    ...prevState,
-                    isOpen: false
-                }))
+                onClose: () => {
+                    setAnimationInfo(prevState => ({
+                        ...prevState,
+                        isOpen: false
+                    }));
+                    playSoundtrack();
+                }
             });
         }, 30);
     };
@@ -120,6 +125,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
         setPassed(passed);
         setCoins(prevCoins => {
             if (!HAS_USER_FINISHED_MODULE && prevCoins >= remainingCoins) {
+                pauseSoundtrack();
                 setAnimationInfo(prevState => ({
                     ...prevState,
                     isOpen: true
