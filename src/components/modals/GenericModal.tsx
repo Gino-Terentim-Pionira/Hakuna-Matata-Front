@@ -260,6 +260,7 @@ const GenericModal: FC<IGenericModal> = ({
                             isLoading={loading}
                             width='300px'
                             height='50px'
+                            _hover={{ bg: colorPalette.primaryColor }}
                             background={colorPalette.primaryColor}
                             color={colorPalette.buttonTextColor}
                             fontSize='24px'
@@ -313,6 +314,7 @@ const GenericModal: FC<IGenericModal> = ({
                 buttonBody={
                     <Button
                         color='white'
+                        _hover={{ bg: colorPalette.primaryColor }}
                         bg={colorPalette.primaryColor}
                         onClick={() => window.location.reload()}
                     >

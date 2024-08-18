@@ -363,6 +363,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 					<Button
 						ref={cancelRef}
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={() => {
 							isAlertOnClose();
@@ -395,6 +396,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 				buttonBody={
 					<Button
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={() => window.location.reload()}
 					>

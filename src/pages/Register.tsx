@@ -330,6 +330,7 @@ const Register = () => {
                             <Button
                                 ref={cancelRef}
                                 color='white'
+                                _hover={{ bg: colorPalette.primaryColor }}
                                 bg={colorPalette.primaryColor}
                                 onClick={alertModal.action}
                             >
@@ -349,6 +350,7 @@ const Register = () => {
                             <Button
                                 ref={cancelRef}
                                 color='white'
+                                _hover={{ bg: colorPalette.primaryColor }}
                                 bg={colorPalette.primaryColor}
                                 onClick={alertModal.action}
                             >

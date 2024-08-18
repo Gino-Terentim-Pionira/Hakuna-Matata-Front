@@ -14,7 +14,9 @@ export const useSoundtrack = () => {
     const playSoundtrack = () => {
         if (audio) {
             changeVolumeSoundtrack();
-            audio.play();
+            setTimeout(() => {
+                audio.play();
+            }, 200);
 
             if (isSoundtrackMuted === "true") {
                 muteSoundtrack();

@@ -15,7 +15,7 @@ import {
     Tooltip
 } from "@chakra-ui/react";
 import { useUser, useModule } from '../../hooks';
-import { useSoundtrack } from "../../hooks/useSoundtrack";
+import { useSoundtrack } from '../../hooks/useSoundtrack';
 import { AxiosResponse } from 'axios';
 
 // Components
@@ -461,12 +461,12 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                         }
                                     </div>
                                     <Flex justifyContent='space-around'>
-                                        <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => {
+                                        <Button h='3.5rem' _hover={{ bg: colorPalette.confirmButton }} bg={colorPalette.confirmButton} onClick={() => {
                                             closeConfirmationModal();
                                         }}>
                                             Realizar desafio denovo!
                                         </Button>
-                                        <Button h='3.5rem' w='45%' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
+                                        <Button h='3.5rem' w='45%' _hover={{ bg: colorPalette.closeButton }} bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
                                             Voltar!
                                         </Button>
                                     </Flex>
@@ -499,6 +499,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 buttonBody={
                     <Button
                         color='white'
+                        _hover={{ bg: colorPalette.primaryColor }}
                         bg={colorPalette.primaryColor}
                         onClick={() => window.location.reload()}
                     >

@@ -699,6 +699,7 @@ const CheetahPath = () => {
                     <Button
                         ref={cancelRef}
                         color='white'
+                        _hover={{ bg: colorPalette.primaryColor }}
                         bg={colorPalette.primaryColor}
                         onClick={LogOut}
                     >
@@ -717,6 +718,7 @@ const CheetahPath = () => {
                     <Button
                         ref={cancelRef}
                         color='white'
+                        _hover={{ bg: colorPalette.primaryColor }}
                         bg={colorPalette.primaryColor}
                         onClick={paxTax}
                         isLoading={payLoading}
@@ -741,6 +743,7 @@ const CheetahPath = () => {
                             <Button
                                 ref={cancelRef}
                                 color='white'
+                                _hover={{ bg: colorPalette.primaryColor }}
                                 bg={colorPalette.primaryColor}
                                 onClick={() => {
                                     isAlertCoinsOnClose();
@@ -762,6 +765,7 @@ const CheetahPath = () => {
                 buttonBody={
                     <Button
                         color='white'
+                        _hover={{ bg: colorPalette.primaryColor }}
                         bg={colorPalette.primaryColor}
                         onClick={() => window.location.reload()}
                     >

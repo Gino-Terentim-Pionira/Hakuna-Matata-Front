@@ -15,7 +15,7 @@ import { IUser } from '../recoil/useRecoilState';
 import OracleAnimation from '../components/Oracle/OracleChat/components/OracleAnimation';
 import GenericModal from "../components/modals/GenericModal";
 import { PiWarningFill } from "react-icons/pi";
-import { useSoundtrack } from "../hooks/useSoundtrack";
+import { useSoundtrack } from '../hooks/useSoundtrack';
 
 export type PackagesDataType = ShopItemInfoType[];
 
@@ -232,6 +232,7 @@ export const Oracle = () => {
 				buttonBody={
 					<Button
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={alert.buttonFunction}
 					>
