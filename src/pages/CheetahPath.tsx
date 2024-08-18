@@ -214,7 +214,7 @@ const CheetahPath = () => {
     const [payLoading, setPayLoading] = useState<boolean>(false);
     const [blockedMessage, setBlockedMessage] = useState<string>('');
     const { changeSoundtrack} = useSoundtrack();
-    const [canFinalQuiz, setCanFinalQuiz] = useState(false);
+    const [canDoFinalQuiz, setCanDoFinalQuiz] = useState(false);
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -303,7 +303,7 @@ const CheetahPath = () => {
             await challengeNarrative();
         }
         if (hasEnougthStatusForFinalQuiz(userData, AGILITY) == 'enoughStatus') {
-            setCanFinalQuiz(true);
+            setCanDoFinalQuiz(true);
         } else {
             setCheetahText(`Seu nível de ${AGILITY} não é suficiente! É necessário 90% ou mais de ${AGILITY} para acessar o Desafio Final.`);
         }
@@ -549,7 +549,7 @@ const CheetahPath = () => {
                                             borderTopStartRadius='5px'
                                             clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
                                         />
-                                        {completeTrail || !canFinalQuiz ? (
+                                        {completeTrail || !canDoFinalQuiz ? (
                                             <>
                                                 <ModalBody
                                                     d='flex'
