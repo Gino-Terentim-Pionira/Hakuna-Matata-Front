@@ -438,6 +438,7 @@ const ShopItem: FC<ShopItemProps> = ({
 										isAlert ? (
 											<Button
 												color='white'
+												_hover={{ bg: colorPalette.primaryColor }}
 												bg={colorPalette.primaryColor}
 												onClick={() => {
 													history.go(0);
@@ -478,6 +479,7 @@ const ShopItem: FC<ShopItemProps> = ({
 									buttonBody={
 										<Button
 											color='white'
+											_hover={{ bg: colorPalette.primaryColor }}
 											bg={colorPalette.primaryColor}
 											onClick={() => window.location.reload()}
 										>

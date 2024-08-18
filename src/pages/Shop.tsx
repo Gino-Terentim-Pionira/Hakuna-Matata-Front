@@ -189,6 +189,7 @@ const Shop = () => {
 				buttonBody={
 					<Button
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={() => window.location.reload()}
 					>

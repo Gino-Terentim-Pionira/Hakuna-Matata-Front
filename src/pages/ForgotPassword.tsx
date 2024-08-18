@@ -90,6 +90,7 @@ const ForgotPassword = () => {
 					<Button
 						ref={cancelRef}
 						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
 						bg={colorPalette.primaryColor}
 						onClick={() => {
 							onClose();

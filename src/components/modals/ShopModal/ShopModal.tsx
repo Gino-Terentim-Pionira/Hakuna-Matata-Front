@@ -153,6 +153,7 @@ export const ShopModal = ({isOpen, onClose, packages} : ShopModalType) => {
 					<Button
 						color='white'
 						bg={colorPalette.primaryColor}
+						_hover={{ bg: colorPalette.primaryColor }}
 						onClick={buyItem}
 						ml={3}
 						isLoading={isAlertLoading}

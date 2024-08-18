@@ -236,8 +236,8 @@ const Relics = () => {
                 onClose={isLoading ? () => {return} : closeAlertModalInfo}
                 buttonBody={
                     <>
-                        <Button isLoading={isLoading} isDisabled={isLoading} onClick={alertModalInfo.onClick}  minWidth="72px" color={colorPalette.whiteText} background={colorPalette.primaryColor}>Confirmar</Button>
-                        <Button isLoading={isLoading} isDisabled={isLoading} onClick={closeAlertModalInfo} minWidth="72px" marginLeft="8px" color={colorPalette.whiteText} background={colorPalette.alertText}>Cancelar</Button>
+                        <Button isLoading={isLoading} isDisabled={isLoading} onClick={alertModalInfo.onClick}  minWidth="72px" color={colorPalette.whiteText} _hover={{ bg: colorPalette.primaryColor }} background={colorPalette.primaryColor}>Confirmar</Button>
+                        <Button isLoading={isLoading} isDisabled={isLoading} onClick={closeAlertModalInfo} minWidth="72px" marginLeft="8px" color={colorPalette.whiteText} _hover={{ bg: colorPalette.alertText }} background={colorPalette.alertText}>Cancelar</Button>
                     </>
                 }
             />

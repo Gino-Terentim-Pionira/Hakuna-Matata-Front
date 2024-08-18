@@ -230,6 +230,7 @@ const ShopItem: FC<ShopItemProps> = ({
 											color={colorPalette.buttonTextColor}
 											fontSize='1.5rem'
 											borderRadius='8px'
+											_hover={{ bg: colorPalette.primaryColor }}
 											onClick={() => dowloadItem()}
 										>
 											Download
