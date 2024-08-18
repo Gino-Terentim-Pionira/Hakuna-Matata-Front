@@ -87,7 +87,7 @@ const GenericModal: FC<IGenericModal> = ({
     }
 
     const handleClose = () => {
-        if (!isDisabled || isStaticModal) { // Um modal estático não precisará da limitação dos cliques pois não dá recompensa
+        if ((!isDisabled || isStaticModal) && !loading ) { // Um modal estático não precisará da limitação dos cliques pois não dá recompensa
             setIsDisabled(true);
             closeFunction ? closeFunction() : confirmFunction();
         }
