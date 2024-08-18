@@ -66,10 +66,9 @@ const FreeLunch: FC<IFreeLunch> = ({
                 lastCollected: currentDate.getTime()
             });
 
-            incrementStatus(_userId as string);
+            await incrementStatus(_userId as string);
 
             await getNewUserInfo();
-            history.go(0);
         } catch (error) {
             setOnError(true);
         }
@@ -80,8 +79,9 @@ const FreeLunch: FC<IFreeLunch> = ({
         try {
             setIsLoading(true);
             await addCoinsStatus(coinsRecieved);
-            setIsLoading(false);
             await onClose();
+            history.go(0);
+            setIsLoading(false);
         } catch (error) {
             setOnError(true);
         }
