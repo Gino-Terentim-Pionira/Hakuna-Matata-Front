@@ -487,7 +487,8 @@ const CheetahPath = () => {
                                         left='68vw'
                                         top='75vh'
                                         quizIndex={0}
-                                        openFinalModuleNarrative={() => moduleEndNarrativeScript(2)}
+                                        isBlocked={true}
+                                        openFinalModuleNarrative={() => moduleEndNarrativeScript(0)}
                                         blockedFunction={handleBlockedModule}
                                     />
                                     <ModuleModal
