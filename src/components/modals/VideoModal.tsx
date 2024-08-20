@@ -54,7 +54,6 @@ const VideoModal: FC<IVideoModal> = ({
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
     const [videoDuration, setVideoDuration] = useState(0);
-    const [hasTriggered, setHasTriggered] = useState(false);
     const { userData } = useUser();
 
     const updateVideo = async () => {
@@ -101,8 +100,7 @@ const VideoModal: FC<IVideoModal> = ({
         const currentTime = state.playedSeconds;
         const timeRemaining = videoDuration - currentTime;
 
-        if (timeRemaining <= 300 && !hasTriggered) {
-            setHasTriggered(true);
+        if (timeRemaining <= 300 && !userData?.video_id.includes(id)) {
             await handleFinishedVideo()
         }
     };
