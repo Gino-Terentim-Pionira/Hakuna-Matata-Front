@@ -54,7 +54,7 @@ const VideoModal: FC<IVideoModal> = ({
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
     const [videoDuration, setVideoDuration] = useState(0);
-    const [hasTriggered, setHasTriggered] = useState(false);
+    const [fallbackHasBeenCalled, setFallbackHasBeenCalled] = useState(false);
     const { userData } = useUser();
 
     const updateVideo = async () => {
@@ -90,6 +90,7 @@ const VideoModal: FC<IVideoModal> = ({
 
     const handleCloseModal = () => {
         setIsVideoLoading(true);
+        setFallbackHasBeenCalled(false);
         videoOnClose()
     }
 
@@ -101,15 +102,16 @@ const VideoModal: FC<IVideoModal> = ({
         const currentTime = state.playedSeconds;
         const timeRemaining = videoDuration - currentTime;
 
-        if (timeRemaining <= 300 && !hasTriggered) {
-            setHasTriggered(true);
+        const shouldCallFallback = timeRemaining <= 300 && !userData?.video_id.includes(id) && !fallbackHasBeenCalled;
+        if (shouldCallFallback) {
+            setFallbackHasBeenCalled(true);
             await handleFinishedVideo()
         }
     };
 
     return (
         <>
-            <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="6xl">
+            <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="5xl">
                 <ModalOverlay />
                 <ModalContent paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
                     <ModalHeader paddingTop="0" paddingBottom="0px">
@@ -125,7 +127,7 @@ const VideoModal: FC<IVideoModal> = ({
                         <Flex direction="column" alignItems="center" paddingTop="0px">
                             {
                                 isVideoLoading &&
-                                <Flex height="550px">
+                                <Flex height="450px">
                                     <LoadingState/>
                                 </Flex>
                             }
@@ -136,7 +138,7 @@ const VideoModal: FC<IVideoModal> = ({
                                 onProgress={handleProgress}
                                 onEnded={handleFinishedVideo}
                                 width="100%"
-                                height="550px"
+                                height="450px"
                                 onReady={() => setIsVideoLoading(false)}
                                 style={{
                                     display: isVideoLoading ? 'none': 'block',
