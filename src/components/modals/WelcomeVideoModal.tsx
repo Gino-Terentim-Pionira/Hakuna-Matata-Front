@@ -31,7 +31,7 @@ FC<IWelcomeVideoModal>
             onClose()
     }
     return (
-        <Modal isOpen={isOpen} onClose={handleCloseModal} size="6xl">
+        <Modal isOpen={isOpen} onClose={handleCloseModal} size="5xl">
             <ModalOverlay/>
             <ModalContent paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
                 <ModalHeader paddingTop="0" paddingBottom="0px">
@@ -47,7 +47,7 @@ FC<IWelcomeVideoModal>
                     <Flex direction="column" alignItems="center" paddingTop="0px">
                             {
                                 isLoad &&
-                                <Flex height="550px">
+                                <Flex height="450px">
                                     <LoadingState/>
                                 </Flex>
                             }
@@ -56,7 +56,7 @@ FC<IWelcomeVideoModal>
                                 controls={true}
                                 playing={true}
                                 width="100%"
-                                height="550px"
+                                height="450px"
                                 onReady={() => setIsLoad(false)}
                                 style={{
                                     display: isLoad ? 'none': 'block',

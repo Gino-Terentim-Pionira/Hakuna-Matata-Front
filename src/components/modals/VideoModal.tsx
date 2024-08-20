@@ -54,6 +54,7 @@ const VideoModal: FC<IVideoModal> = ({
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
     const [videoDuration, setVideoDuration] = useState(0);
+    const [fallbackHasBeenCalled, setFallbackHasBeenCalled] = useState(false);
     const { userData } = useUser();
 
     const updateVideo = async () => {
@@ -89,6 +90,7 @@ const VideoModal: FC<IVideoModal> = ({
 
     const handleCloseModal = () => {
         setIsVideoLoading(true);
+        setFallbackHasBeenCalled(false);
         videoOnClose()
     }
 
@@ -100,7 +102,9 @@ const VideoModal: FC<IVideoModal> = ({
         const currentTime = state.playedSeconds;
         const timeRemaining = videoDuration - currentTime;
 
-        if (timeRemaining <= 300 && !userData?.video_id.includes(id)) {
+        const shouldCallFallback = timeRemaining <= 300 && !userData?.video_id.includes(id) && !fallbackHasBeenCalled;
+        if (shouldCallFallback) {
+            setFallbackHasBeenCalled(true);
             await handleFinishedVideo()
         }
     };
