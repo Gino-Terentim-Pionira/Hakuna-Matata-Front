@@ -364,7 +364,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                 )
                         }
                         {
-                            !isLoading && <Button
+                            !isLoading && moduleInfo.questions_id.length > 0 && <Button
                                 display="Button"
                                 justifyContent="center"
                                 alignItems="center"
@@ -395,7 +395,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             </Modal >
 
             {
-                moduleInfo ? <ModuleQuiz
+                moduleInfo && moduleInfo.questions_id.length > 0 ? <ModuleQuiz
                     openModal={quizIsOpen}
                     closeModal={quizOnClose}
                     moduleInfo={moduleInfo}
