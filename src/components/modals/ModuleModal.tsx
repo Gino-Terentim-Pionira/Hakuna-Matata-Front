@@ -115,6 +115,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     // States
     const { moduleData } = useModule();
     const moduleInfo = moduleData[quizIndex];
+    const IS_MODULE_INFO_HAS_QUESTIONS = moduleInfo.questions_id.length > 0;
     const { userData, getNewUserInfo } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [buttonValidation, setButtonValidation] = useState(false);
@@ -364,7 +365,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                 )
                         }
                         {
-                            !isLoading && <Button
+                            !isLoading && IS_MODULE_INFO_HAS_QUESTIONS && <Button
                                 display="Button"
                                 justifyContent="center"
                                 alignItems="center"
@@ -395,7 +396,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             </Modal >
 
             {
-                moduleInfo ? <ModuleQuiz
+                moduleInfo && IS_MODULE_INFO_HAS_QUESTIONS ? <ModuleQuiz
                     openModal={quizIsOpen}
                     closeModal={quizOnClose}
                     moduleInfo={moduleInfo}
