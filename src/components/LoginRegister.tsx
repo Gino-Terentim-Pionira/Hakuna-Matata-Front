@@ -9,20 +9,21 @@ import TermsOfUse from './modals/TermsPolicyModal/TermsComponent/TermsOfUse';
 import PrivacyPolicy from './modals/TermsPolicyModal/TermsComponent/PrivacyPolicy';
 
 type LoginRegisterProps = {
-    mainText: string;
-    firstText: string;
+    mainText: string | ReactElement;
+    tip?: string
+    firstText?: string;
     secondText?: string;
-    firstPlaceholder: string;
+    firstPlaceholder?: string;
     secondPlaceholder?: string;
-    firstInputType: string;
+    firstInputType?: string;
     secondInputType?: string;
-    firstValue: string;
+    firstValue?: string;
     secondValue?: string;
-    firstChange: ChangeEventHandler;
+    firstChange?: ChangeEventHandler;
     secondChange?: ChangeEventHandler;
     onBlur?: VoidFunction;
     nextStep: VoidFunction;
-    previousStep: VoidFunction;
+    previousStep?: VoidFunction;
     buttonText: string;
     forgetPassword?: string;
     forgetPasswordLink?: VoidFunction;
@@ -30,6 +31,8 @@ type LoginRegisterProps = {
     hasValidationError?: boolean;
     loading: boolean;
     hasTerms?: boolean;
+    additionalComponents?: ReactElement;
+    noInput?: boolean;
 }
 
 const LoginRegister: FC<LoginRegisterProps> = ({
@@ -54,6 +57,9 @@ const LoginRegister: FC<LoginRegisterProps> = ({
     loading,
     hasTerms,
     onBlur,
+    tip,
+    additionalComponents,
+    noInput
 }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -170,9 +176,20 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         {mainText}
                     </Text>
                 </Flex>
-                <Box marginTop="32px">
+                {
+                    tip &&
                     <Text
-                        fontSize={{ base: "14px", md: '16px', lg: '18px' }}
+                        fontSize={{ base: "12px", md: '14px', lg: '18px' }}
+                        color={colorPalette.textColor}
+                        ml="4px"
+                        mt="8px"
+                    >
+                        <strong>Dica: </strong>{tip}
+                    </Text>
+                }
+                {!noInput && <><Box marginTop="32px">
+                    <Text
+                        fontSize={{base: "14px", md: '16px', lg: '18px'}}
                         color={colorPalette.textColor}
                     >
                         {firstText}
@@ -189,65 +206,73 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         hasValidationError ? "#F47070" : undefined
                     )}
                     <Text color="red" fontSize="15"> {validationError} </Text>
-
                 </Box>
-                <Box marginTop="16px">
-                    {secondText || secondValue || secondPlaceholder ? (
-                        <>
-                            <Text
-                                fontSize={{ base: "14px", md: '16px', lg: '18px' }}
-                                color={colorPalette.textColor}
-                            >
-                                {secondText}
-                            </Text>
-                            {renderInput(
-                                secondPlaceholder as string,
-                                secondInputType as string,
-                                secondValue as string,
-                                secondChange as VoidFunction,
-                                loading,
-                                handleKeyPress
-                            )}
-                        </>
-                    ) : (null)}
+                    <Box marginTop="16px">
+                {secondText || secondValue || secondPlaceholder ? (
+                    <>
+                    <Text
+                    fontSize={{base: "14px", md: '16px', lg: '18px'}}
+                color={colorPalette.textColor}
+            >
+                {secondText}
+            </Text>
+            {renderInput(
+                secondPlaceholder as string,
+                secondInputType as string,
+                secondValue as string,
+                secondChange as VoidFunction,
+                loading,
+                handleKeyPress
+            )}
+        </>
+    )
+    :
+        (null)
+    }
 
-                    {forgetPassword && (
-                        <Box display="flex" justifyContent="flex-start" marginTop='8px'>
-                            <Link
-                                color={colorPalette.linkTextColor}
-                                fontSize="1rem"
-                                textDecoration="underline"
-                                onMouseDown={loading ? () => { return null } : forgetPasswordLink}
-                                _hover={loading ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
-                            >
-                                Esqueci minha senha
-                            </Link>
-                        </Box>)}
+    {
+        forgetPassword && (
+            <Box display="flex" justifyContent="flex-start" marginTop='8px'>
+                <Link
+                    color={colorPalette.linkTextColor}
+                    fontSize="1rem"
+                    textDecoration="underline"
+                    onMouseDown={loading ? () => {
+                        return null
+                    } : forgetPasswordLink}
+                    _hover={loading ? {cursor: 'not-allowed'} : {cursor: 'pointer'}}
+                >
+                    Esqueci minha senha
+                </Link>
+            </Box>)
+    }
 
-                    {
-                        hasTerms && (
-                            <Flex
-                                flexDirection='column'
-                                alignSelf='flex-start'
-                                textAlign='justify'
-                                fontFamily={fontTheme.fonts}
-                                fontSize='14px'
-                                marginTop='16px'
-                            >
-                                <Text>
-                                    Ao clicar em Continuar, você concorda com nossos <Link
-                                        color={colorPalette.linkTextColor}
-                                        textDecoration='underLine'
-                                        onMouseDown={handleTermsOfUse}
-                                    >Termos de uso</Link> e <Link
-                                        color={colorPalette.linkTextColor}
-                                        textDecoration='underLine'
-                                        onMouseDown={handlerPrivacyPolicy}
-                                    >Política de Privacidade</Link>
-                                </Text>
-                            </Flex>
-                        )}
-                </Box>
+    {
+        hasTerms && (
+            <Flex
+                flexDirection='column'
+                alignSelf='flex-start'
+                textAlign='justify'
+                fontFamily={fontTheme.fonts}
+                fontSize='14px'
+                marginTop='16px'
+            >
+                <Text>
+                    Ao clicar em Continuar, você concorda com nossos <Link
+                    color={colorPalette.linkTextColor}
+                    textDecoration='underLine'
+                    onMouseDown={handleTermsOfUse}
+                >Termos de uso</Link> e <Link
+                    color={colorPalette.linkTextColor}
+                    textDecoration='underLine'
+                    onMouseDown={handlerPrivacyPolicy}
+                >Política de Privacidade</Link>
+                </Text>
+            </Flex>
+        )
+    }
+    </Box> </>}
+                {additionalComponents}
             </Flex>
 
             <Box w='70%' h='fit-content'>
@@ -271,17 +296,19 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                     </Button>
                 </Center>
 
-                <Box display='flex' justifyContent='flex-end'>
+                {previousStep && <Box display='flex' justifyContent='flex-end'>
                     <Link
                         marginTop='8px'
                         color={colorPalette.linkTextColor}
                         textDecoration='underLine'
-                        onClick={loading ? () => { return null } : previousStep}
-                        _hover={loading ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
+                        onClick={loading ? () => {
+                            return null
+                        } : previousStep}
+                        _hover={loading ? {cursor: 'not-allowed'} : {cursor: 'pointer'}}
                     >
                         Voltar
                     </Link>
-                </Box>
+                </Box>}
             </Box>
             <TermsPolicyModal 
                 isOpen={isOpen}

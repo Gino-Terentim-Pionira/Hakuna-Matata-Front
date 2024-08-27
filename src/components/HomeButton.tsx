@@ -7,9 +7,10 @@ type HomeButtonProps = {
     image: string;
     onClick: VoidFunction;
     mouseOver: string;
+    subText: string;
 }
 
-const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver}) => {
+const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver, subText}) => {
     return (
         <Tooltip 
             label={mouseOver} 
@@ -17,8 +18,9 @@ const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver}) => {
         >
             <Flex
             width='320px'
-            h='170px'
-            padding='2rem'
+            h='fit-content'
+            paddingTop="32px"
+            paddingBottom="22px"
             border='0.1rem  solid'
             borderColor={colorPalette.primaryColor}
             background='rgba(255, 255, 255, 0.51)'
@@ -37,7 +39,6 @@ const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver}) => {
                 <Flex
                     flexDirection='column'
                     width='100%'
-                    h='80%'
                     justifyContent='space-around'
                     alignItems='center'
                 >
@@ -47,6 +48,12 @@ const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver}) => {
                         color='#926021'
                     >
                         {text}
+                    </Text>
+                    <Text
+                        fontSize={{ lg: '24px', md: '24px', sm: '20px' }}
+                        color='#926021'
+                    >
+                        {subText}
                     </Text>
                 </Flex>
             </Flex>
