@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './global.css';
 import { BrowserRouter as HashRouter, Route, Switch } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoutes';
 import { AuthProvider } from './contexts/authContext';
-import CantUseApplication from './components/CantUseApplication';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -19,33 +18,13 @@ import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
 import { SoundtrackManager } from "./components/SoundtrackManager";
 
-const useWindowSize = () => {
-	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
-	useEffect(() => {
-		const handleResize = () => {
-			setSize([window.innerHeight, window.innerWidth]);
-		}
-		window.addEventListener("resize", handleResize);
-		return () => {
-			window.removeEventListener("resize", handleResize);
-		}
-	}, []);
-	return size;
-}
 
 const Routes = () => {
-	const [height, width] = useWindowSize();
-
 	return (
 		<RecoilRoot>
 			<HashRouter basename="/">
 				<SoundtrackManager />
 				<AuthProvider>
-					{
-						height < 550 || width < 600 ? (
-							<CantUseApplication/>
-						) : null
-					}
 					<Switch>
 						<Route path='/' exact component={Home}/>
 						<Route path='/login' component={Login}/>
