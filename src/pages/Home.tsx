@@ -41,26 +41,28 @@ const Home = () => {
 				<Center flexDir="column">
 					<Image ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
 					<Flex
-						gap="108px"
+						gap="72px"
 						flexDirection='row'
 						align='center'
-						mt="8px"
+						mt="16px"
 					>
 						<HomeButton
 							text='Entrar na Savana'
 							image={loginImg}
 							onClick={() => history.push('/login')}
 							mouseOver={LOGIN}
+							subText="(Acessar conta)"
 						/>
 						<HomeButton
 							text='Criar Passaporte'
 							image={registerImg}
 							onClick={() => history.push('/register')}
 							mouseOver={REGISTER}
+							subText="(Cadastrar conta)"
 						/>
 					</Flex>
 				</Center>
-				<a target="_blank" href='https://www.ginoterentim.com'>
+				<a target="_blank" href='https://novo.ginoterentim.com/'>
 					<Image filter="drop-shadow(0px 4px 1px rgba(0, 0, 0, 0.14))" position="absolute" left="0" right="0" margin="auto" bottom="40px" width="125px" src={GinoLogo} alt="Logo gino" />
 				</a>
 			</Box>
