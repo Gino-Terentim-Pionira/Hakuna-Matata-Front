@@ -42,7 +42,7 @@ const Routes = () => {
 				<SoundtrackManager />
 				<AuthProvider>
 					{
-						height < 550 || width < 600 ? (
+						height < 400 || width < 450 ? (
 							<CantUseApplication/>
 						) : null
 					}
