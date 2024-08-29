@@ -1,4 +1,4 @@
-import React, { useState, BaseSyntheticEvent, useEffect, useRef } from 'react';
+import React, {useState, BaseSyntheticEvent, useEffect, useRef, ReactElement} from 'react';
 import LoginRegister from '../components/LoginRegister';
 import { useHistory } from 'react-router-dom';
 import { CreateUser } from '../services/createUser';
@@ -10,6 +10,7 @@ import {
     Box,
     Image,
     Button,
+    Text,
 } from '@chakra-ui/react';
 import {validateEmail, validatePassword} from '../utils/validates';
 
@@ -25,6 +26,27 @@ import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import axios from 'axios';
 import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 import {NavSoundtrackIcon} from "../components/NavigationComponents/NavSoundtrackIcon";
+import { MdEmail } from "react-icons/md";
+import { FaCheckSquare } from "react-icons/fa";
+
+type screenInfoType = {
+    mainText: string | ReactElement,
+    firstText?: string,
+    secondText?: string,
+    firstPlaceholder?: string,
+    secondPlaceholder?: string,
+    firstInputType?: string,
+    secondInputType?: string,
+    firstValue?: string,
+    firstChange?: (e: BaseSyntheticEvent) => void,
+    onBlur?: (() => boolean) | (() => void),
+    secondValue?: string,
+    secondChange?: (e: BaseSyntheticEvent) => void,
+    buttonText: string,
+    tip?: string,
+    noInput?: boolean,
+    additionalComponents?: ReactElement,
+}
 
 const Register = () => {
 
@@ -94,10 +116,6 @@ const Register = () => {
         'DUPLICATE_EMAIL_ERROR': {
             label: errorCases.DUPLICATE_EMAIL_ERROR,
             action: () => { setStep(2); onClose() }
-        },
-        'SUCCESS_CASE_REGISTER': {
-            label: errorCases.SUCCESS_CASE_REGISTER,
-            action: () => history.push('/login')
         }
     };
 
@@ -176,7 +194,9 @@ const Register = () => {
     }
 
     const nextStep = async () => {
-        if (step == 3) {
+        if (step == 4) {
+          history.push("/")
+        } else if (step == 3) {
             if (formConfirmPassword && formPassword && !validationError) {
                 if (formPassword === formConfirmPassword) {
                     try {
@@ -192,8 +212,8 @@ const Register = () => {
 
                         await CreateUser(name[0], lastName, formEmail, formPassword, formDate, formUserName);
 
-                        handleAlertModal('SUCCESS_CASE_REGISTER');
-
+                        setStep(4);
+                        setIsLoading(false);
                     } catch (err) {
                         if (axios.isAxiosError(err)) {
                             if (err.response) {
@@ -232,6 +252,72 @@ const Register = () => {
         }
     }
 
+    const renderAdditionalComponents = () => (
+        <Box mt="28px"  fontSize="18px">
+            <Flex alignItems="center">
+                <MdEmail color={colorPalette.alertText} size={80} /> <Text ml="8px">Acesse seu email!</Text>
+            </Flex>
+            <Flex alignItems="center" mt="8px">
+                <FaCheckSquare color={colorPalette.correctAnswer} size={80} /> <Text ml="8px">e confirme sua conta!</Text>
+            </Flex>
+        </Box>
+    )
+
+    const screenInfo: {[key: number]: screenInfoType} = {
+        1: {
+            mainText: 'Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, viajante.',
+            firstText: "”Qual é o seu nome, viajante?”",
+            secondText: "”E como você gostaria de ser chamado dentro da savana?”",
+            firstPlaceholder: "Nome Completo",
+            secondPlaceholder: "Nome de Usuário",
+            firstInputType: "text",
+            secondInputType: "text",
+            firstValue: formName,
+            firstChange: (e: BaseSyntheticEvent) => handleNameChanged(e),
+            onBlur: isValidName,
+            secondValue: formUserName,
+            secondChange: (e: BaseSyntheticEvent) => setFormUserName(e.target.value),
+            buttonText: "Próximo"
+        },
+        2: {
+            mainText: 'Agora preciso de outras informações adicionais. Não sei o que é isso, mas a sabedoria da Savana está me pedindo o seu e-mail.',
+            firstText: "”Qual é o seu e-mail, viajante?”",
+            secondText: "”Queria saber também qual a sua data de nascimento?”",
+            firstPlaceholder: "Endereço de e-mail",
+            secondPlaceholder: "Data de Nascimento",
+            firstInputType: "email",
+            secondInputType: "date",
+            firstValue: formEmail,
+            firstChange: (e: BaseSyntheticEvent) => handleEmailChanged(e),
+            onBlur: isValidEmail,
+            secondValue: formDate,
+            secondChange: (e: BaseSyntheticEvent) => setFormDate(e.target.value),
+            buttonText: "Próximo"
+        },
+        3: {
+            mainText: 'Por último, precisamos definir uma senha para permitir a sua entrada na Savana. Lembre-se que não pode ser uma senha fácil de adivinhar, não queremos invasores na Savana.',
+            firstText: "”Qual é a sua senha, viajante?”",
+            secondText: "”Não entendi muito bem, poderia repeti-la?”",
+            firstPlaceholder: "Senha",
+            secondPlaceholder: "Confirmar senha",
+            firstInputType: "password",
+            secondInputType: "password",
+            firstValue: formPassword,
+            firstChange: (e: BaseSyntheticEvent) => handlePasswordChanged(e),
+            onBlur: isValidPassword,
+            secondValue: formConfirmPassword,
+            secondChange: (e: BaseSyntheticEvent) => setFormConfirmPassword(e.target.value),
+            buttonText: "Próximo"
+        },
+        4: {
+            mainText: <>Tudo certo! <strong>Enviamos um “email” para você!</strong> Agora você só precisa <strong>entrar no seu email</strong> para <strong>confirmar o passaporte</strong>. Não sei o que significa, mas a sabedoria da savana me pediu para lhe dizer isso.</>,
+            tip: 'Acesse o seu email para confirmar sua conta e completar o seu cadastro!',
+            buttonText: "Confirmei minha conta!",
+            noInput: true,
+            additionalComponents: renderAdditionalComponents(),
+        }
+    }
+
     const previousStep = () => {
         if (step == 1) {
             history.push('/');
@@ -250,74 +336,30 @@ const Register = () => {
         >
             <NavSoundtrackIcon position="absolute" left="16px" top="12px" />
             <Center width='100%'>
-                {step === 1 ? (
-                    <LoginRegister
-                        mainText='Vejo que temos um novo viajante por aqui. Antes de começarmos nossa aventura, gostaria de saber algumas coisas sobre você, viajante.'
-                        firstText="”Qual é o seu nome, viajante?”"
-                        secondText="”E como você gostaria de ser chamado dentro da savana?”"
-                        firstPlaceholder="Nome Completo"
-                        secondPlaceholder="Nome de Usuário"
-                        nextStep={() => nextStep()}
-                        previousStep={() => previousStep()}
-                        firstInputType="text"
-                        secondInputType="text"
-                        firstValue={formName}
-                        firstChange={(e: BaseSyntheticEvent) => handleNameChanged(e)}
-                        onBlur={isValidName}
-                        secondValue={formUserName}
-                        secondChange={(e: BaseSyntheticEvent) => setFormUserName(e.target.value)}
-                        buttonText="Próximo"
-                        validationError={validationError}
-                        hasValidationError={!!validationError}
-                        loading={false}
-                    />
-
-                ) : step === 2 ? (
-                    <LoginRegister
-                        mainText='Agora preciso de outras informações adicionais. Não sei o que é isso, mas a sabedoria da Savana está me pedindo o seu e-mail.'
-                        firstText="”Qual é o seu e-mail, viajante?”"
-                        secondText="”Queria saber também qual a sua data de nascimento?”"
-                        firstPlaceholder="Endereço de e-mail"
-                        secondPlaceholder="Data de Nascimento"
-                        nextStep={() => nextStep()}
-                        previousStep={() => previousStep()}
-                        firstInputType="email"
-                        secondInputType="date"
-                        firstValue={formEmail}
-                        firstChange={(e: BaseSyntheticEvent) => handleEmailChanged(e)}
-                        onBlur={isValidEmail}
-                        secondValue={formDate}
-                        secondChange={(e: BaseSyntheticEvent) => setFormDate(e.target.value)}
-                        buttonText="Próximo"
-                        validationError={validationError}
-                        hasValidationError={!!validationError}
-                        loading={false}
-                    />
-                ) : step === 3 ? (
-                    <LoginRegister
-                        mainText='Por último, precisamos definir uma senha para permitir a sua entrada na Savana. Lembre-se que não pode ser uma senha fácil de adivinhar, não queremos invasores na Savana.'
-                        firstText="”Qual é a sua senha, viajante?”"
-                        secondText="”Não entendi muito bem, poderia repeti-la?”"
-                        firstPlaceholder="Senha"
-                        secondPlaceholder="Confirmar senha"
-                        nextStep={() => nextStep()}
-                        previousStep={() => previousStep()}
-                        firstInputType="password"
-                        secondInputType="password"
-                        firstValue={formPassword}
-                        firstChange={(e: BaseSyntheticEvent) => handlePasswordChanged(e)}
-                        onBlur={isValidPassword}
-                        secondValue={formConfirmPassword}
-                        secondChange={(e: BaseSyntheticEvent) => setFormConfirmPassword(e.target.value)}
-                        buttonText="Próximo"
-                        validationError={validationError}
-                        hasValidationError={!!validationError}
-                        loading={isLoading}
-                        hasTerms={true}
-                    />
-                ) : (
-                    <div>Você não devia estar aqui, chapa!</div>
-                )}
+                <LoginRegister
+                    mainText={screenInfo[step].mainText}
+                    firstText={screenInfo[step].firstText}
+                    secondText={screenInfo[step].secondText}
+                    firstPlaceholder={screenInfo[step].firstPlaceholder}
+                    secondPlaceholder={screenInfo[step].secondPlaceholder}
+                    nextStep={() => nextStep()}
+                    previousStep={step === 4 ? undefined : () => previousStep()}
+                    firstInputType={screenInfo[step].firstInputType}
+                    secondInputType={screenInfo[step].secondInputType}
+                    firstValue={screenInfo[step].firstValue}
+                    firstChange={screenInfo[step].firstChange}
+                    onBlur={screenInfo[step].onBlur}
+                    secondValue={screenInfo[step].secondValue}
+                    secondChange={screenInfo[step].secondChange}
+                    buttonText={screenInfo[step].buttonText}
+                    validationError={validationError}
+                    hasValidationError={!!validationError}
+                    loading={isLoading}
+                    hasTerms={step === 3}
+                    additionalComponents={screenInfo[step].additionalComponents}
+                    tip={screenInfo[step].tip}
+                    noInput={screenInfo[step].noInput}
+                />
 
                 {(step === 3 && !!validationError) ? (
                     <AlertModal
