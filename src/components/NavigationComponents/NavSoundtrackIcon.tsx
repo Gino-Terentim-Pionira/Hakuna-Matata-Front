@@ -20,7 +20,7 @@ export const NavSoundtrackIcon = (props: BoxProps) => {
         soundtrackData.isPlaying ?
         <Box {...props}>
             <NavIcon
-                image={isAudioMuted ? 'soundtrackUnmute' : 'soundtrackMute'}
+                image={isAudioMuted ? 'soundtrackMute' : 'soundtrackUnmute'}
                 onClick={handleSoundtrackButton}
                 size='small'
                 isMap={false}

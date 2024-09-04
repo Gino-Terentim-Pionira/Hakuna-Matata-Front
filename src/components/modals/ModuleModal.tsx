@@ -315,18 +315,19 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                     <>
                                         <GridContainer>
                                             {
-                                                moduleInfo.videos_id.map(({ _id, name, url, description, coins }: {
+                                                moduleInfo.videos_id.map(({ _id, name, url, description, coins, thumbnail }: {
                                                     name: string,
                                                     url: string,
                                                     description: string,
                                                     _id: string,
                                                     coins: number,
+                                                    thumbnail?: string
                                                 }) => {
                                                     return (
                                                         <Flex
                                                             className='videoCardContainer'
                                                             width="297px"
-                                                            height="334px"
+                                                            height="380px"
                                                             borderRadius="8px"
                                                             flexDir="column"
                                                             boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
@@ -339,8 +340,10 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                             }}
                                                             key={_id}
                                                         >
-                                                            <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="147px" bg={colorPalette.textColor}>
-                                                                <Image height='59px' src={VideoIcon} alt="Icone de video" />
+                                                            <Flex justifyContent="center" backgroundImage={thumbnail || ''} backgroundSize='cover' backgroundRepeat='no-repeat' alignItems="center" borderTopRadius="8px" width="100%" height="147px" bg={thumbnail ? '' : colorPalette.textColor}>
+                                                                {
+                                                                    !thumbnail && <Image height='59px' src={VideoIcon} alt="Icone de video" />
+                                                                }
                                                             </Flex>
                                                             <Flex flexDir="column" paddingX="16px" marginTop="24px">
                                                                 <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
