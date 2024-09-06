@@ -22,7 +22,8 @@ export interface IQuiz {
         name: string,
         url: string,
         description: string,
-        coins: number
+        coins: number,
+        thumbnail?: string
     }];
     total_coins: number;
     trail: string;
