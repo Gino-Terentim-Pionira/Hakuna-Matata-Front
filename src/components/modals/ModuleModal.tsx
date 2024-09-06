@@ -340,10 +340,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                             }}
                                                             key={_id}
                                                         >
-                                                            <Flex justifyContent="center" backgroundImage={thumbnail || ''} backgroundSize='cover' backgroundRepeat='no-repeat' alignItems="center" borderTopRadius="8px" width="100%" height="147px" bg={thumbnail ? '' : colorPalette.textColor}>
-                                                                {
-                                                                    !thumbnail && <Image height='59px' src={VideoIcon} alt="Icone de video" />
-                                                                }
+                                                            <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="165px" bg={colorPalette.textColor}>
+                                                            <Image height={thumbnail ? '' : '59px'}  src={thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
                                                             </Flex>
                                                             <Flex flexDir="column" paddingX="16px" marginTop="24px">
                                                                 <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
