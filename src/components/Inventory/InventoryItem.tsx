@@ -21,14 +21,14 @@ type InventoryItemProps = {
     description: string;
     type: string;
     image: string;
-    customButton: ReactElement
+    downloadFunction: VoidFunction
 };
 
 const InventoryItem: FC<InventoryItemProps> = ({
     name,
     description,
     type,
-    customButton,
+    downloadFunction,
     image
 }) => {
     const { isOpen, onToggle } = useDisclosure();
@@ -180,7 +180,18 @@ const InventoryItem: FC<InventoryItemProps> = ({
                                 flexDirection='column'
                                 alignSelf='flex-start'
                             >
-                                <Component />
+                                <Button
+                                    width='100%'
+                                    height='3.5rem'
+                                    background={colorPalette.primaryColor}
+                                    color={colorPalette.buttonTextColor}
+                                    fontSize='1.5rem'
+                                    borderRadius='8px'
+                                    _hover={{ bg: colorPalette.primaryColor }}
+                                    onClick={downloadFunction}
+                                >
+                                    Download
+                                </Button>
                             </Flex>
                         </Flex>
                     </Flex>

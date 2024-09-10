@@ -2,9 +2,7 @@ import React, { FC } from 'react';
 import { IOwnedCertificate } from '../../services/CertificateService';
 import InventoryItem from './InventoryItem';
 import certificateIcon from '../../assets/icons/certificate/certificate.svg';
-import { Button } from '@chakra-ui/react';
-import colorPalette from '../../styles/colorPalette';
-import { Page, Text, View, Document, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
+import { jsPDF } from 'jspdf';
 
 const OwnedCertificateItem: FC<IOwnedCertificate> = ({
     certificate_name,
@@ -16,31 +14,33 @@ const OwnedCertificateItem: FC<IOwnedCertificate> = ({
     hash
 }) => {
 
-    const styles = StyleSheet.create({
-        page: {
-            flexDirection: 'row',
-            backgroundColor: '#E4E4E4'
-        },
-        section: {
-            margin: 10,
-            padding: 10,
-            flexGrow: 1
-        }
-    });
+    const handleGeneratePDF = () => {
+        const img = new Image();
+        img.src = image + '?r=' + Math.floor(Math.random() * 100000);
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+            const imgWidth = img.width;
+            const imgHeight = img.height;
 
-    // Create Document Component
-    const MyDocument = () => (
-        <Document>
-            <Page size="A4" style={styles.page}>
-                <View style={styles.section}>
-                    <Text>Section #1</Text>
-                </View>
-                <View style={styles.section}>
-                    <Text>Section #2</Text>
-                </View>
-            </Page>
-        </Document>
-    );
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'px',
+                format: [imgWidth, imgHeight]
+            });
+            doc.addImage(img, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+
+            doc.setFontSize(30);
+            doc.text(`${first_name} ${last_name}`, imgWidth / 2, imgHeight * 0.4, { align: 'center' });
+
+            doc.setFontSize(16);
+            doc.text(issue_date, imgWidth / 2, imgHeight * 0.70, { align: 'center' });
+
+            doc.setFontSize(16);
+            doc.text(hash, 0, imgHeight - 5, );
+
+            doc.save(`${certificate_name}.pdf`);
+        }
+    };
 
     return (
         <InventoryItem
@@ -48,24 +48,7 @@ const OwnedCertificateItem: FC<IOwnedCertificate> = ({
             description={description}
             type='Certificado'
             image={certificateIcon}
-            customButton={
-                <PDFDownloadLink document={<MyDocument />} fileName={`${certificate_name}.pdf`}>
-                    {({ loading }) => {
-                        <Button
-                            width='100%'
-                            height='3.5rem'
-                            background={colorPalette.primaryColor}
-                            color={colorPalette.buttonTextColor}
-                            fontSize='1.5rem'
-                            borderRadius='8px'
-                            _hover={{ bg: colorPalette.primaryColor }}
-                            isDisabled={loading}
-                        >
-                            Download
-                        </Button>
-                    }}
-                </PDFDownloadLink>
-            }
+            downloadFunction={handleGeneratePDF}
         />
     )
 }

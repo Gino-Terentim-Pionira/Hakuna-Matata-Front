@@ -672,6 +672,7 @@ const LionPath = () => {
 							routeQuestions={'lionquestions'}
 							routeQuiz={'finallionquiz'}
 							trail={2}
+							remainingTo80={0}
 						/>
 					</>
 				)

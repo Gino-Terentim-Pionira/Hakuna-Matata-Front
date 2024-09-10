@@ -58,6 +58,7 @@ interface IQuizComponent {
 	routeQuiz: string;
 	routeQuestions: string;
 	trail: number;
+	remainingTo80: number
 }
 
 const FinalUniversalQuiz: FC<IQuizComponent> = ({
@@ -68,7 +69,8 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	imgName,
 	routeQuiz,
 	routeQuestions,
-	trail
+	trail,
+	remainingTo80
 }) => {
 	const { isOpen, onOpen } = useDisclosure();
 	const [step, setStep] = useState(0);
@@ -386,6 +388,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 				routeQuestions={routeQuestions}
 				ignorance={ignorance}
 				trail={trail}
+				remainingTo80={remainingTo80}
 			/>
 
 			<AlertModal
