@@ -15,7 +15,6 @@ import {
     Tooltip
 } from "@chakra-ui/react";
 import { useUser, useModule } from '../../hooks';
-import { useSoundtrack } from '../../hooks/useSoundtrack';
 import { AxiosResponse } from 'axios';
 
 // Components
@@ -121,8 +120,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [buttonValidation, setButtonValidation] = useState(false);
     const [totalCoins, setTotalCoins] = useState(0);
     const [onError, setOnError] = useState(false);
-    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
-    const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0, description: '' });
+    const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0, description: '', autoplay: ()=>console.log('oi') });
     const [remainingCoins, setRemainingCoins] = useState(0);
     const [iconInfo, setIconInfo] = useState({
         label: moduleInfo.module_name,
@@ -188,10 +186,15 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         quizOnOpen();
     }
 
-    const handleVideoModal = (id: string, name: string, url: string, coins: number, description: string) => {
-        setVideoInfo({ id, name, url, coins, description });
+    const handleVideoModal = (id: string, name: string, url: string, coins: number, description: string, index: number) => {
+        if (index < (moduleInfo.videos_id.length - 1)) {
+            const nextVideoInfo = moduleInfo.videos_id[index + 1];
+            const autoplay = () => handleVideoModal(nextVideoInfo._id, nextVideoInfo.name, nextVideoInfo.url, nextVideoInfo.coins, nextVideoInfo.description, index + 1);
+            setVideoInfo({ id, name, url, coins, description, autoplay });
+        } else {
+            setVideoInfo({ id, name, url, coins, description, autoplay: ()=>console.log('oi') });
+        }
         videoOnOpen();
-        pauseSoundtrack();
     }
 
     const defineProperties = async () => {
@@ -235,7 +238,6 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     }
 
     const handleOnCloseVideo = () => {
-        playSoundtrack()
         videoOnClose()
     }
 
@@ -322,7 +324,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                     _id: string,
                                                     coins: number,
                                                     thumbnail?: string
-                                                }) => {
+                                                }, index) => {
                                                     return (
                                                         <Flex
                                                             className='videoCardContainer'
@@ -332,7 +334,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                             flexDir="column"
                                                             boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
                                                             bg={"#FEFEFE"}
-                                                            onClick={() => handleVideoModal(_id, name, url, coins, description)}
+                                                            onClick={() => handleVideoModal(_id, name, url, coins, description, index)}
                                                             transition="ease 200ms"
                                                             _hover={{
                                                                 cursor: 'pointer',
@@ -518,6 +520,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 videoIsOpen={videoIsOpen}
                 videoOnClose={handleOnCloseVideo}
                 updateQuiz={getNewUserInfo}
+                autoplayFunction={videoInfo.autoplay}
             />
         </>
     );

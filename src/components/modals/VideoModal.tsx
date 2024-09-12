@@ -27,6 +27,7 @@ import colorPalette from "../../styles/colorPalette";
 import { errorCases } from '../../utils/errors/errorsCases';
 import LoadingState from "../LoadingState";
 import { OnProgressProps } from "react-player/base";
+import { useSoundtrack } from '../../hooks/useSoundtrack';
 
 interface IVideoModal {
     id: string;
@@ -38,6 +39,7 @@ interface IVideoModal {
     plataform?: 'vimeo' | 'youtube';
     updateQuiz: VoidFunction;
     coins: number;
+    autoplayFunction?: VoidFunction;
 }
 
 const VideoModal: FC<IVideoModal> = ({
@@ -49,13 +51,15 @@ const VideoModal: FC<IVideoModal> = ({
     description,
     url,
     plataform = 'youtube',
-    updateQuiz
+    updateQuiz,
+    autoplayFunction
 }) => {
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
     const [videoDuration, setVideoDuration] = useState(0);
     const [fallbackHasBeenCalled, setFallbackHasBeenCalled] = useState(false);
     const { userData } = useUser();
+    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
 
     const updateVideo = async () => {
         try {
@@ -82,6 +86,16 @@ const VideoModal: FC<IVideoModal> = ({
         }
     }
 
+    const handleAutoplay = () => {
+        handleCloseModal();
+        autoplayFunction && autoplayFunction();
+    }
+
+    const handleOnEnded = async () => {
+        await handleFinishedVideo();
+        handleAutoplay();
+    }
+
     // Pega o necessario da URL do video
     const parseVideoUrl = () => {
         if (url)
@@ -91,7 +105,8 @@ const VideoModal: FC<IVideoModal> = ({
     const handleCloseModal = () => {
         setIsVideoLoading(true);
         setFallbackHasBeenCalled(false);
-        videoOnClose()
+        videoOnClose();
+        playSoundtrack();
     }
 
     const handleDuration = (duration: number) => {
@@ -134,9 +149,10 @@ const VideoModal: FC<IVideoModal> = ({
                             <ReactPlayer
                                 url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
                                 controls={true}
+                                onStart={pauseSoundtrack}
                                 onDuration={handleDuration}
                                 onProgress={handleProgress}
-                                onEnded={handleFinishedVideo}
+                                onEnded={handleOnEnded}
                                 width="100%"
                                 height="450px"
                                 onReady={() => setIsVideoLoading(false)}
