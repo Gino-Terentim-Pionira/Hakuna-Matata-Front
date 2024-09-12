@@ -52,13 +52,21 @@ const Shop = () => {
 		}
 
 		const getShopItens = async () => {
-			const res = await api.get('/shopItem/');
-			setShopItem(res.data);
+			try {
+				const res = await api.get('/shopItem/');
+				setShopItem(res.data);
+			} catch {
+				setShopItem([]);
+			}
 		};
 	
 		const getOwnedCertificates = async (userId: string) => {
-			const res = await certificateService.listOwnedCertificates(userId);
-			setOwnedCertificates(res);
+			try {
+				const res = await certificateService.listOwnedCertificates(userId);
+				setOwnedCertificates(res);
+			} catch {
+				setOwnedCertificates([]);
+			}
 		}
 		
 		const getUser = async () => {
@@ -81,6 +89,64 @@ const Shop = () => {
 
 		getUser().then();
 	}, []);
+
+	const mapOwnedCertificates = () => (
+		ownedCertificates.map(({
+								   certificate_name,
+								   description,
+								   first_name,
+								   last_name,
+								   hash,
+								   image,
+								   issue_date
+							   }: IOwnedCertificate) => {
+			return (
+				<OwnedCertificateItem
+					key={certificate_name}
+					certificate_name={certificate_name}
+					description={description}
+					first_name={first_name}
+					last_name={last_name}
+					hash={hash}
+					image={image}
+					issue_date={issue_date}
+				/>
+			)
+		})
+	);
+
+	const mapShopItems = () => (
+		shopItem.map(
+			({
+				 _id,
+				 name,
+				 value,
+				 description,
+				 type,
+				 id_link,
+			 }: {
+				_id: string;
+				name: string;
+				value: number;
+				description: string;
+				type: string;
+				id_link: string;
+			}) => {
+				return (
+					<PurchasedItems
+						key={_id}
+						_id={_id}
+						items_id={userData.items_id}
+						name={name}
+						value={value}
+						description={description}
+						type={type}
+						id_link={id_link}
+					/>
+				);
+			},
+		)
+	)
 	return (
 		<Box
 			display='flex'
@@ -151,7 +217,7 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{userData?.items_id?.length > 0 ? (
+			{userData?.items_id?.length || ownedCertificates.length ? (
 				<>
 					<SimpleGrid
 						zIndex='2'
@@ -160,60 +226,8 @@ const Shop = () => {
 						overflowY='auto'
 						mt='2.5rem'
 					>
-						{
-							ownedCertificates.map(({
-								certificate_name,
-								description,
-								first_name,
-								last_name,
-								hash,
-								image,
-								issue_date
-							}: IOwnedCertificate) => {
-								return (
-									<OwnedCertificateItem 
-										key={certificate_name}
-										certificate_name={certificate_name}
-										description={description}
-										first_name={first_name}
-										last_name={last_name}
-										hash={hash}
-										image={image}
-										issue_date={issue_date}
-									/>
-								)
-							})
-						}
-						{shopItem.map(
-							({
-								_id,
-								name,
-								value,
-								description,
-								type,
-								id_link,
-							}: {
-								_id: string;
-								name: string;
-								value: number;
-								description: string;
-								type: string;
-								id_link: string;
-							}) => {
-								return (
-									<PurchasedItems
-										key={_id}
-										_id={_id}
-										items_id={userData.items_id}
-										name={name}
-										value={value}
-										description={description}
-										type={type}
-										id_link={id_link}
-									/>
-								);
-							},
-						)}
+						{mapOwnedCertificates()}
+						{mapShopItems()}
 					</SimpleGrid>
 				</>
 			) : (

@@ -48,7 +48,7 @@ const OwnedCertificateItem: FC<IOwnedCertificate> = ({
             description={description}
             type='Certificado'
             image={certificateIcon}
-            downloadFunction={handleGeneratePDF}
+            downloadItem={handleGeneratePDF}
         />
     )
 }

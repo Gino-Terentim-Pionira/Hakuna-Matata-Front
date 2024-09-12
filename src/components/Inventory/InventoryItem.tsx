@@ -1,17 +1,16 @@
-import React, { FC, useState, Component, ReactComponentElement, ReactElement } from 'react';
+import React, { FC, useState } from 'react';
 import {
     Flex,
-    Button,
     Box,
     Image,
     Text,
-    Slide,
     useDisclosure,
 } from '@chakra-ui/react';
 
 // Styles
 import fontTheme from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
+import {ItemSlider} from "./ItemSlider";
 
 //API
 //import api from '../services/api';
@@ -21,14 +20,14 @@ type InventoryItemProps = {
     description: string;
     type: string;
     image: string;
-    downloadFunction: VoidFunction
+    downloadItem: VoidFunction
 };
 
 const InventoryItem: FC<InventoryItemProps> = ({
     name,
     description,
     type,
-    downloadFunction,
+    downloadItem,
     image
 }) => {
     const { isOpen, onToggle } = useDisclosure();
@@ -45,7 +44,7 @@ const InventoryItem: FC<InventoryItemProps> = ({
 
     return (
 
-        <Box>
+        <Box width="fit-content">
             <Flex
                 _hover={{
                     cursor: 'pointer',
@@ -60,8 +59,8 @@ const InventoryItem: FC<InventoryItemProps> = ({
                 transform={show ? `scale(1.05)` : ' '}
                 transition='150ms cubic-bezier(.38, .5, .5, 1.5)'
             >
-                <Box maxHeight='300px'>
-                    <Box w='100%'>
+                <Box minW="250px" maxHeight='300px'>
+                    <Box>
                         <Image
                             maxWidth='300px'
                             transition='50ms'
@@ -100,103 +99,7 @@ const InventoryItem: FC<InventoryItemProps> = ({
                     </Text>
                 </Flex>
             </Flex>
-            {show ? (
-                <Slide
-                    direction='bottom'
-                    in={isOpen}
-                    style={{ zIndex: 10 }}
-                >
-                    <Box onClick={showDescription} w='100%' h='100vh' />
-                    <Flex
-                        w='100%'
-                        h='16rem'
-                        bg={colorPalette.slideBackground}
-                        rounded='md'
-                        shadow='md'
-                        flexDirection='column'
-                        justifyContent='space-between'
-                        border='4px solid'
-                        borderColor={colorPalette.secondaryColor}
-                    >
-                        <Flex
-                            justifyContent='flex-end'
-                            paddingRight='20px'
-                            paddingTop='9px'
-                            fontSize='2rem'
-                            fontWeight='bold'
-                            color={colorPalette.closeButton}
-                        >
-                            <Text
-                                onClick={showDescription}
-                                transition='all 0.2s'
-                                _hover={{
-                                    cursor: 'pointer',
-                                    opacity: '80%',
-                                }}
-                                _active={{
-                                    opacity: '50%',
-                                }}
-                                w='2.5rem'
-                            >
-                                X
-                        </Text>
-                        </Flex>
-                        <Flex
-                            w='92%'
-                            marginTop='2rem'
-                            position='absolute'
-                            marginLeft='1.5rem'
-                            justifyContent='space-between'
-                        >
-                            <Flex flexDirection='column' w='80%'>
-                                <Text
-                                    fontSize={[
-                                        '0.5rem',
-                                        '1.2rem',
-                                        '1.5rem',
-                                    ]}
-                                    w='60%'
-                                    fontWeight='semibold'
-                                    textAlign='left'
-                                    mb='8px'
-                                >
-                                    {name}
-                                </Text>
-                                <Text
-                                    fontSize={[
-                                        '0.3rem',
-                                        '0.8rem',
-                                        '1rem',
-                                    ]}
-                                    fontWeight='regular'
-                                    textAlign='left'
-                                    overflow="auto"
-                                    maxH="160px"
-                                >
-                                    {description}
-                                </Text>
-                            </Flex>
-                            <Flex
-                                flexDirection='column'
-                                alignSelf='flex-start'
-                            >
-                                <Button
-                                    width='100%'
-                                    height='3.5rem'
-                                    background={colorPalette.primaryColor}
-                                    color={colorPalette.buttonTextColor}
-                                    fontSize='1.5rem'
-                                    borderRadius='8px'
-                                    _hover={{ bg: colorPalette.primaryColor }}
-                                    onClick={downloadFunction}
-                                >
-                                    Download
-                                </Button>
-                            </Flex>
-                        </Flex>
-                    </Flex>
-                </Slide>
-            ) : null}
+            {show && <ItemSlider isOpen={isOpen} showDescription={showDescription} description={description} downloadItem={downloadItem} />}
         </Box>
     );
 };

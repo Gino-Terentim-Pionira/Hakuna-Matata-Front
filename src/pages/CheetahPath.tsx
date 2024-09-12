@@ -215,7 +215,6 @@ const CheetahPath = () => {
     const [blockedMessage, setBlockedMessage] = useState<string>('');
     const { changeSoundtrack} = useSoundtrack();
     const [canDoFinalQuiz, setCanDoFinalQuiz] = useState(false);
-    const [remainingTo80, setRemainingTo80] = useState(0);
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -250,11 +249,6 @@ const CheetahPath = () => {
             newQuiz.data[0].questions_id,
             _userId as string,
         );
-
-        const quiz80percent = newQuiz.data[0].questions_id.length * 0.8;
-        const questionsAnswered = newQuiz.data[0].questions_id.length - finishQuestions.length;
-        const questionsRemainingTo80 = Math.max(quiz80percent - questionsAnswered, 0);
-        setRemainingTo80(questionsRemainingTo80);
 
         if (finishQuestions.length <= 0) {
             setQuestions(newQuiz.data[0].questions_id);
@@ -686,7 +680,6 @@ const CheetahPath = () => {
                                     routeQuestions={'cheetahquestions'}
                                     routeQuiz={'finalcheetahquiz'}
                                     trail={1}
-                                    remainingTo80={remainingTo80}
                                 />
                             </>
                         )}

@@ -121,7 +121,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 
 	const rewardModalInfo = () => {
 		const questionsRemainingTo80 = remainingTo80 - correctAnswers;
-		const questionPlural = questionsRemainingTo80 == 1 ? 'questão' : 'questões';
+		const questionLabel = questionsRemainingTo80 == 1 ? 'questão' : 'questões';
 		if (correctAnswers === totalAnswers)
 			return {
 				title: 'Parabéns!!',
@@ -138,7 +138,7 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 			`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você poderá vencer a ignorância!`,
 			icon: Cross,
 			coins,
-			alert: questionsRemainingTo80 <= 0 ? 'Você está legível para obter o certificado da trilha! Acesse a loja e verifique os outros requisitos.' : `Falta acertar ${questionsRemainingTo80} ${questionPlural} para você poder obter o certificado da trilha!`
+			alert: questionsRemainingTo80 <= 0 ? 'Você está legível para obter o certificado da trilha! Acesse a loja e verifique os outros requisitos.' : `Falta acertar ${questionsRemainingTo80} ${questionLabel} para você poder obter o certificado da trilha!`
 		}
 	}
 
