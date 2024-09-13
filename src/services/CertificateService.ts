@@ -5,6 +5,7 @@ export interface IOwnedCertificate {
     last_name: string,
     certificate_name: string,
     description: string,
+    content: string,
     image: string,
     hash: string,
     issue_date: string
