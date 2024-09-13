@@ -53,6 +53,17 @@ interface IModuleModal {
     openFinalModuleNarrative: VoidFunction;
 }
 
+interface IVideoInfo {
+    id: string;
+    name: string;
+    url: string;
+    coins: number;
+    description: string;
+    nextVideoFunction?: () => void;
+    previousVideoFunction?: () => void;
+}
+
+
 const GridContainer = styled.div`
     display: grid;
     margin-left: 47px;
@@ -120,7 +131,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
     const [buttonValidation, setButtonValidation] = useState(false);
     const [totalCoins, setTotalCoins] = useState(0);
     const [onError, setOnError] = useState(false);
-    const [videoInfo, setVideoInfo] = useState({ id: '', name: '', url: '', coins: 0, description: '', autoplay: ()=>console.log('oi') });
+    const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
     const [remainingCoins, setRemainingCoins] = useState(0);
     const [iconInfo, setIconInfo] = useState({
         label: moduleInfo.module_name,
@@ -186,38 +197,57 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         quizOnOpen();
     }
 
-    const handleVideoModal = (id: string, name: string, url: string, coins: number, description: string, index: number) => {
-        if (index < (moduleInfo.videos_id.length - 1)) {
-            const nextVideoInfo = moduleInfo.videos_id[index + 1];
-            const autoplay = () => handleVideoModal(nextVideoInfo._id, nextVideoInfo.name, nextVideoInfo.url, nextVideoInfo.coins, nextVideoInfo.description, index + 1);
-            setVideoInfo({ id, name, url, coins, description, autoplay });
-        } else {
-            setVideoInfo({ id, name, url, coins, description, autoplay: ()=>console.log('oi') });
-        }
+    const handleVideoModal = (
+        id: string,
+        name: string,
+        url: string,
+        coins: number,
+        description: string,
+        index: number
+    ) => {
+        const getVideoInfoFunction = (offset: number) => {
+            const videoInfo = moduleInfo.videos_id[index + offset];
+            return videoInfo
+                ? () =>
+                    handleVideoModal(
+                        videoInfo._id,
+                        videoInfo.name,
+                        videoInfo.url,
+                        videoInfo.coins,
+                        videoInfo.description,
+                        index + offset
+                    )
+                : undefined;
+        };
+
+        const nextVideoFunction = getVideoInfoFunction(1);
+        const previousVideoFunction = getVideoInfoFunction(-1);
+
+        setVideoInfo({ id, name, url, coins, description, nextVideoFunction, previousVideoFunction });
         videoOnOpen();
-    }
+    };
 
     const defineProperties = async () => {
         const totalNumberOfQuestions = moduleInfo.questions_id.length;
 
         if (isBlocked || !statusRequirement) {
-            if(quizIndex === 0) {
+            if (quizIndex === 0) {
                 setIconInfo({
                     label: "Módulo indisponível",
-                    ...MODULE_INFO('blocked', 0,0),
+                    ...MODULE_INFO('blocked', 0, 0),
                     description: "Este módulo não está disponível ainda, aguarde para mais atualizações..."
                 })
             } else {
                 setIconInfo({
                     ...iconInfo,
-                    ...MODULE_INFO('blocked', 0,0)
+                    ...MODULE_INFO('blocked', 0, 0)
                 })
             }
             setImage(button_blocked);
         } else if (buttonValidation || userData.module_id?.includes(moduleInfo._id)) {
             setIconInfo({
                 ...iconInfo,
-                ...MODULE_INFO('complete', totalNumberOfQuestions,totalNumberOfQuestions),
+                ...MODULE_INFO('complete', totalNumberOfQuestions, totalNumberOfQuestions),
             })
             setImage(button_on);
         } else {
@@ -231,7 +261,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
             setIconInfo({
                 ...iconInfo,
-                ...MODULE_INFO('incomplete', totalNumberOfAnsweredQuesitons,totalNumberOfQuestions),
+                ...MODULE_INFO('incomplete', totalNumberOfAnsweredQuesitons, totalNumberOfQuestions),
             })
             setImage(button_off);
         }
@@ -243,8 +273,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
     const renderTooltip = () => {
         return <>
-            <p style={{ fontWeight: 'bold'}} >{iconInfo.label}</p>
-            <p style={{ fontSize: '12px', marginTop: '2px'}} >{iconInfo.description}</p>
+            <p style={{ fontWeight: 'bold' }} >{iconInfo.label}</p>
+            <p style={{ fontSize: '12px', marginTop: '2px' }} >{iconInfo.description}</p>
             <p style={{ fontWeight: 'bold', color: iconInfo.availabilityColor, marginTop: '8px' }}>
                 {iconInfo.availabilityInfo}
             </p>
@@ -343,7 +373,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                             key={_id}
                                                         >
                                                             <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="165px" bg={colorPalette.textColor}>
-                                                            <Image height={thumbnail ? '' : '59px'}  src={thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
+                                                                <Image height={thumbnail ? '' : '59px'} src={thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
                                                             </Flex>
                                                             <Flex flexDir="column" paddingX="16px" marginTop="24px">
                                                                 <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
@@ -520,7 +550,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 videoIsOpen={videoIsOpen}
                 videoOnClose={handleOnCloseVideo}
                 updateQuiz={getNewUserInfo}
-                autoplayFunction={videoInfo.autoplay}
+                nextVideoFunction={videoInfo.nextVideoFunction}
+                previousVideoFunction={videoInfo.previousVideoFunction}
             />
         </>
     );

@@ -28,6 +28,8 @@ import { errorCases } from '../../utils/errors/errorsCases';
 import LoadingState from "../LoadingState";
 import { OnProgressProps } from "react-player/base";
 import { useSoundtrack } from '../../hooks/useSoundtrack';
+import { BiSkipNextCircle } from "react-icons/bi";
+import { BiSkipPreviousCircle } from "react-icons/bi";
 
 interface IVideoModal {
     id: string;
@@ -39,7 +41,8 @@ interface IVideoModal {
     plataform?: 'vimeo' | 'youtube';
     updateQuiz: VoidFunction;
     coins: number;
-    autoplayFunction?: VoidFunction;
+    nextVideoFunction?: VoidFunction;
+    previousVideoFunction?: VoidFunction;
 }
 
 const VideoModal: FC<IVideoModal> = ({
@@ -52,7 +55,8 @@ const VideoModal: FC<IVideoModal> = ({
     url,
     plataform = 'youtube',
     updateQuiz,
-    autoplayFunction
+    nextVideoFunction,
+    previousVideoFunction
 }) => {
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
@@ -86,14 +90,19 @@ const VideoModal: FC<IVideoModal> = ({
         }
     }
 
-    const handleAutoplay = () => {
+    const handleNextVideo = () => {
         handleCloseModal();
-        autoplayFunction && autoplayFunction();
+        nextVideoFunction && nextVideoFunction();
+    }
+
+    const handlePreviousVideo = () => {
+        handleCloseModal();
+        previousVideoFunction && previousVideoFunction();
     }
 
     const handleOnEnded = async () => {
         await handleFinishedVideo();
-        handleAutoplay();
+        handleNextVideo();
     }
 
     // Pega o necessario da URL do video
@@ -143,7 +152,7 @@ const VideoModal: FC<IVideoModal> = ({
                             {
                                 isVideoLoading &&
                                 <Flex height="450px">
-                                    <LoadingState/>
+                                    <LoadingState />
                                 </Flex>
                             }
                             <ReactPlayer
@@ -157,9 +166,37 @@ const VideoModal: FC<IVideoModal> = ({
                                 height="450px"
                                 onReady={() => setIsVideoLoading(false)}
                                 style={{
-                                    display: isVideoLoading ? 'none': 'block',
+                                    display: isVideoLoading ? 'none' : 'block',
                                 }}
                             />
+                            <Flex width='100%'>
+                                {
+                                    previousVideoFunction && <Button
+                                        marginRight='auto'
+                                        marginTop='16px'
+                                        color='white'
+                                        _hover={{ bg: colorPalette.primaryColor }}
+                                        bg={colorPalette.primaryColor}
+                                        onClick={handlePreviousVideo}
+                                        leftIcon={<BiSkipPreviousCircle color='black' size='30px' />}
+                                    >
+                                        Vídeo Anterior
+                                    </Button>
+                                }
+                                {
+                                    nextVideoFunction && <Button
+                                        marginLeft='auto'
+                                        marginTop='16px'
+                                        color='white'
+                                        _hover={{ bg: colorPalette.primaryColor }}
+                                        bg={colorPalette.primaryColor}
+                                        onClick={handleNextVideo}
+                                        rightIcon={<BiSkipNextCircle color='black' size='30px' />}
+                                    >
+                                        Próximo vídeo
+                                    </Button>
+                                }
+                            </Flex>
                         </Flex>
                     </ModalBody>
                 </ModalContent >
