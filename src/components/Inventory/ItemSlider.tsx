@@ -7,8 +7,9 @@ interface IItemSlider {
     showDescription: VoidFunction;
     description: string;
     downloadItem:VoidFunction;
+    title: string;
 }
-export const ItemSlider = ({isOpen, downloadItem, description, showDescription}: IItemSlider) => (
+export const ItemSlider = ({isOpen, downloadItem, description, showDescription, title}: IItemSlider) => (
     <Slide
         direction='bottom'
         in={isOpen}
@@ -68,7 +69,7 @@ export const ItemSlider = ({isOpen, downloadItem, description, showDescription}:
                         textAlign='left'
                         mb='8px'
                     >
-                        {name}
+                        {title}
                     </Text>
                     <Text
                         fontSize={[

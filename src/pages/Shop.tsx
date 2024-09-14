@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Flex, Spacer, Text} from '@chakra-ui/layout';
-import {Button, Center, Image, SimpleGrid} from '@chakra-ui/react';
+import {Center, Image, SimpleGrid} from '@chakra-ui/react';
 import {useHistory} from 'react-router-dom';
 import {useUser} from '../hooks';
 import usePath from '../hooks/usePath';
 
 // Components
 import ShopItem from '../components/shopItem';
-import AlertModal from '../components/modals/AlertModal';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
@@ -19,37 +18,21 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import icon_inventory from '../assets/icons/icon_inventory.svg';
-import {errorCases} from '../utils/errors/errorsCases';
 import BackButton from '../components/BackButton';
 import {getStatusPoints} from '../utils/statusUtils';
 import {useSoundtrack} from "../hooks/useSoundtrack";
+import {CertificateService, IShopCertificate} from "../services/CertificateService";
 
 const Shop = () => {
 	const { handleBack } = usePath();
 	const { getNewUserInfo, userData } = useUser();
 	const { soundtrackData, audio } = useSoundtrack();
 	const [shopItem, setShopItem] = useState([]);
+	const [certificates, setCertificates] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
-	const [onError, setOnError] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const history = useHistory();
-
-	const getShopItens = async () => {
-		try {
-			if (Object.keys(userData).length == 0) {
-				await getNewUserInfo();
-			}
-			const res = await api.get('/shopItem/');
-			const userId = sessionStorage.getItem('@pionira/userId');
-			const userIdString = '' + userId;
-			setShopItem(res.data);
-			setCurrentUserId(userIdString);
-			setIsLoading(false);
-		} catch (error) {
-			setOnError(true);
-		}
-	};
 
 	const goToInventory = async () => {
 		const userId = sessionStorage.getItem('@pionira/userId');
@@ -60,12 +43,49 @@ const Shop = () => {
 		handleBack();
 	};
 
+	const certificateItemDescription = (description: string, message: string) => (
+		<> {description}. <Text color={colorPalette.alertText} fontWeight="bold"> {message}</Text> </>
+	)
+
 	useEffect(() => {
+		const getShopItens = async () => {
+			try {
+				if (Object.keys(userData).length == 0) {
+					await getNewUserInfo();
+				}
+				const res = await api.get('/shopItem/');
+				const userId = sessionStorage.getItem('@pionira/userId');
+				const userIdString = '' + userId;
+				setShopItem(res.data);
+				setCurrentUserId(userIdString);
+			} catch (error) {
+				setShopItem([]);
+			}
+		};
+
+		const getCertificates = async () => {
+				try {
+					const userId = sessionStorage.getItem('@pionira/userId');
+					const userIdString = '' + userId;
+					const res = await new CertificateService().listShopCertificates(userIdString)
+					setCertificates(res);
+				} catch {
+					setCertificates([])
+				}
+		}
+
+		const getShopInfo = async () => {
+			setIsLoading(true)
+			await getShopItens();
+			await getCertificates();
+			setIsLoading(false);
+		}
+
 		if(!soundtrackData.isPlaying) {
 			audio.src = sessionStorage.getItem("lastSoundtrack") as string;
 		}
 
-		getShopItens();
+		getShopInfo();
 	}, []);
 	return (
 		<Box
@@ -138,7 +158,24 @@ const Shop = () => {
 				<LoadingOverlay />
 			) : (
 				<>
-					<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
+					<SimpleGrid onClick={() => console.log(certificates)} w='72%' columns={3} overflowY='auto' mt='2rem'>
+						{
+							certificates.map((certificate: IShopCertificate) => (
+								<ShopItem
+									key={certificate.name}
+									_id={certificate.id}
+									current_user_id={currentUserId}
+									items_id={userData.items_id}
+									userCoins={userData.coins}
+									name={certificate.name}
+									value={certificate.price}
+									description={certificateItemDescription(certificate.description, certificate.message)}
+									type='item4'
+									userStatus={getStatusPoints(userData, "agilidade")}
+									itemStatus={{status_name: "agilidade", points: 1}}
+								/>
+							))
+						}
 						{shopItem.map(
 							({
 								_id,
@@ -180,23 +217,6 @@ const Shop = () => {
 					</SimpleGrid>
 				</>
 			)}
-			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody={errorCases.SERVER_ERROR}
-
-				buttonBody={
-					<Button
-						color='white'
-						_hover={{ bg: colorPalette.primaryColor }}
-						bg={colorPalette.primaryColor}
-						onClick={() => window.location.reload()}
-					>
-						Recarregar
-					</Button>
-				}
-			/>
 		</Box>
 	);
 };

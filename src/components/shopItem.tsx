@@ -1,4 +1,4 @@
-import React, { useRef, FC, useState } from 'react';
+import React, {useRef, FC, useState, ReactElement} from 'react';
 import {
 	Flex,
 	Button,
@@ -32,13 +32,16 @@ import { errorCases } from '../utils/errors/errorsCases';
 import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 import { NOT_ENOUGH_STATUS } from '../utils/constants/mouseOverConstants';
 import { getStatusNick, getStatusColor } from '../utils/statusUtils';
+import certificateIcon from '../assets/icons/certificate/certificate.svg';
+import {CertificateService} from "../services/CertificateService";
+
 
 type ShopItemProps = {
 	current_user_id: string;
 	_id: string;
 	name: string;
 	value: number;
-	description: string;
+	description: string | ReactElement;
 	type: string;
 	items_id: string[];
 	userCoins: number;
@@ -75,7 +78,7 @@ const ShopItem: FC<ShopItemProps> = ({
 		setIsConfirmOpen(false);
 	};
 	const cancelRef = useRef<HTMLButtonElement>(null);
-	const [alertAnswer, setAlertAnswer] = useState('');
+	const [alertAnswer, setAlertAnswer] = useState<string | ReactElement>('');
 
 	const history = useHistory();
 
@@ -91,7 +94,15 @@ const ShopItem: FC<ShopItemProps> = ({
 	const itemType: { [key: string]: string } = {
 		"item1": "E-books",
 		"item2": "Utilitários",
-		"item3": "Especiais"
+		"item3": "Especiais",
+		"item4": "Certificado"
+	}
+
+	const getItemTypeImage: { [key: string]: string } = {
+		"item1": cardicon,
+		"item2": bookicon,
+		"item3": hourglassicon,
+		"item4": certificateIcon
 	}
 
 	const confirmBuyItem = () => {
@@ -125,6 +136,17 @@ const ShopItem: FC<ShopItemProps> = ({
 					} catch (error) {
 						setOnError(true);
 					}
+				} else if (type === "item4") {
+					try {
+						await new CertificateService().buyCertificate({userId: current_user_id, certificateId: _id})
+						setLoaging(false);
+						setAlertAnswer(<>Parabéns! Seu certificado foi comprado com sucesso! <Text color={colorPalette.alertText} fontWeight="semibold">Acesse o inventario para baixá-lo</Text> </>);
+						setIsAlert(true);
+					} catch (error) {
+						setLoaging(false);
+						setAlertAnswer(<Text color={colorPalette.alertText} fontWeight="semibold"> {error.response.data.message}</Text>);
+						setIsAlert(true);
+					}
 				} else {
 					try {
 
@@ -137,7 +159,7 @@ const ShopItem: FC<ShopItemProps> = ({
 						});
 
 						setLoaging(false);
-						setAlertAnswer('Parabéns! Seu item foi comprado com sucesso!');
+						setAlertAnswer(<>Parabéns! Seu item foi comprado com sucesso! <Text color={colorPalette.alertText} fontWeight="semibold">Acesse o inventario para baixá-lo</Text> </>);
 						setIsAlert(true);
 					} catch (error) {
 						setOnError(true);
@@ -177,56 +199,20 @@ const ShopItem: FC<ShopItemProps> = ({
 					justifySelf='flex-start'
 					maxWidth='300px'
 				>
-					{type === 'item3' ? (
-						<Box w='100%'>
-							<Image
-								maxWidth='300px'
-								transition='50ms'
-								bg={show ? '#00000012' : colorPalette.backgroundHighlight}
-								minW="190px"
-								w='100%'
-								h='18.75rem'
-								mt='0.5rem'
-								src={hourglassicon}
-								alt='hourglassicon'
-								padding='5rem 4.7rem'
-								mb='1rem'
-								borderRadius='7.5%'
-							/>
-						</Box>
-					) : (
-							type === 'item2' ? (
-								<Image
-									maxWidth='300px'
-									transition='50ms'
-									bg={show ? '#00000012' : colorPalette.backgroundHighlight}
-									minW="190px"
-									w='100%'
-									h='18.75rem'
-									mt='0.5rem'
-									src={bookicon}
-									alt='bookicon'
-									padding='5rem 3.5rem'
-									mb='1rem'
-									borderRadius='7.5%'
-								/>
-							) : (
-									<Image
-										maxWidth='300px'
-										transition='50ms'
-										bg={show ? '#00000012' : colorPalette.backgroundHighlight}
-										minW="190px"
-										w='100%'
-										h='18.75rem'
-										mt='0.5rem'
-										src={cardicon}
-										alt='cardicon'
-										padding='5rem 5rem'
-										mb='1rem'
-										borderRadius='7.5%'
-									/>
-								)
-						)}
+					<Image
+						maxWidth='300px'
+						transition='50ms'
+						bg={show ? '#00000012' : colorPalette.backgroundHighlight}
+						minW="190px"
+						w='100%'
+						h='18.75rem'
+						mt='0.5rem'
+						src={getItemTypeImage[type]}
+						alt='hourglassicon'
+						padding='5rem 4.7rem'
+						mb='1rem'
+						borderRadius='7.5%'
+					/>
 				</Box>
 				<Flex
 					flexDirection='column'
@@ -411,19 +397,21 @@ const ShopItem: FC<ShopItemProps> = ({
 											</Button>
 											</Tooltip>
 										)}
-									<Box
-										marginLeft='15px'
-										fontFamily={fontTheme.fonts}
-										fontSize="18px"
-										fontWeight="bold"
-										color={getStatusColor(itemStatus.status_name)}
-										textAlign='center'
-									>
-										<Text> {userStatus}/{itemStatus.points}</Text>
-										<Text>
-											{getStatusNick(itemStatus.status_name)}
-										</Text>
-									</Box>
+									{
+										type !== "item4" &&	<Box
+											marginLeft='15px'
+											fontFamily={fontTheme.fonts}
+											fontSize="18px"
+											fontWeight="bold"
+											color={getStatusColor(itemStatus.status_name)}
+											textAlign='center'
+										>
+											<Text> {userStatus}/{itemStatus.points}</Text>
+											<Text>
+												{getStatusNick(itemStatus.status_name)}
+											</Text>
+										</Box>
+									}
 								</Flex>
 
 
