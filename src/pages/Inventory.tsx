@@ -98,7 +98,8 @@ const Shop = () => {
 								   last_name,
 								   hash,
 								   image,
-								   issue_date
+								   issue_date,
+								   content
 							   }: IOwnedCertificate) => {
 			return (
 				<OwnedCertificateItem
@@ -110,6 +111,7 @@ const Shop = () => {
 					hash={hash}
 					image={image}
 					issue_date={issue_date}
+					content={content}
 				/>
 			)
 		})
