@@ -197,7 +197,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         quizOnOpen();
     }
 
-    const getVideoInfoFunction = (offset: number, index: number) => {
+    const getVideoInfoWith = (offset: number, index: number) => {
         const videoInfo = moduleInfo.videos_id[index + offset];
         return videoInfo
             ? () =>
@@ -220,8 +220,8 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         description: string,
         index: number
     ) => {
-        const nextVideoFunction = getVideoInfoFunction(1, index);
-        const previousVideoFunction = getVideoInfoFunction(-1, index);
+        const nextVideoFunction = getVideoInfoWith(1, index);
+        const previousVideoFunction = getVideoInfoWith(-1, index);
 
         setVideoInfo({ id, name, url, coins, description, nextVideoFunction, previousVideoFunction });
         videoOnOpen();

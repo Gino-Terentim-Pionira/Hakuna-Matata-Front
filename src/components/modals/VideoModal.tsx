@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, {FC, useState} from 'react';
 import {
     Modal,
     ModalContent,
@@ -133,6 +133,32 @@ const VideoModal: FC<IVideoModal> = ({
         }
     };
 
+    const renderNavigationVideoButton = (navigationType: 'left' | 'right') => ( navigationType === 'left' ?
+        <Button
+            marginRight='auto'
+            marginTop='16px'
+            color='white'
+            _hover={{ bg: colorPalette.primaryColor }}
+            bg={colorPalette.primaryColor}
+            onClick={handlePreviousVideo}
+            leftIcon={<BiSkipPreviousCircle color='black' size='26px' />}
+        >
+            Vídeo Anterior
+        </Button>
+        :
+        <Button
+            marginLeft='auto'
+            marginTop='16px'
+            color='white'
+            _hover={{ bg: colorPalette.primaryColor }}
+            bg={colorPalette.primaryColor}
+            onClick={handleNextVideo}
+            rightIcon={<BiSkipNextCircle color='black' size='26px' />}
+        >
+            Próximo vídeo
+        </Button>
+    )
+
     return (
         <>
             <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="5xl">
@@ -171,30 +197,10 @@ const VideoModal: FC<IVideoModal> = ({
                             />
                             <Flex width='100%'>
                                 {
-                                    previousVideoFunction && <Button
-                                        marginRight='auto'
-                                        marginTop='16px'
-                                        color='white'
-                                        _hover={{ bg: colorPalette.primaryColor }}
-                                        bg={colorPalette.primaryColor}
-                                        onClick={handlePreviousVideo}
-                                        leftIcon={<BiSkipPreviousCircle color='black' size='30px' />}
-                                    >
-                                        Vídeo Anterior
-                                    </Button>
+                                    previousVideoFunction && renderNavigationVideoButton('left')
                                 }
                                 {
-                                    nextVideoFunction && <Button
-                                        marginLeft='auto'
-                                        marginTop='16px'
-                                        color='white'
-                                        _hover={{ bg: colorPalette.primaryColor }}
-                                        bg={colorPalette.primaryColor}
-                                        onClick={handleNextVideo}
-                                        rightIcon={<BiSkipNextCircle color='black' size='30px' />}
-                                    >
-                                        Próximo vídeo
-                                    </Button>
+                                    nextVideoFunction && renderNavigationVideoButton('right')
                                 }
                             </Flex>
                         </Flex>
