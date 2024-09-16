@@ -46,7 +46,7 @@ const Shop = () => {
 		handleBack();
 	};
 
-	const generateLabel = (count: number, singular: string, plural: string): string => {
+	const certificateRequirementsLabel = (count: number, singular: string, plural: string): string => {
 		return !count ? 'Finalizado!' : `Falta ${count > 1 ? plural : singular}`;
 	};
 
@@ -61,10 +61,68 @@ const Shop = () => {
 		</Flex>
 	);
 
+	const mapCertificate = () => (
+		certificates.map((certificate: IShopCertificate) => (
+			<ShopItem
+				key={certificate.name}
+				_id={certificate.id}
+				current_user_id={currentUserId}
+				items_id={userData.items_id}
+				userCoins={userData.coins}
+				name={certificate.name}
+				value={certificate.price}
+				description={certificateItemDescription(certificate.description, certificate.trail, certificate.isEnoughVideo, certificate.isEnoughQuestion, certificate.isEnoughFinalQuiz)}
+				type='item4'
+				userStatus={getStatusPoints(userData, "agilidade")}
+				itemStatus={{ status_name: "agilidade", points: 1 }}
+			/>
+		))
+	);
+
+	const mapShopItem = () => (
+		shopItem.map(
+			({
+				 _id,
+				 name,
+				 value,
+				 description,
+				 type,
+				 status_requirement
+			 }: {
+				_id: string;
+				name: string;
+				value: number;
+				description: string;
+				type: string;
+				status_requirement: {
+					status_name: string;
+					points: number;
+				}
+			}) => {
+				if (!userData?.items_id?.includes(_id)) {
+					return (
+						<ShopItem
+							key={_id}
+							_id={_id}
+							current_user_id={currentUserId}
+							items_id={userData.items_id}
+							userCoins={userData.coins}
+							name={name}
+							value={value}
+							description={description}
+							type={type}
+							userStatus={getStatusPoints(userData, status_requirement.status_name)}
+							itemStatus={status_requirement}
+						/>
+					);
+				}
+			},
+		)
+	);
 	const certificateItemDescription = (description: string, trail: trailEnum, isEnoughVideo: number, isEnoughQuestion: number, isEnoughFinalQuiz: number) => {
-		const videoLabel = generateLabel(isEnoughVideo, 'assistir 1 vídeo', `assistir ${isEnoughVideo} vídeos`);
-		const questionLabel = generateLabel(isEnoughQuestion, 'acertar 1 questão', `acertar ${isEnoughQuestion} questões`);
-		const finalQuizLabel = generateLabel(isEnoughFinalQuiz, 'acertar 1 questão', `acertar ${isEnoughFinalQuiz} questões`);
+		const videoLabel = certificateRequirementsLabel(isEnoughVideo, 'assistir 1 vídeo', `assistir ${isEnoughVideo} vídeos`);
+		const questionLabel = certificateRequirementsLabel(isEnoughQuestion, 'acertar 1 questão', `acertar ${isEnoughQuestion} questões`);
+		const finalQuizLabel = certificateRequirementsLabel(isEnoughFinalQuiz, 'acertar 1 questão', `acertar ${isEnoughFinalQuiz} questões`);
 
 		return (
 			<>
@@ -204,60 +262,11 @@ const Shop = () => {
 					<>
 						<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
 							{
-								certificates.map((certificate: IShopCertificate) => (
-									<ShopItem
-										key={certificate.name}
-										_id={certificate.id}
-										current_user_id={currentUserId}
-										items_id={userData.items_id}
-										userCoins={userData.coins}
-										name={certificate.name}
-										value={certificate.price}
-										description={certificateItemDescription(certificate.description, certificate.trail, certificate.isEnoughVideo, certificate.isEnoughQuestion, certificate.isEnoughFinalQuiz)}
-										type='item4'
-										userStatus={getStatusPoints(userData, "agilidade")}
-										itemStatus={{ status_name: "agilidade", points: 1 }}
-									/>
-								))
+								mapCertificate()
 							}
-							{shopItem.map(
-								({
-									_id,
-									name,
-									value,
-									description,
-									type,
-									status_requirement
-								}: {
-									_id: string;
-									name: string;
-									value: number;
-									description: string;
-									type: string;
-									status_requirement: {
-										status_name: string;
-										points: number;
-									}
-								}) => {
-									if (!userData?.items_id?.includes(_id)) {
-										return (
-											<ShopItem
-												key={_id}
-												_id={_id}
-												current_user_id={currentUserId}
-												items_id={userData.items_id}
-												userCoins={userData.coins}
-												name={name}
-												value={value}
-												description={description}
-												type={type}
-												userStatus={getStatusPoints(userData, status_requirement.status_name)}
-												itemStatus={status_requirement}
-											/>
-										);
-									}
-								},
-							)}
+							{
+								mapShopItem()
+							}
 						</SimpleGrid>
 					</>
 				)}
