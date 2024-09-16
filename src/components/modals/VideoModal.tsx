@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, {FC, useState} from 'react';
 import {
     Modal,
     ModalContent,
@@ -27,6 +27,9 @@ import colorPalette from "../../styles/colorPalette";
 import { errorCases } from '../../utils/errors/errorsCases';
 import LoadingState from "../LoadingState";
 import { OnProgressProps } from "react-player/base";
+import { useSoundtrack } from '../../hooks/useSoundtrack';
+import { BiSkipNextCircle } from "react-icons/bi";
+import { BiSkipPreviousCircle } from "react-icons/bi";
 
 interface IVideoModal {
     id: string;
@@ -38,6 +41,8 @@ interface IVideoModal {
     plataform?: 'vimeo' | 'youtube';
     updateQuiz: VoidFunction;
     coins: number;
+    nextVideoFunction?: VoidFunction;
+    previousVideoFunction?: VoidFunction;
 }
 
 const VideoModal: FC<IVideoModal> = ({
@@ -49,13 +54,16 @@ const VideoModal: FC<IVideoModal> = ({
     description,
     url,
     plataform = 'youtube',
-    updateQuiz
+    updateQuiz,
+    nextVideoFunction,
+    previousVideoFunction
 }) => {
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [onError, setOnError] = useState(false);
     const [videoDuration, setVideoDuration] = useState(0);
     const [fallbackHasBeenCalled, setFallbackHasBeenCalled] = useState(false);
     const { userData } = useUser();
+    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
 
     const updateVideo = async () => {
         try {
@@ -82,6 +90,21 @@ const VideoModal: FC<IVideoModal> = ({
         }
     }
 
+    const handleNextVideo = () => {
+        handleCloseModal();
+        nextVideoFunction && nextVideoFunction();
+    }
+
+    const handlePreviousVideo = () => {
+        handleCloseModal();
+        previousVideoFunction && previousVideoFunction();
+    }
+
+    const handleOnEnded = async () => {
+        await handleFinishedVideo();
+        handleNextVideo();
+    }
+
     // Pega o necessario da URL do video
     const parseVideoUrl = () => {
         if (url)
@@ -91,7 +114,8 @@ const VideoModal: FC<IVideoModal> = ({
     const handleCloseModal = () => {
         setIsVideoLoading(true);
         setFallbackHasBeenCalled(false);
-        videoOnClose()
+        videoOnClose();
+        playSoundtrack();
     }
 
     const handleDuration = (duration: number) => {
@@ -108,6 +132,32 @@ const VideoModal: FC<IVideoModal> = ({
             await handleFinishedVideo()
         }
     };
+
+    const renderNavigationVideoButton = (navigationType: 'left' | 'right') => ( navigationType === 'left' ?
+        <Button
+            marginRight='auto'
+            marginTop='16px'
+            color='white'
+            _hover={{ bg: colorPalette.primaryColor }}
+            bg={colorPalette.primaryColor}
+            onClick={handlePreviousVideo}
+            leftIcon={<BiSkipPreviousCircle color='black' size='26px' />}
+        >
+            Vídeo Anterior
+        </Button>
+        :
+        <Button
+            marginLeft='auto'
+            marginTop='16px'
+            color='white'
+            _hover={{ bg: colorPalette.primaryColor }}
+            bg={colorPalette.primaryColor}
+            onClick={handleNextVideo}
+            rightIcon={<BiSkipNextCircle color='black' size='26px' />}
+        >
+            Próximo vídeo
+        </Button>
+    )
 
     return (
         <>
@@ -128,22 +178,31 @@ const VideoModal: FC<IVideoModal> = ({
                             {
                                 isVideoLoading &&
                                 <Flex height="450px">
-                                    <LoadingState/>
+                                    <LoadingState />
                                 </Flex>
                             }
                             <ReactPlayer
                                 url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
                                 controls={true}
+                                onStart={pauseSoundtrack}
                                 onDuration={handleDuration}
                                 onProgress={handleProgress}
-                                onEnded={handleFinishedVideo}
+                                onEnded={handleOnEnded}
                                 width="100%"
                                 height="450px"
                                 onReady={() => setIsVideoLoading(false)}
                                 style={{
-                                    display: isVideoLoading ? 'none': 'block',
+                                    display: isVideoLoading ? 'none' : 'block',
                                 }}
                             />
+                            <Flex width='100%'>
+                                {
+                                    previousVideoFunction && renderNavigationVideoButton('left')
+                                }
+                                {
+                                    nextVideoFunction && renderNavigationVideoButton('right')
+                                }
+                            </Flex>
                         </Flex>
                     </ModalBody>
                 </ModalContent >
