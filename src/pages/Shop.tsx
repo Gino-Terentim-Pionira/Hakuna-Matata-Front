@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Flex, Spacer, Text} from '@chakra-ui/layout';
-import {Center, Image, SimpleGrid} from '@chakra-ui/react';
-import {useHistory} from 'react-router-dom';
-import {useUser} from '../hooks';
+import React, { useEffect, useState } from 'react';
+import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
+import { Center, Image, SimpleGrid } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
+import { useUser } from '../hooks';
 import usePath from '../hooks/usePath';
 
 // Components
@@ -19,9 +19,12 @@ import colorPalette from '../styles/colorPalette';
 // Images
 import icon_inventory from '../assets/icons/icon_inventory.svg';
 import BackButton from '../components/BackButton';
-import {getStatusPoints} from '../utils/statusUtils';
-import {useSoundtrack} from "../hooks/useSoundtrack";
-import {CertificateService, IShopCertificate} from "../services/CertificateService";
+import { getStatusPoints } from '../utils/statusUtils';
+import { useSoundtrack } from "../hooks/useSoundtrack";
+import { CertificateService, IShopCertificate } from "../services/CertificateService";
+import { IoMdCloseCircle } from "react-icons/io";
+import { BiSolidCheckCircle } from "react-icons/bi";
+import trailEnum from '../utils/enums/trail';
 
 const Shop = () => {
 	const { handleBack } = usePath();
@@ -43,9 +46,50 @@ const Shop = () => {
 		handleBack();
 	};
 
-	const certificateItemDescription = (description: string, message: string) => (
-		<> {description}. <Text color={colorPalette.alertText} fontWeight="bold"> {message}</Text> </>
-	)
+	const generateLabel = (count: number, singular: string, plural: string): string => {
+		return !count ? 'Finalizado!' : `Falta ${count > 1 ? plural : singular}`;
+	};
+
+	const RequirementItem = ({ isCompleted, label, requirementText }: { isCompleted: boolean; label: string; requirementText: string }) => (
+		<Flex
+			fontFamily={fontTheme.fonts}
+			color={isCompleted ? colorPalette.correctAnswer : colorPalette.alertText}
+			alignItems='center'
+		>
+			{isCompleted ? <BiSolidCheckCircle size='20px' /> : <IoMdCloseCircle size='20px' />}
+			<Text marginLeft='4px'>{requirementText} ({label})</Text>
+		</Flex>
+	);
+
+	const certificateItemDescription = (description: string, trail: trailEnum, isEnoughVideo: number, isEnoughQuestion: number, isEnoughFinalQuiz: number) => {
+		const videoLabel = generateLabel(isEnoughVideo, 'assistir 1 vídeo', `assistir ${isEnoughVideo} vídeos`);
+		const questionLabel = generateLabel(isEnoughQuestion, 'acertar 1 questão', `acertar ${isEnoughQuestion} questões`);
+		const finalQuizLabel = generateLabel(isEnoughFinalQuiz, 'acertar 1 questão', `acertar ${isEnoughFinalQuiz} questões`);
+
+		return (
+			<>
+				{description}.
+				<Text fontFamily={fontTheme.fonts} fontWeight="bold">
+					Requisitos para a compra, na Trilha do {trail}:
+			</Text>
+				<RequirementItem
+					isCompleted={!isEnoughVideo}
+					label={videoLabel}
+					requirementText="Assistir 80% dos vídeos"
+				/>
+				<RequirementItem
+					isCompleted={!isEnoughQuestion}
+					label={questionLabel}
+					requirementText="Acertar 80% dos desafios"
+				/>
+				<RequirementItem
+					isCompleted={!isEnoughFinalQuiz}
+					label={finalQuizLabel}
+					requirementText="Acertar 80% do desafio final"
+				/>
+			</>
+		);
+	};
 
 	useEffect(() => {
 		const getShopItens = async () => {
@@ -64,14 +108,14 @@ const Shop = () => {
 		};
 
 		const getCertificates = async () => {
-				try {
-					const userId = sessionStorage.getItem('@pionira/userId');
-					const userIdString = '' + userId;
-					const res = await new CertificateService().listShopCertificates(userIdString)
-					setCertificates(res);
-				} catch {
-					setCertificates([])
-				}
+			try {
+				const userId = sessionStorage.getItem('@pionira/userId');
+				const userIdString = '' + userId;
+				const res = await new CertificateService().listShopCertificates(userIdString)
+				setCertificates(res);
+			} catch {
+				setCertificates([])
+			}
 		}
 
 		const getShopInfo = async () => {
@@ -81,7 +125,7 @@ const Shop = () => {
 			setIsLoading(false);
 		}
 
-		if(!soundtrackData.isPlaying) {
+		if (!soundtrackData.isPlaying) {
 			audio.src = sessionStorage.getItem("lastSoundtrack") as string;
 		}
 
@@ -112,7 +156,7 @@ const Shop = () => {
 				alignItems='center'
 				justifyContent='center'
 			>
-				<BackButton 
+				<BackButton
 					onClick={goBack}
 				/>
 				<Spacer />
@@ -157,66 +201,66 @@ const Shop = () => {
 			{isLoading ? (
 				<LoadingOverlay />
 			) : (
-				<>
-					<SimpleGrid onClick={() => console.log(certificates)} w='72%' columns={3} overflowY='auto' mt='2rem'>
-						{
-							certificates.map((certificate: IShopCertificate) => (
-								<ShopItem
-									key={certificate.name}
-									_id={certificate.id}
-									current_user_id={currentUserId}
-									items_id={userData.items_id}
-									userCoins={userData.coins}
-									name={certificate.name}
-									value={certificate.price}
-									description={certificateItemDescription(certificate.description, certificate.message)}
-									type='item4'
-									userStatus={getStatusPoints(userData, "agilidade")}
-									itemStatus={{status_name: "agilidade", points: 1}}
-								/>
-							))
-						}
-						{shopItem.map(
-							({
-								_id,
-								name,
-								value,
-								description,
-								type,
-								status_requirement
-							}: {
-								_id: string;
-								name: string;
-								value: number;
-								description: string;
-								type: string;
-								status_requirement: {
-									status_name: string;
-									points: number;
-								}
-							}) => {
-								if (!userData?.items_id?.includes(_id)) {
-									return (
-										<ShopItem
-											key={_id}
-											_id={_id}
-											current_user_id={currentUserId}
-											items_id={userData.items_id}
-											userCoins={userData.coins}
-											name={name}
-											value={value}
-											description={description}
-											type={type}
-											userStatus={getStatusPoints(userData, status_requirement.status_name)}
-											itemStatus={status_requirement}
-										/>
-									);
-								}
-							},
-						)}
-					</SimpleGrid>
-				</>
-			)}
+					<>
+						<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
+							{
+								certificates.map((certificate: IShopCertificate) => (
+									<ShopItem
+										key={certificate.name}
+										_id={certificate.id}
+										current_user_id={currentUserId}
+										items_id={userData.items_id}
+										userCoins={userData.coins}
+										name={certificate.name}
+										value={certificate.price}
+										description={certificateItemDescription(certificate.description, certificate.trail, certificate.isEnoughVideo, certificate.isEnoughQuestion, certificate.isEnoughFinalQuiz)}
+										type='item4'
+										userStatus={getStatusPoints(userData, "agilidade")}
+										itemStatus={{ status_name: "agilidade", points: 1 }}
+									/>
+								))
+							}
+							{shopItem.map(
+								({
+									_id,
+									name,
+									value,
+									description,
+									type,
+									status_requirement
+								}: {
+									_id: string;
+									name: string;
+									value: number;
+									description: string;
+									type: string;
+									status_requirement: {
+										status_name: string;
+										points: number;
+									}
+								}) => {
+									if (!userData?.items_id?.includes(_id)) {
+										return (
+											<ShopItem
+												key={_id}
+												_id={_id}
+												current_user_id={currentUserId}
+												items_id={userData.items_id}
+												userCoins={userData.coins}
+												name={name}
+												value={value}
+												description={description}
+												type={type}
+												userStatus={getStatusPoints(userData, status_requirement.status_name)}
+												itemStatus={status_requirement}
+											/>
+										);
+									}
+								},
+							)}
+						</SimpleGrid>
+					</>
+				)}
 		</Box>
 	);
 };

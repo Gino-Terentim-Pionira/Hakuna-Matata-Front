@@ -1,4 +1,4 @@
-import React, {useRef, FC, useState, ReactElement} from 'react';
+import React, { useRef, FC, useState, ReactElement, isValidElement } from 'react';
 import {
 	Flex,
 	Button,
@@ -33,7 +33,7 @@ import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 import { NOT_ENOUGH_STATUS } from '../utils/constants/mouseOverConstants';
 import { getStatusNick, getStatusColor } from '../utils/statusUtils';
 import certificateIcon from '../assets/icons/certificate/certificate.svg';
-import {CertificateService} from "../services/CertificateService";
+import { CertificateService } from "../services/CertificateService";
 
 
 type ShopItemProps = {
@@ -138,7 +138,7 @@ const ShopItem: FC<ShopItemProps> = ({
 					}
 				} else if (type === "item4") {
 					try {
-						await new CertificateService().buyCertificate({userId: current_user_id, certificateId: _id})
+						await new CertificateService().buyCertificate({ userId: current_user_id, certificateId: _id })
 						setLoaging(false);
 						setAlertAnswer(<>Parabéns! Seu certificado foi comprado com sucesso! <Text color={colorPalette.alertText} fontWeight="semibold">Acesse o inventario para baixá-lo</Text> </>);
 						setIsAlert(true);
@@ -296,6 +296,7 @@ const ShopItem: FC<ShopItemProps> = ({
 							marginTop='2rem'
 							position='absolute'
 							marginLeft='1.5rem'
+							justifyContent='space-between'
 						>
 							<Flex flexDirection='column'>
 								<Text
@@ -306,16 +307,22 @@ const ShopItem: FC<ShopItemProps> = ({
 								>
 									{name}
 								</Text>
-								<Text
-									fontSize={['0.3rem', '0.8rem', '1rem']}
-									fontWeight='regular'
-									textAlign='left'
-									overflow="auto"
-									maxH="160px"
-									paddingBottom="16px"
-								>
-									{description}
-								</Text>
+								{
+									isValidElement(description) ? (
+										description
+									) : (
+											<Text
+												fontSize={['0.3rem', '0.8rem', '1rem']}
+												fontWeight='regular'
+												textAlign='left'
+												overflow="auto"
+												maxH="160px"
+												paddingBottom="16px"
+											>
+												{description}
+											</Text>
+										)
+								}
 							</Flex>
 							<Flex flexDirection='column' alignSelf='flex-start' marginTop="24px" marginLeft="24px">
 								<Box display='flex' flexDirection='row' marginBottom="4px">
@@ -393,12 +400,12 @@ const ShopItem: FC<ShopItemProps> = ({
 													onClick={confirmBuyItem}
 													cursor={IS_USER_HAS_STATUS_REQUIREMENT ? 'pointer' : 'help'}
 												>
-													{IS_USER_HAS_STATUS_REQUIREMENT ? 'Comprar': 'Bloqueado'}
-											</Button>
+													{IS_USER_HAS_STATUS_REQUIREMENT ? 'Comprar' : 'Bloqueado'}
+												</Button>
 											</Tooltip>
 										)}
 									{
-										type !== "item4" &&	<Box
+										type !== "item4" && <Box
 											marginLeft='15px'
 											fontFamily={fontTheme.fonts}
 											fontSize="18px"

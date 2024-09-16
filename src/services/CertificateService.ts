@@ -1,4 +1,5 @@
 import api from "./api"
+import trailEnum from "../utils/enums/trail";
 
 export interface IOwnedCertificate {
     first_name: string,
@@ -15,7 +16,7 @@ export interface  IShopCertificate {
     name: string;
     price: number;
     description: string;
-    trail: string;
+    trail: trailEnum;
     isBlocked: boolean;
     isEnoughVideo: number;
     isEnoughQuestion: number;
