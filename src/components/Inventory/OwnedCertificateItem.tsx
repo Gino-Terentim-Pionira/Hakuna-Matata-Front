@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { IOwnedCertificate } from '../../services/CertificateService';
-import InventoryItem from './InventoryItem';
+import CertificateItem from './CertificateItem';
 import certificateIcon from '../../assets/icons/certificate/certificate.svg';
 import { jsPDF } from 'jspdf';
 
@@ -58,7 +58,7 @@ const OwnedCertificateItem: FC<IOwnedCertificate> = ({
     };
 
     return (
-        <InventoryItem
+        <CertificateItem
             name={certificate_name}
             description={description}
             type='Certificado'

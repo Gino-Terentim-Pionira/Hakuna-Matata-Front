@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Flex, Spacer, Text} from '@chakra-ui/layout';
-import {Button, Center, Image, SimpleGrid} from '@chakra-ui/react';
-import {useHistory} from 'react-router-dom';
-import {useUser} from '../hooks';
+import React, { useEffect, useState } from 'react';
+import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
+import { Center, Image, SimpleGrid } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
+import { useUser } from '../hooks';
 import usePath from '../hooks/usePath';
 
 // Components
 import ShopItem from '../components/shopItem';
-import AlertModal from '../components/modals/AlertModal';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 // Requisitions
@@ -19,37 +18,24 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import icon_inventory from '../assets/icons/icon_inventory.svg';
-import {errorCases} from '../utils/errors/errorsCases';
 import BackButton from '../components/BackButton';
-import {getStatusPoints} from '../utils/statusUtils';
-import {useSoundtrack} from "../hooks/useSoundtrack";
+import { getStatusPoints } from '../utils/statusUtils';
+import { useSoundtrack } from "../hooks/useSoundtrack";
+import { CertificateService, IShopCertificate } from "../services/CertificateService";
+import { IoMdCloseCircle } from "react-icons/io";
+import { BiSolidCheckCircle } from "react-icons/bi";
+import trailEnum from '../utils/enums/trail';
 
 const Shop = () => {
 	const { handleBack } = usePath();
 	const { getNewUserInfo, userData } = useUser();
 	const { soundtrackData, audio } = useSoundtrack();
 	const [shopItem, setShopItem] = useState([]);
+	const [certificates, setCertificates] = useState([]);
 	const [currentUserId, setCurrentUserId] = useState('');
-	const [onError, setOnError] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const history = useHistory();
-
-	const getShopItens = async () => {
-		try {
-			if (Object.keys(userData).length == 0) {
-				await getNewUserInfo();
-			}
-			const res = await api.get('/shopItem/');
-			const userId = sessionStorage.getItem('@pionira/userId');
-			const userIdString = '' + userId;
-			setShopItem(res.data);
-			setCurrentUserId(userIdString);
-			setIsLoading(false);
-		} catch (error) {
-			setOnError(true);
-		}
-	};
 
 	const goToInventory = async () => {
 		const userId = sessionStorage.getItem('@pionira/userId');
@@ -60,12 +46,149 @@ const Shop = () => {
 		handleBack();
 	};
 
+	const certificateRequirementsLabel = (count: number, singular: string, plural: string): string => {
+		return !count ? 'Finalizado!' : `Falta ${count > 1 ? plural : singular}`;
+	};
+
+	const RequirementItem = ({ isCompleted, label, requirementText }: { isCompleted: boolean; label: string; requirementText: string }) => (
+		<Flex
+			fontFamily={fontTheme.fonts}
+			color={isCompleted ? colorPalette.correctAnswer : colorPalette.alertText}
+			alignItems='center'
+		>
+			{isCompleted ? <BiSolidCheckCircle size='20px' /> : <IoMdCloseCircle size='20px' />}
+			<Text marginLeft='4px'>{requirementText} ({label})</Text>
+		</Flex>
+	);
+
+	const certificateItemDescription = (description: string, trail: trailEnum, isEnoughVideo: number, isEnoughQuestion: number, isEnoughFinalQuiz: number) => {
+		const videoLabel = certificateRequirementsLabel(isEnoughVideo, 'assistir 1 vídeo', `assistir ${isEnoughVideo} vídeos`);
+		const questionLabel = certificateRequirementsLabel(isEnoughQuestion, 'acertar 1 questão', `acertar ${isEnoughQuestion} questões`);
+		const finalQuizLabel = certificateRequirementsLabel(isEnoughFinalQuiz, 'acertar 1 questão', `acertar ${isEnoughFinalQuiz} questões`);
+
+		return (
+			<>
+				{description}.
+				<Text fontFamily={fontTheme.fonts} fontWeight="bold">
+					Requisitos para a compra, na Trilha do {trail}:
+				</Text>
+				<RequirementItem
+					isCompleted={!isEnoughVideo}
+					label={videoLabel}
+					requirementText="Assistir 80% dos vídeos"
+				/>
+				<RequirementItem
+					isCompleted={!isEnoughQuestion}
+					label={questionLabel}
+					requirementText="Acertar 80% dos desafios"
+				/>
+				<RequirementItem
+					isCompleted={!isEnoughFinalQuiz}
+					label={finalQuizLabel}
+					requirementText="Acertar 80% do desafio final"
+				/>
+			</>
+		);
+	};
+
+	const mapCertificate = () => (
+		certificates.map((certificate: IShopCertificate) => (
+			<ShopItem
+				key={certificate.name}
+				_id={certificate.id}
+				current_user_id={currentUserId}
+				items_id={userData.items_id}
+				userCoins={userData.coins}
+				name={certificate.name}
+				value={certificate.price}
+				description={certificateItemDescription(certificate.description, certificate.trail as trailEnum, certificate.isEnoughVideo, certificate.isEnoughQuestion, certificate.isEnoughFinalQuiz)}
+				type='item4'
+				userStatus={getStatusPoints(userData, "agilidade")}
+				itemStatus={{ status_name: "agilidade", points: 1 }}
+			/>
+		))
+	);
+
+	const mapShopItem = () => (
+		shopItem.map(
+			({
+				 _id,
+				 name,
+				 value,
+				 description,
+				 type,
+				 status_requirement
+			 }: {
+				_id: string;
+				name: string;
+				value: number;
+				description: string;
+				type: string;
+				status_requirement: {
+					status_name: string;
+					points: number;
+				}
+			}) => {
+				if (!userData?.items_id?.includes(_id)) {
+					return (
+						<ShopItem
+							key={_id}
+							_id={_id}
+							current_user_id={currentUserId}
+							items_id={userData.items_id}
+							userCoins={userData.coins}
+							name={name}
+							value={value}
+							description={description}
+							type={type}
+							userStatus={getStatusPoints(userData, status_requirement.status_name)}
+							itemStatus={status_requirement}
+						/>
+					);
+				}
+			},
+		)
+	);
+
 	useEffect(() => {
-		if(!soundtrackData.isPlaying) {
+		const getShopItens = async () => {
+			try {
+				if (Object.keys(userData).length == 0) {
+					await getNewUserInfo();
+				}
+				const res = await api.get('/shopItem/');
+				const userId = sessionStorage.getItem('@pionira/userId');
+				const userIdString = '' + userId;
+				setShopItem(res.data);
+				setCurrentUserId(userIdString);
+			} catch (error) {
+				setShopItem([]);
+			}
+		};
+
+		const getCertificates = async () => {
+			try {
+				const userId = sessionStorage.getItem('@pionira/userId');
+				const userIdString = '' + userId;
+				const res = await new CertificateService().listShopCertificates(userIdString)
+				setCertificates(res);
+			} catch {
+				setCertificates([])
+			}
+		}
+
+		const getShopInfo = async () => {
+			setIsLoading(true)
+			await getShopItens();
+			await getCertificates();
+			setIsLoading(false);
+		}
+
+		if (!soundtrackData.isPlaying) {
 			audio.src = sessionStorage.getItem("lastSoundtrack") as string;
 		}
 
-		getShopItens();
+		getShopInfo();
 	}, []);
 	return (
 		<Box
@@ -92,7 +215,7 @@ const Shop = () => {
 				alignItems='center'
 				justifyContent='center'
 			>
-				<BackButton 
+				<BackButton
 					onClick={goBack}
 				/>
 				<Spacer />
@@ -137,66 +260,17 @@ const Shop = () => {
 			{isLoading ? (
 				<LoadingOverlay />
 			) : (
-				<>
-					<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
-						{shopItem.map(
-							({
-								_id,
-								name,
-								value,
-								description,
-								type,
-								status_requirement
-							}: {
-								_id: string;
-								name: string;
-								value: number;
-								description: string;
-								type: string;
-								status_requirement: {
-									status_name: string;
-									points: number;
-								}
-							}) => {
-								if (!userData?.items_id?.includes(_id)) {
-									return (
-										<ShopItem
-											key={_id}
-											_id={_id}
-											current_user_id={currentUserId}
-											items_id={userData.items_id}
-											userCoins={userData.coins}
-											name={name}
-											value={value}
-											description={description}
-											type={type}
-											userStatus={getStatusPoints(userData, status_requirement.status_name)}
-											itemStatus={status_requirement}
-										/>
-									);
-								}
-							},
-						)}
-					</SimpleGrid>
-				</>
-			)}
-			<AlertModal
-				isOpen={onError}
-				onClose={() => window.location.reload()}
-				alertTitle='Ops!'
-				alertBody={errorCases.SERVER_ERROR}
-
-				buttonBody={
-					<Button
-						color='white'
-						_hover={{ bg: colorPalette.primaryColor }}
-						bg={colorPalette.primaryColor}
-						onClick={() => window.location.reload()}
-					>
-						Recarregar
-					</Button>
-				}
-			/>
+					<>
+						<SimpleGrid w='72%' columns={3} overflowY='auto' mt='2rem'>
+							{
+								mapCertificate()
+							}
+							{
+								mapShopItem()
+							}
+						</SimpleGrid>
+					</>
+				)}
 		</Box>
 	);
 };

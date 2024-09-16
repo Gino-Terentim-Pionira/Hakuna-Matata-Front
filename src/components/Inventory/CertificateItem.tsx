@@ -15,7 +15,7 @@ import {ItemSlider} from "./ItemSlider";
 //API
 //import api from '../services/api';
 
-type InventoryItemProps = {
+type CertificateItemProps = {
     name: string;
     description: string;
     type: string;
@@ -23,7 +23,7 @@ type InventoryItemProps = {
     downloadItem: VoidFunction
 };
 
-const InventoryItem: FC<InventoryItemProps> = ({
+const CertificateItem: FC<CertificateItemProps> = ({
     name,
     description,
     type,
@@ -99,9 +99,9 @@ const InventoryItem: FC<InventoryItemProps> = ({
                     </Text>
                 </Flex>
             </Flex>
-            {show && <ItemSlider isOpen={isOpen} showDescription={showDescription} description={description} downloadItem={downloadItem} />}
+            {show && <ItemSlider title={name} isOpen={isOpen} showDescription={showDescription} description={description} downloadItem={downloadItem} />}
         </Box>
     );
 };
 
-export default InventoryItem;
+export default CertificateItem;
