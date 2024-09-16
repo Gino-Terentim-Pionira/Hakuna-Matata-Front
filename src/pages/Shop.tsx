@@ -61,6 +61,36 @@ const Shop = () => {
 		</Flex>
 	);
 
+	const certificateItemDescription = (description: string, trail: trailEnum, isEnoughVideo: number, isEnoughQuestion: number, isEnoughFinalQuiz: number) => {
+		const videoLabel = certificateRequirementsLabel(isEnoughVideo, 'assistir 1 vídeo', `assistir ${isEnoughVideo} vídeos`);
+		const questionLabel = certificateRequirementsLabel(isEnoughQuestion, 'acertar 1 questão', `acertar ${isEnoughQuestion} questões`);
+		const finalQuizLabel = certificateRequirementsLabel(isEnoughFinalQuiz, 'acertar 1 questão', `acertar ${isEnoughFinalQuiz} questões`);
+
+		return (
+			<>
+				{description}.
+				<Text fontFamily={fontTheme.fonts} fontWeight="bold">
+					Requisitos para a compra, na Trilha do {trail}:
+				</Text>
+				<RequirementItem
+					isCompleted={!isEnoughVideo}
+					label={videoLabel}
+					requirementText="Assistir 80% dos vídeos"
+				/>
+				<RequirementItem
+					isCompleted={!isEnoughQuestion}
+					label={questionLabel}
+					requirementText="Acertar 80% dos desafios"
+				/>
+				<RequirementItem
+					isCompleted={!isEnoughFinalQuiz}
+					label={finalQuizLabel}
+					requirementText="Acertar 80% do desafio final"
+				/>
+			</>
+		);
+	};
+
 	const mapCertificate = () => (
 		certificates.map((certificate: IShopCertificate) => (
 			<ShopItem
@@ -119,35 +149,6 @@ const Shop = () => {
 			},
 		)
 	);
-	const certificateItemDescription = (description: string, trail: trailEnum, isEnoughVideo: number, isEnoughQuestion: number, isEnoughFinalQuiz: number) => {
-		const videoLabel = certificateRequirementsLabel(isEnoughVideo, 'assistir 1 vídeo', `assistir ${isEnoughVideo} vídeos`);
-		const questionLabel = certificateRequirementsLabel(isEnoughQuestion, 'acertar 1 questão', `acertar ${isEnoughQuestion} questões`);
-		const finalQuizLabel = certificateRequirementsLabel(isEnoughFinalQuiz, 'acertar 1 questão', `acertar ${isEnoughFinalQuiz} questões`);
-
-		return (
-			<>
-				{description}.
-				<Text fontFamily={fontTheme.fonts} fontWeight="bold">
-					Requisitos para a compra, na Trilha do {trail}:
-			</Text>
-				<RequirementItem
-					isCompleted={!isEnoughVideo}
-					label={videoLabel}
-					requirementText="Assistir 80% dos vídeos"
-				/>
-				<RequirementItem
-					isCompleted={!isEnoughQuestion}
-					label={questionLabel}
-					requirementText="Acertar 80% dos desafios"
-				/>
-				<RequirementItem
-					isCompleted={!isEnoughFinalQuiz}
-					label={finalQuizLabel}
-					requirementText="Acertar 80% do desafio final"
-				/>
-			</>
-		);
-	};
 
 	useEffect(() => {
 		const getShopItens = async () => {
