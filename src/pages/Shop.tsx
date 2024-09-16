@@ -101,7 +101,7 @@ const Shop = () => {
 				userCoins={userData.coins}
 				name={certificate.name}
 				value={certificate.price}
-				description={certificateItemDescription(certificate.description, certificate.trail, certificate.isEnoughVideo, certificate.isEnoughQuestion, certificate.isEnoughFinalQuiz)}
+				description={certificateItemDescription(certificate.description, certificate.trail as trailEnum, certificate.isEnoughVideo, certificate.isEnoughQuestion, certificate.isEnoughFinalQuiz)}
 				type='item4'
 				userStatus={getStatusPoints(userData, "agilidade")}
 				itemStatus={{ status_name: "agilidade", points: 1 }}
