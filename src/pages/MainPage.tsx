@@ -77,7 +77,7 @@ const MainPage = () => {
 	} = useDisclosure();
 
 	const { getNewUserInfo, setUserData, userData } = useUser();
-	const { changeSoundtrack, muteSoundtrack, unmuteSoundtrack } = useSoundtrack();
+	const { changeSoundtrack, pauseSoundtrack } = useSoundtrack();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [onAlert, setOnAlert] = useState(false);
 	const [ignoranceImage, setIgnoranceImage] = useState('');
@@ -143,7 +143,6 @@ const MainPage = () => {
 				narrativeOnOpen();
 			}
 
-			unmuteSoundtrack();
 			welcomeVideoOnClose();
 		} catch (error) {
 			handleErrorAlert();
@@ -287,8 +286,8 @@ const MainPage = () => {
 				setIgnoranceFilter(res.data.ignorance, ignoranceArray);
 
 				if (res.data.isFirstTimeAppLaunching) {
+					pauseSoundtrack();
 					welcomeVideoOnOpen();
-					muteSoundtrack();
 				}
 
 				await checkCanCollectDaily(res.data.lastCollected, res.data.coins);

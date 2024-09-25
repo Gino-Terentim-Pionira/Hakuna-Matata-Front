@@ -6,7 +6,7 @@ import {soundtrackEnum} from "../utils/enums/soundtrackEnums";
 
 export const SoundtrackManager = () => {
     const location = useLocation();
-    const { playSoundtrack, soundtrackData, setSoundtrackData } = useSoundtrack();
+    const { soundtrackData, setSoundtrackData } = useSoundtrack();
     const defaultSrc = soundtrackEnum[location.pathname];
 
     useEffect(() => {
@@ -17,27 +17,15 @@ export const SoundtrackManager = () => {
             })
         };
 
-        const handleClick = () => {
-            if (soundtrackData.isLoaded && !soundtrackData.isPlaying) {
-                playSoundtrack();
-                setSoundtrackData({
-                    ...soundtrackData,
-                    isPlaying: true,
-                })
-            }
-        };
-
         const audioElement = document.getElementById('audio');
 
         if (audioElement) {
             audioElement.addEventListener('canplaythrough', handleCanPlayThrough);
-            document.addEventListener('click', handleClick);
         }
 
         return () => {
             if (audioElement) {
                 audioElement.removeEventListener('canplaythrough', handleCanPlayThrough);
-                document.removeEventListener('click', handleClick);
             }
         };
     }, [soundtrackData]);
