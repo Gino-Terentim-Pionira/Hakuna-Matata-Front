@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Center, Flex, Input, Tooltip, Collapse, Box, Text } from '@chakra-ui/react';
+import { Button, Center, Flex, Input, Tooltip, Collapse, Box, Text, Stack } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
 import { useUser } from '../../../../hooks';
@@ -63,56 +63,62 @@ export const OracleInput = ({
 	}
 
 	const renderGroupedQuestions = () => (
-		Object.keys(groupedQuestions).map((moduleName) => (
-			<Box key={moduleName} marginTop='28px' marginLeft='16px' marginRight='65px'>
-				<Text fontWeight='bold' fontSize='20px'>
-					{moduleName}
-				</Text>
-
-				{Object.keys(groupedQuestions[moduleName]).map((topic) => (
-					<Box key={topic} marginTop='12px'>
-						<Text fontWeight='bold' fontSize='16px' color={colorPalette.greyText} marginTop="12px">
-							{topic}
+		<Box marginTop='28px'>
+			{
+				Object.keys(groupedQuestions).map((moduleName) => (
+					<Box key={moduleName} marginBottom='18px' marginRight='65px'>
+						<Text fontWeight='bold' marginBottom='16px' fontSize='20px' marginLeft='24px'>
+							{moduleName}
 						</Text>
 
-						{groupedQuestions[moduleName][topic].map((question) => (
-							<Tooltip
-								label={NOT_ENOUGH_MESSAGES}
-								placement='left'
-								hasArrow
-								isDisabled={IS_USER_HAS_MESSAGES}
-								closeOnClick={false}
-							>
-								<Button
-									key={question._id}
-									paddingX="18px"
-									paddingY="2px"
-									cursor={IS_USER_HAS_MESSAGES ? 'pointer' : 'help'}
-									background={IS_USER_HAS_MESSAGES ? colorPalette.primaryColor : colorPalette.grayBackground}
-									color={colorPalette.whiteText}
-									height="auto"
-									width="100%"
-									minH="30px"
-									fontSize="16px"
-									fontWeight="medium"
-									whiteSpace="normal"
-									textAlign='left'
-									isDisabled={isMessageLoading}
-									_hover={{}}
-									marginBottom="8px"
-									onClick={() => {
-										setIsCommonQuestionOpen(false);
-										send(question.question);
-									}}
-								>
-									{question.question}
-								</Button>
-							</Tooltip>
+						{Object.keys(groupedQuestions[moduleName]).map((topic) => (
+							<Box key={topic} marginBottom='12px' marginLeft='28px'>
+								<Text fontWeight='bold' fontSize='16px' color={colorPalette.greyText} marginBottom='4px'>
+									{topic}
+								</Text>
+
+								<Stack spacing='8px'>
+									{groupedQuestions[moduleName][topic].map((question) => (
+										<Tooltip
+											label={NOT_ENOUGH_MESSAGES}
+											placement='left'
+											hasArrow
+											isDisabled={IS_USER_HAS_MESSAGES}
+											closeOnClick={false}
+										>
+											<Button
+												borderRadius='4px 4px 4px 0px'
+												key={question._id}
+												paddingX="18px"
+												paddingY="2px"
+												cursor={IS_USER_HAS_MESSAGES ? 'pointer' : 'help'}
+												background={IS_USER_HAS_MESSAGES ? colorPalette.primaryColor : colorPalette.grayBackground}
+												color={colorPalette.whiteText}
+												height="auto"
+												width="100%"
+												minH="30px"
+												fontSize="16px"
+												fontWeight="medium"
+												whiteSpace="normal"
+												textAlign='left'
+												isDisabled={isMessageLoading}
+												_hover={{}}
+												onClick={() => {
+													setIsCommonQuestionOpen(false);
+													send(question.question);
+												}}
+											>
+												{question.question}
+											</Button>
+										</Tooltip>
+									))}
+								</Stack>
+							</Box>
 						))}
 					</Box>
-				))}
-			</Box>
-		))
+				))
+			}
+		</Box>
 	);
 
 	return (
@@ -147,7 +153,8 @@ export const OracleInput = ({
 				<Collapse in={isCommonQuestionOpen} animateOpacity>
 					<Box
 						borderTopRadius='4px'
-						background={colorPalette.whiteText}
+						background={colorPalette.oracleWhite}
+						boxShadow="inset 0px 6px 4px rgba(74, 74, 74, 0.25)"
 						height='60vh'
 						overflowY='auto'
 						onMouseLeave={() => setIsCommonQuestionOpen(false)}
