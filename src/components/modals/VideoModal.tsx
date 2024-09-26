@@ -63,7 +63,7 @@ const VideoModal: FC<IVideoModal> = ({
     const [videoDuration, setVideoDuration] = useState(0);
     const [fallbackHasBeenCalled, setFallbackHasBeenCalled] = useState(false);
     const { userData } = useUser();
-    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
+    const { pauseSoundtrack } = useSoundtrack();
 
     const updateVideo = async () => {
         try {
@@ -115,7 +115,6 @@ const VideoModal: FC<IVideoModal> = ({
         setIsVideoLoading(true);
         setFallbackHasBeenCalled(false);
         videoOnClose();
-        playSoundtrack();
     }
 
     const handleDuration = (duration: number) => {

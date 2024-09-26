@@ -4,7 +4,6 @@ import { soundtrackState } from "../recoil/soundtrackRecoilState";
 
 export const useSoundtrack = () => {
     const audio = document.getElementById('audio') as HTMLAudioElement;
-    const isSoundtrackMuted = localStorage.getItem("isSoundtrackMuted");
     const [soundtrackData, setSoundtrackData] = useRecoilState(soundtrackState);
 
     const changeVolumeSoundtrack = () => {
@@ -14,45 +13,36 @@ export const useSoundtrack = () => {
     const playSoundtrack = () => {
         if (audio) {
             changeVolumeSoundtrack();
+
+            setSoundtrackData({
+                ...soundtrackData,
+                isPlaying: true,
+            });
+
             setTimeout(() => {
                 audio.play();
             }, 200);
-
-            if (isSoundtrackMuted === "true") {
-                muteSoundtrack();
-            }
         }
     }
 
     const pauseSoundtrack = () => {
-        changeVolumeSoundtrack();
-        audio.pause();
+        if (audio) {
+            audio.volume = 0;
+            setSoundtrackData({
+                ...soundtrackData,
+                isPlaying: false,
+            });
+        }
     }
 
     const changeSoundtrack = (path: string) => {
-        if(audio.src !== soundtrackEnum[path]) {
-            audio.src = soundtrackEnum[path] ;
+        if (audio.src !== soundtrackEnum[path]) {
+            audio.src = soundtrackEnum[path];
             sessionStorage.setItem('lastSoundtrack', soundtrackEnum[path]);
 
             pauseSoundtrack();
-            if(soundtrackData.isPlaying)
+            if (soundtrackData.isPlaying)
                 playSoundtrack();
-        }
-    }
-
-    const muteSoundtrack = (fallback?: VoidFunction) => {
-        if (audio) {
-            localStorage.setItem("isSoundtrackMuted", "true");
-            audio.volume = 0;
-            fallback && fallback();
-        }
-    }
-
-    const unmuteSoundtrack = (fallback?: VoidFunction) => {
-        if (audio) {
-            localStorage.setItem("isSoundtrackMuted", "false");
-            changeVolumeSoundtrack();
-            fallback && fallback();
         }
     }
 
@@ -61,8 +51,6 @@ export const useSoundtrack = () => {
         playSoundtrack,
         pauseSoundtrack,
         changeSoundtrack,
-        muteSoundtrack,
-        unmuteSoundtrack,
         soundtrackData,
         setSoundtrackData
     }
