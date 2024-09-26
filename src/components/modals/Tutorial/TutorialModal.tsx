@@ -26,7 +26,7 @@ type TutorialTopicsModalType = {
 
 export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopicsModalType) => {
     const { userData } = useUser();
-    const { pauseSoundtrack, playSoundtrack } = useSoundtrack();
+    const { pauseSoundtrack } = useSoundtrack();
     const tutorialServices = new TutorialServices();
     const [tutorialTopics, setTutorialTopics] = useState([
         {
@@ -68,7 +68,6 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
     }
 
     const handleWelcomeVideoOnClose = () => {
-        playSoundtrack()
         welcomeVideoOnClose()
     }
 
