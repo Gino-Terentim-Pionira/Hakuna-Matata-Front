@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Center, Flex, Input, Tooltip, Collapse, Box, Text, Stack } from '@chakra-ui/react';
+import { Button, Center, Flex, Input, Tooltip, Box } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
 import { useUser } from '../../../../hooks';
 import { NOT_ENOUGH_MESSAGES, ORACLE_INPUT_BLOCK } from '../../../../utils/constants/mouseOverConstants';
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
+import CollapseQuestions from './CollapseQuestions';
 
 export type userMessageFunction = (content: string) => Promise<void>;
 
@@ -14,11 +15,6 @@ type OracleInputType = {
 	userMessage: userMessageFunction;
 	isInputReleased?: boolean;
 	isMessageLoading: boolean;
-}
-interface IGroupedQuestions {
-	[module_name: string]: {
-		[topic: string]: ICommonQuestion[];
-	};
 }
 
 export const OracleInput = ({
@@ -31,20 +27,6 @@ export const OracleInput = ({
 	const [inputReleasedMessage, setInputReleasedMessage] = useState('');
 	const IS_USER_HAS_MESSAGES = userData.oracle_messages >= 1;
 	const [isCommonQuestionOpen, setIsCommonQuestionOpen] = useState(false);
-	const groupedQuestions = commonQuestions.reduce<IGroupedQuestions>((acc, question) => {
-		const { module_name, topic } = question;
-
-		if (!acc[module_name]) {
-			acc[module_name] = {};
-		}
-
-		if (!acc[module_name][topic]) {
-			acc[module_name][topic] = [];
-		}
-
-		acc[module_name][topic].push(question);
-		return acc;
-	}, {});
 
 	const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === 'Enter') {
@@ -62,64 +44,10 @@ export const OracleInput = ({
 		}
 	}
 
-	const renderGroupedQuestions = () => (
-		<Box marginTop='28px'>
-			{
-				Object.keys(groupedQuestions).map((moduleName) => (
-					<Box key={moduleName} marginBottom='18px' marginRight='65px'>
-						<Text fontWeight='bold' marginBottom='16px' fontSize='20px' marginLeft='24px'>
-							{moduleName}
-						</Text>
-
-						{Object.keys(groupedQuestions[moduleName]).map((topic) => (
-							<Box key={topic} marginBottom='12px' marginLeft='28px'>
-								<Text fontWeight='bold' fontSize='16px' color={colorPalette.greyText} marginBottom='4px'>
-									{topic}
-								</Text>
-
-								<Stack spacing='8px'>
-									{groupedQuestions[moduleName][topic].map((question) => (
-										<Tooltip
-											label={NOT_ENOUGH_MESSAGES}
-											placement='left'
-											hasArrow
-											isDisabled={IS_USER_HAS_MESSAGES}
-											closeOnClick={false}
-										>
-											<Button
-												borderRadius='4px 4px 4px 0px'
-												key={question._id}
-												paddingX="18px"
-												paddingY="2px"
-												cursor={IS_USER_HAS_MESSAGES ? 'pointer' : 'help'}
-												background={IS_USER_HAS_MESSAGES ? colorPalette.primaryColor : colorPalette.grayBackground}
-												color={colorPalette.whiteText}
-												height="auto"
-												width="100%"
-												minH="30px"
-												fontSize="16px"
-												fontWeight="medium"
-												whiteSpace="normal"
-												textAlign='left'
-												isDisabled={isMessageLoading}
-												_hover={{}}
-												onClick={() => {
-													setIsCommonQuestionOpen(false);
-													send(question.question);
-												}}
-											>
-												{question.question}
-											</Button>
-										</Tooltip>
-									))}
-								</Stack>
-							</Box>
-						))}
-					</Box>
-				))
-			}
-		</Box>
-	);
+	const sendCommonQuestion = (question: string) => {
+		setIsCommonQuestionOpen(false);
+		send(question);
+	}
 
 	return (
 		<Box position='relative'>
@@ -150,46 +78,14 @@ export const OracleInput = ({
 							)
 					}
 				</Center>
-				<Collapse in={isCommonQuestionOpen} animateOpacity>
-					<Box
-						borderTopRadius='4px'
-						background={colorPalette.oracleWhite}
-						boxShadow="inset 0px 6px 4px rgba(74, 74, 74, 0.25)"
-						height='60vh'
-						overflowY='auto'
-						onMouseLeave={() => setIsCommonQuestionOpen(false)}
-						sx={{
-							"&::-webkit-scrollbar": {
-								width: "4px",
-								height: "4px",
-								borderRadius: "8px"
-							},
-							"&::-webkit-scrollbar-thumb": {
-								background: "#9D9D9D",
-								borderRadius: "10px"
-							},
-							"&::-webkit-scrollbar-thumb:hover": {
-								background: "#555",
-							},
-							"&::-moz-scrollbar": {
-								width: "4px",
-								height: "4px",
-								borderRadius: "8px"
-							},
-							"&::-moz-scrollbar-thumb": {
-								background: "#9D9D9D",
-								borderRadius: "10px"
-							},
-							"&::-moz-scrollbar-thumb:hover": {
-								background: "#555",
-							},
-						}}
-					>
-						{
-							renderGroupedQuestions()
-						}
-					</Box>
-				</Collapse>
+				<CollapseQuestions 
+					commonQuestions={commonQuestions}
+					IS_USER_HAS_MESSAGES={IS_USER_HAS_MESSAGES}
+					isMessageLoading={isMessageLoading}
+					sendCommonQuestion={sendCommonQuestion}
+					isCommonQuestionOpen={isCommonQuestionOpen}
+					closeCollapse={()=>setIsCommonQuestionOpen(false)}
+				/>
 			</Flex>
 
 			<Center
