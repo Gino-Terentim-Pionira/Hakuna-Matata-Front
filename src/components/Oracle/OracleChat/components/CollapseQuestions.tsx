@@ -38,7 +38,7 @@ const CollapseQuestions = ({ commonQuestions, IS_USER_HAS_MESSAGES, isMessageLoa
     const renderGroupedQuestions = () => (
         <Box marginTop='28px'>
             {
-                Object.keys(groupedQuestions).map((moduleName) => (
+                Object.keys(groupedQuestions).reverse().map((moduleName) => (
                     <Box key={moduleName} marginBottom='18px' marginRight='65px'>
                         <Text fontWeight='bold' marginBottom='16px' fontSize='20px' marginLeft='24px'>
                             {moduleName}
