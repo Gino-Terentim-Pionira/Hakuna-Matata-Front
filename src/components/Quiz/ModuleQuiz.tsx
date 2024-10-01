@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { useDisclosure } from '@chakra-ui/react';
+import { useDisclosure, Flex, Button } from '@chakra-ui/react';
 import { useUser, useModule } from '../../hooks';
 import { updateModuleCooldown } from '../../services/moduleCooldown';
 
@@ -20,6 +20,7 @@ import UnlockAnimation from '../modals/UnlockAnimation';
 import { S3_VIDEO_FINISHED_MODULE, S3_VIDEO_ORACLE_UPDATED, S3_VIDEO_ORACLE_AVAILABLE } from '../../utils/constants/constants';
 import { numberCompletedModules } from '../../utils/oracleUtils';
 import { IQuiz } from '../../recoil/moduleRecoilState';
+import AlertModal from '../modals/AlertModal';
 
 interface IStatus {
     name: string,
@@ -69,6 +70,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
         isOpen: false,
         onClose: () => onCloseFirstAnimation()
     });
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
     const HAS_USER_FINISHED_MODULE = remainingCoins == 0;
 
     const onCloseFirstAnimation = () => {
@@ -208,6 +210,17 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
         };
     };
 
+    const handleCloseAlert = () => {
+        setIsAlertOpen(false);
+    }
+
+    const confirmLeave = async () => {
+        const userId = sessionStorage.getItem('@pionira/userId');
+        onToggle();
+        setIsAlertOpen(false);
+        await updateModuleCooldown(userId as string, moduleInfo._id);
+    }
+
     return (
         <>
             <UnlockAnimation animation={animationInfo.animation_url} isOpen={animationInfo.isOpen} onClose={animationInfo.onClose} key={animationInfo.animation_url} />
@@ -220,6 +233,7 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
                 onWrong={onWrong}
                 onEndQuiz={onEndQuiz}
                 correctAnswers={correctAnswers}
+                openAlert={() => setIsAlertOpen(true)}
             />
             <RewardModal
                 isOpen={isOpen}
@@ -228,6 +242,32 @@ const ModuleQuiz: FC<IModuleQuiz> = ({
                 initFunction={updateUserCoins}
                 loading={isLoading}
                 error={onError}
+            />
+            <AlertModal 
+                isOpen={isAlertOpen}
+                onClose={handleCloseAlert}
+                alertTitle='Finalizar Desafio'
+                alertBody='Tem certeza que deseja sair do desafio? Você terá que esperar 30 minutos para fazê-lo novamente.'
+                buttonBody={
+                    <Flex
+                        color='white'
+                    >
+                        <Button
+                            onClick={handleCloseAlert}
+                            bg={colorPalette.closeButton}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            bg={colorPalette.primaryColor}
+                            _hover={{}}
+                            onClick={confirmLeave}
+                            marginLeft='16px'
+                        >
+                            Confirmar
+                        </Button>
+                    </Flex>
+                }
             />
         </>
     );
