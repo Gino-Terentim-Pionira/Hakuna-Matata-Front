@@ -1,4 +1,4 @@
-import { Flex, Text, Modal, ModalOverlay, ModalContent, Box, ModalBody, Center } from '@chakra-ui/react';
+import { Flex, Text, Modal, ModalOverlay, ModalContent, Box, ModalBody, Center, ModalCloseButton } from '@chakra-ui/react';
 import React, { FC, useState, useEffect } from 'react';
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
@@ -18,6 +18,7 @@ interface IGenericQuizModal {
     onWrong(question_id: string): void;
     onEndQuiz(passed: boolean): void;
     correctAnswers: number;
+    openAlert?: VoidFunction;
 }
 
 const GenericQuizModal: FC<IGenericQuizModal> = ({
@@ -28,7 +29,8 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
     questions_id,
     onCorrect,
     onWrong,
-    correctAnswers
+    correctAnswers,
+    openAlert
 }) => {
     const [step, setStep] = useState(0);
     const [borderStyle, setBorderStyle] = useState(['none', 'none', 'none', 'none']);
@@ -118,9 +120,10 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
 
     return (
         <>
-            <Modal isOpen={openModal} onClose={closeModal} size='full' closeOnEsc={false} >
+            <Modal isOpen={openModal} onClose={openAlert ? openAlert : closeModal} size='full' >
                 <ModalOverlay />
                 <ModalContent margin="0" display='flex' justifyContent='center' alignItems='center' >
+                    <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     <Box
                         w="40%"
                         bg={colorPalette.primaryColor}
