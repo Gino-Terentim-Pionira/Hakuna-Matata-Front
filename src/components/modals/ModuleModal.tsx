@@ -359,7 +359,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                         <Flex
                                                             className='videoCardContainer'
                                                             width="297px"
-                                                            height="380px"
+                                                            height="auto"
                                                             borderRadius="8px"
                                                             flexDir="column"
                                                             boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
