@@ -22,29 +22,20 @@ import {errorCases} from '../utils/errors/errorsCases';
 import LoadingOverlay from '../components/LoadingOverlay';
 import BackButton from '../components/BackButton';
 import {useSoundtrack} from "../hooks/useSoundtrack";
+import { CertificateService, IOwnedCertificate } from '../services/CertificateService';
+import OwnedCertificateItem from '../components/Inventory/OwnedCertificateItem';
 
 
 const Shop = () => {
-	const { getNewUserInfo, userData } = useUser();
+	const { userData, setUserData } = useUser();
 	const { handleBack } = usePath();
 	const [shopItem, setShopItem] = useState([]);
 	const [onError, setOnError] = useState(false);
 	const history = useHistory();
 	const { audio, soundtrackData } = useSoundtrack();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
-
-	const getShopItens = async () => {
-		try {
-			if (Object.keys(userData).length == 0)
-				getNewUserInfo();
-			
-			const res = await api.get('/shopItem/');
-			setShopItem(res.data);
-			setIsLoading(false);
-		} catch (error) {
-			setOnError(true);
-		}
-	};
+	const certificateService = new CertificateService();
+	const [ownedCertificates, setOwnedCertificates] = useState<IOwnedCertificate[]>([]);
 
 	const goBackShop = async () => {
 		history.push(`/shop`);
@@ -55,12 +46,109 @@ const Shop = () => {
 	};
 
 	useEffect(() => {
+		
 		if(!soundtrackData.isPlaying) {
 			audio.src = sessionStorage.getItem("lastSoundtrack") as string;
 		}
 
-		getShopItens();
+		const getShopItens = async () => {
+			try {
+				const res = await api.get('/shopItem/');
+				setShopItem(res.data);
+			} catch {
+				setShopItem([]);
+			}
+		};
+	
+		const getOwnedCertificates = async (userId: string) => {
+			try {
+				const res = await certificateService.listOwnedCertificates(userId);
+				setOwnedCertificates(res);
+			} catch {
+				setOwnedCertificates([]);
+			}
+		}
+		
+		const getUser = async () => {
+			try {
+				let userInfoData;
+				const _userId = sessionStorage.getItem('@pionira/userId');
+				if (!userData._id) {
+					const { data } = await api.get(`/user/${_userId}`);
+					setUserData(data);
+					userInfoData = data;
+				} else userInfoData = userData;
+				await getShopItens();
+				await getOwnedCertificates(userInfoData._id);
+
+				setIsLoading(false);
+			} catch (error) {
+				setOnError(true);
+			}
+		}
+
+		getUser().then();
 	}, []);
+
+	const mapOwnedCertificates = () => (
+		ownedCertificates.map(({
+								   certificate_name,
+								   description,
+								   first_name,
+								   last_name,
+								   hash,
+								   image,
+								   issue_date,
+								   content
+							   }: IOwnedCertificate) => {
+			return (
+				<OwnedCertificateItem
+					key={certificate_name}
+					certificate_name={certificate_name}
+					description={description}
+					first_name={first_name}
+					last_name={last_name}
+					hash={hash}
+					image={image}
+					issue_date={issue_date}
+					content={content}
+				/>
+			)
+		})
+	);
+
+	const mapShopItems = () => (
+		shopItem.map(
+			({
+				 _id,
+				 name,
+				 value,
+				 description,
+				 type,
+				 id_link,
+			 }: {
+				_id: string;
+				name: string;
+				value: number;
+				description: string;
+				type: string;
+				id_link: string;
+			}) => {
+				return (
+					<PurchasedItems
+						key={_id}
+						_id={_id}
+						items_id={userData.items_id}
+						name={name}
+						value={value}
+						description={description}
+						type={type}
+						id_link={id_link}
+					/>
+				);
+			},
+		)
+	)
 	return (
 		<Box
 			display='flex'
@@ -131,7 +219,7 @@ const Shop = () => {
 					</Text>
 				</Box>
 			</Flex>
-			{userData?.items_id?.length > 0 ? (
+			{userData?.items_id?.length || ownedCertificates.length ? (
 				<>
 					<SimpleGrid
 						zIndex='2'
@@ -140,36 +228,8 @@ const Shop = () => {
 						overflowY='auto'
 						mt='2.5rem'
 					>
-						{shopItem.map(
-							({
-								_id,
-								name,
-								value,
-								description,
-								type,
-								id_link,
-							}: {
-								_id: string;
-								name: string;
-								value: number;
-								description: string;
-								type: string;
-								id_link: string;
-							}) => {
-								return (
-									<PurchasedItems
-										key={_id}
-										_id={_id}
-										items_id={userData.items_id}
-										name={name}
-										value={value}
-										description={description}
-										type={type}
-										id_link={id_link}
-									/>
-								);
-							},
-						)}
+						{mapOwnedCertificates()}
+						{mapShopItems()}
 					</SimpleGrid>
 				</>
 			) : (

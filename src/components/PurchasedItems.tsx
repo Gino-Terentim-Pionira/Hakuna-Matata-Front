@@ -89,7 +89,7 @@ const ShopItem: FC<ShopItemProps> = ({
 										<Image
 											maxWidth='300px'
 											transition='50ms'
-											bg={show ? '#00000012' : colorPalette.backgroundHighlight}											
+											bg={show ? '#00000012' : colorPalette.backgroundHighlight}
 											w='100%'
 											h='18.75rem'
 											mt='0.5rem'
