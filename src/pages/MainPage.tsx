@@ -47,6 +47,8 @@ import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/background
 import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
+import { ShopModal } from "../components/modals/ShopModal/ShopModal";
+import useShopItems from "../hooks/useShopItems";
 
 interface IScript {
 	name: string;
@@ -100,6 +102,7 @@ const MainPage = () => {
 	});
 	const [rewardOpen, setRewardOpen] = useState(false);
 	const [rewardLoading, setRewardLoading] = useState(false);
+	const { getNewShopItems, shopItemsData } = useShopItems();
 
 	const ignoranceArray = [
 		ignorance100,
@@ -267,6 +270,8 @@ const MainPage = () => {
 	useEffect(() => {
 		changeSoundtrack("/mainPage");
 
+		getNewShopItems().then()
+
 		const getUserRequisition = async () => {
 			if (userData._id) {
 				setIgnoranceFilter(userData.ignorance, ignoranceArray);
@@ -398,7 +403,7 @@ const MainPage = () => {
 					)
 			}
 
-
+			{ shopItemsData.length && <ShopModal isOpen={true} onClose={() => console.log("")} packages={shopItemsData}/> }
 			<AlertModal
 				isOpen={onAlert}
 				onClose={alert.closeFunction}
