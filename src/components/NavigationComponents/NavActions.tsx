@@ -1,5 +1,5 @@
 import {Box, Flex, useDisclosure} from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import { useUser } from '../../hooks';
@@ -28,6 +28,8 @@ import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
 import {TutorialModal} from "../modals/Tutorial/TutorialModal";
 import { NavSoundtrackIcon } from "./NavSoundtrackIcon";
+import useShopItems from "../../hooks/useShopItems";
+import { ShopModal } from "../modals/ShopModal/ShopModal";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -42,6 +44,14 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const scriptChat = () => chatScript(userData.ignorance);
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
+  const {
+    getNewOraclePackagesItem,
+    getNewCertificateItems,
+    getNewShopItems,
+    shopItemsData,
+    certificatesItemData,
+    oraclePackagesItemData
+  } = useShopItems();
 
   const {
     isOpen: profileIsOpen,
@@ -61,10 +71,16 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     onOpen: tutorialTopicOnOpen,
   } = useDisclosure();
 
+  const {
+    isOpen: shopIsOpen,
+    onClose: shopOnClose,
+    onOpen: shopOnOpen
+  } = useDisclosure();
+
   const history = useHistory();
 
-  const handleStore = () => {
-    handleFirstView('Loja', () => handlePath('/shop'));
+  const handleShop = () => {
+    shopOnOpen()
   }
 
   const handleInventory = () => {
@@ -100,6 +116,12 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     history.push(path)
   }
 
+  useEffect(() => {
+    !certificatesItemData.length && getNewCertificateItems().then();
+    !shopItemsData.length && getNewShopItems().then();
+    !oraclePackagesItemData.length && getNewOraclePackagesItem().then();
+  }, []);
+
   return (
     <>
       <Flex
@@ -124,7 +146,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
           {!isIgnoranceFilterOn && <NavIcon
             image={icon_shop}
-            onClick={handleStore}
+            onClick={handleShop}
             size='normal'
             isMap={false}
             mouseOver={STORE}
@@ -186,6 +208,17 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         onToggle={narrativeOnToggle}
         script={scriptChat()}
       />
+
+      { shopItemsData.length &&
+          <ShopModal
+              isOpen={shopIsOpen}
+              onClose={shopOnClose}
+              oraclePackages={oraclePackagesItemData}
+              shopItems={shopItemsData}
+              certificates={certificatesItemData}
+              showQuickFilters
+          />
+      }
     </>
   )
 }

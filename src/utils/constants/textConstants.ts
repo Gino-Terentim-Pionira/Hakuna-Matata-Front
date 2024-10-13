@@ -11,3 +11,10 @@ export const ALERT_QUIZ_MODAL = 'Bote em dia a sua sabedoria completando esse de
 export const COPY = 'Clique aqui para copiar';
 
 export const COPIED = 'Copiado com sucesso!';
+
+// Shop Success Cases
+
+export const NORMAL = 'Acesse seu inventario para baixar!';
+export const ESPECIAL = 'Você já pode refazer os desafios novamente!';
+export const ORACLE = 'Você já pode realizar perguntas para o Oraculo! Acesse o Oraculo do Cheeta para conversar com ele!';
+export const CERTIFICATE = 'Acesse o inventario para baixar seu certificado!';

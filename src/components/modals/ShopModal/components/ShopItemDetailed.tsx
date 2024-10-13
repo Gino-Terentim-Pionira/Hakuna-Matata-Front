@@ -25,7 +25,7 @@ export const ShopItemDetailed = ({isOpen, onClose, shopItemInfo, onClick}: ShopI
 			<Flex
 				position="relative"
 				w='100%'
-				h='256px'
+				h='360px'
 				bg={colorPalette.slideBackground}
 				rounded='md'
 				shadow='md'
@@ -53,7 +53,7 @@ export const ShopItemDetailed = ({isOpen, onClose, shopItemInfo, onClick}: ShopI
 				>
 					X
 				</Text>
-				<Flex paddingLeft="24px" flexDir="column" top="32px" position="absolute" w="92%">
+				<Flex paddingLeft="24px" flexDir="column" top="32px" position="absolute" w="95%">
 					<Text
 						fontSize={['0.7rem', '1.5rem', '1.7rem']}
 						fontWeight='semibold'
@@ -62,19 +62,19 @@ export const ShopItemDetailed = ({isOpen, onClose, shopItemInfo, onClick}: ShopI
 					>
 						{shopItemInfo && shopItemInfo.title}
 					</Text>
-					<Flex alignItems="flex-start" justifyContent="space-between">
+					<Flex alignItems="flex-start" justifyContent="space-between" columnGap="24px">
 						<Text
 							fontSize={['0.5rem', '1rem', '1.2rem']}
 							fontWeight='regular'
 							textAlign='left'
-							overflow="auto"
-							maxH="160px"
+							overflowY="auto"
+							maxH="260px"
 							paddingBottom="16px"
 						>
 							{shopItemInfo &&  shopItemInfo.description}
 						</Text>
 
-						<Flex flexDir="column" marginTop="-16px">
+						<Flex flexDir="column" marginTop="1px">
 							<Flex>
 								<Text
 									fontFamily={fontTheme.fonts}

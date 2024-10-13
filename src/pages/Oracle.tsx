@@ -191,7 +191,7 @@ export const Oracle = () => {
 							alignItems="center"
 							fontFamily={fontTheme.fonts}
 						>
-							<ShopModal packages={packages} isOpen={isShopModalOpen} onClose={onCloseShopModal} />
+							<ShopModal shopItems={packages} isOpen={isShopModalOpen} onClose={onCloseShopModal} />
 							<OracleHeader
 								oracleName={oracleObject.oracle_name}
 								onOpen={onOpenShopModal}

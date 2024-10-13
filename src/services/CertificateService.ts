@@ -22,7 +22,7 @@ export interface  IShopCertificate {
     isEnoughQuestion: number;
     isEnoughFinalQuiz: number;
     message: string;
-    id: string
+    id: string;
 }
 
 export class CertificateService {
