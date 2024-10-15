@@ -23,6 +23,7 @@ import { ItemType } from "../../../recoil/shopItemsRecoil";
 import { CERTIFICATE, ESPECIAL, NORMAL, ORACLE } from "../../../utils/constants/textConstants";
 import { ShopQuickFilter } from "./components/ShopQuickFilter";
 import LoadingState from '../../LoadingState';
+import trailEnum from '../../../utils/enums/trail';
 
 type ShopModalType = {
 	isOpen: boolean;
@@ -43,6 +44,11 @@ export type ShopItemInfoType = {
 	image: string;
 	itemType: 'certificate' | 'oracle' | 'normal';
 	id: string;
+	isBlocked?: boolean;
+	isEnoughVideo?: number;
+	isEnoughQuestion?: number;
+	isEnoughFinalQuiz?: number;
+	trail?: trailEnum;
 }
 
 type AlertModalInfoType = {
@@ -74,7 +80,12 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 			type: item.type,
 			image: item.image,
 			id: item.id,
-			itemType: item.itemType
+			itemType: item.itemType,
+			isBlocked: item.isBlocked,
+			isEnoughVideo: item.isEnoughVideo,
+			isEnoughQuestion: item.isEnoughQuestion,
+			isEnoughFinalQuiz: item.isEnoughFinalQuiz,
+			trail: item.trail
 		})
 	}
 

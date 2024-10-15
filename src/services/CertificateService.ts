@@ -35,7 +35,7 @@ export class CertificateService {
         return response.data;
     }
 
-    listShopCertificates = async (userid: string) => {
+    listShopCertificates = async (userid: string): Promise<IShopCertificate[]> => {
         const response = await api.get(`certificate/shop/${userid}`);
 
         return response.data

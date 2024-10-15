@@ -31,7 +31,7 @@ const Shop = () => {
 	const { getNewUserInfo, userData } = useUser();
 	const { soundtrackData, audio } = useSoundtrack();
 	const [shopItem, setShopItem] = useState([]);
-	const [certificates, setCertificates] = useState([]);
+	const [certificates, setCertificates] = useState<IShopCertificate[]>([]);
 	const [currentUserId, setCurrentUserId] = useState('');
 	const [isLoading, setIsLoading] = useState(true);
 

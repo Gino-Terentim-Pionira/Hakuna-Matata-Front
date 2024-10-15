@@ -2,11 +2,12 @@ import { SetStateAction } from "react";
 import { useRecoilState } from "recoil"
 import { shopItemsState } from "../recoil/shopItemsRecoil";
 import shopService from "../services/ShopService";
-import { CertificateService, IShopCertificate } from "../services/CertificateService";
+import { CertificateService } from "../services/CertificateService";
 import certificateIcon from "../assets/icons/certificate/certificate.svg";
 import { certificatesState } from "../recoil/certificatesRecoil";
 import { oraclePackageState } from "../recoil/oraclePackagesRecoil";
 import { OracleServices } from "../services/OracleServices";
+import { ShopItemInfoType } from "../components/modals/ShopModal/ShopModal";
 
 export const useShopItems = () => {
     const [shopItemsData, setShopItemsData] = useRecoilState(shopItemsState);
@@ -46,14 +47,19 @@ export const useShopItems = () => {
 
             const res = await certificateService.listShopCertificates(_userId as string)
             if (res.length) {
-                const certificates = res.map((item: IShopCertificate) => ({
+                const certificates: ShopItemInfoType[] = res.map((item) => ({
                     title: item.name,
                     description: item.description,
                     image: certificateIcon,
                     type: "Certificado",
                     price: String(item.price),
                     itemType: 'certificate',
-                    id: item.id
+                    id: item.id,
+                    isBlocked: item.isBlocked,
+                    isEnoughVideo: item.isEnoughVideo,
+                    isEnoughQuestion: item.isEnoughQuestion,
+                    isEnoughFinalQuiz: item.isEnoughFinalQuiz,
+                    trail: item.trail
                 }));
                 setCertificatesItemData(certificates)
             } else {
