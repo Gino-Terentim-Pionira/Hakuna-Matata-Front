@@ -3,7 +3,7 @@ import { ShopItemInfoType } from "../components/modals/ShopModal/ShopModal";
 
 const oraclePackageState = atom({
     key: "oraclePackageState",
-    default: {} as ShopItemInfoType[]
+    default: [] as ShopItemInfoType[]
 });
 
 export {

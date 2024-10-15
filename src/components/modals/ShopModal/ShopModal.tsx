@@ -17,11 +17,12 @@ import AlertModal from '../AlertModal';
 import { OracleServices } from '../../../services/OracleServices';
 import { useUser } from '../../../hooks';
 import shopService from "../../../services/ShopService";
-import {CertificateService} from "../../../services/CertificateService";
+import { CertificateService } from "../../../services/CertificateService";
 import useShopItems from "../../../hooks/useShopItems";
-import {ItemType} from "../../../recoil/shopItemsRecoil";
-import {CERTIFICATE, ESPECIAL, NORMAL, ORACLE} from "../../../utils/constants/textConstants";
-import {ShopQuickFilter} from "./components/ShopQuickFilter";
+import { ItemType } from "../../../recoil/shopItemsRecoil";
+import { CERTIFICATE, ESPECIAL, NORMAL, ORACLE } from "../../../utils/constants/textConstants";
+import { ShopQuickFilter } from "./components/ShopQuickFilter";
+import LoadingState from '../../LoadingState';
 
 type ShopModalType = {
 	isOpen: boolean;
@@ -30,6 +31,7 @@ type ShopModalType = {
 	certificates?: ShopItemInfoType[];
 	oraclePackages?: ShopItemInfoType[]
 	showQuickFilters?: boolean;
+	isLoading?: boolean
 }
 
 export type ShopItemInfoType = {
@@ -50,7 +52,7 @@ type AlertModalInfoType = {
 	buttonBody?: ReactElement,
 }
 
-export const ShopModal = ({isOpen, onClose, shopItems, certificates, oraclePackages, showQuickFilters} : ShopModalType) => {
+export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePackages, showQuickFilters, isLoading }: ShopModalType) => {
 	const ALL_ITEMS_AVAILABLE = certificates?.length || oraclePackages?.length || shopItems?.length;
 	const { userData, getNewUserInfo } = useUser();
 	const oracleService = new OracleServices();
@@ -158,7 +160,7 @@ export const ShopModal = ({isOpen, onClose, shopItems, certificates, oraclePacka
 				reload: () => null
 			},
 			'certificate': {
-				buy: async () => await certificateService.buyCertificate({userId: userData._id, certificateId: item.id}),
+				buy: async () => await certificateService.buyCertificate({ userId: userData._id, certificateId: item.id }),
 				reload: async () => await getNewCertificateItems()
 			}
 		}
@@ -186,82 +188,121 @@ export const ShopModal = ({isOpen, onClose, shopItems, certificates, oraclePacka
 		}
 	}
 
+	const renderContent = () => (
+		<>
+			{
+				showQuickFilters && <Flex alignItems="center" gap="16px">
+					<ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} />
+					<ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} />
+					<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materias de estudo" onClick={handleQuickFilters['normal'].onClick} />
+					<ShopQuickFilter isSelected={handleQuickFilters['oracle'].isSelected} label="Tokens oraculo" onClick={handleQuickFilters['oracle'].onClick} />
+				</Flex>
+			}
+
+			{
+				!ALL_ITEMS_AVAILABLE && <Text fontSize="18px" color={colorPalette.textColor} w="100%" margin="auto" textAlign="center" marginTop='8px'>Estamos sem items disponiveis no momento, volte novamente mais tarde!</Text>
+			}
+			<SimpleGrid mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px"
+				height="432px">
+				{
+					((quickFilterSelected === "certificate" || quickFilterSelected === "all") && certificates && certificates.length > 0) && certificates.map((item) =>
+						<ShopItem
+							key={item.title}
+							onClick={() => handleShopItemInfo(item)}
+							image={item.image}
+							title={item.title}
+							type={item.type}
+							value={item.price}
+						/>
+					)
+				}
+
+				{
+					((quickFilterSelected === "normal" || quickFilterSelected === "all") && shopItems && shopItems.length > 0) && shopItems.map((item) =>
+						<ShopItem
+							key={item.title}
+							onClick={() => handleShopItemInfo(item)}
+							image={item.image}
+							title={item.title}
+							type={item.type}
+							value={item.price}
+						/>
+					)
+				}
+
+				{
+					((quickFilterSelected === "oracle" || quickFilterSelected === "all") && oraclePackages && oraclePackages.length > 0) && oraclePackages.map((item) =>
+						<ShopItem
+							key={item.title}
+							onClick={() => handleShopItemInfo(item)}
+							image={item.image}
+							title={item.title}
+							type={item.type}
+							value={item.price}
+						/>
+					)
+				}
+				<Flex w="130px" h="1px" />
+				<Flex w="130px" h="1px" />
+				<Flex w="130px" h="1px" />
+			</SimpleGrid>
+		</>
+	)
+
 
 	return (
 		<Modal isCentered isOpen={isOpen} onClose={onClose} size="4xl" scrollBehavior="inside">
 			<ModalOverlay />
-			<ModalContent background={colorPalette.oracleWhite} paddingX="48px" fontFamily={fontTheme.fonts}>
+			<ModalContent background={colorPalette.oracleWhite} paddingX="48px" minHeight='60vh' fontFamily={fontTheme.fonts}>
 				<ModalHeader width="100%" borderBottom={`2px solid ${colorPalette.primaryColor}`}>
 					<Text width="fit-content" margin="auto" fontSize="40px" color={colorPalette.textColor}
-						  fontWeight="semibold">Loja</Text>
+						fontWeight="semibold">Loja</Text>
 					<ModalCloseButton color={colorPalette.closeButton} size="48px" mr="8px" mt="8px" />
 				</ModalHeader>
 
-				<ModalBody width="100%">
+				<ModalBody width="100%"
+					sx={{
+						"&::-webkit-scrollbar": {
+							width: "4px",
+							height: "4px",
+							borderRadius: "8px"
+						},
+						"&::-webkit-scrollbar-thumb": {
+							background: "#9D9D9D",
+							borderRadius: "10px"
+						},
+						"&::-webkit-scrollbar-thumb:hover": {
+							background: "#555",
+						},
+						"&::-moz-scrollbar": {
+							width: "4px",
+							height: "4px",
+							borderRadius: "8px"
+						},
+						"&::-moz-scrollbar-thumb": {
+							background: "#9D9D9D",
+							borderRadius: "10px"
+						},
+						"&::-moz-scrollbar-thumb:hover": {
+							background: "#555",
+						},
+					}}
+				>
 					{
-						showQuickFilters && <Flex alignItems="center" gap="16px">
-							<ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} />
-							<ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} />
-							<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materias de estudo" onClick={handleQuickFilters['normal'].onClick} />
-							<ShopQuickFilter isSelected={handleQuickFilters['oracle'].isSelected} label="Tokens oraculo" onClick={handleQuickFilters['oracle'].onClick} />
-						</Flex>
+						isLoading ? (
+							<LoadingState />
+						) : (
+								renderContent()
+							)
 					}
-
-					{
-						!ALL_ITEMS_AVAILABLE && <Text fontSize="18px" color={colorPalette.textColor} w="100%" margin="auto" textAlign="center">Estamos sem items disponiveis no momento, volte novamente mais tarde!</Text>
-					}
-					<SimpleGrid mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px"
-								height="432px">
-						{
-							((quickFilterSelected === "certificate" || quickFilterSelected === "all") && certificates?.length) && certificates.map((item) =>
-								<ShopItem
-									key={item.title}
-									onClick={() => handleShopItemInfo(item)}
-									image={item.image}
-									title={item.title}
-									type={item.type}
-									value={item.price}
-								/>
-							)
-						}
-
-						{
-							((quickFilterSelected === "normal" || quickFilterSelected === "all") && shopItems?.length) && shopItems.map((item) =>
-								<ShopItem
-									key={item.title}
-									onClick={() => handleShopItemInfo(item)}
-									image={item.image}
-									title={item.title}
-									type={item.type}
-									value={item.price}
-								/>
-							)
-						}
-
-						{
-							((quickFilterSelected === "oracle" || quickFilterSelected === "all") && oraclePackages?.length) && oraclePackages.map((item) =>
-								<ShopItem
-									key={item.title}
-									onClick={() => handleShopItemInfo(item)}
-									image={item.image}
-									title={item.title}
-									type={item.type}
-									value={item.price}
-								/>
-							)
-						}
-						<Flex w="130px" h="1px" />
-						<Flex w="130px" h="1px" />
-						<Flex w="130px" h="1px" />
-					</SimpleGrid>
 				</ModalBody>
 			</ModalContent>
-			<ShopItemDetailed onClick={openAlertModalInfo} shopItemInfo={shopItemInfo} isOpen={!!shopItemInfo} onClose={closeShopItemInfo}/>
+			<ShopItemDetailed onClick={openAlertModalInfo} shopItemInfo={shopItemInfo} isOpen={!!shopItemInfo} onClose={closeShopItemInfo} />
 			<AlertModal
 				isOpen={alertModalInfo.isOpen}
 				onClose={closeAlertModal}
 				closeOnOverlayClick={false}
-				buttonBody={ alertModalInfo.buttonBody || <>
+				buttonBody={alertModalInfo.buttonBody || <>
 					<Button
 						onClick={closeAlertModal}
 						isDisabled={isAlertLoading}

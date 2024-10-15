@@ -1,5 +1,5 @@
-import {Box, Flex, useDisclosure} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Box, Flex, useDisclosure } from "@chakra-ui/react";
+import React, { useState } from "react";
 
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import { useUser } from '../../hooks';
@@ -26,7 +26,7 @@ import {
 import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
-import {TutorialModal} from "../modals/Tutorial/TutorialModal";
+import { TutorialModal } from "../modals/Tutorial/TutorialModal";
 import { NavSoundtrackIcon } from "./NavSoundtrackIcon";
 import useShopItems from "../../hooks/useShopItems";
 import { ShopModal } from "../modals/ShopModal/ShopModal";
@@ -52,6 +52,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     certificatesItemData,
     oraclePackagesItemData
   } = useShopItems();
+  const [isShopLoading, setIsShopLoading] = useState(true);
 
   const {
     isOpen: profileIsOpen,
@@ -80,7 +81,15 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const history = useHistory();
 
   const handleShop = () => {
-    shopOnOpen()
+    handleFirstView('Loja', openShop);
+  }
+
+  const openShop = async () => {
+    shopOnOpen();
+    !certificatesItemData.length && await getNewCertificateItems();
+    !shopItemsData.length && await getNewShopItems();
+    !oraclePackagesItemData.length && await getNewOraclePackagesItem();
+    setIsShopLoading(false);
   }
 
   const handleInventory = () => {
@@ -115,12 +124,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     const path = '/mainPage';
     history.push(path)
   }
-
-  useEffect(() => {
-    !certificatesItemData.length && getNewCertificateItems().then();
-    !shopItemsData.length && getNewShopItems().then();
-    !oraclePackagesItemData.length && getNewOraclePackagesItem().then();
-  }, []);
 
   return (
     <>
@@ -170,19 +173,19 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
           <Box marginLeft="7px">
             <NavIcon
-                image={icon_tutorial}
-                onClick={tutorialTopicOnOpen}
-                size='small'
-                isMap={false}
-                mouseOver={TUTORIAL}
+              image={icon_tutorial}
+              onClick={tutorialTopicOnOpen}
+              size='small'
+              isMap={false}
+              mouseOver={TUTORIAL}
             />
 
             <NavIcon
-                image={icon_logout}
-                onClick={logout}
-                size='small'
-                isMap={false}
-                mouseOver={LOG_OUT}
+              image={icon_logout}
+              onClick={logout}
+              size='small'
+              isMap={false}
+              mouseOver={LOG_OUT}
             />
           </Box>
         </Flex>
@@ -209,16 +212,15 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         script={scriptChat()}
       />
 
-      { shopItemsData.length &&
-          <ShopModal
-              isOpen={shopIsOpen}
-              onClose={shopOnClose}
-              oraclePackages={oraclePackagesItemData}
-              shopItems={shopItemsData}
-              certificates={certificatesItemData}
-              showQuickFilters
-          />
-      }
+      <ShopModal
+        isOpen={shopIsOpen}
+        onClose={shopOnClose}
+        oraclePackages={oraclePackagesItemData}
+        shopItems={shopItemsData}
+        certificates={certificatesItemData}
+        showQuickFilters
+        isLoading={isShopLoading}
+      />
     </>
   )
 }

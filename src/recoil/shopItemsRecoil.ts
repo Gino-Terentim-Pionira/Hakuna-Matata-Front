@@ -5,7 +5,7 @@ export type ItemType = 'normal' | 'especial' | 'oracle' | 'certificate'
 
 const shopItemsState = atom({
     key: "shopItemsState",
-    default: {} as ShopItemInfoType[]
+    default: [] as ShopItemInfoType[]
 });
 
 export {
