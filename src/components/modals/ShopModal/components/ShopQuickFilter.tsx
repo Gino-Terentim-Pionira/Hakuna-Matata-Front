@@ -6,9 +6,10 @@ type ShopQuickFilterType = {
     isSelected: boolean;
     label: string;
     onClick: VoidFunction;
+    color: string;
 }
 
-export const ShopQuickFilter = ({ isSelected, label, onClick }: ShopQuickFilterType) => {
+export const ShopQuickFilter = ({ isSelected, label, onClick, color }: ShopQuickFilterType) => {
     return (
         <Flex
             minW="100px"
@@ -16,14 +17,14 @@ export const ShopQuickFilter = ({ isSelected, label, onClick }: ShopQuickFilterT
             h="35px"
             alignItems="center"
             justifyContent="center"
-            border={`2px solid ${colorPalette.primaryColor}`}
+            border={`2px solid ${color}`}
             paddingX="16px"
             paddingY="8px"
             borderRadius="4px"
             fontSize="16px"
             fontWeight="medium"
             color={isSelected ? colorPalette.whiteText : colorPalette.textColor}
-            background={isSelected ? colorPalette.primaryColor : 'transparent'}
+            background={isSelected ? color : 'transparent'}
             mt="12px"
             cursor="pointer"
             onClick={onClick}

@@ -24,6 +24,7 @@ import { CERTIFICATE, ESPECIAL, NORMAL, ORACLE } from "../../../utils/constants/
 import { ShopQuickFilter } from "./components/ShopQuickFilter";
 import LoadingState from '../../LoadingState';
 import trailEnum from '../../../utils/enums/trail';
+import { useOwnedItems } from '../../../hooks/useOwnedItems';
 
 type ShopModalType = {
 	isOpen: boolean;
@@ -72,6 +73,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 	});
 	const [quickFilterSelected, setQuickFilterSelected] = useState<'all' | 'certificate' | 'oracle' | 'normal'>('all');
 	const { getNewShopItems, getNewCertificateItems } = useShopItems();
+	const { getNewOwnedItems, getNewOwnedCertificateItems } = useOwnedItems();
 	const handleShopItemInfo = (item: ShopItemInfoType) => {
 		setShopItemInfo({
 			title: item.title,
@@ -160,7 +162,10 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 		const buyType = {
 			'normal': {
 				buy: async () => await shopService.buyShopItem(userData._id, item.id),
-				reload: async () => await getNewShopItems()
+				reload: async () => {
+					await getNewShopItems();
+					await getNewOwnedItems();
+				}
 			},
 			'especial': {
 				buy: async () => await shopService.buyShopItem(userData._id, item.id),
@@ -172,7 +177,10 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 			},
 			'certificate': {
 				buy: async () => await certificateService.buyCertificate({ userId: userData._id, certificateId: item.id }),
-				reload: async () => await getNewCertificateItems()
+				reload: async () => {
+					await getNewCertificateItems();
+					await getNewOwnedCertificateItems();
+				}
 			}
 		}
 
@@ -203,10 +211,10 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 		<>
 			{
 				showQuickFilters && <Flex alignItems="center" gap="16px">
-					<ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} />
-					<ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} />
-					<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materias de estudo" onClick={handleQuickFilters['normal'].onClick} />
-					<ShopQuickFilter isSelected={handleQuickFilters['oracle'].isSelected} label="Tokens oraculo" onClick={handleQuickFilters['oracle'].onClick} />
+					<ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} color={colorPalette.primaryColor} />
+					<ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} color={colorPalette.primaryColor} />
+					<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materias de estudo" onClick={handleQuickFilters['normal'].onClick} color={colorPalette.primaryColor} />
+					<ShopQuickFilter isSelected={handleQuickFilters['oracle'].isSelected} label="Tokens oraculo" onClick={handleQuickFilters['oracle'].onClick} color={colorPalette.primaryColor} />
 				</Flex>
 			}
 

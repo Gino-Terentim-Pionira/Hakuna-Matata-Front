@@ -23,13 +23,14 @@ import {
   MAP,
   CHAT,
 } from "../../utils/constants/mouseOverConstants";
-import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
 import { TutorialModal } from "../modals/Tutorial/TutorialModal";
 import { NavSoundtrackIcon } from "./NavSoundtrackIcon";
 import useShopItems from "../../hooks/useShopItems";
 import { ShopModal } from "../modals/ShopModal/ShopModal";
+import { InventoryModal } from "../modals/InventoryModal/InventoryModal";
+import { useOwnedItems } from "../../hooks/useOwnedItems";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -38,7 +39,6 @@ interface NavActionsInterface {
 
 const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const { userData } = useUser();
-  const { handlePath } = usePath();
   const tutorialServices = new TutorialServices();
   const { isIgnoranceFilterOn } = useIgnoranceFilter();
   const scriptChat = () => chatScript(userData.ignorance);
@@ -53,6 +53,14 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     oraclePackagesItemData
   } = useShopItems();
   const [isShopLoading, setIsShopLoading] = useState(true);
+
+  const {
+    ownedCertificateItemData,
+    getNewOwnedCertificateItems,
+    ownedItemsData,
+    getNewOwnedItems
+  } = useOwnedItems();
+  const [isInventoryLoading, setIsInventoryLoading] = useState(true);
 
   const {
     isOpen: profileIsOpen,
@@ -78,6 +86,12 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     onOpen: shopOnOpen
   } = useDisclosure();
 
+  const {
+    isOpen: inventoryIsOpen,
+    onClose: inventoryOnClose,
+    onOpen: inventoryOnOpen
+  } = useDisclosure();
+
   const history = useHistory();
 
   const handleShop = () => {
@@ -93,7 +107,14 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   }
 
   const handleInventory = () => {
-    handleFirstView('Inventário', () => handlePath('/inventory'));
+    handleFirstView('Inventário', openInventory);
+  }
+
+  const openInventory = async () => {
+    inventoryOnOpen();
+    !ownedCertificateItemData.length && await getNewOwnedCertificateItems();
+    !ownedItemsData.length && await getNewOwnedItems();
+    setIsInventoryLoading(false);
   }
 
   const handleChat = () => {
@@ -220,6 +241,14 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         certificates={certificatesItemData}
         showQuickFilters
         isLoading={isShopLoading}
+      />
+
+      <InventoryModal 
+        isOpen={inventoryIsOpen}
+        onClose={inventoryOnClose}
+        shopItems={ownedItemsData}
+        certificates={ownedCertificateItemData}
+        isLoading={isInventoryLoading}
       />
     </>
   )
