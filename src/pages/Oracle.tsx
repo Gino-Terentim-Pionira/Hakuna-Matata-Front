@@ -9,15 +9,14 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import AlertModal from '../components/modals/AlertModal';
 import colorPalette from '../styles/colorPalette';
 import { useHistory, useLocation } from 'react-router-dom';
-import { ShopItemInfoType, ShopModal } from '../components/modals/ShopModal/ShopModal';
+import { ShopModal } from '../components/modals/ShopModal/ShopModal';
 import { useUser } from '../hooks';
 import { IUser } from '../recoil/useRecoilState';
 import OracleAnimation from '../components/Oracle/OracleChat/components/OracleAnimation';
 import GenericModal from "../components/modals/GenericModal";
 import { PiWarningFill } from "react-icons/pi";
 import { useSoundtrack } from '../hooks/useSoundtrack';
-
-export type PackagesDataType = ShopItemInfoType[];
+import useShopItems from '../hooks/useShopItems';
 
 const FinalQuizCompleteEnum: { [key: string]: keyof IUser['finalQuizComplete'] } = {
 	'Cheetah': 'cheetahFinal',
@@ -33,7 +32,6 @@ export const Oracle = () => {
 	const oracleService = new OracleServices();
 	const { changeSoundtrack } = useSoundtrack();
 	const { isOpen: isShopModalOpen, onOpen: onOpenShopModal, onClose: onCloseShopModal } = useDisclosure();
-	const [packages, setPackages] = useState<PackagesDataType>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isMessageLoading, setIsMessageLoading] = useState(false);
 	const [isTalking, setIsTalking] = useState<boolean>(false);
@@ -53,6 +51,7 @@ export const Oracle = () => {
 		] as IMessages[],
 		commonQuestions: [] as ICommonQuestion[]
 	});
+	const { oraclePackagesItemData, getNewOraclePackagesItem } = useShopItems();
 
 	const [alert, setAlert] = useState<{
 		onAlert: boolean,
@@ -124,8 +123,7 @@ export const Oracle = () => {
 				if (!userData._id) {
 					await getNewUserInfo();
 				}
-				const packages = await oracleService.getAllPackages();
-				setPackages(packages);
+				!oraclePackagesItemData.length && await getNewOraclePackagesItem();
 				await getHistoryAndQuestions();
 			} catch (error) {
 				setAlert({
@@ -191,7 +189,7 @@ export const Oracle = () => {
 							alignItems="center"
 							fontFamily={fontTheme.fonts}
 						>
-							<ShopModal packages={packages} isOpen={isShopModalOpen} onClose={onCloseShopModal} />
+							<ShopModal shopItems={oraclePackagesItemData} isOpen={isShopModalOpen} onClose={onCloseShopModal} />
 							<OracleHeader
 								oracleName={oracleObject.oracle_name}
 								onOpen={onOpenShopModal}

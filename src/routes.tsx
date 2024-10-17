@@ -10,8 +10,6 @@ import Register from './pages/Register';
 import MainPage from './pages/MainPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import Shop from './pages/Shop';
-import Inventory from './pages/Inventory';
 import CheetahPath from './pages/CheetahPath';
 // import BlackMambaPath from './pages/blackMambaPath';
 // import LionPath from './pages/lionPath';
@@ -52,8 +50,6 @@ const Routes = () => {
 						<Route path='/forgotPassword' component={ForgotPassword}/>
 						<Route path="/resetPassword/:id" component={ResetPassword}/>
 						<Route path='/register' component={Register}/>
-						<ProtectedRoute path='/shop' component={Shop}/>
-						<ProtectedRoute path='/inventory' component={Inventory}/>
 						<ProtectedRoute path='/mainPage' component={MainPage}/>
 						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath}/>
 						{/*

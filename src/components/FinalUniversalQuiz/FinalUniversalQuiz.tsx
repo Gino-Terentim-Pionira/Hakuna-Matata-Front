@@ -92,6 +92,8 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 	const [alertAnswer, setAlertAnswer] = useState<string | undefined>('');
 	const isAlertOnClose = () => setIsConfirmOpen(false);
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+	const [remainingTo80, setRemainingTo80] = useState(0);
+
 
 	const handleQuestion = () => {
 		if (step >= length - 1) {
@@ -224,6 +226,13 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 			return () => clearTimeout(timeout);
 		}
 	}, [delayButton]);
+
+	useEffect(() => {
+		const quiz80percent = quiz.questions_id.length * 0.8;
+		const questionsAnswered = quiz.questions_id.length - questions.length;
+		const questionsRemainingTo80 = Math.max(quiz80percent - questionsAnswered, 0);
+		setRemainingTo80(questionsRemainingTo80);
+	}, [questions]);
 
 	return (
 		<>
@@ -386,6 +395,7 @@ const FinalUniversalQuiz: FC<IQuizComponent> = ({
 				routeQuestions={routeQuestions}
 				ignorance={ignorance}
 				trail={trail}
+				remainingTo80={remainingTo80}
 			/>
 
 			<AlertModal

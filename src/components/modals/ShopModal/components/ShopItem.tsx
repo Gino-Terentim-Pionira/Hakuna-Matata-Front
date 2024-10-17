@@ -11,12 +11,13 @@ type ShopItemTypes = {
 }
 
 export const ShopItem = ({ image, title, type, value, onClick } : ShopItemTypes) => (
-	<Flex _hover={{cursor: 'pointer'}} w="fit-content" h="fit-content"  flexDir="column" onClick={onClick} >
-		<Center padding="16px" borderRadius="8px" border={`2px solid ${colorPalette.primaryColor}`} background={colorPalette.whiteText}>
+	<Flex _hover={{cursor: 'pointer'}} w="148px" h="fit-content"  flexDir="column" onClick={onClick} >
+		<Center padding="16px" borderRadius="8px" h="162px" border={`2px solid ${colorPalette.primaryColor}`} background={colorPalette.whiteText}>
 			<Image
 				src={image}
 				alt={title}
-				w="126px"
+				w="116px"
+				h="126px"
 			/>
 		</Center>
 

@@ -18,6 +18,7 @@ interface IFinalUniversalRewardModal {
 	routeQuestions: string;
 	ignorance: number;
 	trail: number;
+	remainingTo80: number;
 }
 
 interface userDataProps {
@@ -36,7 +37,8 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	routeQuiz,
 	routeQuestions,
 	ignorance,
-	trail
+	trail,
+	remainingTo80
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -118,21 +120,25 @@ const FinalUniversalRewardModal: FC<IFinalUniversalRewardModal> = ({
 	};
 
 	const rewardModalInfo = () => {
+		const questionsRemainingTo80 = remainingTo80 - correctAnswers;
+		const questionLabel = questionsRemainingTo80 == 1 ? 'questão' : 'questões';
 		if (correctAnswers === totalAnswers)
 			return {
 				title: 'Parabéns!!',
 				titleColor: colorPalette.inactiveButton,
-				subtitle: `Você provou por completo o seu valor!`,
+				subtitle: `Você provou por completo o seu valor! Parabéns!`,
 				icon: Cheetah,
-				coins
+				coins,
+				alert: 'Você está legível para obter o certificado da trilha! Acesse a loja e verifique os outros requisitos.'
 			}
 		return {
 			title: 'Que pena!',
 			titleColor: colorPalette.closeButton,
 			subtitle: correctAnswers === 0 ? `Você não acertou nenhuma questão! Mas não desista, você poderá vencer a ignorância!` :
-				`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você poderá vencer a ignorância!`,
+			`Você acertou apenas ${correctAnswers} de ${totalAnswers} questões! Mas não desista, você poderá vencer a ignorância!`,
 			icon: Cross,
 			coins,
+			alert: questionsRemainingTo80 <= 0 ? 'Você está legível para obter o certificado da trilha! Acesse a loja e verifique os outros requisitos.' : `Falta acertar ${questionsRemainingTo80} ${questionLabel} para você poder obter o certificado da trilha!`
 		}
 	}
 
