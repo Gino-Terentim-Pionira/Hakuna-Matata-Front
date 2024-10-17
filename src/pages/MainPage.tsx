@@ -398,7 +398,6 @@ const MainPage = () => {
 					)
 			}
 
-
 			<AlertModal
 				isOpen={onAlert}
 				onClose={alert.closeFunction}

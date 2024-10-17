@@ -1,4 +1,4 @@
-import {Box, Flex, useDisclosure} from "@chakra-ui/react";
+import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
@@ -23,11 +23,14 @@ import {
   MAP,
   CHAT,
 } from "../../utils/constants/mouseOverConstants";
-import usePath from "../../hooks/usePath";
 import useIgnoranceFilter from "../../hooks/useIgnoranceFilter";
 import chatScript from '../../utils/scripts/Baboon/chatScript';
-import {TutorialModal} from "../modals/Tutorial/TutorialModal";
+import { TutorialModal } from "../modals/Tutorial/TutorialModal";
 import { NavSoundtrackIcon } from "./NavSoundtrackIcon";
+import useShopItems from "../../hooks/useShopItems";
+import { ShopModal } from "../modals/ShopModal/ShopModal";
+import { InventoryModal } from "../modals/InventoryModal/InventoryModal";
+import { useOwnedItems } from "../../hooks/useOwnedItems";
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -36,12 +39,28 @@ interface NavActionsInterface {
 
 const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const { userData } = useUser();
-  const { handlePath } = usePath();
   const tutorialServices = new TutorialServices();
   const { isIgnoranceFilterOn } = useIgnoranceFilter();
   const scriptChat = () => chatScript(userData.ignorance);
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
+  const {
+    getNewOraclePackagesItem,
+    getNewCertificateItems,
+    getNewShopItems,
+    shopItemsData,
+    certificatesItemData,
+    oraclePackagesItemData
+  } = useShopItems();
+  const [isShopLoading, setIsShopLoading] = useState(true);
+
+  const {
+    ownedCertificateItemData,
+    getNewOwnedCertificateItems,
+    ownedItemsData,
+    getNewOwnedItems
+  } = useOwnedItems();
+  const [isInventoryLoading, setIsInventoryLoading] = useState(true);
 
   const {
     isOpen: profileIsOpen,
@@ -61,14 +80,41 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
     onOpen: tutorialTopicOnOpen,
   } = useDisclosure();
 
+  const {
+    isOpen: shopIsOpen,
+    onClose: shopOnClose,
+    onOpen: shopOnOpen
+  } = useDisclosure();
+
+  const {
+    isOpen: inventoryIsOpen,
+    onClose: inventoryOnClose,
+    onOpen: inventoryOnOpen
+  } = useDisclosure();
+
   const history = useHistory();
 
-  const handleStore = () => {
-    handleFirstView('Loja', () => handlePath('/shop'));
+  const handleShop = () => {
+    handleFirstView('Loja', openShop);
+  }
+
+  const openShop = async () => {
+    shopOnOpen();
+    !certificatesItemData.length && await getNewCertificateItems();
+    !shopItemsData.length && await getNewShopItems();
+    !oraclePackagesItemData.length && await getNewOraclePackagesItem();
+    setIsShopLoading(false);
   }
 
   const handleInventory = () => {
-    handleFirstView('Inventário', () => handlePath('/inventory'));
+    handleFirstView('Inventário', openInventory);
+  }
+
+  const openInventory = async () => {
+    inventoryOnOpen();
+    !ownedCertificateItemData.length && await getNewOwnedCertificateItems();
+    !ownedItemsData.length && await getNewOwnedItems();
+    setIsInventoryLoading(false);
   }
 
   const handleChat = () => {
@@ -124,7 +170,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
           {!isIgnoranceFilterOn && <NavIcon
             image={icon_shop}
-            onClick={handleStore}
+            onClick={handleShop}
             size='normal'
             isMap={false}
             mouseOver={STORE}
@@ -148,19 +194,19 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
           <Box marginLeft="7px">
             <NavIcon
-                image={icon_tutorial}
-                onClick={tutorialTopicOnOpen}
-                size='small'
-                isMap={false}
-                mouseOver={TUTORIAL}
+              image={icon_tutorial}
+              onClick={tutorialTopicOnOpen}
+              size='small'
+              isMap={false}
+              mouseOver={TUTORIAL}
             />
 
             <NavIcon
-                image={icon_logout}
-                onClick={logout}
-                size='small'
-                isMap={false}
-                mouseOver={LOG_OUT}
+              image={icon_logout}
+              onClick={logout}
+              size='small'
+              isMap={false}
+              mouseOver={LOG_OUT}
             />
           </Box>
         </Flex>
@@ -185,6 +231,24 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         isOpen={narrativeIsOpen}
         onToggle={narrativeOnToggle}
         script={scriptChat()}
+      />
+
+      <ShopModal
+        isOpen={shopIsOpen}
+        onClose={shopOnClose}
+        oraclePackages={oraclePackagesItemData}
+        shopItems={shopItemsData}
+        certificates={certificatesItemData}
+        showQuickFilters
+        isLoading={isShopLoading}
+      />
+
+      <InventoryModal 
+        isOpen={inventoryIsOpen}
+        onClose={inventoryOnClose}
+        shopItems={ownedItemsData}
+        certificates={ownedCertificateItemData}
+        isLoading={isInventoryLoading}
       />
     </>
   )

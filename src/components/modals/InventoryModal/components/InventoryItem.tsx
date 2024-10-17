@@ -2,17 +2,16 @@ import { Center, Flex, Image, Text } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import React from 'react';
 
-type ShopItemTypes = {
+type InventoryItemTypes = {
 	image: string;
 	title: string;
 	type: string;
-	value: string;
 	onClick: VoidFunction;
 }
 
-export const ShopItem = ({ image, title, type, value, onClick } : ShopItemTypes) => (
+export const InventoryItem = ({ image, title, type, onClick } : InventoryItemTypes) => (
 	<Flex _hover={{cursor: 'pointer'}} w="148px" h="fit-content"  flexDir="column" onClick={onClick} >
-		<Center padding="16px" borderRadius="8px" h="162px" border={`2px solid ${colorPalette.primaryColor}`} background={colorPalette.whiteText}>
+		<Center padding="16px" borderRadius="8px" h="162px" border={`2px solid ${colorPalette.secondaryColor}`} background={colorPalette.whiteText}>
 			<Image
 				src={image}
 				alt={title}
@@ -26,9 +25,6 @@ export const ShopItem = ({ image, title, type, value, onClick } : ShopItemTypes)
 		</Text>
 		<Text fontSize="15px" color="#757575">
 			{`Tipo: ${type}`}
-		</Text>
-		<Text mt="2px" fontSize="15px" color="#757575">
-			{`Valor: ${value}`}
 		</Text>
 	</Flex>
 );
