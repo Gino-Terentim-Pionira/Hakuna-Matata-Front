@@ -164,6 +164,7 @@ const BaboonHelp = () => {
                                             userMessage={sendMessage}
                                             isInputReleased={true}
                                             isMessageLoading={isMessageLoading}
+                                            isMessageFree={true}
                                         />
                                     </Flex>
                                 )
