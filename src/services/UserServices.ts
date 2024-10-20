@@ -59,4 +59,10 @@ export class UserServices {
     ) => {
         await api.patch(`/user/addquestions/${_userId}`, { questions_id });
     }
+
+    resendConfirmation = async (
+        email: string
+    ) => {
+        await api.post(`/user/resendconfirmation`, { email });
+    }
 }

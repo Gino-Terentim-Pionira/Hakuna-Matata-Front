@@ -10,7 +10,6 @@ import {
     Box,
     Image,
     Button,
-    Text,
 } from '@chakra-ui/react';
 import {validateEmail, validatePassword} from '../utils/validates';
 
@@ -26,10 +25,9 @@ import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
 import axios from 'axios';
 import { GENERIC_MODAL_TEXT } from '../utils/constants/buttonConstants';
 import {NavSoundtrackIcon} from "../components/NavigationComponents/NavSoundtrackIcon";
-import { MdEmail } from "react-icons/md";
-import { FaCheckSquare } from "react-icons/fa";
+import RenderConfirmationComponents from '../components/RenderConfirmationComponent';
 
-type screenInfoType = {
+export type screenInfoType = {
     mainText: string | ReactElement,
     firstText?: string,
     secondText?: string,
@@ -46,6 +44,8 @@ type screenInfoType = {
     tip?: string,
     noInput?: boolean,
     additionalComponents?: ReactElement,
+    forgetPassword?: string,
+    forgetPasswordLink?: VoidFunction
 }
 
 const Register = () => {
@@ -252,15 +252,8 @@ const Register = () => {
         }
     }
 
-    const renderAdditionalComponents = () => (
-        <Box mt="28px"  fontSize="18px">
-            <Flex alignItems="center">
-                <MdEmail color={colorPalette.alertText} size={80} /> <Text ml="8px">Acesse seu email!</Text>
-            </Flex>
-            <Flex alignItems="center" mt="8px">
-                <FaCheckSquare color={colorPalette.correctAnswer} size={80} /> <Text ml="8px">e confirme sua conta!</Text>
-            </Flex>
-        </Box>
+    const renderConfirmationComponents = () => (
+        <RenderConfirmationComponents />
     )
 
     const screenInfo: {[key: number]: screenInfoType} = {
@@ -314,7 +307,7 @@ const Register = () => {
             tip: 'Acesse o seu email para confirmar sua conta e completar o seu cadastro!',
             buttonText: "Confirmei minha conta!",
             noInput: true,
-            additionalComponents: renderAdditionalComponents(),
+            additionalComponents: renderConfirmationComponents(),
         }
     }
 

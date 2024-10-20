@@ -9,7 +9,7 @@
   SERVER_ERROR: 'Parece que ocorreu um erro durante a nossa viagem, Viajante! Vamos tentar novamente!',
   NON_EXISTING_EMAIL_ERROR: 'A Savana me informou que você é novo por aqui, Viajante! Para acessar a Savana, você deve criar o seu passaporte.',
   WRONG_PASSWORD_ERROR: 'Ops, não posso permitir que entre na Savana pois essa não é a sua senha!',
-  USER_IS_NOT_CONFIRMED_ERROR: 'Não posso te deixar entrar, seu passaporte ainda não foi confirmado. Olhe seu "email" por favor.',
+  USER_IS_NOT_CONFIRMED_ERROR: 'Seu passaporte ainda não foi confirmado. Deseja enviar o "e-mail" novamente?',
   FAILED_LOGIN_ERROR: 'Parece que ocorreu um erro durante a nossa viagem, Viajante! Vamos tentar novamente!'
  };
 
