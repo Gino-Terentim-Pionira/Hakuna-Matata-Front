@@ -20,9 +20,12 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
-import { GENERIC_MODAL_TEXT, CREATE_PASSAPORT } from '../utils/constants/buttonConstants';
-import {validateEmail} from "../utils/validates";
+import { GENERIC_MODAL_TEXT, CREATE_PASSAPORT, AGREE } from '../utils/constants/buttonConstants';
+import { validateEmail } from "../utils/validates";
 import { NavSoundtrackIcon } from "../components/NavigationComponents/NavSoundtrackIcon";
+import { screenInfoType } from './Register';
+import RenderConfirmationComponents from '../components/RenderConfirmationComponent';
+import { UserServices } from '../services/UserServices';
 
 const Login = () => {
 	const [email, setEmail] = useState<string>('');
@@ -31,6 +34,8 @@ const Login = () => {
 	const history = useHistory();
 	const { handleLogin, authenticated } = useAuth();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [step, setStep] = useState(1);
+	const userService = new UserServices();
 
 	const [alertModal, setAlertModal] = useState({
 		alertAnswer: '',
@@ -50,6 +55,17 @@ const Login = () => {
 			history.replace('/mainPage');
 		}
 	}, [authenticated]);
+
+	const handleConfirmateEmail = async () => {
+		setStep(2);
+		onClose();
+		try {
+			await userService.resendConfirmation(email);
+		} catch (error) {
+			const errorMessage = error.response?.data.error || 'SERVER_ERROR';
+			handleAlertModal(errorMessage);
+		}
+	}
 
 	const ERROR_TYPES: {
 		[key: string]: {
@@ -80,8 +96,8 @@ const Login = () => {
 		},
 		'USER_IS_NOT_CONFIRMED_ERROR': {
 			label: errorCases.USER_IS_NOT_CONFIRMED_ERROR,
-			buttonLabel: GENERIC_MODAL_TEXT,
-			action: onClose
+			buttonLabel: AGREE,
+			action: handleConfirmateEmail
 		},
 		'FAILED_LOGIN_ERROR': {
 			label: errorCases.FAILED_LOGIN_ERROR,
@@ -105,22 +121,26 @@ const Login = () => {
 	}
 
 	const _handleLogin = async () => {
-		if (email && password) {
-			try {
-				if(emailError) {
-					handleAlertModal('INVALID_EMAIL');
-					return
-				}
+		if (step === 1) {
+			if (email && password) {
+				try {
+					if (emailError) {
+						handleAlertModal('INVALID_EMAIL');
+						return
+					}
 
-				setIsLoading(true);
-				await handleLogin(email, password);
-			} catch (error) {
-				const errorMessage = error.response?.data.error || 'SERVER_ERROR';
-				handleAlertModal(errorMessage);
-				setIsLoading(false);
+					setIsLoading(true);
+					await handleLogin(email, password);
+				} catch (error) {
+					const errorMessage = error.response?.data.error || 'SERVER_ERROR';
+					handleAlertModal(errorMessage);
+					setIsLoading(false);
+				}
+			} else {
+				handleAlertModal('MISSING_FIELDS_ERROR');
 			}
 		} else {
-			handleAlertModal('MISSING_FIELDS_ERROR');
+			setStep(1);
 		}
 	};
 
@@ -151,6 +171,38 @@ const Login = () => {
 		}
 	}
 
+	const renderConfirmationComponents = () => (
+		<RenderConfirmationComponents />
+	)
+
+	const screenInfo: { [key: number]: screenInfoType } = {
+		1: {
+			mainText: 'Seja bem vindo de volta ao Pionira. Para entrar na Savana preciso que você me fale seu e-mail e sua senha.',
+			firstText: '”Qual é o seu e-mail, viajante?”',
+			secondText: '”E qual a sua senha?”',
+			firstPlaceholder: 'E-mail',
+			secondPlaceholder: 'Senha',
+			firstInputType: 'email',
+			secondInputType: 'password',
+			firstValue: email,
+			firstChange: (e: BaseSyntheticEvent) => handleEmailChanges(e),
+			onBlur: isValidEmail,
+			secondValue: password,
+			secondChange: (e: BaseSyntheticEvent) => setPassword(e.target.value),
+			buttonText: "Próximo",
+			forgetPassword: 'Esqueci minha senha',
+			forgetPasswordLink: () => goToForgotPassword()
+
+		},
+		2: {
+			mainText: <>Tudo certo! <strong>Enviamos um “email” para você!</strong> Agora você só precisa <strong>entrar no seu email</strong> para <strong>confirmar o passaporte</strong>. Não sei o que significa, mas a sabedoria da savana me pediu para lhe dizer isso.</>,
+			tip: 'Acesse o seu email para confirmar sua conta e completar o seu cadastro!',
+			buttonText: "Confirmei minha conta!",
+			noInput: true,
+			additionalComponents: renderConfirmationComponents(),
+		}
+	}
+
 	return (
 		<Flex
 			h='100vh'
@@ -161,30 +213,29 @@ const Login = () => {
 			<NavSoundtrackIcon position="absolute" left="16px" top="12px" />
 			<Center width='100%'>
 				<LoginRegister
-					mainText='Seja bem vindo de volta ao Pionira. Para entrar na Savana preciso que você me fale seu e-mail e sua senha.'
-					firstText='”Qual é o seu e-mail, viajante?”'
-					secondText='”E qual a sua senha?”'
-					firstPlaceholder='E-mail'
-					secondPlaceholder='Senha'
-					firstValue={email}
-					firstChange={(e: BaseSyntheticEvent) =>
-						handleEmailChanges(e)
-					}
-					onBlur={isValidEmail}
-					secondValue={password}
-					secondChange={(e: BaseSyntheticEvent) =>
-						setPassword(e.target.value)
-					}
-					firstInputType='email'
-					secondInputType='password'
+					mainText={screenInfo[step].mainText}
+					firstText={screenInfo[step].firstText}
+					secondText={screenInfo[step].secondText}
+					firstPlaceholder={screenInfo[step].firstPlaceholder}
+					secondPlaceholder={screenInfo[step].secondPlaceholder}
+					firstValue={screenInfo[step].firstValue}
+					firstChange={screenInfo[step].firstChange}
+					onBlur={screenInfo[step].onBlur}
+					secondValue={screenInfo[step].secondValue}
+					secondChange={screenInfo[step].secondChange}
+					firstInputType={screenInfo[step].firstInputType}
+					secondInputType={screenInfo[step].secondInputType}
 					nextStep={() => _handleLogin()}
 					previousStep={() => previousStep()}
-					forgetPassword='Esqueci minha senha'
-					forgetPasswordLink={() => goToForgotPassword()}
-					buttonText='Próximo'
+					forgetPassword={screenInfo[step].forgetPassword}
+					forgetPasswordLink={screenInfo[step].forgetPasswordLink}
+					buttonText={screenInfo[step].buttonText}
 					loading={isLoading}
 					validationError={emailError}
 					hasValidationError={!!emailError}
+					additionalComponents={screenInfo[step].additionalComponents}
+					tip={screenInfo[step].tip}
+					noInput={screenInfo[step].noInput}
 				/>
 
 				<Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
@@ -197,15 +248,27 @@ const Login = () => {
 				alertTitle='Entrada da Savana'
 				alertBody={alertModal.alertAnswer}
 				buttonBody={
-					<Button
-						ref={cancelRef}
-						color='white'
-						_hover={{ bg: colorPalette.primaryColor }}
-						bg={colorPalette.primaryColor}
-						onClick={alertModal.action}
-					>
-						{alertModal.buttonLabel}
-					</Button>
+					<Box>
+						<Button
+							ref={cancelRef}
+							color='white'
+							_hover={{ bg: colorPalette.closeButton }}
+							bg={colorPalette.closeButton}
+							onClick={onClose}
+							marginRight='8px'
+						>
+							Cancelar
+						</Button>
+						<Button
+							ref={cancelRef}
+							color='white'
+							_hover={{ bg: colorPalette.primaryColor }}
+							bg={colorPalette.primaryColor}
+							onClick={alertModal.action}
+						>
+							{alertModal.buttonLabel}
+						</Button>
+					</Box>
 				}
 			/>
 		</Flex>
