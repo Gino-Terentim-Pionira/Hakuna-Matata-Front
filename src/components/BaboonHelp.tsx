@@ -148,13 +148,16 @@ const BaboonHelp = () => {
                         <ModalCloseButton color={colorPalette.closeButton} size="48px" mr="8px" mt="8px" />
                     </ModalHeader>
 
-                    <ModalBody height='100%'>
+                    <ModalBody 
+                        height='100%'
+                        marginTop="16px"
+                        paddingTop="0px"
+                    >
                         {
                             isLoading ? (
                                 <LoadingState />
                             ) : (
                                     <Flex
-                                        alignItems='center'
                                         justifyContent='center'
                                         height='100%'
                                     >
