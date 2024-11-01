@@ -213,7 +213,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 				showQuickFilters && <Flex alignItems="center" gap="16px">
 					<ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} color={colorPalette.primaryColor} />
 					<ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} color={colorPalette.primaryColor} />
-					<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materias de estudo" onClick={handleQuickFilters['normal'].onClick} color={colorPalette.primaryColor} />
+					<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materiais de estudo" onClick={handleQuickFilters['normal'].onClick} color={colorPalette.primaryColor} />
 					<ShopQuickFilter isSelected={handleQuickFilters['oracle'].isSelected} label="Tokens oraculo" onClick={handleQuickFilters['oracle'].onClick} color={colorPalette.primaryColor} />
 				</Flex>
 			}

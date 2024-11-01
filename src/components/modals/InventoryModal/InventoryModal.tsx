@@ -118,7 +118,7 @@ export const InventoryModal = ({ isOpen, onClose, shopItems, certificates, isLoa
             <Flex alignItems="center" gap="16px">
                 <ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} color={colorPalette.secondaryColor} />
                 <ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} color={colorPalette.secondaryColor} />
-                <ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materias de estudo" onClick={handleQuickFilters['normal'].onClick} color={colorPalette.secondaryColor} />
+                <ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materiais de estudo" onClick={handleQuickFilters['normal'].onClick} color={colorPalette.secondaryColor} />
             </Flex>
             {
                 !ALL_ITEMS_AVAILABLE && <Text fontSize="18px" color={colorPalette.textColor} w="100%" margin="auto" textAlign="center" marginTop='8px'>Você não possui nenhum item. Acesse a loja para comprar um!</Text>
