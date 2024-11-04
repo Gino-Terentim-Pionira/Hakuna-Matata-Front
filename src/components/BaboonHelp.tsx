@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Modal, ModalOverlay, ModalContent, ModalHeader, Text, ModalCloseButton, ModalBody, useDisclosure, Button, Flex } from '@chakra-ui/react';
 import colorPalette from '../styles/colorPalette';
 import fontTheme from '../styles/base';
@@ -9,7 +9,8 @@ import AlertModal from './modals/AlertModal';
 import { OracleChat } from './Oracle/OracleChat/OracleChat';
 
 const BaboonHelp = () => {
-
+    const MILI_SECONDS_INACTIVE = 40000;
+    const [isInactive, setIsInactive] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const oracleService = new OracleServices();
     const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +28,14 @@ const BaboonHelp = () => {
         ] as IMessages[],
         commonQuestions: [] as ICommonQuestion[]
     });
+
+    const countInactive = () => {
+        const timer = setTimeout(() => {
+            setIsInactive(true);
+        }, MILI_SECONDS_INACTIVE);
+
+        return timer;
+    }
 
     const addUserMessage = (content: string) => {
 		setOracleObject((currentState) => (
@@ -120,6 +129,12 @@ const BaboonHelp = () => {
             setIsMessageLoading(false);
         }
     }
+
+    useEffect(() => {
+        const timer = countInactive();
+
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <>
