@@ -75,6 +75,7 @@ const BaboonHelp = () => {
 
     const handleOpenChat = async () => {
         onOpen();
+        setIsInactive(true);
 
         await fetchData();
     }

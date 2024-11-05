@@ -41,7 +41,6 @@ export const OracleChat = ({
 			width="700px"
 			overflowX="auto"
 			overflowY="auto"
-			minHeight="450px"
 			height="90%"
 			maxHeight="880px"
 			background="rgba(240, 240, 240, 0.95)"
