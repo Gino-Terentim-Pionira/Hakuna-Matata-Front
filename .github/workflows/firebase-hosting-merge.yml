@@ -6,7 +6,6 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - stage
-      - feat/baboon_oracle
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
