@@ -7,10 +7,14 @@ import trailEnum from '../utils/enums/trail';
 import LoadingState from './LoadingState';
 import AlertModal from './modals/AlertModal';
 import { OracleChat } from './Oracle/OracleChat/OracleChat';
+import SliderModal from './modals/SliderModal';
+import monkey from "../assets/sprites/monkey/monkey.webp";
+import { MdClose } from "react-icons/md";
 
 const BaboonHelp = () => {
     const MILI_SECONDS_INACTIVE = 40000;
     const [isInactive, setIsInactive] = useState(false);
+    const [isInactiveOpen, setIsInactiveOpen] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const oracleService = new OracleServices();
     const [isLoading, setIsLoading] = useState(true);
@@ -29,31 +33,27 @@ const BaboonHelp = () => {
         commonQuestions: [] as ICommonQuestion[]
     });
 
-    const countInactive = () => {
-        const timer = setTimeout(() => {
-            setIsInactive(true);
-        }, MILI_SECONDS_INACTIVE);
-
-        return timer;
+    const handleCloseInactive = () => {
+        setIsInactiveOpen(false);
     }
 
     const addUserMessage = (content: string) => {
-		setOracleObject((currentState) => (
-			{
-				...currentState,
-				messages: [{
-					role: 'user',
-					content
-				}, ...currentState.messages]
-			}
-		));
-	}
+        setOracleObject((currentState) => (
+            {
+                ...currentState,
+                messages: [{
+                    role: 'user',
+                    content
+                }, ...currentState.messages]
+            }
+        ));
+    }
 
     const fetchData = async () => {
         try {
             const userId = sessionStorage.getItem('@pionira/userId');
 
-			const messages = await oracleService.getOracleHistory(userId as string, trailEnum.BABOON);
+            const messages = await oracleService.getOracleHistory(userId as string, trailEnum.BABOON);
             const commonQuestionsResponse = await oracleService.getCommonQuestionsByModule(trailEnum.BABOON);
 
             setOracleObject((currentState) => (
@@ -62,7 +62,7 @@ const BaboonHelp = () => {
                     oracle_name: messages.oracle.oracle_name,
                     thread_id: messages.thread_id,
                     assistant_id: messages.oracle.assistant_id,
-					messages: [...messages.messages, ...currentState.messages],
+                    messages: [...messages.messages, ...currentState.messages],
                     commonQuestions: commonQuestionsResponse
                 }
             ));
@@ -73,10 +73,15 @@ const BaboonHelp = () => {
         }
     }
 
-    const handleOpenChat = () => {
+    const handleOpenChat = async () => {
         onOpen();
 
-        fetchData();
+        await fetchData();
+    }
+
+    const openInactiveChat = () => {
+        handleCloseInactive();
+        handleOpenChat();
     }
 
     const handleCloseModal = () => {
@@ -102,7 +107,7 @@ const BaboonHelp = () => {
     }
 
     const sendMessage = async (content: string) => {
-        if(!content) return
+        if (!content) return
         try {
             setIsMessageLoading(true);
             addUserMessage(content);
@@ -113,16 +118,16 @@ const BaboonHelp = () => {
             );
 
             const newMessages = response.map((message: IMessages) => ({
-				...message,
-				isNew: true
-			}));
+                ...message,
+                isNew: true
+            }));
 
-			setOracleObject((currentState) => (
-				{
-					...currentState,
-					messages: [...newMessages, ...currentState.messages]
-				}
-			));
+            setOracleObject((currentState) => (
+                {
+                    ...currentState,
+                    messages: [...newMessages, ...currentState.messages]
+                }
+            ));
         } catch (error) {
             setIsErrorOpen(true);
         } finally {
@@ -131,10 +136,32 @@ const BaboonHelp = () => {
     }
 
     useEffect(() => {
-        const timer = countInactive();
+        let timeout: NodeJS.Timeout;
 
-        return () => clearTimeout(timer);
-    }, []);
+        const resetTimer = () => {
+            clearTimeout(timeout);
+            if (!isInactive) {
+                timeout = setTimeout(() => {
+                    setIsInactive(true);
+                    setIsInactiveOpen(true);
+                }, MILI_SECONDS_INACTIVE);
+            }
+        };
+
+        const handleMouseMove = () => {
+            if (isInactive) return;
+            resetTimer();
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+
+        resetTimer();
+
+        return () => {
+            clearTimeout(timeout);
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [isInactive]);
 
     return (
         <>
@@ -163,7 +190,7 @@ const BaboonHelp = () => {
                         <ModalCloseButton color={colorPalette.closeButton} size="48px" mr="8px" mt="8px" />
                     </ModalHeader>
 
-                    <ModalBody 
+                    <ModalBody
                         height='100%'
                         marginTop="16px"
                         paddingTop="0px"
@@ -183,6 +210,7 @@ const BaboonHelp = () => {
                                             isInputReleased={true}
                                             isMessageLoading={isMessageLoading}
                                             isMessageFree={true}
+                                            inicialMessage='Estou perdido nesta Savana, o que posso fazer?'
                                         />
                                     </Flex>
                                 )
@@ -206,6 +234,47 @@ const BaboonHelp = () => {
                 }
                 alertTitle={'Babuíno indisponível'}
                 alertBody={'O Sábio Babuíno está indisponível no momento. Tente novamente mais tarde!'}
+            />
+
+            <SliderModal
+                isOpen={isInactiveOpen}
+                buttonFunctions={handleCloseInactive}
+                image={monkey}
+                visibleName={true}
+                title='Está perdido, viajante?'
+                visibleText={true}
+                visibleImage={true}
+                content='Tenho algumas dicas do que você poderia fazer em seguida!'
+                customComponent={
+                    <Flex
+                        justifyContent='space-between'
+                        alignItems='flex-end'
+                        marginRight='32px'
+                        marginTop='32px'
+                        marginBottom='32px'
+                        flexDirection='column'
+                    >
+                        <MdClose
+                            size='54px'
+                            color={colorPalette.closeButton}
+                            cursor='pointer'
+                            onClick={handleCloseInactive}
+                        />
+
+                        <Button
+                            width='142px'
+                            height='45px'
+                            backgroundColor={colorPalette.primaryColor}
+                            _hover={{ bg: colorPalette.primaryColor }}
+                            color={colorPalette.whiteText}
+                            fontFamily={fontTheme.fonts}
+                            fontSize='20px'
+                            onClick={openInactiveChat}
+                        >
+                            Converse comigo
+                            </Button>
+                    </Flex>
+                }
             />
         </>
     )

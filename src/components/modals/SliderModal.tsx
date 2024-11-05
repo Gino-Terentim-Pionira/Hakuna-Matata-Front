@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { SplitTitle } from "../../utils/animations/SplitTitle";
 import { SplitText } from "../../utils/animations/SplitText";
 import colorPalette from '../../styles/colorPalette';
+import fontTheme from '../../styles/base';
 
 const SliderModal = ({
     isOpen,
@@ -27,7 +28,10 @@ const SliderModal = ({
     customComponent: ReactNode
 }) => {
     return (
-        <Box zIndex={10000}>
+        <Box 
+            zIndex={10000}
+            fontFamily={fontTheme.fonts}
+        >
             <Slide direction="bottom" in={isOpen} >
                 <Box onClick={buttonFunctions} w='100%' zIndex="5" h='100vh' />
                 <Flex w="100%" justifyContent="flex-end" >

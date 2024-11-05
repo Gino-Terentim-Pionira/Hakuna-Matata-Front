@@ -16,6 +16,7 @@ type OracleInputType = {
 	isInputReleased?: boolean;
 	isMessageLoading: boolean;
 	isMessageFree?: boolean;
+	inicialMessage?: string;
 }
 
 export const OracleInput = ({
@@ -23,10 +24,11 @@ export const OracleInput = ({
 	userMessage,
 	isInputReleased = false,
 	isMessageLoading,
-	isMessageFree = false
+	isMessageFree = false,
+	inicialMessage
 }: OracleInputType) => {
 	const { userData } = useUser();
-	const [inputReleasedMessage, setInputReleasedMessage] = useState('');
+	const [inputReleasedMessage, setInputReleasedMessage] = useState(inicialMessage || '');
 	const IS_USER_HAS_MESSAGES = userData.oracle_messages >= 1 || isMessageFree;
 	const [isCommonQuestionOpen, setIsCommonQuestionOpen] = useState(false);
 
