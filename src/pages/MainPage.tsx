@@ -4,6 +4,7 @@ import {
 	useDisclosure,
 	Flex,
 	Button,
+	Box,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 
@@ -47,6 +48,7 @@ import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/background
 import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
+import BaboonHelp from '../components/BaboonHelp';
 
 interface IScript {
 	name: string;
@@ -378,6 +380,15 @@ const MainPage = () => {
 												mouseOver={BLOCKED_TRAIL}
 											/>
 										</Flex>
+
+										<Box
+											position='absolute'
+											width='22%'
+											left='60vw'
+											top='52vh'
+										>
+											<BaboonHelp />
+										</Box>
 
 										<Flex
 											position='absolute'

@@ -15,17 +15,21 @@ type OracleInputType = {
 	userMessage: userMessageFunction;
 	isInputReleased?: boolean;
 	isMessageLoading: boolean;
+	isMessageFree?: boolean;
+	inicialMessage?: string;
 }
 
 export const OracleInput = ({
 	commonQuestions,
 	userMessage,
 	isInputReleased = false,
-	isMessageLoading
+	isMessageLoading,
+	isMessageFree = false,
+	inicialMessage
 }: OracleInputType) => {
 	const { userData } = useUser();
-	const [inputReleasedMessage, setInputReleasedMessage] = useState('');
-	const IS_USER_HAS_MESSAGES = userData.oracle_messages >= 1;
+	const [inputReleasedMessage, setInputReleasedMessage] = useState(inicialMessage || '');
+	const IS_USER_HAS_MESSAGES = userData.oracle_messages >= 1 || isMessageFree;
 	const [isCommonQuestionOpen, setIsCommonQuestionOpen] = useState(false);
 
 	const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
