@@ -65,7 +65,7 @@ export const Oracle = () => {
 		title: 'Ops!',
 		body: 'O Oráculo não está disponível no momento. Volte mais tarde!',
 		closeFunction: () => history.goBack(),
-		buttonFunction:() => history.goBack(),
+		buttonFunction: () => history.goBack(),
 		buttonText: 'Voltar'
 	});
 
@@ -82,7 +82,7 @@ export const Oracle = () => {
 	}
 
 	const sendOracleMessage = async (content: string) => {
-		if(!content) return
+		if (!content) return
 		try {
 			setIsMessageLoading(true);
 			addUserMessage(content);
@@ -166,10 +166,10 @@ export const Oracle = () => {
 
 	useEffect(() => {
 		const handleAlertModal = () => {
-			if(userData.oracle_messages === 0)
+			if (userData.oracle_messages === 0)
 				setIsAlertTokenModalOpen(true)
 		}
-		if(!isLoading && userData.userName)
+		if (!isLoading && userData.userName)
 			setTimeout(() => {
 				handleAlertModal()
 			}, 200);
@@ -206,18 +206,23 @@ export const Oracle = () => {
 								alignItems="flex-end"
 								paddingX="16px"
 							>
-								<OracleAnimation 
+								<OracleAnimation
 									oracleObject={oracleObject}
 									isTalking={isTalking}
-									onEnd={() => {setIsTalking(false)}}
+									onEnd={() => { setIsTalking(false) }}
 								/>
-								<OracleChat
-									isInputReleased={IS_FINAL_QUIZ_COMPLETE}
-									commonQuestions={oracleObject.commonQuestions}
-									messages={oracleObject.messages}
-									userMessage={sendOracleMessage}
-									isMessageLoading={isMessageLoading}
-								/>
+								<Flex 
+									height="100%"
+									alignItems="center"
+								>
+									<OracleChat
+										isInputReleased={IS_FINAL_QUIZ_COMPLETE}
+										commonQuestions={oracleObject.commonQuestions}
+										messages={oracleObject.messages}
+										userMessage={sendOracleMessage}
+										isMessageLoading={isMessageLoading}
+									/>
+								</Flex>
 							</Flex>
 						</Flex>
 					)

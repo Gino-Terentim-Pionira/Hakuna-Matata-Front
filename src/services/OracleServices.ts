@@ -64,6 +64,14 @@ export class OracleServices {
         return response.data;
     }
 
+    getCommonQuestionsByModule = async (
+        module_name: string
+    ): Promise<ICommonQuestion[]> => {
+        const response = await api.get(this.createURL(`commonquestionsby/${module_name}`));
+
+        return response.data;
+    }
+
     getAllPackages = async () => {
         const response = await api.get(this.createURL('packages'))
 
@@ -96,6 +104,18 @@ export class OracleServices {
         const response = await api.post(this.createURL(`sendmessage/${userId}`), {
             thread_id,
             assistant_id,
+            content
+        });
+
+        return response.data;
+    }
+
+    sendMessageToBaboon = async (
+        thread_id: string,
+        content: string
+    ): Promise<IMessages[]> => {
+        const response = await api.post(this.createURL(`sendmessagebaboon`), {
+            thread_id,
             content
         });
 

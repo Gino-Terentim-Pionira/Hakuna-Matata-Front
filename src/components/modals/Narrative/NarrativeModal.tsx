@@ -56,7 +56,9 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
         lunchOnOpen();
     }
 
+    
     const handleCloseFreeLunch = async (trail: trailEnum) => {
+        type NarrativeKeys = trailEnum.CHEETAH | trailEnum.LION | trailEnum.MAMBA;
         const user = userData;
         const narrateiveObject = {
             'Cheetah': {
@@ -75,7 +77,7 @@ const NarrativeModal: FC<NarrativeModalProps> = ({
         await api.patch(`/user/narrative/${user._id}`, {
             narrative_status: {
                 ...user.narrative_status,
-                ...narrateiveObject[trail]
+                ...narrateiveObject[trail as NarrativeKeys]
             }
         });
 
