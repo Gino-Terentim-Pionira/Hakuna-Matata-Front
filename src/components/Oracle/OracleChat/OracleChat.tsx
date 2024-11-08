@@ -45,7 +45,7 @@ export const OracleChat = ({
 			maxHeight="880px"
 			background="rgba(240, 240, 240, 0.95)"
 			borderRadius="8px"
-			boxShadow="0 4px 4px rgba(0, 0, 0, 0.25), inset 0 4px 4px rgba(0, 0, 0, 0.25)"
+			boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)"
 		>
 			<Box
 				display="flex"
