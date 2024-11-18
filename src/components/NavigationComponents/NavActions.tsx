@@ -251,7 +251,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
         isLoading={isInventoryLoading}
       />
     </>
-  )
+  );
 }
 
 export default NavActions;
