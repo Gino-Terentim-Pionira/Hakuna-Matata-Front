@@ -16,6 +16,7 @@ import CheetahPath from './pages/CheetahPath';
 import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
 import { SoundtrackManager } from "./components/SoundtrackManager";
+import Trail from './pages/Trail';
 
 const useWindowSize = () => {
 	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
@@ -57,6 +58,7 @@ const Routes = () => {
 							<ProtectedRoute path='/trilha-leao' component={LionPath} />
 						*/}
 						<ProtectedRoute path='/oracle' component={Oracle}/>
+						<ProtectedRoute path='/trail' component={Trail} />
 					</Switch>
 				</AuthProvider>
 			</HashRouter>
