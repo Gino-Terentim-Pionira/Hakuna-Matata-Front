@@ -190,7 +190,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 
         if (!moduleInfo.videos.length || moduleInfo.isBlocked) {
             setIconInfo({
-                label: "Módulo indisponível",
+                ...iconInfo,
                 ...MODULE_INFO('blocked', 0, 0),
                 description: !moduleInfo.videos.length ? "Este módulo não está disponível ainda, aguarde para mais atualizações..." : "Para desbloquear este módulo, finalize 100% do anterior."
             });
@@ -200,13 +200,15 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
             setIconInfo({
                 ...iconInfo,
                 ...MODULE_INFO('complete', totalNumberOfQuestions, totalNumberOfQuestions),
-            })
+            });
+            setIsModuleBlocked(false);
             setImage(button_on);
         } else {
             setIconInfo({
                 ...iconInfo,
                 ...MODULE_INFO('incomplete', totalNumberOfQuestions - moduleInfo.questionsRemaining, totalNumberOfQuestions),
-            })
+            });
+            setIsModuleBlocked(false);
             setImage(button_off);
         }
     }

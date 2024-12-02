@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useDisclosure, Flex, Button } from '@chakra-ui/react';
-import { useUser, useModule } from '../../hooks';
+import { useUser, useTrail } from '../../hooks';
 import { updateModuleCooldown } from '../../services/moduleCooldown';
 
 // Components
@@ -16,7 +16,6 @@ import GenericQuizModal from './GenericQuizModal';
 import { UserServices } from '../../services/UserServices';
 import UnlockAnimation from '../modals/UnlockAnimation';
 import { S3_VIDEO_FINISHED_MODULE, S3_VIDEO_ORACLE_UPDATED, S3_VIDEO_ORACLE_AVAILABLE } from '../../utils/constants/constants';
-import { numberCompletedModules } from '../../utils/oracleUtils';
 import AlertModal from '../modals/AlertModal';
 import { Module } from '../../recoil/trailRecoilState';
 
@@ -39,7 +38,7 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
     const userServices = new UserServices();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { getNewUserInfo, userData } = useUser();
-    const { moduleData } = useModule();
+    const { trailData, getNewTrailInfo } = useTrail();
     const length = moduleInfo.questions.length;
     const [coins, setCoins] = useState(0);
     const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -57,7 +56,7 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
     const HAS_USER_FINISHED_MODULE = moduleInfo.coinsRemaining == 0;
 
     const onCloseFirstAnimation = () => {
-        const second_animation_url = numberCompletedModules(moduleData, userData.module_id) ? S3_VIDEO_ORACLE_UPDATED : S3_VIDEO_ORACLE_AVAILABLE;
+        const second_animation_url = trailData?.stamps ? S3_VIDEO_ORACLE_UPDATED : S3_VIDEO_ORACLE_AVAILABLE;
         setAnimationInfo(prevState => ({
             ...prevState,
             isOpen: false
@@ -79,7 +78,6 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
         const questionUserId = userData.question_id;
         const currentQuestion = moduleInfo.questions.find((item) => item._id === question_id);
         const questionsCoins = currentQuestion?.coins as number;
-
         if (questionUserId.includes(question_id)) {
             setCorrectAnswers(correctAnswers + 1);
         } else {
@@ -137,6 +135,7 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
             }
             await updateUserQuizTime();
             await getNewUserInfo();
+            await getNewTrailInfo(moduleInfo.trailName);
             if (coins >= moduleInfo.coinsRemaining) {
                 completeModuleFunction();
             }
@@ -147,27 +146,29 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
     };
 
     const handleOnCloseReward = () => {
+        setCoins(0);
+        setCorrectAnswers(0);
         onClose();
     }
 
     const rewardModalInfo = () => {
         if (moduleInfo.coinsRemaining == 0)
             return {
-                title: 'Arrasou!',
+                title: 'Módulo Finalizado!',
                 titleColor: colorPalette.inactiveButton,
                 subtitle: 'Você já conseguiu provar todo o seu valor nesse desafio! Pode seguir adiante com sua jornada, caro viajante!',
                 icon: Cheetah
             };
         if (passed)
             return {
-                title: 'Quiz finalizado!',
+                title: 'Arrasou!',
                 titleColor: colorPalette.inactiveButton,
-                subtitle: `Você acertou ${correctAnswers} de ${length} questões!`,
+                subtitle: `Você acertou ${correctAnswers} de ${length} questões! Volte mais tarde para finalizar o módulo.`,
                 icon: Cheetah,
                 coins,
                 video_names: videos
             };
-        const oracle_text = numberCompletedModules(moduleData, userData.module_id) ? 'aprimorar' : 'desbloquear';
+        const oracle_text = trailData?.stamps ? 'aprimorar' : 'desbloquear';
         return {
             title: 'Que pena!',
             titleColor: colorPalette.closeButton,
