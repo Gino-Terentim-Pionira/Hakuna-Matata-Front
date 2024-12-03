@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Box } from '@chakra-ui/react';
+import { Flex, Box, Center, Tooltip, Image, useDisclosure } from '@chakra-ui/react';
 import { useTrail, useUser } from '../hooks';
 import trailEnum from '../utils/enums/trail';
 import VideoBackground from '../components/VideoBackground';
@@ -11,6 +11,15 @@ import NavIcon from '../components/NavigationComponents/NavIcon';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import colorPalette from '../styles/colorPalette';
 import { useSoundtrack } from '../hooks/useSoundtrack';
+import { FINAL_CHALLENGE } from '../utils/constants/mouseOverConstants';
+import FinalChallengeScript from '../utils/scripts/finalChallenge/FinalChallengeScript';
+import DefaultNarrativeModal from '../components/modals/Narrative/DefaultNarrativeModal';
+
+export interface IScript {
+    name: string;
+    image: string;
+    texts: string[];
+}
 
 const Trail = () => {
 
@@ -20,6 +29,12 @@ const Trail = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
     const [trailPageIndex, setTrailPageIndex] = useState(0);
+    const [script, setScript] = useState<IScript[]>([]);
+
+    const { isOpen: narrativeIsOpen,
+        onOpen: narrativeOnOpen,
+        onToggle: narrativeOnToggle
+    } = useDisclosure();
 
     const modulesPositions = [
         { top: "74vh", left: "19vw" },
@@ -31,6 +46,21 @@ const Trail = () => {
     const handleChangePage = (offset: number) => {
         setIsAnimationLoading(true);
         setTrailPageIndex(trailPageIndex + offset);
+    }
+
+    const handleFinalChallenge = () => {
+        if (trailData) {
+            const challengeScript = FinalChallengeScript(
+                trailData.finalChallenge.image as string,
+                trailEnum.CHEETAH,
+                trailData.totalModules - trailData.stamps,
+                trailData.finalChallenge.isAvailable,
+                trailData.finalChallenge.isBlocked
+            );
+
+            setScript(challengeScript);
+            narrativeOnOpen();
+        }
     }
 
     const fetchData = async () => {
@@ -91,7 +121,7 @@ const Trail = () => {
                                 >
                                     <NavIcon
                                         image={<FaArrowLeft size={55} color={colorPalette.secondaryColor} />}
-                                        onClick={()=>handleChangePage(-1)}
+                                        onClick={() => handleChangePage(-1)}
                                         size='normal'
                                         mouseOver='Voltar na trilha'
                                     />
@@ -108,6 +138,38 @@ const Trail = () => {
                                 ))
                             }
                             {
+                                trailData.finalChallenge.icon ? (
+                                    <Center
+                                        _hover={{
+                                            cursor: 'pointer',
+                                            transform: 'scale(2.2)',
+                                        }}
+                                        transition='all 0.2s ease'
+                                        width='4rem'
+                                        height='4rem'
+                                        onClick={() => {
+                                            handleFinalChallenge()
+                                        }}
+                                        position='absolute'
+                                        top='40vh'
+                                        left='70vw'
+                                    >
+                                        <Tooltip
+                                            hasArrow
+                                            placement='top'
+                                            gutter={35}
+                                            label={FINAL_CHALLENGE(trailEnum.CHEETAH)}
+                                        >
+                                            <Image
+                                                src={trailData.finalChallenge.icon}
+                                                width='90%'
+                                                height='90%'
+                                            />
+                                        </Tooltip>
+                                    </Center>
+                                ) : null
+                            }
+                            {
                                 trailPageIndex < trailData.trailPages.length - 1 && <Box
                                     position='absolute'
                                     top='60vh'
@@ -115,13 +177,23 @@ const Trail = () => {
                                 >
                                     <NavIcon
                                         image={<FaArrowRight size={55} color={colorPalette.secondaryColor} />}
-                                        onClick={()=>handleChangePage(1)}
+                                        onClick={() => handleChangePage(1)}
                                         size='normal'
                                         mouseOver='Avançar pela trilha'
                                     />
                                 </Box>
                             }
                         </Flex>
+
+                        {
+                            script.length ? (
+                                <DefaultNarrativeModal
+                                    isOpen={narrativeIsOpen}
+                                    onToggle={narrativeOnToggle}
+                                    script={script}
+                                />
+                            ) : null
+                        }
                     </>
                 )
             }

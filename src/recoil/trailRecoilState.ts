@@ -45,11 +45,14 @@ export interface Trail {
     statusName: string;
     soundtrack: string;
     stamps: number;
+    totalModules: number;
     trailPages: TrailPage[];
     stampImage: string;
     finalChallenge: {
         isBlocked: boolean;
         isAvailable: boolean;
+        icon?: string;
+        image?: string;
     }
 }
 
