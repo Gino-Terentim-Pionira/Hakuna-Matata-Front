@@ -51,6 +51,7 @@ export interface Trail {
     finalChallenge: {
         isBlocked: boolean;
         isAvailable: boolean;
+        isComplete: boolean;
         icon?: string;
         image?: string;
     }

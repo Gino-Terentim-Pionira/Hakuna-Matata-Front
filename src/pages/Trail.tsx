@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Flex, Box, Center, Tooltip, Image, useDisclosure } from '@chakra-ui/react';
+import React, { useEffect, useState, SetStateAction } from 'react';
+import { Flex, Box, Center, Tooltip, Image, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Text, Button, ModalHeader, ModalCloseButton } from '@chakra-ui/react';
 import { useTrail, useUser } from '../hooks';
 import trailEnum from '../utils/enums/trail';
 import VideoBackground from '../components/VideoBackground';
@@ -14,6 +14,12 @@ import { useSoundtrack } from '../hooks/useSoundtrack';
 import { FINAL_CHALLENGE } from '../utils/constants/mouseOverConstants';
 import FinalChallengeScript from '../utils/scripts/finalChallenge/FinalChallengeScript';
 import DefaultNarrativeModal from '../components/modals/Narrative/DefaultNarrativeModal';
+import fontTheme from '../styles/base';
+import AlertModal from '../components/modals/AlertModal';
+import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
+import horizon from '../assets/horizon.webp';
+import api from '../services/api';
+import { errorCases } from '../utils/errors/errorsCases';
 
 export interface IScript {
     name: string;
@@ -30,10 +36,40 @@ const Trail = () => {
     const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
     const [trailPageIndex, setTrailPageIndex] = useState(0);
     const [script, setScript] = useState<IScript[]>([]);
+    const [challengeText, setChallengeText] = useState<string>();
+    const [challengeInfo, setChallengeInfo] = useState({
+        isAvailable: false,
+        isComplete: false,
+        isBlocked: true,
+        remainingModules: 0
+    });
+    const [onEndNarrative, setOnEndNarrative] = useState<(() => void) | undefined>(undefined);
+    const [alertInfo, setAlertInfo] = useState<{
+        isOpen: boolean,
+        title: string | undefined,
+        body: string | undefined,
+        buttonText: string | undefined,
+        buttonFunction: (() => void) | undefined,
+        isLoading: boolean
+    }>({
+        isOpen: false,
+        title: undefined,
+        body: undefined,
+        buttonText: undefined,
+        buttonFunction: undefined,
+        isLoading: false
+    });
 
     const { isOpen: narrativeIsOpen,
         onOpen: narrativeOnOpen,
+        onClose: narrativeOnClose,
         onToggle: narrativeOnToggle
+    } = useDisclosure();
+
+    const {
+        isOpen: modalIsOpen,
+        onClose: modalOnClose,
+        onOpen: modalOnOpen,
     } = useDisclosure();
 
     const modulesPositions = [
@@ -43,34 +79,138 @@ const Trail = () => {
         { top: "75vh", left: "78vw" },
     ];
 
+    const payChallengeTax = async () => {
+        const value = FINAL_QUIZ_SINK;
+        const _userId: SetStateAction<string> | null = sessionStorage.getItem(
+            '@pionira/userId',
+        );
+        const userCoins = userData.coins;
+
+        if (userCoins >= value) {
+            const newCoins = userCoins - value;
+            try {
+                setAlertInfo((prevAlertInfo) => ({
+                    ...prevAlertInfo,
+                    isLoading: true
+                }));
+                await api.patch(`/user/coins/${_userId}`, {
+                    coins: newCoins,
+                });
+                getNewUserInfo();
+
+                handleCloseAlert();
+            } catch (error) {
+                setAlertInfo((prevAlertInfo) => ({
+                    ...prevAlertInfo,
+                    body: 'Houve um erro, tente novamente mais tarde',
+                    buttonText: 'Voltar',
+                    isLoading: false,
+                    buttonFunction: handleCloseAlert
+                }));
+            }
+        } else {
+            setAlertInfo((prevAlertInfo) => ({
+                ...prevAlertInfo,
+                body: 'Poxa! Parece que você não tem moedas suficientes!',
+                buttonText: 'Voltar',
+                isLoading: false,
+                buttonFunction: handleCloseAlert
+            }));
+        }
+
+        handleCloseChallengeModal();
+    }
+
+    const openChallengeConfirmation = () => {
+        setAlertInfo((prevAlertInfo) => ({
+            ...prevAlertInfo,
+            isOpen: true,
+            title: 'Desafio Final',
+            body: `Para fazer o desafio final são necessárias ${FINAL_QUIZ_SINK} joias do conhecimento! Tem certeza que deseja prosseguir?`,
+            buttonText: 'Pagar',
+            buttonFunction: payChallengeTax
+        }));
+    }
+
+    const handleCloseAlert = () => {
+        setAlertInfo({
+            isOpen: false,
+            title: undefined,
+            body: undefined,
+            buttonText: undefined,
+            buttonFunction: undefined,
+            isLoading: false
+        });
+    }
+
+    const handleError = () => {
+        setAlertInfo({
+            isOpen: true,
+            title: 'Ops!',
+            body: errorCases.SERVER_ERROR,
+            buttonText: 'Recarregar',
+            buttonFunction: () => window.location.reload(),
+            isLoading: false
+        });
+    }
+
     const handleChangePage = (offset: number) => {
         setIsAnimationLoading(true);
         setTrailPageIndex(trailPageIndex + offset);
     }
 
+    const handleCloseChallengeModal = () => {
+        setOnEndNarrative(undefined);
+        modalOnClose();
+    }
+
+    const handleOpenChallengeModal = () => {
+        narrativeOnClose();
+        modalOnOpen();
+    }
+
     const handleFinalChallenge = () => {
         if (trailData) {
-            const challengeScript = FinalChallengeScript(
-                trailData.finalChallenge.image as string,
-                trailEnum.CHEETAH,
-                trailData.totalModules - trailData.stamps,
-                trailData.finalChallenge.isAvailable,
-                trailData.finalChallenge.isBlocked
-            );
+            if (challengeInfo.isComplete) {
+                setChallengeText('Você já completou este desafio, Viajante. Parabéns, novos horizontes te esperam!');
+                handleOpenChallengeModal();
+            } else {
+                const challengeScript = FinalChallengeScript(
+                    trailData.finalChallenge.image as string,
+                    trailEnum.CHEETAH,
+                    challengeInfo.remainingModules,
+                    challengeInfo.isAvailable,
+                    challengeInfo.isBlocked
+                );
 
-            setScript(challengeScript);
-            narrativeOnOpen();
+                setScript(challengeScript);
+
+                if (!challengeInfo.isAvailable) {
+                    setChallengeText('Este desafio ainda não está disponível, Viajante.');
+                } else if (challengeInfo.isBlocked) {
+                    setChallengeText(`Você ainda não pode realizar este desafio. Complete ${challengeInfo.remainingModules} módulo${challengeInfo.remainingModules > 1 ? 's' : null} e volte novamente!`);
+                } else {
+                    setChallengeText('Você está pronto para este desafio, Viajante!');
+                }
+
+                setOnEndNarrative(() => handleOpenChallengeModal);
+                narrativeOnOpen();
+            }
         }
     }
 
     const fetchData = async () => {
-        if (!trailData) {
-            await getNewTrailInfo(trailEnum.CHEETAH);
+        try {
+            if (!trailData) {
+                await getNewTrailInfo(trailEnum.CHEETAH);
+            }
+            if (!userData._id) {
+                await getNewUserInfo();
+            }
+            setIsLoading(false);
+        } catch (error) {
+            handleError();
         }
-        if (!userData._id) {
-            await getNewUserInfo();
-        }
-        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -80,6 +220,12 @@ const Trail = () => {
     useEffect(() => {
         if (trailData && trailData.soundtrack) {
             changeSoundtrack('', trailData.soundtrack);
+            setChallengeInfo({
+                isAvailable: trailData.finalChallenge.isAvailable,
+                isBlocked: trailData.finalChallenge.isBlocked,
+                isComplete: trailData.finalChallenge.isComplete,
+                remainingModules: trailData.totalModules - trailData.stamps
+            });
         }
     }, [trailData]);
 
@@ -89,6 +235,24 @@ const Trail = () => {
                 key={trailPageIndex}
                 handleLoading={() => setIsAnimationLoading(false)}
                 source={trailData?.trailPages[trailPageIndex].backgroundDay || null}
+            />
+            <AlertModal
+                isOpen={alertInfo.isOpen}
+                onClose={handleCloseAlert}
+                onClickClose={handleCloseAlert}
+                alertTitle={alertInfo.title}
+                alertBody={alertInfo.body}
+                buttonBody={
+                    <Button
+                        color='white'
+                        _hover={{ bg: colorPalette.primaryColor }}
+                        bg={colorPalette.primaryColor}
+                        onClick={alertInfo.buttonFunction}
+                        isLoading={alertInfo.isLoading}
+                    >
+                        {alertInfo.buttonText}
+                    </Button>
+                }
             />
             {
                 (isLoading || isAnimationLoading || !trailData) ? <LoadingOverlay /> : (
@@ -191,9 +355,153 @@ const Trail = () => {
                                     isOpen={narrativeIsOpen}
                                     onToggle={narrativeOnToggle}
                                     script={script}
+                                    endScriptFunction={onEndNarrative}
                                 />
                             ) : null
                         }
+
+                        <Modal
+                            isOpen={modalIsOpen}
+                            onClose={handleCloseChallengeModal}
+                            size='4xl'
+                        >
+                            <ModalOverlay />
+                            <ModalContent
+                                height='34rem'
+                                fontFamily={fontTheme.fonts}
+                            >
+                                <Box
+                                    w='25%'
+                                    bg={colorPalette.primaryColor}
+                                    h='25rem'
+                                    position='absolute'
+                                    zIndex='-1'
+                                    left='0'
+                                    top='0'
+                                    borderTopStartRadius='5px'
+                                    clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+                                />
+                                {challengeInfo.isComplete || !challengeInfo.isAvailable || challengeInfo.isBlocked ? (
+                                    <>
+                                        <ModalBody
+                                            d='flex'
+                                            mt='-1rem'
+                                            flexDirection='column'
+                                            alignItems='center'
+                                            justifyContent='space-between'
+                                        >
+                                            <Flex
+                                                w='65%'
+                                                h='100%'
+                                                justifyContent='space-between'
+                                                flexDirection='column'
+                                                marginBottom='0.8rem'
+                                            >
+                                                <Text
+                                                    w='100%'
+                                                    marginTop='5rem'
+                                                    fontSize='2rem'
+                                                    lineHeight='9vh'
+                                                    textAlign='center'
+                                                    fontWeight='normal'
+                                                >
+                                                    {challengeText}
+                                                </Text>
+                                                <Button
+                                                    bgColor={
+                                                        colorPalette.secondaryColor
+                                                    }
+                                                    width='45%'
+                                                    alignSelf='center'
+                                                    color={
+                                                        colorPalette.buttonTextColor
+                                                    }
+                                                    height='4rem'
+                                                    fontSize='1.4rem'
+                                                    _hover={{
+                                                        transform: 'scale(1.1)',
+                                                    }}
+                                                    onClick={handleCloseChallengeModal}
+                                                >
+                                                    Okay!
+                                                </Button>
+                                            </Flex>
+                                        </ModalBody>
+                                    </>
+                                ) : (
+                                        <>
+                                            <ModalHeader
+                                                d='flex'
+                                                justifyContent='center'
+                                                mt='1.4rem'
+                                            >
+                                                <Text
+                                                    ml='2.3rem'
+                                                    w='75%'
+                                                    fontSize='1.4rem'
+                                                    textAlign='center'
+                                                    fontWeight='normal'
+                                                >
+                                                    {challengeText}
+                                                </Text>
+                                                <ModalCloseButton
+                                                    color={colorPalette.closeButton}
+                                                    size='lg'
+                                                />
+                                            </ModalHeader>
+
+                                            <ModalBody
+                                                d='flex'
+                                                mt='-1rem'
+                                                flexDirection='column'
+                                                alignItems='center'
+                                                justifyContent='space-between'
+                                            >
+                                                <Image
+                                                    src={horizon}
+                                                    w='65%'
+                                                    h='75%'
+                                                />
+
+                                                <Flex
+                                                    w='65%'
+                                                    justifyContent='space-between'
+                                                    marginBottom='0.8rem'
+                                                >
+                                                    <Button
+                                                        bgColor={
+                                                            colorPalette.confirmButton
+                                                        }
+                                                        width='45%'
+                                                        height='4rem'
+                                                        fontSize='1.2rem'
+                                                        _hover={{
+                                                            transform: 'scale(1.1)',
+                                                        }}
+                                                        onClick={openChallengeConfirmation}
+                                                    >
+                                                        Vamos nessa!
+                                                </Button>
+                                                    <Button
+                                                        bgColor={
+                                                            colorPalette.closeButton
+                                                        }
+                                                        width='45%'
+                                                        height='4rem'
+                                                        fontSize='1.2rem'
+                                                        _hover={{
+                                                            transform: 'scale(1.1)',
+                                                        }}
+                                                        onClick={handleCloseChallengeModal}
+                                                    >
+                                                        Ainda não estou pronto!
+                                                </Button>
+                                                </Flex>
+                                            </ModalBody>
+                                        </>
+                                    )}
+                            </ModalContent>
+                        </Modal>
                     </>
                 )
             }
