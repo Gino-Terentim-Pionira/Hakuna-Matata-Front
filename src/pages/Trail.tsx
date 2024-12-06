@@ -18,8 +18,11 @@ import fontTheme from '../styles/base';
 import AlertModal from '../components/modals/AlertModal';
 import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import horizon from '../assets/horizon.webp';
-import api from '../services/api';
 import { errorCases } from '../utils/errors/errorsCases';
+import { TrailServices } from '../services/TrailServices';
+import { Question } from '../recoil/trailRecoilState';
+import FinalChallengeQuiz from '../components/Quiz/FinalChallengeQuiz';
+import api from '../services/api';
 
 export interface IScript {
     name: string;
@@ -29,6 +32,7 @@ export interface IScript {
 
 const Trail = () => {
 
+    const trailService = new TrailServices();
     const { userData, getNewUserInfo } = useUser();
     const { changeSoundtrack } = useSoundtrack();
     const { getNewTrailInfo, trailData } = useTrail();
@@ -59,6 +63,10 @@ const Trail = () => {
         buttonFunction: undefined,
         isLoading: false
     });
+    const [finalChallengeInfo, setFinalChallengeInfo] = useState<{
+        questions: Question[],
+        totalQuestions: number
+    }>();
 
     const { isOpen: narrativeIsOpen,
         onOpen: narrativeOnOpen,
@@ -72,12 +80,30 @@ const Trail = () => {
         onOpen: modalOnOpen,
     } = useDisclosure();
 
+    const {
+        isOpen: finalChallengeIsOpen,
+        onClose: finalChallengeOnClose,
+        onOpen: finalChallengeOnOpen,
+        onToggle: finalChallengeOnToggle
+    } = useDisclosure();
+
     const modulesPositions = [
         { top: "74vh", left: "19vw" },
         { top: "56vh", left: "45vw" },
         { top: "75vh", left: "60vw" },
         { top: "75vh", left: "78vw" },
     ];
+
+    const finishFinalChallenge = async () => {
+        try {
+            const userId = sessionStorage.getItem('@pionira/userId');
+            await api.patch(`user/addmodule/${userId}`, {
+                module_id: trailData?.finalChallenge.id
+            });
+        } catch (error) {
+            handleError();
+        }
+    }
 
     const payChallengeTax = async () => {
         const value = FINAL_QUIZ_SINK;
@@ -87,16 +113,16 @@ const Trail = () => {
         const userCoins = userData.coins;
 
         if (userCoins >= value) {
-            const newCoins = userCoins - value;
             try {
                 setAlertInfo((prevAlertInfo) => ({
                     ...prevAlertInfo,
                     isLoading: true
                 }));
-                await api.patch(`/user/coins/${_userId}`, {
-                    coins: newCoins,
-                });
+                const finalQuestions = await trailService.startFinalChallenge(_userId as string, trailEnum.CHEETAH as string);
                 getNewUserInfo();
+
+                setFinalChallengeInfo(finalQuestions);
+                finalChallengeOnOpen();
 
                 handleCloseAlert();
             } catch (error) {
@@ -502,6 +528,21 @@ const Trail = () => {
                                     )}
                             </ModalContent>
                         </Modal>
+
+                        {
+                            finalChallengeInfo?.questions ? (
+                                <FinalChallengeQuiz
+                                    openModal={finalChallengeIsOpen}
+                                    closeModal={finalChallengeOnClose}
+                                    onToggle={finalChallengeOnToggle}
+                                    QuestionInfo={finalChallengeInfo.questions}
+                                    totalQuestions={finalChallengeInfo.totalQuestions}
+                                    trailName={trailEnum.CHEETAH}
+                                    image={trailData.finalChallenge.image as string}
+                                    completeModuleFunction={finishFinalChallenge}
+                                />
+                            ) : null
+                        }
                     </>
                 )
             }

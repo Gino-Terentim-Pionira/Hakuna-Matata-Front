@@ -54,6 +54,7 @@ export interface Trail {
         isComplete: boolean;
         icon?: string;
         image?: string;
+        id: string;
     }
 }
 
