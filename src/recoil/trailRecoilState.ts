@@ -55,6 +55,10 @@ export interface Trail {
         icon?: string;
         image?: string;
         id: string;
+    };
+    oracle: {
+        isAvailable: boolean,
+        isBlocked: boolean,
     }
 }
 

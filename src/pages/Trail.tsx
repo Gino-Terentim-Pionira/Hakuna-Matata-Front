@@ -295,6 +295,9 @@ const Trail = () => {
                             <IgnorancePremiumIcons
                                 ignorance={userData.ignorance}
                                 showStatus={false}
+                                trail={trailEnum.CHEETAH}
+                                dontShowOracle={!trailData.oracle.isAvailable}
+                                showOracle={!trailData.oracle.isBlocked}
                             />
 
 
