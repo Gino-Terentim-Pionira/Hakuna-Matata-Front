@@ -20,19 +20,15 @@ import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
 import horizon from '../assets/horizon.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import { TrailServices } from '../services/TrailServices';
-import { Question } from '../recoil/trailRecoilState';
+import { Question, IScript } from '../recoil/trailRecoilState';
 import FinalChallengeQuiz from '../components/Quiz/FinalChallengeQuiz';
 import api from '../services/api';
-
-export interface IScript {
-    name: string;
-    image: string;
-    texts: string[];
-}
+import { UserServices } from '../services/UserServices';
 
 const Trail = () => {
 
     const trailService = new TrailServices();
+    const userService = new UserServices();
     const { userData, getNewUserInfo } = useUser();
     const { changeSoundtrack } = useSoundtrack();
     const { getNewTrailInfo, trailData } = useTrail();
@@ -225,6 +221,16 @@ const Trail = () => {
         }
     }
 
+    const handleAddNarrativeToUser = async (userId: string, narrativeId: string) => {
+        await userService.addNarrativeToUser(userId, narrativeId);
+        await getNewTrailInfo(trailEnum.CHEETAH);
+    }
+
+    const handleCloseTrailNarrative = (userId: string, narrativeId: string) => {
+        handleAddNarrativeToUser(userId, narrativeId);
+        narrativeOnClose();
+    }
+
     const fetchData = async () => {
         try {
             if (!trailData) {
@@ -244,6 +250,7 @@ const Trail = () => {
     }, []);
 
     useEffect(() => {
+        console.log('oi')
         if (trailData && trailData.soundtrack) {
             changeSoundtrack('', trailData.soundtrack);
             setChallengeInfo({
@@ -253,7 +260,13 @@ const Trail = () => {
                 remainingModules: trailData.totalModules - trailData.stamps
             });
         }
-    }, [trailData]);
+        if (trailData && userData && trailData.newScript) {
+            const narrativeId = trailData.newScript._id;
+            setScript(trailData.newScript.scriptObject);
+            setOnEndNarrative(() => () => handleCloseTrailNarrative(userData._id, narrativeId));
+            narrativeOnOpen();
+        }
+    }, [trailData, userData]);
 
     return (
         <>

@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export interface IScript {
+    name: string;
+    image: string;
+    texts: string[];
+}
 export interface Question {
     _id: string;
     description: string;
@@ -59,6 +64,12 @@ export interface Trail {
     oracle: {
         isAvailable: boolean,
         isBlocked: boolean,
+    };
+    newScript?: {
+        _id: string;
+        quantModule: number;
+        trailName: string;
+        scriptObject: IScript[];
     }
 }
 

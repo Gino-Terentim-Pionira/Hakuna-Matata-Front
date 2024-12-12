@@ -66,4 +66,11 @@ export class UserServices {
     ) => {
         await api.post(`/user/resendconfirmation`, { email });
     }
+
+    addNarrativeToUser = async (
+        _userId: string,
+        narrative_id: string,
+    ) => {
+        await api.patch(`/user/addnarrative/${_userId}`, { narrative_id });
+    }
 }

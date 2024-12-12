@@ -27,8 +27,8 @@ interface userDataProps {
 
 const RandomRewardModal = () => {
     const { userData, getNewUserInfo } = useUser();
-    const [randomNumber, setRandomNumber] = useState(false);
-    const [coins, setCoins] = useState(0);
+    const [randomNumber, setRandomNumber] = useState(true);
+    const [coins, setCoins] = useState(6);
     const [onError, setOnError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
