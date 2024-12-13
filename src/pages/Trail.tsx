@@ -24,9 +24,13 @@ import { Question, IScript } from '../recoil/trailRecoilState';
 import FinalChallengeQuiz from '../components/Quiz/FinalChallengeQuiz';
 import api from '../services/api';
 import { UserServices } from '../services/UserServices';
+import { useLocation } from 'react-router-dom';
+import { LogOut } from '../services/auth';
 
 const Trail = () => {
 
+    const location = useLocation();
+    const trailName = location.state.trail as trailEnum;
     const trailService = new TrailServices();
     const userService = new UserServices();
     const { userData, getNewUserInfo } = useUser();
@@ -114,7 +118,7 @@ const Trail = () => {
                     ...prevAlertInfo,
                     isLoading: true
                 }));
-                const finalQuestions = await trailService.startFinalChallenge(_userId as string, trailEnum.CHEETAH as string);
+                const finalQuestions = await trailService.startFinalChallenge(_userId as string, trailName as string);
                 getNewUserInfo();
 
                 setFinalChallengeInfo(finalQuestions);
@@ -141,6 +145,17 @@ const Trail = () => {
         }
 
         handleCloseChallengeModal();
+    }
+
+    const handleLogOut = () => {
+        setAlertInfo((prevAlertInfo) => ({
+            ...prevAlertInfo,
+            isOpen: true,
+            title: 'Logout',
+            body: `Tem certeza que você deseja sair da Savana?`,
+            buttonText: 'Sair',
+            buttonFunction: LogOut
+        }));
     }
 
     const openChallengeConfirmation = () => {
@@ -199,7 +214,7 @@ const Trail = () => {
             } else {
                 const challengeScript = FinalChallengeScript(
                     trailData.finalChallenge.image as string,
-                    trailEnum.CHEETAH,
+                    trailName,
                     challengeInfo.remainingModules,
                     challengeInfo.isAvailable,
                     challengeInfo.isBlocked
@@ -223,7 +238,7 @@ const Trail = () => {
 
     const handleAddNarrativeToUser = async (userId: string, narrativeId: string) => {
         await userService.addNarrativeToUser(userId, narrativeId);
-        await getNewTrailInfo(trailEnum.CHEETAH);
+        await getNewTrailInfo(trailName);
     }
 
     const handleCloseTrailNarrative = (userId: string, narrativeId: string) => {
@@ -234,7 +249,7 @@ const Trail = () => {
     const fetchData = async () => {
         try {
             if (!trailData) {
-                await getNewTrailInfo(trailEnum.CHEETAH);
+                await getNewTrailInfo(trailName);
             }
             if (!userData._id) {
                 await getNewUserInfo();
@@ -250,7 +265,6 @@ const Trail = () => {
     }, []);
 
     useEffect(() => {
-        console.log('oi')
         if (trailData && trailData.soundtrack) {
             changeSoundtrack('', trailData.soundtrack);
             setChallengeInfo({
@@ -303,14 +317,16 @@ const Trail = () => {
                             alignItems='flex-start'
                             margin='auto'
                         >
-                            <NavActions logout={() => null} />
+                            <NavActions logout={handleLogOut} />
 
                             <IgnorancePremiumIcons
                                 ignorance={userData.ignorance}
                                 showStatus={false}
-                                trail={trailEnum.CHEETAH}
+                                trail={trailName}
                                 dontShowOracle={!trailData.oracle.isAvailable}
                                 showOracle={!trailData.oracle.isBlocked}
+                                modules={trailData.trailPages[trailPageIndex].modules}
+                                stampImage={trailData.stampImage}
                             />
 
 
@@ -364,7 +380,7 @@ const Trail = () => {
                                             hasArrow
                                             placement='top'
                                             gutter={35}
-                                            label={FINAL_CHALLENGE(trailEnum.CHEETAH)}
+                                            label={FINAL_CHALLENGE(trailName)}
                                         >
                                             <Image
                                                 src={trailData.finalChallenge.icon}
@@ -553,7 +569,7 @@ const Trail = () => {
                                     onToggle={finalChallengeOnToggle}
                                     QuestionInfo={finalChallengeInfo.questions}
                                     totalQuestions={finalChallengeInfo.totalQuestions}
-                                    trailName={trailEnum.CHEETAH}
+                                    trailName={trailName}
                                     image={trailData.finalChallenge.image as string}
                                     completeModuleFunction={finishFinalChallenge}
                                 />

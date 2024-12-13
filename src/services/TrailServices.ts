@@ -1,6 +1,13 @@
 import api from './api';
 import { Question } from '../recoil/trailRecoilState';
 
+export interface IStamps {
+    trailName: string;
+    stampImage: string;
+    stamps: number;
+    statusName: string;
+}
+
 export class TrailServices {
 
     startFinalChallenge = async (userId: string, trailName: string): Promise<{
@@ -12,5 +19,11 @@ export class TrailServices {
         });
 
         return result.data;
+    }
+
+    getAllStamps = async (userId: string): Promise<IStamps[]> => {
+        const result = await api.get(`/trail/stamps/${userId}`);
+
+        return result.data.result;
     }
 }
