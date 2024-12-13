@@ -55,14 +55,22 @@ export class UserServices {
 
     addQuestionsToUser = async (
         _userId: string,
-        questions_id: string[]
+        questions_id: string[],
+        vFlag?: number
     ) => {
-        await api.patch(`/user/addquestions/${_userId}`, { questions_id });
+        await api.patch(`/user/addquestions/${_userId}`, { questions_id, vFlag });
     }
 
     resendConfirmation = async (
         email: string
     ) => {
         await api.post(`/user/resendconfirmation`, { email });
+    }
+
+    addNarrativeToUser = async (
+        _userId: string,
+        narrative_id: string,
+    ) => {
+        await api.patch(`/user/addnarrative/${_userId}`, { narrative_id });
     }
 }

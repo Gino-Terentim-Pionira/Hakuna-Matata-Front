@@ -49,6 +49,7 @@ import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
 import BaboonHelp from '../components/BaboonHelp';
+import trailEnum from '../utils/enums/trail';
 
 interface IScript {
 	name: string;
@@ -246,8 +247,12 @@ const MainPage = () => {
 	*/
 
 	const goToPath2 = () => {
-		const path = '/trilha-cheetah';
-		history.push(path);
+		history.push({
+			pathname: '/trail',
+			state: {
+				trail: trailEnum.CHEETAH
+			}
+		})
 	};
 
 	/*
