@@ -42,11 +42,9 @@ const FinalChallengeQuiz: FC<IFinalChallengeQuiz> = ({
     const userServices = new UserServices();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { getNewUserInfo, userData } = useUser();
-    const { trailData, getNewTrailInfo } = useTrail();
-    const length = QuestionInfo.length;
+    const { getNewTrailInfo } = useTrail();
     const [coins, setCoins] = useState(0);
     const [correctAnswers, setCorrectAnswers] = useState(0);
-    const [passed, setPassed] = useState(Boolean);
     const [questionsId, setQuestionsId] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
@@ -67,7 +65,6 @@ const FinalChallengeQuiz: FC<IFinalChallengeQuiz> = ({
     };
 
     const onEndQuiz = (passed: boolean) => {
-        setPassed(passed);
         onOpen();
     };
 
