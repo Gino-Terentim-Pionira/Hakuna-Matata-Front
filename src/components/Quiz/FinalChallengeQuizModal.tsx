@@ -15,7 +15,7 @@ interface IFinalChallengeQuizModal {
     })[] | [];
     onCorrect(question_id: string): void;
     onWrong(question_id: string): void;
-    onEndQuiz(passed: boolean): void;
+    onEndQuiz(): void;
     correctAnswers: number;
     openAlert?: VoidFunction;
     image: string;
@@ -38,18 +38,18 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
     const [delayButton, setDelayButton] = useState(true);
     const length = questions_id.length;
 
-    const callReward = (passed: boolean) => {
-        onEndQuiz(passed);
+    const callReward = () => {
+        onEndQuiz();
     }
 
     const handleQuestion = () => {
         if (step >= (length - 1)) {
             onToggle();
             if (correctAnswers >= length / 2) {
-                callReward(true);
+                callReward();
             }
             else {
-                callReward(false);
+                callReward();
             }
         } else {
             setStep(step + 1);

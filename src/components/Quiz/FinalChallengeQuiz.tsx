@@ -64,7 +64,7 @@ const FinalChallengeQuiz: FC<IFinalChallengeQuiz> = ({
         }
     };
 
-    const onEndQuiz = (passed: boolean) => {
+    const onEndQuiz = () => {
         onOpen();
     };
 
