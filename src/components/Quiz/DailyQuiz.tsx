@@ -13,16 +13,8 @@ import api from '../../services/api';
 import Cheetah from '../../assets/icons/cheetahblink.svg';
 import Cross from '../../assets/icons/cross.svg';
 import GenericQuizModal from './GenericQuizModal';
-import { getDailyModule } from '../../services/module';
-
-interface IQuestions {
-    _id: string,
-    description: string,
-    alternatives: string[],
-    answer: number,
-    coins: number,
-    video_name: string,
-}
+import { getDailyQuiz } from '../../services/module';
+import { Question } from '../../recoil/trailRecoilState';
 
 interface userDataProps {
     coins: number,
@@ -49,7 +41,7 @@ const DailyQuiz: FC<IDailyQuiz> = ({
     const [passed, setPassed] = useState(Boolean);
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
-    const [questions, setQuestions] = useState<IQuestions[]>([]);
+    const [questions, setQuestions] = useState<Question[]>([]);
     const [videos, setVideos] = useState<string[]>([]);
 
     const updateVideoArray = (videoArray: string[], video_name: string) => {
@@ -69,7 +61,7 @@ const DailyQuiz: FC<IDailyQuiz> = ({
 
     const onWrong = (question_id: string) => {
         const currentQuestion = questions.find((item) => item._id == question_id);
-        const video_name = currentQuestion?.video_name as string;
+        const video_name = currentQuestion?.videoName as string;
         updateVideoArray(videos, video_name);
     }
 
@@ -130,7 +122,7 @@ const DailyQuiz: FC<IDailyQuiz> = ({
 	}, []);
 
     const getQuestions = async () => {
-        const questions = await getDailyModule();
+        const questions = await getDailyQuiz();
         setQuestions(questions.data);
     }
 

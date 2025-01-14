@@ -334,31 +334,33 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                                 )
                         }
                         {
-                            !isLoading && IS_MODULE_INFO_HAS_QUESTIONS && <Button
-                                display="Button"
-                                justifyContent="center"
-                                alignItems="center"
-                                boxShadow="5px 5px 5px rgba(0, 0, 0, 0.25)"
-                                margin="auto"
-                                bottom="56px"
-                                position='absolute'
-                                bg={colorPalette.progressOrange}
-                                width="330px"
-                                height="65px"
-                                borderRadius="16px"
-                                _hover={{
-                                    transform: 'scale(1.05)',
-                                }}
-                                onClick={handleModal}
-                            >
-                                <Text
-                                    fontFamily={fontTheme.fonts}
-                                    fontSize="30px"
-                                    color={colorPalette.textColor}
+                            (!isLoading && IS_MODULE_INFO_HAS_QUESTIONS) ? (
+                                <Button
+                                    display="Button"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    boxShadow="5px 5px 5px rgba(0, 0, 0, 0.25)"
+                                    margin="auto"
+                                    bottom="56px"
+                                    position='absolute'
+                                    bg={colorPalette.progressOrange}
+                                    width="330px"
+                                    height="65px"
+                                    borderRadius="16px"
+                                    _hover={{
+                                        transform: 'scale(1.05)',
+                                    }}
+                                    onClick={handleModal}
                                 >
-                                    Ir para o desafio!
+                                    <Text
+                                        fontFamily={fontTheme.fonts}
+                                        fontSize="30px"
+                                        color={colorPalette.textColor}
+                                    >
+                                        Ir para o desafio!
                                 </Text>
-                            </Button>
+                                </Button>
+                            ) : null
                         }
                     </ModalBody>
                 </ModalContent >

@@ -142,60 +142,60 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
           mt='10px'
           alignItems='flex-end'
         >
-          {
-            !dontShowIgnorance && <Flex
-              flexDirection='column'
-              alignItems='flex-end'
-            >
-              <IgnoranceProgress
+          <Flex
+            flexDirection='column'
+            alignItems='flex-end'
+          >
+            <IgnoranceProgress
+              position='bottom'
+              ignorance={ignorance}
+            />
+            {
+              showStatus && <StatusProgress
+                status={statusPoints || 0}
                 position='bottom'
-                ignorance={ignorance}
+                labelText={statusText || ""}
+                color={statusColor || ""}
               />
-              {
-                showStatus && <StatusProgress
-                  status={statusPoints || 0}
-                  position='bottom'
-                  labelText={statusText || ""}
-                  color={statusColor || ""}
-                />
-              }
-              {
-                modules?.length ? (
-                  <Tooltip
-                    label='Complete módulos para ganhar carimbos no passaporte!'
-                    hasArrow
+            }
+            {
+              modules?.length ? (
+                <Tooltip
+                  label='Complete módulos para ganhar carimbos no passaporte!'
+                  hasArrow
+                >
+                  <Flex
+                    marginTop='16px'
+                    gap='8px'
                   >
-                    <Flex
-                      marginTop='16px'
-                      gap='8px'
-                    >
-                      {
-                        modules.map(item => {
-                          return (
-                            <StampIcon
-                              stampImage={item.isCompleted ? stampImage as string : S3_LOCKED_STAMP}
-                            />
-                          )
-                        })
-                      }
-                    </Flex>
-                  </Tooltip>
-                ) : null
-              }
-            </Flex>
-          }
+                    {
+                      modules.map(item => {
+                        return (
+                          <StampIcon
+                            stampImage={item.isCompleted ? stampImage as string : S3_LOCKED_STAMP}
+                          />
+                        )
+                      })
+                    }
+                  </Flex>
+                </Tooltip>
+              ) : null
+            }
+          </Flex>
           <CoinsDisplay
             value={userData.coins}
             position='bottom'
           />
-          <NavIcon
-            image={isIgnoranceFilterOn ? GlassesOn : Glasses}
-            mouseOver={IGNORANCE_GLASS}
-            onClick={handleIgnoranceGlasses}
-            size="normal"
-            isMap={false}
-            position="right"
-          />
+          {
+            !dontShowIgnorance && <NavIcon
+              image={isIgnoranceFilterOn ? GlassesOn : Glasses}
+              mouseOver={IGNORANCE_GLASS}
+              onClick={handleIgnoranceGlasses}
+              size="normal"
+              isMap={false}
+              position="right"
+            />
+          }
           {
             (!isIgnoranceFilterOn && isDifferentDay) && <NavIcon
               image={Daily}
