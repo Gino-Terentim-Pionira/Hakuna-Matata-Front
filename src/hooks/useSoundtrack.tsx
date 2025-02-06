@@ -35,10 +35,11 @@ export const useSoundtrack = () => {
         }
     }
 
-    const changeSoundtrack = (path: string) => {
-        if (audio.src !== soundtrackEnum[path]) {
-            audio.src = soundtrackEnum[path];
-            sessionStorage.setItem('lastSoundtrack', soundtrackEnum[path]);
+    const changeSoundtrack = (path: string, soundtrackUrl?: string) => {
+        const newSoundtrack = soundtrackUrl || soundtrackEnum[path];
+        if (audio.src !== newSoundtrack) {
+            audio.src = newSoundtrack;
+            sessionStorage.setItem('lastSoundtrack', newSoundtrack);
 
             pauseSoundtrack();
             if (soundtrackData.isPlaying)

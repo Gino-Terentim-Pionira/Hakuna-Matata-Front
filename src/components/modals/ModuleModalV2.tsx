@@ -1,68 +1,32 @@
-import React, { FC, useEffect, useState } from 'react';
-import {
-    Modal,
-    ModalContent,
-    ModalOverlay,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
-    Box,
-    Flex,
-    Button,
-    Text,
-    useDisclosure,
-    Image,
-    Tooltip
-} from "@chakra-ui/react";
-import { useUser, useModule } from '../../hooks';
-import { AxiosResponse } from 'axios';
-
-// Components
-import LoadingState from '../LoadingState';
-import VideoModal from './VideoModal';
-import TimeModal from './TimeModal';
-import AlertModal from './AlertModal';
-import ModuleQuiz from '../Quiz/ModuleQuiz';
-
-// Requisitions
-import api from '../../services/api';
-import { verifyModuleCooldown } from '../../services/moduleCooldown';
-
-// Styles
-import fontTheme from '../../styles/base';
-import styled from 'styled-components';
-
-// Images
+import React, { FC, useState, useEffect } from 'react';
+import { Module, Video } from '../../recoil/trailRecoilState';
 import button_on from '../../assets/icons/button_on.png';
 import button_off from '../../assets/icons/button_off.png';
 import button_blocked from '../../assets/icons/button_blocked.png';
-import colorPalette from '../../styles/colorPalette';
-import { errorCases } from '../../utils/errors/errorsCases';
-import VideoIcon from '../../assets/icons/video.png';
 import { MODULE_INFO } from '../../utils/constants/mouseOverConstants';
-import { getStatusPoints } from '../../utils/statusUtils';
-import { getUserAnsweredQuestions } from "../../services/module";
+import { Tooltip, Flex, Image, Modal, ModalOverlay, ModalContent, useDisclosure, Box, ModalHeader, Text, ModalCloseButton, ModalBody, Button } from '@chakra-ui/react';
+import fontTheme from '../../styles/base';
+import colorPalette from '../../styles/colorPalette';
+import styled from 'styled-components';
+import VideoIcon from '../../assets/icons/video.png';
+import { useUser, useTrail } from '../../hooks';
+import { IVideoInfo } from './ModuleModal';
+import VideoModal from './VideoModal';
+import { AxiosResponse } from 'axios';
+import { verifyModuleCooldown } from '../../services/moduleCooldown';
+import LoadingState from '../LoadingState';
+import TimeModal from './TimeModal';
+import AlertModal from './AlertModal';
+import { errorCases } from '../../utils/errors/errorsCases';
+import ModuleQuizV2 from '../Quiz/ModuleQuizV2';
+import api from '../../services/api';
 
-interface IModuleModal {
-    quizIndex: number;
+interface IModuleModalV2 {
+    moduleInfo: Module,
     top?: string;
     bottom?: string;
     left?: string;
-    isBlocked?: boolean;
-    blockedFunction?: VoidFunction;
-    openFinalModuleNarrative: VoidFunction;
 }
-
-export interface IVideoInfo {
-    id: string;
-    name: string;
-    url: string;
-    coins: number;
-    description: string;
-    nextVideoFunction?: () => void;
-    previousVideoFunction?: () => void;
-}
-
 
 const GridContainer = styled.div`
     display: grid;
@@ -91,18 +55,36 @@ const GridContainer = styled.div`
     }
 `;
 
-const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked, blockedFunction, openFinalModuleNarrative }) => {
-    //modais
+const ModuleModalV2: FC<IModuleModalV2> = ({
+    moduleInfo,
+    top,
+    bottom,
+    left
+}) => {
+    const [iconInfo, setIconInfo] = useState({
+        label: moduleInfo.moduleName,
+        description: "",
+        availabilityInfo: "",
+        availabilityColor: ""
+    });
+    const [image, setImage] = useState(button_off);
+    const [isModuleBlocked, setIsModuleBlocked] = useState(false);
+    const { userData, getNewUserInfo } = useUser();
+    const { getNewTrailInfo } = useTrail();
+    const IS_MODULE_INFO_HAS_QUESTIONS = moduleInfo.questions.length;
+    const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
+    const [isLoading, setIsLoading] = useState(false);
+    const [onError, setOnError] = useState(false);
+
     const { isOpen,
         onClose,
         onOpen,
         onToggle
     } = useDisclosure();
 
-    const { isOpen: quizIsOpen,
-        onClose: quizOnClose,
-        onOpen: quizOnOpen,
-        onToggle: quizToggle
+    const { isOpen: videoIsOpen,
+        onClose: videoOnClose,
+        onOpen: videoOnOpen,
     } = useDisclosure();
 
     const { isOpen: timeIsOpen,
@@ -116,56 +98,14 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         onToggle: verificationOnToggle
     } = useDisclosure();
 
-    const { isOpen: videoIsOpen,
-        onClose: videoOnClose,
-        onOpen: videoOnOpen,
+    const { isOpen: quizIsOpen,
+        onClose: quizOnClose,
+        onOpen: quizOnOpen,
+        onToggle: quizToggle
     } = useDisclosure();
 
-
-    // States
-    const { moduleData } = useModule();
-    const moduleInfo = moduleData[quizIndex];
-    const IS_MODULE_INFO_HAS_QUESTIONS = moduleInfo.questions_id.length > 0;
-    const { userData, getNewUserInfo } = useUser();
-    const [isLoading, setIsLoading] = useState(false);
-    const [buttonValidation, setButtonValidation] = useState(false);
-    const [totalCoins, setTotalCoins] = useState(0);
-    const [onError, setOnError] = useState(false);
-    const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
-    const [remainingCoins, setRemainingCoins] = useState(0);
-    const [iconInfo, setIconInfo] = useState({
-        label: moduleInfo.module_name,
-        description: "",
-        availabilityInfo: "",
-        availabilityColor: ""
-    })
-    const [image, setImage] = useState(button_off);
-
-    const moduleStatusName = moduleInfo.status_requirement.status_name;
-    const userStatus = getStatusPoints(userData, moduleStatusName);
-    const moduleStatus = moduleInfo.status_requirement.points;
-    const statusRequirement = userStatus >= moduleStatus;
-
-    // Metodos
-    const addUserIdToModule = async () => {
-        try {
-            const userId = sessionStorage.getItem('@pionira/userId');
-            await api.patch(`user/addmodule/${userId}`, {
-                module_id: moduleInfo._id
-            });
-            await getNewUserInfo();
-        } catch (error) {
-            setOnError(true);
-        }
-    }
-
-    const confirmationValidation = async () => {
-        if (userData) {
-            setIsLoading(true);
-            await addUserIdToModule();
-            setIsLoading(false);
-        }
-        setButtonValidation(true);
+    const handleOnCloseVideo = () => {
+        videoOnClose()
     }
 
     const handleModal = async () => {
@@ -178,11 +118,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
             if (!response.data.validation) {
                 setIsLoading(false);
                 timeOnOpen();
-            }
-            else { // Fazer requisição de moedas faltantes aqui
-                const module_name = encodeURI(moduleInfo.module_name);
-                const coins = await api.get(`module/remainingCoins/${module_name}`);
-                setRemainingCoins(coins.data);
+            } else {
                 setIsLoading(false);
                 verificationOnOpen();
             }
@@ -197,13 +133,34 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         quizOnOpen();
     }
 
+    const addUserIdToModule = async () => {
+        try {
+            const userId = sessionStorage.getItem('@pionira/userId');
+            await api.patch(`user/addmodule/${userId}`, {
+                module_id: moduleInfo._id
+            });
+            await getNewUserInfo();
+            await getNewTrailInfo(moduleInfo.trailName);
+        } catch (error) {
+            setOnError(true);
+        }
+    }
+
+    const confirmationValidation = async () => {
+        if (userData) {
+            setIsLoading(true);
+            await addUserIdToModule();
+            setIsLoading(false);
+        }
+    }
+
     const getVideoInfoWith = (offset: number, index: number) => {
-        const videoInfo = moduleInfo.videos_id[index + offset];
+        const videoInfo = moduleInfo.videos[index + offset];
         return videoInfo
             ? () =>
                 handleVideoModal(
                     videoInfo._id,
-                    videoInfo.name,
+                    videoInfo.videoName,
                     videoInfo.url,
                     videoInfo.coins,
                     videoInfo.description,
@@ -227,49 +184,38 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         videoOnOpen();
     };
 
-    const defineProperties = async () => {
-        const totalNumberOfQuestions = moduleInfo.questions_id.length;
+    const defineProperties = () => {
 
-        if (isBlocked || !statusRequirement) {
-            if (quizIndex === 0) {
-                setIconInfo({
-                    label: "Módulo indisponível",
-                    ...MODULE_INFO('blocked', 0, 0),
-                    description: "Este módulo não está disponível ainda, aguarde para mais atualizações..."
-                })
-            } else {
-                setIconInfo({
-                    ...iconInfo,
-                    ...MODULE_INFO('blocked', 0, 0)
-                })
-            }
+        const totalNumberOfQuestions = moduleInfo.questions.length;
+
+        if (!moduleInfo.videos.length || moduleInfo.isBlocked) {
+            setIconInfo({
+                ...iconInfo,
+                ...MODULE_INFO('blocked', 0, 0),
+                description: !moduleInfo.videos.length ? "Este módulo não está disponível ainda, aguarde para mais atualizações..." : "Para desbloquear este módulo, finalize 100% do anterior."
+            });
             setImage(button_blocked);
-        } else if (buttonValidation || userData.module_id?.includes(moduleInfo._id)) {
+            setIsModuleBlocked(true);
+        } else if (moduleInfo.isCompleted) {
             setIconInfo({
                 ...iconInfo,
                 ...MODULE_INFO('complete', totalNumberOfQuestions, totalNumberOfQuestions),
-            })
+            });
+            setIsModuleBlocked(false);
             setImage(button_on);
         } else {
-            let totalNumberOfAnsweredQuesitons = 0;
-            try {
-                const response = await getUserAnsweredQuestions(moduleInfo.module_name);
-                totalNumberOfAnsweredQuesitons = response.data
-            } catch (e) {
-                totalNumberOfAnsweredQuesitons = 0
-            }
-
             setIconInfo({
                 ...iconInfo,
-                ...MODULE_INFO('incomplete', totalNumberOfAnsweredQuesitons, totalNumberOfQuestions),
-            })
+                ...MODULE_INFO('incomplete', totalNumberOfQuestions - moduleInfo.questionsRemaining, totalNumberOfQuestions),
+            });
+            setIsModuleBlocked(false);
             setImage(button_off);
         }
     }
 
-    const handleOnCloseVideo = () => {
-        videoOnClose()
-    }
+    useEffect(() => {
+        defineProperties();
+    }, [moduleInfo]);
 
     const renderTooltip = () => {
         return <>
@@ -281,10 +227,9 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
         </>
     }
 
-    useEffect(() => {
-        setTotalCoins(moduleInfo.total_coins);
-        defineProperties().finally();
-    }, [userData, statusRequirement])
+    const handleOpenModule = () => {
+        isModuleBlocked ? null : onOpen();
+    }
 
     return (
         <>
@@ -293,6 +238,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 placement='top'
                 gutter={12}
                 label={renderTooltip()}
+                closeOnClick={false}
             >
                 <Flex
                     position="absolute"
@@ -305,12 +251,11 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 >
                     <Image
                         src={image}
-                        onClick={isBlocked || !statusRequirement ? blockedFunction : onOpen}
+                        onClick={handleOpenModule}
                         _hover={{
-                            cursor: 'pointer',
+                            cursor: isModuleBlocked ? 'not-allowed' : 'pointer',
                             transform: 'scale(1.1)',
                         }}
-
                         transition='all 0.2s ease'
                         width={[116, null, null, null, null, 180]}
                         height={[70, null, null, null, null, 110]}
@@ -333,7 +278,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                         borderTopStartRadius='5px'
                     />
                     <ModalHeader d='flex' justifyContent='center'>
-                        <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{moduleInfo.module_name}</Text>
+                        <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{moduleInfo.moduleName}</Text>
                         <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     </ModalHeader>
 
@@ -344,104 +289,94 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                     <LoadingState />
                                 </Box>
                             ) : (
-                                    <>
-                                        <GridContainer>
-                                            {
-                                                moduleInfo.videos_id.map(({ _id, name, url, description, coins, thumbnail }: {
-                                                    name: string,
-                                                    url: string,
-                                                    description: string,
-                                                    _id: string,
-                                                    coins: number,
-                                                    thumbnail?: string
-                                                }, index) => {
-                                                    return (
-                                                        <Flex
-                                                            className='videoCardContainer'
-                                                            width="297px"
-                                                            height="auto"
-                                                            borderRadius="8px"
-                                                            flexDir="column"
-                                                            boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
-                                                            bg={"#FEFEFE"}
-                                                            onClick={() => handleVideoModal(_id, name, url, coins, description, index)}
-                                                            transition="ease 200ms"
-                                                            _hover={{
-                                                                cursor: 'pointer',
-                                                                opacity: '0.8'
-                                                            }}
-                                                            key={_id}
-                                                        >
-                                                            <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="165px" bg={colorPalette.textColor}>
-                                                                <Image height={thumbnail ? '' : '59px'} src={thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
-                                                            </Flex>
-                                                            <Flex flexDir="column" paddingX="16px" marginTop="24px">
-                                                                <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
-                                                                    {name}
-                                                                </Text>
-                                                                <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
-                                                                    {description}
-                                                                </Text>
-                                                                {
-                                                                    userData?.video_id.includes(_id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
-                                                                        Já assistido
-                                                                    </Text>
-                                                                }
-
-                                                            </Flex>
+                                    <GridContainer>
+                                        {
+                                            moduleInfo.videos.map((video: Video, index) => {
+                                                return (
+                                                    <Flex
+                                                        className='videoCardContainer'
+                                                        width="297px"
+                                                        height="auto"
+                                                        borderRadius="8px"
+                                                        flexDir="column"
+                                                        boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
+                                                        bg={"#FEFEFE"}
+                                                        onClick={() => handleVideoModal(video._id, video.videoName, video.url, video.coins, video.description, index)}
+                                                        transition="ease 200ms"
+                                                        _hover={{
+                                                            cursor: 'pointer',
+                                                            opacity: '0.8'
+                                                        }}
+                                                        key={video._id}
+                                                    >
+                                                        <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="165px" bg={colorPalette.textColor}>
+                                                            <Image height={video.thumbnail ? '' : '59px'} src={video.thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
                                                         </Flex>
-                                                    )
-                                                })
-                                            }
-                                        </GridContainer>
-                                    </>
+                                                        <Flex flexDir="column" paddingX="16px" marginTop="24px">
+                                                            <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
+                                                                {video.videoName}
+                                                            </Text>
+                                                            <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
+                                                                {video.description}
+                                                            </Text>
+                                                            {
+                                                                userData?.video_id.includes(video._id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
+                                                                    Já assistido
+                                                    </Text>
+                                                            }
+
+                                                        </Flex>
+                                                    </Flex>
+                                                )
+                                            })
+                                        }
+                                    </GridContainer>
                                 )
                         }
                         {
-                            !isLoading && IS_MODULE_INFO_HAS_QUESTIONS && <Button
-                                display="Button"
-                                justifyContent="center"
-                                alignItems="center"
-                                boxShadow="5px 5px 5px rgba(0, 0, 0, 0.25)"
-                                margin="auto"
-                                bottom="56px"
-                                position='absolute'
-                                bg={colorPalette.progressOrange}
-                                width="330px"
-                                height="65px"
-                                borderRadius="16px"
-                                _hover={{
-                                    transform: 'scale(1.05)',
-                                }}
-                                onClick={() => handleModal()}
-                            >
-                                <Text
-                                    fontFamily={fontTheme.fonts}
-                                    fontSize="30px"
-                                    color={colorPalette.textColor}
+                            (!isLoading && IS_MODULE_INFO_HAS_QUESTIONS) ? (
+                                <Button
+                                    display="Button"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    boxShadow="5px 5px 5px rgba(0, 0, 0, 0.25)"
+                                    margin="auto"
+                                    bottom="56px"
+                                    position='absolute'
+                                    bg={colorPalette.progressOrange}
+                                    width="330px"
+                                    height="65px"
+                                    borderRadius="16px"
+                                    _hover={{
+                                        transform: 'scale(1.05)',
+                                    }}
+                                    onClick={handleModal}
                                 >
-                                    Ir para o desafio!
+                                    <Text
+                                        fontFamily={fontTheme.fonts}
+                                        fontSize="30px"
+                                        color={colorPalette.textColor}
+                                    >
+                                        Ir para o desafio!
                                 </Text>
-                            </Button>
+                                </Button>
+                            ) : null
                         }
                     </ModalBody>
                 </ModalContent >
             </Modal >
 
+            <TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} />
+
             {
-                moduleInfo && IS_MODULE_INFO_HAS_QUESTIONS ? <ModuleQuiz
+                moduleInfo && IS_MODULE_INFO_HAS_QUESTIONS ? <ModuleQuizV2
                     openModal={quizIsOpen}
                     closeModal={quizOnClose}
                     moduleInfo={moduleInfo}
                     onToggle={quizToggle}
-                    validateUser={confirmationValidation}
-                    userQuizCoins={totalCoins - remainingCoins}
-                    remainingCoins={remainingCoins}
-                    openFinalModuleNarrative={openFinalModuleNarrative}
+                    completeModuleFunction={confirmationValidation}
                 /> : null
             }
-
-            <TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} />
 
             <Modal isOpen={verificationIsOpen} onClose={verificatioOnClose} size='3xl' >
                 <ModalOverlay />
@@ -463,11 +398,11 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
 
                     <ModalBody d='flex' w='80%' flexDirection='column' justifyContent='space-evenly'>
                         {
-                            buttonValidation || userData.module_id?.includes(moduleInfo._id) ? (
+                            userData.module_id?.includes(moduleInfo._id) ? (
                                 <>
                                     <div>
                                         {
-                                            remainingCoins == 0 ? (
+                                            moduleInfo.coinsRemaining == 0 ? (
                                                 <>
                                                     <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
                                                         Voce já provou por completo seu valor nesse desafio!
@@ -488,7 +423,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                                                             Deseja realizar o desafio novamente?
                                                     </Text>
                                                         <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
-                                                            Joias restantes {remainingCoins}
+                                                            Joias restantes {moduleInfo.coinsRemaining}
                                                         </Text>
                                                     </>
                                                 )
@@ -541,6 +476,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                     </Button>
                 }
             />
+
             <VideoModal
                 id={videoInfo.id}
                 name={videoInfo.name}
@@ -554,7 +490,7 @@ const ModuleModal: FC<IModuleModal> = ({ quizIndex, top, bottom, left, isBlocked
                 previousVideoFunction={videoInfo.previousVideoFunction}
             />
         </>
-    );
+    )
 }
 
-export default ModuleModal;
+export default ModuleModalV2;

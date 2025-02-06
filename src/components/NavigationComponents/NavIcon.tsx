@@ -1,15 +1,14 @@
 import { Center, Image, Tooltip } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 import icon_map from '../../assets/icons/icon_map.svg';
 import icon_map_opened from '../../assets/icons/icon_map_opened.svg';
 import colorPalette from '../../styles/colorPalette';
 import { PositionProps } from '../../utils/props';
 import UserAvatar from '../UserAvatar';
 import { useUser } from '../../hooks';
-import { PiSpeakerSimpleHighFill, PiSpeakerSimpleSlashFill } from "react-icons/pi";
 
 type NavIconProps = {
-    image: string | 'profile' | 'soundtrackMute' | 'soundtrackUnmute';
+    image: string | ReactElement;
     onClick: VoidFunction;
     size: 'big' | 'normal' | 'small';
     isMap?: boolean;
@@ -38,11 +37,7 @@ const NavIcon: FC<NavIconProps> = ({
     }
 
     const renderIcon = () => {
-        if(image === 'soundtrackMute') {
-           return <PiSpeakerSimpleSlashFill color={colorPalette.closeButton} size={39} />
-        } else if(image === 'soundtrackUnmute') {
-            return <PiSpeakerSimpleHighFill size={39} />
-        } else {
+        if (typeof image === 'string') {
             return (
                 image === 'profile' ?
                     <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="52px" height="52px" marginBottom="4px" />
@@ -65,7 +60,7 @@ const NavIcon: FC<NavIconProps> = ({
                         }
                     />
             )
-        }
+        } else return image;
     }
 
     return (

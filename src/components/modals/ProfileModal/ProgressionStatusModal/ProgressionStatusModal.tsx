@@ -1,65 +1,122 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    Stack,
     Flex,
-    Box
+    Text,
+    Grid,
+    Tooltip
 } from "@chakra-ui/react"
 import { useUser } from '../../../../hooks';
 
 // Components
 import LoadingState from '../../../LoadingState';
 import IgnoranceProgress from '../../../IgnoranceCoinsDisplay/IgnoranceProgress';
-import StatusProgressionBar from './StatusProgressionBar';
-import { AGILITY, LEADERSHIP } from '../../../../utils/constants/statusConstants';
-import { getStatusPoints } from '../../../../utils/statusUtils';
 
 // Images
 import CoinsDisplay from '../../../IgnoranceCoinsDisplay/CoinsDisplay';
-import UserAvatar from '../../../UserAvatar';
+import { IStamps, TrailServices } from '../../../../services/TrailServices';
+import StampIcon from '../../../StampIcon';
+import fontTheme from '../../../../styles/base';
+import colorPalette from '../../../../styles/colorPalette';
 
 
 const ProgressionStatusModal = () => {
     const { userData } = useUser();
+    const trailService = new TrailServices();
+    const [stamps, setStamps] = useState<IStamps[]>();
+
+    const fetchStampsInfo = async (userId: string) => {
+        if (!stamps) {
+            const stampsInfo = await trailService.getAllStamps(userId);
+            setStamps(stampsInfo);
+        }
+    }
+
+    useEffect(() => {
+        fetchStampsInfo(userData._id);
+    }, []);
 
     return (
-        <Flex h="100%" w="100%" flexDirection="column" alignItems="center" justifyContent="space-evenly">
+        <Flex h="100%" w="100%" flexDirection="column">
+            <Flex w="90%" flexDirection="row" alignSelf='center' justifyContent="space-between" alignItems="flex-end" marginTop='24px' >
+                <IgnoranceProgress
+                    ignorance={userData.ignorance}
+                    position='top'
+                />
+                <CoinsDisplay
+                    value={userData.coins}
+                    position='top'
+                />
+            </Flex>
+
             {
-                userData.status !== undefined ? (
-                    <>
-                        <Flex w="95%" flexDirection="row" marginTop='1.2rem' alignItems="flex-end" justifyContent="space-between">
-                            <Box w="35%">
-                                <Stack w="100%">
-                                    <StatusProgressionBar color="orange" status={getStatusPoints(userData, AGILITY)} label="Agilidade (AGI)" isOnLeft isBlocked={userData.narrative_status.trail1 < 2} />
-                                    <StatusProgressionBar status={0} marginTop="4px" label="Inovação (INO)" isOnLeft isBlocked />
-                                    <StatusProgressionBar status={0} marginTop="4px" label="Estratégia (EST)" isOnLeft isBlocked />
-                                </Stack>
-                            </Box>
-                            <Box display='flex' flexDirection='column' alignItems='center'>
-                                <UserAvatar customAvatar={userData.custom_avatar} width="180px" height="180px" />
-                            </Box>
-                            <Box w="35%">
-                                <Stack w="100%">
-                                    <StatusProgressionBar status={getStatusPoints(userData, LEADERSHIP)} isBlocked label="Liderança (LID)" />
-                                    <StatusProgressionBar status={0} isBlocked marginTop="4px" label="Gestão de mudanças (GM)" />
-                                    <StatusProgressionBar status={0} isBlocked marginTop="4px" label="Gestão de projetos (GP)" />
-                                </Stack>
-                            </Box>
-                        </Flex>
-                        <Flex w="90%" h="25%" flexDirection="row" justifyContent="space-between" alignItems="flex-end" marginBottom='1rem' >
-                            <IgnoranceProgress
-                                ignorance={userData.ignorance}
-                                position='top'
-                            />
-                            <CoinsDisplay
-                                value={userData.coins}
-                                position='top'
-                            />
-                        </Flex>
-                    </>
+                stamps ? (
+                    <Grid
+                        marginTop='32px'
+                        marginLeft='24px'
+                        templateColumns='repeat(5, 1fr)'
+                        gap='32px'
+                        maxHeight="350px"
+                        overflowY="auto"
+                        sx={{
+                            "&::-webkit-scrollbar": {
+                                width: "4px",
+                                height: "4px",
+                                borderRadius: "8px"
+                            },
+                            "&::-webkit-scrollbar-thumb": {
+                                background: "#9D9D9D",
+                                borderRadius: "10px"
+                            },
+                            "&::-webkit-scrollbar-thumb:hover": {
+                                background: "#555",
+                            },
+                            "&::-moz-scrollbar": {
+                                width: "4px",
+                                height: "4px",
+                                borderRadius: "8px"
+                            },
+                            "&::-moz-scrollbar-thumb": {
+                                background: "#9D9D9D",
+                                borderRadius: "10px"
+                            },
+                            "&::-moz-scrollbar-thumb:hover": {
+                                background: "#555",
+                            },
+                        }}
+                    >
+                        {
+                            stamps.map(item => {
+                                return (
+                                    <Tooltip
+                                        placement='right'
+                                        hasArrow
+                                        label={`Você possui ${item.stamps} carimbo${item.stamps == 1 ? '' : 's'} de ${item.statusName} da trilha do ${item.trailName}`}
+                                    >
+                                        <Flex
+                                            alignItems='center'
+                                        >
+                                            <StampIcon
+                                                stampImage={item.stampImage}
+                                                size='100px'
+                                            />
+                                            <Text
+                                                marginLeft='12px'
+                                                fontFamily={fontTheme.fonts}
+                                                fontWeight='bold'
+                                                fontSize='36'
+                                                color={colorPalette.greyText}
+                                            > {item.stamps}x </Text>
+                                        </Flex>
+                                    </Tooltip>
+                                )
+                            })
+                        }
+                    </Grid>
                 ) : (
                         <LoadingState />
                     )
             }
+
         </Flex>
 
     )

@@ -56,6 +56,8 @@ export const SURPRISE_CHEST = 'Abrir baú surpresa';
 
 export const CHEETAH_FINAL = 'Desafio Final do Cheetah';
 
+export const FINAL_CHALLENGE = (trail: string) => `Desafio Final - ${trail}`;
+
 export const BACK_BUTTON = 'Voltar';
 
 export const RELIC_DESCRIPTION = 'Visualizar descrição da relíquia';
