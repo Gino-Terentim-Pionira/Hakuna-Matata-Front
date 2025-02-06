@@ -125,10 +125,14 @@ const VideoModal: FC<IVideoModal> = ({
         const currentTime = state.playedSeconds;
         const timeRemaining = videoDuration - currentTime;
 
+        if (videoDuration === 0 || currentTime === 0) {
+            return;
+        }
+
         const shouldCallFallback = timeRemaining <= 300 && !userData?.video_id.includes(id) && !fallbackHasBeenCalled;
         if (shouldCallFallback) {
             setFallbackHasBeenCalled(true);
-            await handleFinishedVideo()
+            await handleFinishedVideo();
         }
     };
 
