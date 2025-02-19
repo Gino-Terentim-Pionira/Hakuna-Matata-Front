@@ -23,3 +23,5 @@ export const S3_VIDEO_ORACLE_AVAILABLE = 'https://pionira.s3.sa-east-1.amazonaws
 export const S3_VIDEO_ORACLE_UPDATED = 'https://pionira.s3.sa-east-1.amazonaws.com/animations/oracle_updated.webm';
 
 export const S3_LOCKED_STAMP = 'https://pionira.s3.sa-east-1.amazonaws.com/stamps/locked_stamp.webp';
+
+export const S3_BABOON_HELP = 'https://pionira.s3.sa-east-1.amazonaws.com/oracle/oracle_baboon.webm';
