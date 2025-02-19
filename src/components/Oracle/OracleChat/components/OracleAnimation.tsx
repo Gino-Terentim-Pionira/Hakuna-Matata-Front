@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IOracle } from '../../../../services/OracleServices';
+import { webmToMov } from '../../../../utils/algorithms/webmToMov';
 
 function OracleAnimation({
     oracleObject,
@@ -61,6 +62,7 @@ function OracleAnimation({
                 playsInline
                 style={{ ...videoStyle, opacity: opacityIdle }}
             >
+                <source src={webmToMov(oracleObject.sprite_idle as string)} type="video/quicktime" />
                 <source src={oracleObject.sprite_idle} type="video/webm" />
             </video>
             <video
@@ -71,6 +73,7 @@ function OracleAnimation({
                 style={{ ...videoStyle, opacity: opacityTalking }}
                 onEnded={onEnd}
             >
+                <source src={webmToMov(oracleObject.sprite_talking as string)} type="video/quicktime" />
                 <source src={oracleObject.sprite_talking} type="video/webm" />
             </video>
         </div>
