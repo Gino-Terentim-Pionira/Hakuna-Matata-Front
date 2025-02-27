@@ -21,10 +21,11 @@ import { useSoundtrack } from "../../../hooks/useSoundtrack";
 type TutorialTopicsModalType = {
     isOpen: boolean,
     onClose: VoidFunction,
-    selectedTopic?: string | undefined
+    selectedTopic?: string | undefined,
+    selectedIcon?: string | undefined
 }
 
-export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopicsModalType) => {
+export const TutorialModal = ({ isOpen, onClose, selectedTopic, selectedIcon }: TutorialTopicsModalType) => {
     const { userData } = useUser();
     const { pauseSoundtrack } = useSoundtrack();
     const tutorialServices = new TutorialServices();
@@ -32,9 +33,10 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
         {
             name: 'Vídeo de Boas Vindas',
             icon: cheetahBlink,
-            index: 0
+            index: 0,
         }
     ] as ITutorialTopic[]);
+    const [tutorialIcon, setTutorialIcon] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState(false);
     const [tutorialContentSelected, setTutorialContentSelected] = useState<ITutorialContent[] | undefined>();
 
@@ -44,8 +46,9 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
         onOpen: welcomeVideoOnOpen,
     } = useDisclosure();
 
-    const handleTutorialContentSelected = async (tutorialName: string) => {
+    const handleTutorialContentSelected = async (tutorialName: string, icon: string) => {
         try {
+            setTutorialIcon(icon);
             if (tutorialName == tutorialTopics[0].name) {
                 welcomeVideoOnOpen();
                 pauseSoundtrack();
@@ -91,7 +94,7 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
     }, [isOpen]);
 
     useEffect(() => {
-        if (selectedTopic) handleTutorialContentSelected(selectedTopic as string);
+        if (selectedTopic) handleTutorialContentSelected(selectedTopic as string, selectedIcon as string);
     }, [selectedTopic]);
 
     return (
@@ -112,7 +115,7 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic }: TutorialTopics
                         <LoadingState />
                     ) :
                         (tutorialContentSelected ?
-                            <TutorialContent tutorialContent={tutorialContentSelected} userData={userData} goBack={handleGoBackToTopics} />
+                            <TutorialContent tutorialContent={tutorialContentSelected} userData={userData} goBack={handleGoBackToTopics} tutorialIcon={tutorialIcon} />
                             :
                             <TutorialTopics tutorialTopics={tutorialTopics} userData={userData}
                                 onClick={handleTutorialContentSelected} />
