@@ -16,8 +16,9 @@ type TutorialContentType = {
     tutorialContent: ITutorialContent[];
     goBack: VoidFunction;
     userData: IUser;
+    tutorialIcon?: string;
 }
-export const TutorialContent = ({ tutorialContent, goBack, userData }: TutorialContentType) => {
+export const TutorialContent = ({ tutorialContent, goBack, userData, tutorialIcon }: TutorialContentType) => {
     const IS_ONLY_ONE_CONTENT = tutorialContent.length === 1;
     const [tutorialContentIndex, setTutorialContentIndex] = useState(0);
     const { tutorial_topic_name, image, content, name } = tutorialContent[tutorialContentIndex]
@@ -59,7 +60,7 @@ export const TutorialContent = ({ tutorialContent, goBack, userData }: TutorialC
                         tutorial_topic_name === "Perfil de usuário" ?
                             <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="32px"
                                 height="32px" marginBottom="4px" />
-                            : <Image src={imageIconsEnum[tutorial_topic_name]} width="32px" alt="Tutorial Icon" />
+                            : <Image src={tutorialIcon || imageIconsEnum[tutorial_topic_name]} width="32px" alt="Tutorial Icon" />
                     }
                     {tutorial_topic_name}
                 </motion.div>

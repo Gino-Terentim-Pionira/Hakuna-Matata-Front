@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 type TutorialTopicsType = {
     tutorialTopics: ITutorialTopic[];
     userData: IUser;
-    onClick: (tutorialName: string) => void
+    onClick: (tutorialName: string, icon: string) => void
 }
 
 export const TutorialTopics = ({tutorialTopics, userData, onClick}: TutorialTopicsType) => {
@@ -74,7 +74,7 @@ export const TutorialTopics = ({tutorialTopics, userData, onClick}: TutorialTopi
                                     columnGap="8px"
                                     key={name}
                                     transition='all 200ms ease'
-                                    onClick={() => onClick(name)}
+                                    onClick={() => onClick(name, icon)}
                                     _hover={{
                                         cursor: "pointer",
                                         transform: 'scale(1.05)'
