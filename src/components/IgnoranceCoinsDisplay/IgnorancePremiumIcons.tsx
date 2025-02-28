@@ -169,9 +169,10 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
                     gap='8px'
                   >
                     {
-                      modules.map(item => {
+                      modules.map((item, index) => {
                         return (
                           <StampIcon
+                            key={index}
                             stampImage={item.isCompleted ? stampImage as string : S3_LOCKED_STAMP}
                           />
                         )

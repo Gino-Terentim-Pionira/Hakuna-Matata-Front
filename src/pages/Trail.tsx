@@ -355,8 +355,8 @@ const Trail = () => {
                                     <ModuleModalV2
                                         key={item._id}
                                         moduleInfo={item}
-                                        top={modulesPositions[index].top}
-                                        left={modulesPositions[index].left}
+                                        top={item.top || modulesPositions[index].top}
+                                        left={item.left || modulesPositions[index].left}
                                     />
                                 ))
                             }

@@ -15,7 +15,7 @@ import Cross from '../../assets/icons/cross.svg';
 import GenericQuizModal from './GenericQuizModal';
 import { UserServices } from '../../services/UserServices';
 import UnlockAnimation from '../modals/UnlockAnimation';
-import { S3_VIDEO_FINISHED_MODULE, S3_VIDEO_ORACLE_UPDATED, S3_VIDEO_ORACLE_AVAILABLE } from '../../utils/constants/constants';
+import { S3_VIDEO_FINISHED_MODULE } from '../../utils/constants/constants';
 import AlertModal from '../modals/AlertModal';
 import { Module } from '../../recoil/trailRecoilState';
 
@@ -56,22 +56,24 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
     const HAS_USER_FINISHED_MODULE = moduleInfo.coinsRemaining == 0;
 
     const onCloseFirstAnimation = () => {
-        const second_animation_url = trailData?.stamps ? S3_VIDEO_ORACLE_UPDATED : S3_VIDEO_ORACLE_AVAILABLE;
         setAnimationInfo(prevState => ({
             ...prevState,
             isOpen: false
         }));
 
-        setTimeout(() => {
-            setAnimationInfo({
-                isOpen: true,
-                animation_url: second_animation_url,
-                onClose: () => setAnimationInfo(prevState => ({
-                    ...prevState,
-                    isOpen: false
-                }))
-            });
-        }, 30);
+        if (trailData && trailData.oracle.isAvailable) {
+            const second_animation_url = trailData.stamps ? trailData.oracle.updatedAnimation : trailData.oracle.availableAnimation;
+            setTimeout(() => {
+                setAnimationInfo({
+                    isOpen: true,
+                    animation_url: second_animation_url,
+                    onClose: () => setAnimationInfo(prevState => ({
+                        ...prevState,
+                        isOpen: false
+                    }))
+                });
+            }, 30);
+        }
     };
 
     const onCorrect = (question_id: string) => {
@@ -212,7 +214,7 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
                 loading={isLoading}
                 error={onError}
             />
-            <AlertModal 
+            <AlertModal
                 isOpen={isAlertOpen}
                 onClose={handleCloseAlert}
                 alertTitle='Finalizar Desafio'
