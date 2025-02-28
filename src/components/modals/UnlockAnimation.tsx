@@ -62,7 +62,7 @@ const UnlockAnimation = (
                             width='1000px'
                             onEnded={onClose}
                         >
-                            <source key={animation} src={webmToMov(animation)} type="video/quicktime" />
+                            <source key={webmToMov(animation)} src={webmToMov(animation)} type="video/quicktime" />
                             <source key={animation} src={animation} type="video/webm" />
                         </video>
                     </Box>
