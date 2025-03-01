@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import "./styles/VideoBackground.css"
 
 type VideoBackgroundProps = {
     source: string | null;
@@ -10,6 +11,7 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading }) =>
     return (
         source ? (
             <video
+                className="video_background_container"
                 id="background-video"
                 autoPlay
                 loop
