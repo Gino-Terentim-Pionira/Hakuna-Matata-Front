@@ -40,11 +40,11 @@ const Routes = () => {
 			<HashRouter basename="/">
 				<SoundtrackManager />
 				<AuthProvider>
-					{
-						height < 400 || width < 450 ? (
-							<CantUseApplication/>
-						) : null
-					}
+					{/*{*/}
+					{/*	height < 400 || width < 450 ? (*/}
+					{/*		<CantUseApplication/>*/}
+					{/*	) : null*/}
+					{/*}*/}
 					<Switch>
 						<Route path='/' exact component={Home}/>
 						<Route path='/login' component={Login}/>
