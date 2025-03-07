@@ -5,6 +5,7 @@ import colorPalette from "../../../styles/colorPalette";
 import fontTheme from "../../../styles/base";
 import rightArrow from "../../../assets/icons/rightArrow.png";
 import SliderModal from "../SliderModal";
+import { trackEvent } from "../../../services/analytics";
 
 interface IScript {
     name: string,
@@ -61,6 +62,7 @@ const DefaultNarrativeModal = ({
 
             setScriptName(script[nextScriptIndex].name);
         } else {
+            trackEvent('click', 'button', 'Terminar a Narrativa');
             endScriptFunction ? endScriptFunction() :  onToggle();
         }
     }
@@ -133,6 +135,7 @@ const DefaultNarrativeModal = ({
                                 opacity: '80%'
                             }}
                             onClick={() => {
+                                trackEvent('click', 'button', 'Pular Narrativa');
                                 endScriptFunction ? endScriptFunction() :  onToggle();
                             }}
                             mr="32px"
