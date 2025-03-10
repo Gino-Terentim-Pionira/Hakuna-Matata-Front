@@ -25,6 +25,7 @@ import colorPalette from '../styles/colorPalette';
 
 // Images
 import icon_cheeta from '../assets/icons/icon_cheeta.svg';
+import icon_lion from '../assets/icons/icon_lion.svg';
 import icon_block from '../assets/icons/icon_block.svg';
 import ignorance100 from '../assets/ignorance/mainPage/ignorance_100.webp';
 import ignorance75 from '../assets/ignorance/mainPage/ignorance_75.webp';
@@ -37,7 +38,7 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import BlockedModal from '../components/modals/BlockedModal';
 import IgnoranceFilter from '../components/IgnoranceFilter';
 import TrailIcon from '../components/TrailIcon';
-import { CHEETAH_TRAIL, BLOCKED_TRAIL } from '../utils/constants/mouseOverConstants';
+import { CHEETAH_TRAIL, BLOCKED_TRAIL, LION_TRAIL } from '../utils/constants/mouseOverConstants';
 import { share } from '../services/linkedin';
 import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
@@ -240,26 +241,14 @@ const MainPage = () => {
 		}
 	}
 
-	/*
-		const goToPath1 = () => {
-			history.push('/finalTrail');
-		};
-	*/
-
-	const goToPath2 = () => {
+	const goToPath = (trailName: string) => {
 		history.push({
 			pathname: '/trail',
 			state: {
-				trail: trailEnum.CHEETAH
+				trail: trailName
 			}
 		})
 	};
-
-	/*
-		const goToPath3 = () => {
-			history.push('/trilha-leao');
-		};
-	*/
 
 	const logout = () => {
 		handleLogOutAlert();
@@ -368,7 +357,7 @@ const MainPage = () => {
 											>
 												<TrailIcon
 													image={icon_cheeta}
-													onClick={goToPath2}
+													onClick={() => goToPath(trailEnum.CHEETAH)}
 													mouseOver={CHEETAH_TRAIL}
 												/>
 											</motion.div>
@@ -400,11 +389,16 @@ const MainPage = () => {
 											right='2vw'
 											top='50vh'
 										>
-											<TrailIcon
-												image={icon_block}
-												onClick={() => setOpenBlockedModal(true)}
-												mouseOver={BLOCKED_TRAIL}
-											/>
+											<motion.div
+												animate={checkFirstTrailAcess(trailAccessEnum.LION) ? { scale: [0.8, 1, 0.8] } : false}
+												transition={{ loop: Infinity }}
+											>
+												<TrailIcon
+													image={icon_lion}
+													onClick={() => goToPath(trailEnum.LION)}
+													mouseOver={LION_TRAIL}
+												/>
+											</motion.div>
 										</Flex>
 
 									</>
