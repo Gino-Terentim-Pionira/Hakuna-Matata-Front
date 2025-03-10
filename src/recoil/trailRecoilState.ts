@@ -49,6 +49,7 @@ export interface TrailPage {
 }
 
 export interface Trail {
+    trailName: string;
     statusName: string;
     soundtrack: string;
     stamps: number;

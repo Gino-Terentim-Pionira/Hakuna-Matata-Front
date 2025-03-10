@@ -7,6 +7,9 @@ export const useTrail = () => {
     const [trailData, setTrailData] = useRecoilState(trailState);
 
     const getNewTrailInfo = async (trailName: string) => {
+        if (trailData && trailData.trailName == trailName) {
+            return;
+        }
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
             '@pionira/userId',
         );
