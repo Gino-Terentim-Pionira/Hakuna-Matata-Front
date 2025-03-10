@@ -37,6 +37,8 @@ export interface Module {
     coinsRemaining: number;
     finalChallengeImage?: string;
     isCompleted: boolean;
+    top?: string;
+    left?: string;
 }
 
 export interface TrailPage {
@@ -47,6 +49,7 @@ export interface TrailPage {
 }
 
 export interface Trail {
+    trailName: string;
     statusName: string;
     soundtrack: string;
     stamps: number;
@@ -64,6 +67,8 @@ export interface Trail {
     oracle: {
         isAvailable: boolean,
         isBlocked: boolean,
+        availableAnimation: string,
+        updatedAnimation: string
     };
     newScript?: {
         _id: string;

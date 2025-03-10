@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 type VideoBackgroundProps = {
-    source: string | null;
+    source: string | undefined;
     handleLoading?: VoidFunction
 }
 

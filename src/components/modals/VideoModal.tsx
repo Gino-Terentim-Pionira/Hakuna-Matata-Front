@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import {
     Modal,
     ModalContent,
@@ -9,6 +9,7 @@ import {
     Flex,
     Button,
     Text,
+    Checkbox,
 } from "@chakra-ui/react";
 import ReactPlayer from 'react-player';
 import { useUser } from '../../hooks';
@@ -64,6 +65,8 @@ const VideoModal: FC<IVideoModal> = ({
     const [fallbackHasBeenCalled, setFallbackHasBeenCalled] = useState(false);
     const { userData } = useUser();
     const { pauseSoundtrack } = useSoundtrack();
+    const hasWatchedVideo = userData.video_id.includes(id);
+    const [clickCheck, setClickCheck] = useState(false);
 
     const updateVideo = async () => {
         try {
@@ -84,7 +87,7 @@ const VideoModal: FC<IVideoModal> = ({
     const handleFinishedVideo = async () => {
         try {
             await updateVideo();
-            updateQuiz();
+            await updateQuiz();
         } catch (error) {
             setOnError(true);
         }
@@ -136,7 +139,14 @@ const VideoModal: FC<IVideoModal> = ({
         }
     };
 
-    const renderNavigationVideoButton = (navigationType: 'left' | 'right') => ( navigationType === 'left' ?
+    const handleCheckBox = async () => {
+        setClickCheck(true);
+        setFallbackHasBeenCalled(true);
+        await handleFinishedVideo();
+        setClickCheck(false);
+    }
+
+    const renderNavigationVideoButton = (navigationType: 'left' | 'right') => (navigationType === 'left' ?
         <Button
             marginRight='auto'
             marginTop='16px'
@@ -206,6 +216,27 @@ const VideoModal: FC<IVideoModal> = ({
                                     nextVideoFunction && renderNavigationVideoButton('right')
                                 }
                             </Flex>
+                            {
+                                !hasWatchedVideo ? (
+                                    <Flex
+                                        marginTop='16px'
+                                        alignSelf='flex-start'
+                                    >
+                                        <Checkbox
+                                            size='lg'
+                                            onChange={handleCheckBox}
+                                            disabled={clickCheck || hasWatchedVideo}
+                                        >
+                                            <Text
+                                                fontSize='16px'
+                                                fontFamily={fontTheme.fonts}
+                                            >
+                                                Declaro que assisti este vídeo na íntegra
+                                            </Text>
+                                        </Checkbox>
+                                    </Flex>
+                                ) : null
+                            }
                         </Flex>
                     </ModalBody>
                 </ModalContent >
