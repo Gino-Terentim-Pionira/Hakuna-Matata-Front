@@ -239,7 +239,7 @@ const Trail = () => {
 
     const handleAddNarrativeToUser = async (userId: string, narrativeId: string) => {
         await userService.addNarrativeToUser(userId, narrativeId);
-        await getNewTrailInfo(trailName);
+        await getNewTrailInfo(trailName, true);
     }
 
     const handleCloseTrailNarrative = (userId: string, narrativeId: string) => {

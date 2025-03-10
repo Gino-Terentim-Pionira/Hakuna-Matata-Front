@@ -6,8 +6,8 @@ import { SetStateAction } from "react";
 export const useTrail = () => {
     const [trailData, setTrailData] = useRecoilState(trailState);
 
-    const getNewTrailInfo = async (trailName: string) => {
-        if (trailData && trailData.trailName == trailName) {
+    const getNewTrailInfo = async (trailName: string, force?: boolean) => {
+        if (trailData && trailData.trailName == trailName && !force) {
             return;
         }
         const _userId: SetStateAction<string> | null = sessionStorage.getItem(
