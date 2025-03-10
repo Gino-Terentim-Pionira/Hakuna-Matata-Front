@@ -78,7 +78,7 @@ const FinalChallengeQuiz: FC<IFinalChallengeQuiz> = ({
             }
  
             await getNewUserInfo();
-            await getNewTrailInfo(trailName);
+            await getNewTrailInfo(trailName, true);
             setIsLoading(false);
         } catch (error) {
             setOnError(true);

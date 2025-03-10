@@ -137,7 +137,7 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
             }
             await updateUserQuizTime();
             await getNewUserInfo();
-            await getNewTrailInfo(moduleInfo.trailName);
+            await getNewTrailInfo(moduleInfo.trailName, true);
             if (coins >= moduleInfo.coinsRemaining) {
                 completeModuleFunction();
             }
