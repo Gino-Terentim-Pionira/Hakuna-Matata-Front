@@ -66,6 +66,7 @@ const VideoModal: FC<IVideoModal> = ({
     const { userData } = useUser();
     const { pauseSoundtrack } = useSoundtrack();
     const hasWatchedVideo = userData.video_id.includes(id);
+    const [clickCheck, setClickCheck] = useState(false);
 
     const updateVideo = async () => {
         try {
@@ -86,7 +87,7 @@ const VideoModal: FC<IVideoModal> = ({
     const handleFinishedVideo = async () => {
         try {
             await updateVideo();
-            updateQuiz();
+            await updateQuiz();
         } catch (error) {
             setOnError(true);
         }
@@ -139,8 +140,10 @@ const VideoModal: FC<IVideoModal> = ({
     };
 
     const handleCheckBox = async () => {
+        setClickCheck(true);
         setFallbackHasBeenCalled(true);
         await handleFinishedVideo();
+        setClickCheck(false);
     }
 
     const renderNavigationVideoButton = (navigationType: 'left' | 'right') => (navigationType === 'left' ?
@@ -222,7 +225,7 @@ const VideoModal: FC<IVideoModal> = ({
                                         <Checkbox
                                             size='lg'
                                             onChange={handleCheckBox}
-                                            disabled={hasWatchedVideo}
+                                            disabled={clickCheck || hasWatchedVideo}
                                         >
                                             <Text
                                                 fontSize='16px'
