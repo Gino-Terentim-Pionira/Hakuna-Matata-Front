@@ -2,7 +2,7 @@ name: Upload S3
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feat/update_cache_s3" ]
 
 jobs:
   build:
@@ -25,12 +25,29 @@ jobs:
         env:
           REACT_APP_GTM: ${{ secrets.REACT_APP_GTM }}
 
-      - name: Upload to S3
+      - name: Upload to S3 (No Cache for HTML)
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --cache-control "max-age=172800"
+          args: --cache-control "no-cache, no-store, must-revalidate" --exclude "*" --include "index.html"
         env:
           SOURCE_DIR: build/
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Upload to S3 (Cache for Static Files)
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --cache-control "max-age=31536000, immutable" --exclude "index.html"
+        env:
+          SOURCE_DIR: build/
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
