@@ -25,23 +25,17 @@ jobs:
         env:
           REACT_APP_GTM: ${{ secrets.REACT_APP_GTM }}
 
-      - name: Upload to S3 (No Cache for HTML)
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --cache-control 'no-cache,no-store,must-revalidate' --exclude "*" --include "index.html"
+      - name: Upload index.html to S3 (No Cache)
+        run: |
+          aws s3 cp build/index.html s3://${{ secrets.AWS_S3_BUCKET }}/index.html --cache-control 'no-cache,no-store,must-revalidate' --content-type 'text/html'
         env:
-          SOURCE_DIR: build/
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Upload to S3 (Cache for Static Files)
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --cache-control "max-age=31536000, immutable" --exclude "index.html"
+      - name: Upload static files to S3 (Cache Enabled)
+        run: |
+          aws s3 sync build/ s3://${{ secrets.AWS_S3_BUCKET }}/ --exclude "index.html" --cache-control 'max-age=31536000, immutable'
         env:
-          SOURCE_DIR: build/
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
