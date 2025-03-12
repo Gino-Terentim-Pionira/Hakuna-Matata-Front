@@ -33,7 +33,7 @@ export const Oracle = () => {
 		messages: [
 			{
 				role: 'assistant',
-				content: 'Seja bem vindo(a) à caverna do Oráculo. Você ganhou 1 Token gratuito para sua primeira consulta! No que posso te ajudar?'
+				content: 'Seja bem vindo(a) à caverna do Oráculo! No que posso te ajudar?'
 			}
 		] as IMessages[],
 		commonQuestions: [] as ICommonQuestion[]
