@@ -28,7 +28,6 @@ interface IgnoracenPremiumIconsInterface {
   ignorance: number;
   dontShowIgnorance?: boolean;
   showStatus?: boolean;
-  showOracle?: boolean;
   trail?: trailEnum;
   statusText?: string;
   statusPoints?: number;
@@ -38,7 +37,7 @@ interface IgnoracenPremiumIconsInterface {
   stampImage?: string;
 }
 
-const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showOracle, trail, statusText, statusPoints, statusColor, dontShowOracle, modules, stampImage }: IgnoracenPremiumIconsInterface) => {
+const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, trail, statusText, statusPoints, statusColor, dontShowOracle, modules, stampImage }: IgnoracenPremiumIconsInterface) => {
   // const {
   // 	isOpen: premiumIsOpen,
   // 	onClose: premiumOnClose,
@@ -209,10 +208,10 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, showO
           }
           {
             !dontShowOracle && <NavIcon
-              cursor={showOracle ? 'pointer' : 'not-allowed'}
+              cursor={!dontShowOracle ? 'pointer' : 'not-allowed'}
               image={OracleIcon}
-              mouseOver={showOracle ? ORACLE : BLOCKED_ORACLE}
-              onClick={showOracle ? handleOracle : () => null}
+              mouseOver={!dontShowOracle ? ORACLE : BLOCKED_ORACLE}
+              onClick={!dontShowOracle ? handleOracle : () => null}
               size="normal"
               isMap={false}
               position="right"

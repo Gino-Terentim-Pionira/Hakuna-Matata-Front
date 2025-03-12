@@ -8,9 +8,7 @@ type OracleChatType = {
 	commonQuestions: ICommonQuestion[];
 	messages: IMessages[];
 	userMessage: userMessageFunction;
-	isInputReleased?: boolean;
 	isMessageLoading: boolean;
-	isMessageFree?: boolean;
 	inicialMessage?: string;
 }
 
@@ -18,9 +16,7 @@ export const OracleChat = ({
 	commonQuestions,
 	messages,
 	userMessage,
-	isInputReleased,
 	isMessageLoading,
-	isMessageFree,
 	inicialMessage
 }: OracleChatType) => {
 	const lastMessageRef = useRef<HTMLDivElement>(null);
@@ -101,11 +97,9 @@ export const OracleChat = ({
 				}
 			</Box>
 			<OracleInput
-				isInputReleased={isInputReleased}
 				commonQuestions={commonQuestions}
 				userMessage={sendUserMessage}
 				isMessageLoading={isMessageLoading}
-				isMessageFree={isMessageFree}
 				inicialMessage={inicialMessage}
 			/>
 		</Flex>
