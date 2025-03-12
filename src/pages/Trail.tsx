@@ -324,7 +324,6 @@ const Trail = () => {
                                 dontShowIgnorance={true}
                                 trail={trailName}
                                 dontShowOracle={!trailData.oracle.isAvailable}
-                                showOracle={!trailData.oracle.isBlocked}
                                 modules={trailData.trailPages[trailPageIndex].modules}
                                 stampImage={trailData.stampImage}
                             />
