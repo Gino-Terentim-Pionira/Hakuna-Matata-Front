@@ -66,7 +66,6 @@ export interface Trail {
     };
     oracle: {
         isAvailable: boolean,
-        isBlocked: boolean,
         availableAnimation: string,
         updatedAnimation: string
     };
