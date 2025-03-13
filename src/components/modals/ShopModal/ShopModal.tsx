@@ -200,10 +200,6 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 		'normal': {
 			isSelected: quickFilterSelected === 'normal',
 			onClick: () => setQuickFilterSelected('normal')
-		},
-		'oracle': {
-			isSelected: quickFilterSelected === 'oracle',
-			onClick: () => setQuickFilterSelected('oracle')
 		}
 	}
 
@@ -214,7 +210,6 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 					<ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} color={colorPalette.primaryColor} />
 					<ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} color={colorPalette.primaryColor} />
 					<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materiais de estudo" onClick={handleQuickFilters['normal'].onClick} color={colorPalette.primaryColor} />
-					<ShopQuickFilter isSelected={handleQuickFilters['oracle'].isSelected} label="Tokens oraculo" onClick={handleQuickFilters['oracle'].onClick} color={colorPalette.primaryColor} />
 				</Flex>
 			}
 
@@ -238,19 +233,6 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 
 				{
 					((quickFilterSelected === "normal" || quickFilterSelected === "all") && shopItems && shopItems.length > 0) && shopItems.map((item) =>
-						<ShopItem
-							key={item.title}
-							onClick={() => handleShopItemInfo(item)}
-							image={item.image}
-							title={item.title}
-							type={item.type}
-							value={item.price}
-						/>
-					)
-				}
-
-				{
-					((quickFilterSelected === "oracle" || quickFilterSelected === "all") && oraclePackages && oraclePackages.length > 0) && oraclePackages.map((item) =>
 						<ShopItem
 							key={item.title}
 							onClick={() => handleShopItemInfo(item)}
