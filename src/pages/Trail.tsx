@@ -27,6 +27,7 @@ import { UserServices } from '../services/UserServices';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from '../services/auth';
 import { verifyIsDayTime } from '../utils/algorithms/date';
+import { webmToMP4 } from '../utils/algorithms/webmToOther';
 
 const Trail = () => {
 
@@ -247,6 +248,14 @@ const Trail = () => {
         narrativeOnClose();
     }
 
+    const getBackgroundAnimation = () => {
+        if (trailData) {
+            const animationURL = verifyIsDayTime() ? trailData?.trailPages[trailPageIndex].backgroundDay : trailData?.trailPages[trailPageIndex].backgroundNight;
+    
+            return webmToMP4(animationURL as string);
+        }
+    }
+
     const fetchData = async () => {
         try {
             await getNewTrailInfo(trailName);
@@ -286,7 +295,7 @@ const Trail = () => {
             <VideoBackground
                 key={trailData?.trailName}
                 handleLoading={() => setIsAnimationLoading(false)}
-                source={verifyIsDayTime() ? trailData?.trailPages[trailPageIndex].backgroundDay : trailData?.trailPages[trailPageIndex].backgroundNight}
+                source={getBackgroundAnimation()}
             />
             <AlertModal
                 isOpen={alertInfo.isOpen}

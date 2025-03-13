@@ -18,6 +18,7 @@ import { LOGIN, REGISTER } from '../utils/constants/mouseOverConstants';
 import VideoBackground from '../components/VideoBackground';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { NavSoundtrackIcon } from "../components/NavigationComponents/NavSoundtrackIcon";
+import { webmToMP4 } from '../utils/algorithms/webmToOther';
 
 const Home = () => {
 	const { authenticated } = useAuth();
@@ -34,7 +35,7 @@ const Home = () => {
 			position="relative"
 			overflow="hidden"
 		>
-			<VideoBackground source={getBackgroundAnimation(pathEnum.HOME)} />
+			<VideoBackground source={webmToMP4(getBackgroundAnimation(pathEnum.HOME))} />
 			<NavSoundtrackIcon position="absolute" left="16px" top="12px" />
 
 			<Box w='100vw' mt='5%'>
