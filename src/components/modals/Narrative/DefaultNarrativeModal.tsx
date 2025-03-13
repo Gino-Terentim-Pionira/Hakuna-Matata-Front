@@ -62,7 +62,7 @@ const DefaultNarrativeModal = ({
 
             setScriptName(script[nextScriptIndex].name);
         } else {
-            trackEvent('click', 'button', 'Terminar a Narrativa');
+            trackEvent('narrative', 'Terminar a Narrativa');
             endScriptFunction ? endScriptFunction() :  onToggle();
         }
     }
@@ -135,7 +135,7 @@ const DefaultNarrativeModal = ({
                                 opacity: '80%'
                             }}
                             onClick={() => {
-                                trackEvent('click', 'button', 'Pular Narrativa');
+                                trackEvent('narrative', 'Pular Narrativa');
                                 endScriptFunction ? endScriptFunction() :  onToggle();
                             }}
                             mr="32px"

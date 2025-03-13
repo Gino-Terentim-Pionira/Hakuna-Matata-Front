@@ -5,19 +5,16 @@ declare global {
 }
 
 interface GtagEventParams {
-    event_category: string;
-    event_label?: string;
-    value?: number;
+    'value': string;
 }
 
 
 const env = process.env.REACT_APP_ENV;
 
-export const trackEvent = (action: string, category: string, label: string) => {
+export const trackEvent = (action: string, value: string) => {
     if (window.gtag && env == 'prod') {
         window.gtag('event', action, {
-            event_category: category,
-            event_label: label
+            'value': value
         });
     }
 }
