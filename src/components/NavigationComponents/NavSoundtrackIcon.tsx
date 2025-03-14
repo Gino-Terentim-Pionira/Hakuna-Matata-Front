@@ -5,6 +5,7 @@ import {useSoundtrack} from "../../hooks/useSoundtrack";
 import { Box, BoxProps } from "@chakra-ui/react";
 import { PiSpeakerSimpleSlashFill, PiSpeakerSimpleHighFill } from "react-icons/pi";
 import colorPalette from "../../styles/colorPalette";
+import "./styles/NavSoundtrackIcon.css"
 
 export const NavSoundtrackIcon = (props: BoxProps) => {
     const { soundtrackData, playSoundtrack, pauseSoundtrack } = useSoundtrack();
@@ -19,7 +20,16 @@ export const NavSoundtrackIcon = (props: BoxProps) => {
     return (
         <Box {...props}>
             <NavIcon
-                image={soundtrackData.isPlaying ? <PiSpeakerSimpleHighFill size={39} /> : <PiSpeakerSimpleSlashFill color={colorPalette.closeButton} size={39} />}
+                image={soundtrackData.isPlaying ?
+                    <PiSpeakerSimpleHighFill
+                        className="nav_soundtrack_icon"
+                        size={39}
+                    /> :
+                    <PiSpeakerSimpleSlashFill
+                        className="nav_soundtrack_icon"
+                        color={colorPalette.closeButton}
+                        size={39}
+                    />}
                 onClick={handleSoundtrackButton}
                 size='small'
                 isMap={false}

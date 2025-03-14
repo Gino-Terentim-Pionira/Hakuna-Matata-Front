@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 // Requisitions
 import { useAuth } from '../contexts/authContext';
+import "./styles/Home.css";
 
 //styles
 import './../styles/fadeEffect.css';
@@ -39,8 +40,9 @@ const Home = () => {
 
 			<Box w='100vw' mt='5%'>
 				<Center flexDir="column">
-					<Image ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
+					<Image className="home_container_image" ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
 					<Flex
+						className="home_container_sub_container"
 						gap="72px"
 						flexDirection='row'
 						align='center'
