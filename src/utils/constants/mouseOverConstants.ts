@@ -24,6 +24,8 @@ export const MAP = 'Voltar para seleção de trilhas';
 
 export const CHEETAH_TRAIL = 'Trilha do Cheetah';
 
+export const LION_TRAIL = 'Trilha do Leão e da Leoa';
+
 export const BLOCKED_TRAIL = 'Trilha Bloqueada';
 
 export const WISDOM = 'Seu progresso na luta contra a Ignorância';
@@ -74,7 +76,7 @@ export const DAILY_QUIZ = "Desafio diário";
 
 export const ORACLE = "Consultar o Oráculo";
 
-export const BLOCKED_ORACLE = "Complete o primeiro módulo para desbloquear o Oráculo!";
+export const BLOCKED_ORACLE = "O Oráculo ainda não está disponível";
 
 export const NOT_ENOUGH_STATUS = (statusName: string) => `Seu nivel de ${statusName} não é o suficiente para comprar esse item!`
 

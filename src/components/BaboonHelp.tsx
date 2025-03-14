@@ -211,9 +211,7 @@ const BaboonHelp = () => {
                                             commonQuestions={oracleObject.commonQuestions}
                                             messages={oracleObject.messages}
                                             userMessage={sendMessage}
-                                            isInputReleased={true}
                                             isMessageLoading={isMessageLoading}
-                                            isMessageFree={true}
                                             inicialMessage='Estou perdido nesta Savana, o que posso fazer?'
                                         />
                                     </Flex>

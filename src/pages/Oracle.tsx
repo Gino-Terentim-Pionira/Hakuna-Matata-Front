@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Button, useDisclosure } from '@chakra-ui/react';
+import { Flex, Button } from '@chakra-ui/react';
 import fontTheme from '../styles/base';
 import { OracleHeader } from '../components/Oracle/OracleHeader';
 import { OracleChat } from '../components/Oracle/OracleChat/OracleChat';
@@ -9,33 +9,20 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import AlertModal from '../components/modals/AlertModal';
 import colorPalette from '../styles/colorPalette';
 import { useHistory, useLocation } from 'react-router-dom';
-import { ShopModal } from '../components/modals/ShopModal/ShopModal';
 import { useUser } from '../hooks';
-import { IUser } from '../recoil/useRecoilState';
 import OracleAnimation from '../components/Oracle/OracleChat/components/OracleAnimation';
-import GenericModal from "../components/modals/GenericModal";
-import { PiWarningFill } from "react-icons/pi";
 import { useSoundtrack } from '../hooks/useSoundtrack';
 import useShopItems from '../hooks/useShopItems';
-
-const FinalQuizCompleteEnum: { [key: string]: keyof IUser['finalQuizComplete'] } = {
-	'Cheetah': 'cheetahFinal',
-	'Mamba Negra': 'blackMamba',
-	'Leão e Leoa': 'lionFinal'
-}
 
 export const Oracle = () => {
 	const { userData, getNewUserInfo } = useUser();
 	const history = useHistory();
 	const location = useLocation();
-	const IS_FINAL_QUIZ_COMPLETE = userData.finalQuizComplete ? userData.finalQuizComplete[FinalQuizCompleteEnum[location?.state?.trail as trailEnum]] : false;
 	const oracleService = new OracleServices();
 	const { changeSoundtrack } = useSoundtrack();
-	const { isOpen: isShopModalOpen, onOpen: onOpenShopModal, onClose: onCloseShopModal } = useDisclosure();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isMessageLoading, setIsMessageLoading] = useState(false);
 	const [isTalking, setIsTalking] = useState<boolean>(false);
-	const [isAlertTokenModalOpen, setIsAlertTokenModalOpen] = useState(false);
 	const [oracleObject, setOracleObject] = useState({
 		oracle_name: "",
 		background: "",
@@ -46,7 +33,7 @@ export const Oracle = () => {
 		messages: [
 			{
 				role: 'assistant',
-				content: 'Seja bem vindo(a) à caverna do Oráculo. Você ganhou 1 Token gratuito para sua primeira consulta! No que posso te ajudar?'
+				content: 'Seja bem vindo(a) à caverna do Oráculo! No que posso te ajudar?'
 			}
 		] as IMessages[],
 		commonQuestions: [] as ICommonQuestion[]
@@ -164,17 +151,6 @@ export const Oracle = () => {
 		fetchData().then();
 	}, []);
 
-	useEffect(() => {
-		const handleAlertModal = () => {
-			if (userData.oracle_messages === 0)
-				setIsAlertTokenModalOpen(true)
-		}
-		if (!isLoading && userData.userName)
-			setTimeout(() => {
-				handleAlertModal()
-			}, 200);
-	}, [isLoading]);
-
 	return (
 		<>
 			{
@@ -189,10 +165,8 @@ export const Oracle = () => {
 							alignItems="center"
 							fontFamily={fontTheme.fonts}
 						>
-							<ShopModal shopItems={oraclePackagesItemData} isOpen={isShopModalOpen} onClose={onCloseShopModal} />
 							<OracleHeader
 								oracleName={oracleObject.oracle_name}
-								onOpen={onOpenShopModal}
 							/>
 
 							<Flex
@@ -216,7 +190,6 @@ export const Oracle = () => {
 									alignItems="center"
 								>
 									<OracleChat
-										isInputReleased={IS_FINAL_QUIZ_COMPLETE}
 										commonQuestions={oracleObject.commonQuestions}
 										messages={oracleObject.messages}
 										userMessage={sendOracleMessage}
@@ -242,26 +215,6 @@ export const Oracle = () => {
 						{alert.buttonText}
 					</Button>
 				}
-			/>
-
-			<GenericModal
-				genericModalInfo={{
-					title: "Espere um pouco!",
-					titleColor: "#F0C05D",
-					subtitle: "Você está sem Tokens para poder conversar com o Oráculo. Acesse a Loja para consultar os Pacotes de Tokens!",
-					icon: <PiWarningFill size={80} fill="#FFBC33" />,
-					firstButton: "Acessar loja",
-					secondButton: "Continuar"
-				}}
-				isOpen={isAlertTokenModalOpen}
-				confirmFunction={() => {
-					onOpenShopModal();
-					setIsAlertTokenModalOpen(false)
-				}}
-				secondFunction={() => setIsAlertTokenModalOpen(false)}
-				closeFunction={() => setIsAlertTokenModalOpen(false)}
-				loading={false}
-				error={false}
 			/>
 		</>
 	);

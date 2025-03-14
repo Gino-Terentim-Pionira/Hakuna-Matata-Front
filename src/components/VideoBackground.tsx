@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import "./styles/VideoBackground.css"
 
 type VideoBackgroundProps = {
-    source: string | null;
+    source: string | undefined;
     handleLoading?: VoidFunction
 }
 

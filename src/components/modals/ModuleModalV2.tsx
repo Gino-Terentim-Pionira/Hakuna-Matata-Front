@@ -140,7 +140,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                 module_id: moduleInfo._id
             });
             await getNewUserInfo();
-            await getNewTrailInfo(moduleInfo.trailName);
+            await getNewTrailInfo(moduleInfo.trailName, true);
         } catch (error) {
             setOnError(true);
         }

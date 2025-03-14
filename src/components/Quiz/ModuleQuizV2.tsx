@@ -62,7 +62,7 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
         }));
 
         if (trailData && trailData.oracle.isAvailable) {
-            const second_animation_url = trailData.stamps ? trailData.oracle.updatedAnimation : trailData.oracle.availableAnimation;
+            const second_animation_url = trailData.oracle.updatedAnimation;
             setTimeout(() => {
                 setAnimationInfo({
                     isOpen: true,
@@ -137,7 +137,7 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
             }
             await updateUserQuizTime();
             await getNewUserInfo();
-            await getNewTrailInfo(moduleInfo.trailName);
+            await getNewTrailInfo(moduleInfo.trailName, true);
             if (coins >= moduleInfo.coinsRemaining) {
                 completeModuleFunction();
             }

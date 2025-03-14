@@ -26,6 +26,7 @@ import api from '../services/api';
 import { UserServices } from '../services/UserServices';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from '../services/auth';
+import { verifyIsDayTime } from '../utils/algorithms/date';
 
 const Trail = () => {
 
@@ -238,7 +239,7 @@ const Trail = () => {
 
     const handleAddNarrativeToUser = async (userId: string, narrativeId: string) => {
         await userService.addNarrativeToUser(userId, narrativeId);
-        await getNewTrailInfo(trailName);
+        await getNewTrailInfo(trailName, true);
     }
 
     const handleCloseTrailNarrative = (userId: string, narrativeId: string) => {
@@ -248,9 +249,7 @@ const Trail = () => {
 
     const fetchData = async () => {
         try {
-            if (!trailData) {
-                await getNewTrailInfo(trailName);
-            }
+            await getNewTrailInfo(trailName);
             if (!userData._id) {
                 await getNewUserInfo();
             }
@@ -285,9 +284,9 @@ const Trail = () => {
     return (
         <>
             <VideoBackground
-                key={trailPageIndex}
+                key={trailData?.trailName}
                 handleLoading={() => setIsAnimationLoading(false)}
-                source={trailData?.trailPages[trailPageIndex].backgroundDay || null}
+                source={verifyIsDayTime() ? trailData?.trailPages[trailPageIndex].backgroundDay : trailData?.trailPages[trailPageIndex].backgroundNight}
             />
             <AlertModal
                 isOpen={alertInfo.isOpen}
@@ -325,7 +324,6 @@ const Trail = () => {
                                 dontShowIgnorance={true}
                                 trail={trailName}
                                 dontShowOracle={!trailData.oracle.isAvailable}
-                                showOracle={!trailData.oracle.isBlocked}
                                 modules={trailData.trailPages[trailPageIndex].modules}
                                 stampImage={trailData.stampImage}
                             />

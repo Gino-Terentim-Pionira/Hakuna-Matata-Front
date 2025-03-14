@@ -60,7 +60,6 @@ import BlockedModal from '../components/modals/BlockedModal';
 import cheetahTeasing from '../utils/scripts/CheetahTrail/CheetahTeasing';
 import buildModuleEndScript from '../utils/scripts/BuildModuleEndScript';
 import trailEnum from '../utils/enums/trail';
-import { numberCompletedModules } from '../utils/oracleUtils';
 import VideoBackground from '../components/VideoBackground';
 import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
@@ -457,7 +456,6 @@ const CheetahPath = () => {
                                     statusText={STATUS_LEVEL(AGILITY)}
                                     statusPoints={getStatusPoints(userData, AGILITY)}
                                     statusColor={colorPalette.primaryColor}
-                                    showOracle={numberCompletedModules(moduleData, userData.module_id) >= 1}
                                     trail={trailEnum.CHEETAH}
                                 />
                             )}
