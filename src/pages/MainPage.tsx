@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom';
 import {
 	useDisclosure,
 	Flex,
-	Button
+	Button,
+	Box
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 import "./styles/MainPage.css";
@@ -51,6 +52,8 @@ import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
 import BaboonHelp from '../components/BaboonHelp';
 import trailEnum from '../utils/enums/trail';
+import { MobileIgnorancePremiumIcons } from '../components/IgnoranceCoinsDisplay/MobileIgnorancePremiumIcons';
+import { MobileNavIcon } from '../components/NavigationComponents/MobileNavIcon';
 
 interface IScript {
 	name: string;
@@ -303,6 +306,8 @@ const MainPage = () => {
 
 	return (
 		<div className="main_page_container">
+			<MobileIgnorancePremiumIcons />
+			<MobileNavIcon onClick={() => console.log("hello world")} />
 			<div className="container">
 				<div className="wrapper">
 					<VideoBackground className="main_page_container_video_background"
@@ -360,14 +365,15 @@ const MainPage = () => {
 											/>
 										</Flex>
 
-										{/*<Box*/}
-										{/*	position='absolute'*/}
-										{/*	width='22%'*/}
-										{/*	left='60vw'*/}
-										{/*	top='52vh'*/}
-										{/*>*/}
-										{/*	<BaboonHelp />*/}
-										{/*</Box>*/}
+										<Box
+											className="main_page_container_baboon_icon"
+											position='absolute'
+											width='22%'
+											left='60vw'
+											top='52vh'
+										>
+											<BaboonHelp />
+										</Box>
 
 										<Flex
 											position='absolute'

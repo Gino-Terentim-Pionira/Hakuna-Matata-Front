@@ -54,6 +54,14 @@
     }
 }
 
+.main_page_container_baboon_icon {
+    @media (max-width: 767px) {
+        width: 340px !important;
+        left: 855px !important;
+        top: 50% !important;
+    }
+}
+
 .main_page_container_lion_trail_icon {
     @media (max-width: 767px) {
         width: 80px !important;
