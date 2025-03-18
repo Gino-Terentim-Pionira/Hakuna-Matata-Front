@@ -51,7 +51,6 @@ import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
 import BaboonHelp from '../components/BaboonHelp';
 import trailEnum from '../utils/enums/trail';
-import { webmToMP4 } from '../utils/algorithms/webmToOther';
 
 interface IScript {
 	name: string;
@@ -304,7 +303,7 @@ const MainPage = () => {
 
 	return (
 		<>
-			<VideoBackground handleLoading={() => setIsAnimationLoading(false)} source={webmToMP4(getBackgroundAnimation(pathEnum.MAINPAGE))} />
+			<VideoBackground handleLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 			{
 				(isLoading || isAnimationLoading) ? (
 					<LoadingOverlay />

@@ -27,7 +27,6 @@ import { UserServices } from '../services/UserServices';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from '../services/auth';
 import { verifyIsDayTime } from '../utils/algorithms/date';
-import { webmToMP4 } from '../utils/algorithms/webmToOther';
 
 const Trail = () => {
 
@@ -252,7 +251,7 @@ const Trail = () => {
         if (trailData) {
             const animationURL = verifyIsDayTime() ? trailData?.trailPages[trailPageIndex].backgroundDay : trailData?.trailPages[trailPageIndex].backgroundNight;
     
-            return webmToMP4(animationURL as string);
+            return animationURL;
         }
     }
 
