@@ -247,6 +247,14 @@ const Trail = () => {
         narrativeOnClose();
     }
 
+    const getBackgroundAnimation = () => {
+        if (trailData) {
+            const animationURL = verifyIsDayTime() ? trailData?.trailPages[trailPageIndex].backgroundDay : trailData?.trailPages[trailPageIndex].backgroundNight;
+    
+            return animationURL;
+        }
+    }
+
     const fetchData = async () => {
         try {
             await getNewTrailInfo(trailName);
@@ -286,7 +294,7 @@ const Trail = () => {
             <VideoBackground
                 key={trailData?.trailName}
                 handleLoading={() => setIsAnimationLoading(false)}
-                source={verifyIsDayTime() ? trailData?.trailPages[trailPageIndex].backgroundDay : trailData?.trailPages[trailPageIndex].backgroundNight}
+                source={getBackgroundAnimation()}
             />
             <AlertModal
                 isOpen={alertInfo.isOpen}

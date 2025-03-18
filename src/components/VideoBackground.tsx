@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { webmToOther } from '../utils/algorithms/webmToOther';
 import "./styles/VideoBackground.css"
 
 type VideoBackgroundProps = {
@@ -26,6 +27,7 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading, clas
 			}}
 			onLoadedData={() => (handleLoading ? handleLoading() : null)}
 		>
+			<source src={webmToOther(source, '.mov')} />
 			<source src={source} type='video/webm' />
 		</video>
 	) : null;
