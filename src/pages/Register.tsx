@@ -19,6 +19,7 @@ import AlertModal from '../components/modals/AlertModal';
 // Styles
 import fontTheme from '../styles/base';
 import colorPalette from '../styles/colorPalette';
+import "./styles/Register.css";
 
 // Images
 import monkey from '../assets/sprites/monkey/new_monkey_happy.webp';
@@ -394,8 +395,8 @@ const Register = () => {
                         }
                     />
                 )}
-                <Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
-                <Box w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
+                <Image className="register_container_image" zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
+                <Box className="register_container_bar" w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
             </Center>
         </Flex>
 
