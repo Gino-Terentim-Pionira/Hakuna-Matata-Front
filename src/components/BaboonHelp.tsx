@@ -11,7 +11,7 @@ import SliderModal from './modals/SliderModal';
 import monkey from "../assets/sprites/monkey/monkey.webp";
 import { MdClose } from "react-icons/md";
 import { S3_BABOON_HELP } from '../utils/constants/constants';
-import { webmToMov } from '../utils/algorithms/webmToMov';
+import { webmToOther } from '../utils/algorithms/webmToOther';
 
 const BaboonHelp = () => {
     const MILI_SECONDS_INACTIVE = 40000;
@@ -180,7 +180,7 @@ const BaboonHelp = () => {
                     muted
                     playsInline
                 >
-                    <source src={webmToMov(S3_BABOON_HELP)} type="video/quicktime" />
+                    <source src={webmToOther(S3_BABOON_HELP, '.mov')} type="video/quicktime" />
                     <source src={S3_BABOON_HELP} type="video/webm" />
                 </video>
             </Box>
