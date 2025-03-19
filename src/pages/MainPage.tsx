@@ -307,7 +307,7 @@ const MainPage = () => {
 	return (
 		<div className="main_page_container">
 			<MobileIgnorancePremiumIcons />
-			<MobileNavIcon onClick={() => console.log("hello world")} />
+			<MobileNavIcon />
 			<div className="container">
 				<div className="wrapper">
 					<VideoBackground className="main_page_container_video_background"

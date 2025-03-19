@@ -10,7 +10,7 @@
 .main_page_container_video_background {
     @media (max-width: 767px) {
         position: relative !important;
-        object-fit: cover !important; /* Mantém a proporção do vídeo */
+        object-fit: cover !important;
     }
 }
 
