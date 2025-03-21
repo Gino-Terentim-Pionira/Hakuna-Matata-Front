@@ -1,0 +1,21 @@
+.arrow {
+    transition: all 200ms ease;
+}
+.arrow:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.arrow:active {
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.tutorial_conntent_footer_container {
+    @media (max-width: 767px) {
+        column-gap: 0 !important;
+        justify-content: space-between !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+}
