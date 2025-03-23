@@ -292,7 +292,7 @@ const Trail = () => {
     return (
         <>
             <VideoBackground
-                key={trailData?.trailName}
+                key={`${trailData?.trailName}-${trailPageIndex}`}
                 handleLoading={() => setIsAnimationLoading(false)}
                 source={getBackgroundAnimation()}
             />
@@ -346,7 +346,7 @@ const Trail = () => {
                                 trailPageIndex > 0 && <Box
                                     position='absolute'
                                     top='60vh'
-                                    left='5vw'
+                                    left='10vw'
                                 >
                                     <NavIcon
                                         image={<FaArrowLeft size={55} color={colorPalette.secondaryColor} />}

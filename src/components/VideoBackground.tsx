@@ -25,8 +25,8 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading }) =>
                 }}
                 onLoadedData={() => handleLoading ? handleLoading() : null}
             >
-                <source src={webmToOther(source, '.mov')} />
-                <source src={source} type="video/webm" />
+                <source src={webmToOther(source, '.mov')} key={webmToOther(source, '.mov')} />
+                <source src={source} type="video/webm" key={source} />
             </video>
         ) : null
     )
