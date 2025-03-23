@@ -22,7 +22,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 	const { userData } = useUser();
 	const [startY, setStartY] = useState<number | null>(null);
 	const [translateY, setTranslateY] = useState(0);
-	const [closing, setClosing] = useState(false); // Controla animação de fechamento
+	const [closing, setClosing] = useState(false);
 	const IS_USE_HAS_ENOUGHT_COINS = userData.coins >= Number(shopItemInfo?.price);
 	const IS_ITEM_CERTIFICATE = (shopItemInfo &&
 		shopItemInfo.isBlocked !== undefined &&
