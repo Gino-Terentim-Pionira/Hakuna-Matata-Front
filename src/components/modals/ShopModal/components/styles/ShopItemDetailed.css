@@ -1,0 +1,77 @@
+.shop_item_detailed_container {
+    @media (max-width: 767px) {
+        height: fit-content !important;
+    }
+}
+
+.shop_item_detailed_container_close_bar {
+    @media (min-width: 767px) {
+        display: none !important;
+    }
+}
+
+.shop_item_detailed_container_close_button  {
+    @media (max-width: 767px) {
+        display: none !important;
+    }
+}
+
+.shop_item_detailed_body_container {
+    @media (max-width: 767px) {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        position: relative !important;
+        top: 0 !important;
+        padding-top: 8px !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+
+.shop_item_detailed_body_container_title {
+    @media (max-width: 767px) {
+        font-size: 18px !important;
+        margin-bottom: 16px !important;
+    }
+}
+
+.shop_item_detailed_body_container_items_container {
+    @media (max-width: 767px) {
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        height: 100% !important;
+    }
+}
+
+.shop_item_detailed_body_container_items_container_description {
+    @media (max-width: 767px) {
+        font-size: 16px !important;
+        max-height: none !important;
+    }
+}
+
+.shop_item_detailed_body_container_items_container_bottom {
+    @media (max-width: 767px) {
+        width: 100% !important;
+    }
+}
+
+.shop_item_detailed_body_container_items_container_user_coins {
+    @media (max-width: 767px) {
+        font-size: 18px !important;
+    }
+}
+
+.shop_item_detailed_body_container_items_container_item_price {
+    @media (max-width: 767px) {
+        font-size: 20px !important;
+    }
+}
+
+.shop_item_detailed_body_container_items_container_button {
+    @media (max-width: 767px) {
+        font-size: 20px !important;
+        width: 100% !important;
+        margin-bottom: 24px !important;
+    }
+}
