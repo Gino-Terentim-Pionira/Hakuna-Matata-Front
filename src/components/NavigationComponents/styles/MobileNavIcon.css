@@ -1,0 +1,10 @@
+.mobile_nav_icon_container {
+    @media (min-width: 767px) {
+        display: none !important;
+    }
+}
+.mobile_nav_icon_slide_container {
+    @media (min-width: 767px) {
+        display: none !important;
+    }
+}

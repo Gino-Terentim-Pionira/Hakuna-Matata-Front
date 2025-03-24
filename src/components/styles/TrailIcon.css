@@ -1,0 +1,6 @@
+.trail_icon_image {
+    @media (max-width: 767px) {
+        width: 80px !important;
+        height: 80px !important;
+    }
+}

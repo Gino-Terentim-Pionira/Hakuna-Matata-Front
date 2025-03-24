@@ -4,9 +4,10 @@ import {
 	useDisclosure,
 	Flex,
 	Button,
-	Box,
+	Box
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
+import "./styles/MainPage.css";
 
 // Components
 import WelcomeVideoModal from '../components/modals/WelcomeVideoModal';
@@ -51,6 +52,8 @@ import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
 import BaboonHelp from '../components/BaboonHelp';
 import trailEnum from '../utils/enums/trail';
+import { MobileIgnorancePremiumIcons } from '../components/IgnoranceCoinsDisplay/MobileIgnorancePremiumIcons';
+import { MobileNavIcon } from '../components/NavigationComponents/MobileNavIcon';
 
 interface IScript {
 	name: string;
@@ -302,51 +305,37 @@ const MainPage = () => {
 	}, []);
 
 	return (
-		<>
-			<VideoBackground handleLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
-			{
-				(isLoading || isAnimationLoading) ? (
-					<LoadingOverlay />
-				) : (
-						<>
-							<IgnoranceFilter
-								ignoranceImage={ignoranceImage}
-							/>
-							<Flex
-								width='92.5%'
-								justifyContent='space-between'
-								alignItems='flex-start'
-								margin='auto'
-							>
-								<NavActions logout={logout} dontShowMap />
-								{narrativeIsOpen ? null : (
-									<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
-								)}
-							</Flex>
+		<div className="main_page_container">
+			<MobileIgnorancePremiumIcons />
+			<MobileNavIcon />
+			<div className="container">
+				<div className="wrapper">
+					<VideoBackground className="main_page_container_video_background"
+									 handleLoading={() => setIsAnimationLoading(false)}
+									 source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 
-							{script.length > 0 ? (
-								//verifica se o script possui algum conteúdo
-								<NarrativeModal
-									isOpen={narrativeIsOpen}
-									script={script}
-									onToggle={narrativeOnToggle}
-								/>
-							) : null}
+					{
+						(isLoading || isAnimationLoading) ? (
+							<LoadingOverlay />
+						) : (
+							<>
+								<Flex
+									className="main_page_container_navigation_icons_container"
+									width='92.5%'
+									justifyContent='space-between'
+									alignItems='flex-start'
+									margin='auto'
+								>
+									<NavActions logout={logout} dontShowMap />
+									{narrativeIsOpen ? null : (
+										<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
+									)}
+								</Flex>
 
-							<DailyReward
-								isOpen={dailyIsOpen}
-								onOpen={dailyOnOpen}
-								onClose={dailyOnClose}
-							/>
-							<WelcomeVideoModal
-								isOpen={welcomeVideoIsOpen}
-								onClose={tutorialFirstOnClose}
-							/>
-
-							<Flex margin='2vw' justifyContent='space-between'>
 								{narrativeIsOpen ? null : (
 									<>
 										<Flex
+											className="main_page_container_cheeta_trail_icon"
 											position='absolute'
 											left='18vw'
 											top='49.5vh'
@@ -364,6 +353,7 @@ const MainPage = () => {
 										</Flex>
 
 										<Flex
+											className="main_page_container_mamba_trail_icon"
 											position='absolute'
 											left='43.5vw'
 											top='57.5vh'
@@ -376,6 +366,7 @@ const MainPage = () => {
 										</Flex>
 
 										<Box
+											className="main_page_container_baboon_icon"
 											position='absolute'
 											width='22%'
 											left='60vw'
@@ -388,6 +379,7 @@ const MainPage = () => {
 											position='absolute'
 											right='2vw'
 											top='50vh'
+											className="main_page_container_lion_trail_icon"
 										>
 											<motion.div
 												animate={checkFirstTrailAcess(trailAccessEnum.LION) ? { scale: [0.8, 1, 0.8] } : false}
@@ -403,10 +395,34 @@ const MainPage = () => {
 
 									</>
 								)}
-							</Flex>
-						</>
-					)
-			}
+							</>
+						)
+					}
+				</div>
+			</div>
+
+			{script.length > 0 ? (
+				//verifica se o script possui algum conteúdo
+				<NarrativeModal
+					isOpen={narrativeIsOpen}
+					script={script}
+					onToggle={narrativeOnToggle}
+				/>
+			) : null}
+
+			<IgnoranceFilter
+				ignoranceImage={ignoranceImage}
+			/>
+
+			<DailyReward
+				isOpen={dailyIsOpen}
+				onOpen={dailyOnOpen}
+				onClose={dailyOnClose}
+			/>
+			<WelcomeVideoModal
+				isOpen={welcomeVideoIsOpen}
+				onClose={tutorialFirstOnClose}
+			/>
 
 			<AlertModal
 				isOpen={onAlert}
@@ -440,10 +456,12 @@ const MainPage = () => {
 
 			<BlockedModal
 				isOpen={openBlockedModal}
-				onClose={() => { setOpenBlockedModal(false) }}
+				onClose={() => {
+					setOpenBlockedModal(false)
+				}}
 				subtitle="Esse horizonte ainda não pode ser explorado, por enquanto..."
 			/>
-		</>
+		</div>
 	);
 };
 
