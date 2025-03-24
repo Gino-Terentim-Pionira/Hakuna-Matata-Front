@@ -1,0 +1,10 @@
+.tutorial_modal_container {
+    @media (max-width: 767px) {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        max-height: none !important;
+        height: 100% !important;
+        width: 100% !important;
+        background-size: cover !important;
+    }
+}

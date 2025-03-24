@@ -5,7 +5,7 @@ import colorPalette from "../../../../styles/colorPalette";
 import { imageIconsEnum } from "../../../../utils/enums/imageIconsEnum";
 import Markdown from 'react-markdown';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
-import './TutorialContentStyle.css';
+import './styles/TutorialContentStyle.css';
 import UserAvatar from "../../../UserAvatar";
 import { IUser } from "../../../../recoil/useRecoilState";
 import { motion } from 'framer-motion';
@@ -137,7 +137,7 @@ export const TutorialContent = ({ tutorialContent, goBack, userData, tutorialIco
                 </motion.div>
             </ModalBody>
             {!IS_ONLY_ONE_CONTENT && <Flex margin="auto" width="95%" opacity="0.5" height="1px" background={colorPalette.textColor} />}
-            <ModalFooter paddingBottom="18px" columnGap="48px" paddingX="0px" display="flex" justifyContent="center" alignItems="center">
+            <ModalFooter className="tutorial_conntent_footer_container" paddingBottom="18px" columnGap="48px" paddingX="0px" display="flex" justifyContent="center" alignItems="center">
                 {
                     !IS_ONLY_ONE_CONTENT && (
                         <>
