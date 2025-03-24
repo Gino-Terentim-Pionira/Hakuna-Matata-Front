@@ -38,6 +38,9 @@ import QuizAlertModal from '../Quiz/QuizAlertModal';
 import { ALERT_QUIZ_MODAL } from '../../utils/constants/textConstants';
 import horizon from '../../assets/horizon.webp';
 import DailyQuiz from '../Quiz/DailyQuiz';
+import chat from '../../assets/icons/chat.png';
+import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
+import chatScript from '../../utils/scripts/Baboon/chatScript';
 
 type MobileNavIconTypes = {
 	marginTop?: string;
@@ -47,6 +50,7 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 	const tutorialServices = new TutorialServices();
 	const { userData } = useUser();
 	const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
+	const scriptChat = () => chatScript(userData.ignorance);
 	const {
 		getNewOraclePackagesItem,
 		getNewCertificateItems,
@@ -69,6 +73,12 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 	const [isShopLoading, setIsShopLoading] = useState(true);
 	const [isInventoryLoading, setIsInventoryLoading] = useState(true);
 	const [isDailyModalOpen, setDailyIsModalOpen] = useState(false);
+
+	const {
+		isOpen: narrativeIsOpen,
+		onOpen: narrativeOnOpen,
+		onToggle: narrativeOnToggle,
+	} = useDisclosure();
 
 	const {
 		isOpen: tutorialTopicIsOpen,
@@ -166,6 +176,10 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 		quizOnOpen();
 	}
 
+	const handleChat = () => {
+		narrativeOnOpen();
+	}
+
 	const items = [{
 		label: USER_PROFILE,
 		icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
@@ -234,6 +248,30 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 			>
 				<GiHamburgerMenu size={32} />
 			</Center>
+
+			{isIgnoranceFilterOn &&
+				<Center
+					position='fixed'
+					className='mobile_nav_icon_container'
+					transition='all 0.2s ease'
+					top={marginTop || '83px'}
+					left='16px'
+					border={`3px solid ${colorPalette.blackBorder}`}
+					borderRadius='999px'
+					width='53px'
+					height='53px'
+					bg='white'
+					onClick={handleChat}
+					zIndex={9}
+				>
+					<Image
+						alt="chat_image"
+						src={chat}
+						width='32px'
+						height='32px'
+					/>
+				</Center>
+			}
 
 			<Slide className="mobile_nav_icon_slide_container" direction='left' in={isOpen} style={{ zIndex: 1900 }}>
 				<Flex
@@ -306,6 +344,12 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 				closeModal={quizOnClose}
 				onToggle={quizToggle}
 				openModal={quizIsOpen}
+			/>
+
+			<DefaultNarrativeModal
+				isOpen={narrativeIsOpen}
+				onToggle={narrativeOnToggle}
+				script={scriptChat()}
 			/>
 		</>
 	);

@@ -43,6 +43,7 @@
         width: 80px !important;
         left: 200px !important;
         top: 56% !important;
+        z-index: 1 !important;
     }
 }
 
