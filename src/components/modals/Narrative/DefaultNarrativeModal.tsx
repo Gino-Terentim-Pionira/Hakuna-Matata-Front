@@ -6,6 +6,7 @@ import fontTheme from "../../../styles/base";
 import rightArrow from "../../../assets/icons/rightArrow.png";
 import SliderModal from "../SliderModal";
 import { trackEvent } from "../../../services/analytics";
+import "./styles/DefaultNarrativeModal.css";
 
 interface IScript {
     name: string,
@@ -129,6 +130,7 @@ const DefaultNarrativeModal = ({
                         flexDirection='column'
                     >
                         <Text
+                            className="default_narrative_modal_skip_button"
                             mt=".5rem"
                             _hover={{
                                 cursor: 'pointer',
@@ -151,7 +153,9 @@ const DefaultNarrativeModal = ({
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ loop: Infinity }}
                         >
-                            <Image src={rightArrow}
+                            <Image
+                                className="default_narrative_modal_pass_button"
+                                src={rightArrow}
                                 mb="1.5rem"
                                 _hover={{
                                     cursor: 'pointer',
