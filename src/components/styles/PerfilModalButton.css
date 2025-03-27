@@ -1,0 +1,20 @@
+.profile_modal_button_container {
+    @media (max-width: 767px) {
+        padding: 8px 23px !important;
+        height: fit-content !important;
+        width: fit-content !important;
+        transition: none !important;
+    }
+}
+
+.profile_modal_button_container:hover {
+    @media (max-width: 767px) {
+        transform: none !important;
+    }
+}
+
+.profile_modal_button_container_text {
+    @media (max-width: 767px) {
+        font-size: 16px !important;
+    }
+}
