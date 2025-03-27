@@ -6,6 +6,7 @@ import {
     Tooltip
 } from "@chakra-ui/react"
 import { useUser } from '../../../../hooks';
+import "./styles/ProgressionStatusModal.css";
 
 // Components
 import LoadingState from '../../../LoadingState';
@@ -37,8 +38,9 @@ const ProgressionStatusModal = () => {
 
     return (
         <Flex h="100%" w="100%" flexDirection="column">
-            <Flex w="90%" flexDirection="row" alignSelf='center' justifyContent="space-between" alignItems="flex-end" marginTop='24px' >
+            <Flex className="progression_status_modal_progress_container" w="90%" flexDirection="row" alignSelf='center' justifyContent="space-between" alignItems="flex-end" marginTop='24px' >
                 <IgnoranceProgress
+                    width="100%"
                     ignorance={userData.ignorance}
                     position='top'
                 />
@@ -51,6 +53,7 @@ const ProgressionStatusModal = () => {
             {
                 stamps ? (
                     <Grid
+                        className="progression_status_modal_grid_container"
                         marginTop='32px'
                         marginLeft='24px'
                         templateColumns='repeat(5, 1fr)'
@@ -93,6 +96,7 @@ const ProgressionStatusModal = () => {
                                         label={`Você possui ${item.stamps} carimbo${item.stamps == 1 ? '' : 's'} de ${item.statusName} da trilha do ${item.trailName}`}
                                     >
                                         <Flex
+                                            className="progression_status_modal_grid_container_item"
                                             alignItems='center'
                                         >
                                             <StampIcon
@@ -116,9 +120,7 @@ const ProgressionStatusModal = () => {
                         <LoadingState />
                     )
             }
-
         </Flex>
-
     )
 }
 

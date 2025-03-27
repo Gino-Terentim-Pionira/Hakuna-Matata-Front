@@ -34,6 +34,8 @@ const UserAvatar = ({ avatarStyle = 'Circle', customAvatar, width = '160px', hei
     style={{
         width,
         height,
+        maxWidth: '160px',
+        maxHeight: '160px',
         marginBottom
     }}
 />
