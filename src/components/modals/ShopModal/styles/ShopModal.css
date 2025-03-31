@@ -1,8 +1,10 @@
 .shop_modal_container {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-    max-height: none !important;
-    height: 100% !important;
+    @media (max-width: 767px) {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        max-height: none !important;
+        height: 100% !important;
+    }
 }
 
 .shop_modal_header_container {
