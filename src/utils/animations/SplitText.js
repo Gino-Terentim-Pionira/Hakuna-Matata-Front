@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Text } from '@chakra-ui/react';
+import "./styles/SplitText.css";
 
 export function SplitText({ children, ...rest }) {
     let words = children.split(' ')
@@ -16,6 +17,7 @@ export function SplitText({ children, ...rest }) {
                     custom={i}
                 >
                     <Text
+                        className="split_text_text"
                         fontSize={['.75rem', '1rem', '1.25rem']}
                     >
                         {word + (i !== words.length - 1 ? '\u00A0' : '')}
