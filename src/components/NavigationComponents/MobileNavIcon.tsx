@@ -288,7 +288,7 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 					fontFamily={fontTheme.fonts}
 					paddingX='16px'
 					paddingTop='16px'
-					paddingBottom='24px'
+					paddingBottom='150px'
 				>
 					<Flex
 						alignSelf='flex-end'

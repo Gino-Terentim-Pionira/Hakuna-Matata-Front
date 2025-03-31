@@ -22,6 +22,7 @@ const IgnoranceProgress = ({ ignorance, position, width }: {
 				position='relative'
 				height='32px'
 				width={ width ?? '392px'}
+				maxWidth="392px"
 				backgroundColor={colorPalette.grayBackground}
 				borderWidth='3px'
 				borderColor={colorPalette.blackBorder}
