@@ -4,6 +4,7 @@ import fontTheme from '../../styles/base';
 import Coins from '../../assets/icons/coinicon.svg';
 import { COINS } from '../../utils/constants/mouseOverConstants';
 import { PositionProps } from '../../utils/props';
+import colorPalette from '../../styles/colorPalette';
 
 type CoinsDisplayProps = {
     value: number;
@@ -24,7 +25,7 @@ const CoinsDisplay: FC<CoinsDisplayProps> = ({
                 <Text 
                     fontFamily={fontTheme.fonts} 
                     fontSize="28px" fontWeight="500" 
-                    color="#000"
+                    color={colorPalette.textColor}
                 >
                     {value}
                 </Text>
