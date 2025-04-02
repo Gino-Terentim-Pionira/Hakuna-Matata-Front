@@ -1,0 +1,103 @@
+.module_modal_container {
+    @media (max-width: 767px) {
+        max-height: none !important;
+        height: 100vh !important;
+    }
+}
+
+.module_modal_container_box {
+    @media (max-width: 767px) {
+        display: none !important;
+    }
+}
+
+.module_modal_header_container {
+    @media (max-width: 767px) {
+        padding: 28px 20px !important;
+        justify-content: flex-start !important;
+    }
+}
+
+.module_modal_header_text {
+    @media (max-width: 767px) {
+        font-size: 24px !important;
+        margin: 0 !important;
+        max-width: 80% !important;
+    }
+}
+
+.module_modal_body_container {
+    @media (max-width: 767px) {
+        padding: 0 20px !important;
+    }
+}
+
+.module_modal_grid_video_card_container {
+    @media (max-width: 767px) {
+        width: 100% !important;
+        height: 270px !important;
+    }
+}
+
+.module_modal_grid_video_card_image {
+    @media (max-width: 767px) {
+        object-fit: fill !important;
+        height: 90px !important;
+    }
+}
+
+.module_modal_grid_video_card_info_container {
+    @media (max-width: 767px) {
+        padding: 0 8px !important;
+        margin-top: 8px !important;
+    }
+}
+
+.module_modal_grid_video_card_info_title {
+    @media (max-width: 767px) {
+        font-weight: 600 !important;
+        font-size: 16px !important;
+    }
+}
+
+.module_modal_grid_video_card_info_description {
+    @media (max-width: 767px) {
+        font-size: 13px !important;
+        margin-top: 4px !important;
+    }
+}
+
+.module_modal_grid_video_card_info_checked {
+    @media (max-width: 767px) {
+        margin-top: 8px !important;
+        font-size: 13px !important;
+    }
+}
+
+.module_modal_button {
+    @media (max-width: 767px) {
+        bottom: 28px !important;
+        width: 260px !important;
+        height: 60px !important;
+    }
+}
+
+.module_modal_button_text {
+    @media (max-width: 767px) {
+        font-size: 24px !important;
+        font-weight: 500 !important;
+    }
+}
+
+.module_modal_confirmation_modal_button {
+    @media (max-width: 767px) {
+        max-width: 50% !important;
+        min-height: 60px !important;
+        height: fit-content !important;
+        padding: 4px;
+        font-weight: normal !important;
+        font-size: 16px !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+    }
+}

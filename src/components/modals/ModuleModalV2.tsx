@@ -20,6 +20,7 @@ import AlertModal from './AlertModal';
 import { errorCases } from '../../utils/errors/errorsCases';
 import ModuleQuizV2 from '../Quiz/ModuleQuizV2';
 import api from '../../services/api';
+import "./styles/ModuleModalV2.css";
 
 interface IModuleModalV2 {
     moduleInfo: Module,
@@ -34,24 +35,27 @@ const GridContainer = styled.div`
     grid-template-columns: 1fr 1fr 1fr;
     width: 1100px;
     max-height: 80vh;
-    overflow-y: auto;
     padding-bottom: 116px;
     padding-left: 8px;
     grid-row-gap: 40px;
     grid-column-gap: 48px;
 
     @media (max-width: 1100px) {
-        width: 700px;
+        width: 100%;
+        margin: 0;
+        padding: 0 0 120px 0;
         grid-template-columns: 1fr 1fr;
-        grid-column-gap: 48px;
+        grid-column-gap: 32px;
+        overflow-x: hidden;
     }
 
-    @media (max-width: 780px) {
-        grid-template-columns: 1fr;
-
-        > .videoCardContainer {
-            margin: auto;
-        }
+    @media (max-width: 767px) {
+        width: 100%;
+        margin: 0;
+        padding: 0 0 120px 0;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 20px;
+        overflow-x: hidden;
     }
 `;
 
@@ -266,8 +270,9 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 
             <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <ModalOverlay />
-                <ModalContent height="34rem" fontFamily={fontTheme.fonts}>
+                <ModalContent className="module_modal_container" height="34rem" fontFamily={fontTheme.fonts}>
                     <Box
+                        className="module_modal_container_box"
                         w="150px"
                         bg={colorPalette.primaryColor}
                         h="100%"
@@ -277,12 +282,12 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                         top="0"
                         borderTopStartRadius='5px'
                     />
-                    <ModalHeader d='flex' justifyContent='center'>
-                        <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{moduleInfo.moduleName}</Text>
+                    <ModalHeader className="module_modal_header_container" d='flex' justifyContent='center'>
+                        <Text className="module_modal_header_text" color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{moduleInfo.moduleName}</Text>
                         <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     </ModalHeader>
 
-                    <ModalBody display="flex" flexDirection='column' alignItems='center' >
+                    <ModalBody className="module_modal_body_container" overflowY="auto" display="flex" flexDirection='column' alignItems='center' >
                         {
                             isLoading ? (
                                 <Box width="100%" h="90%">
@@ -294,7 +299,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                                             moduleInfo.videos.map((video: Video, index) => {
                                                 return (
                                                     <Flex
-                                                        className='videoCardContainer'
+                                                        className='module_modal_grid_video_card_container'
                                                         width="297px"
                                                         height="auto"
                                                         borderRadius="8px"
@@ -309,22 +314,20 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                                                         }}
                                                         key={video._id}
                                                     >
-                                                        <Flex justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="165px" bg={colorPalette.textColor}>
-                                                            <Image height={video.thumbnail ? '' : '59px'} src={video.thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
-                                                        </Flex>
-                                                        <Flex flexDir="column" paddingX="16px" marginTop="24px">
-                                                            <Text color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
+                                                        <Image className='module_modal_grid_video_card_image' height={video.thumbnail ? '' : '59px'} src={video.thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
+                                                        <Flex className='module_modal_grid_video_card_info_container' flexDir="column" paddingX="16px" marginTop="24px">
+                                                            <Text className='module_modal_grid_video_card_info_title' color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
                                                                 {video.videoName}
                                                             </Text>
-                                                            <Text color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
+                                                            <Text className='module_modal_grid_video_card_info_description' color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
                                                                 {video.description}
                                                             </Text>
                                                             {
-                                                                userData?.video_id.includes(video._id) && <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
+                                                                userData?.video_id.includes(video._id) &&
+                                                                <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
                                                                     Já assistido
-                                                    </Text>
+                                                                </Text>
                                                             }
-
                                                         </Flex>
                                                     </Flex>
                                                 )
@@ -336,6 +339,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                         {
                             (!isLoading && IS_MODULE_INFO_HAS_QUESTIONS) ? (
                                 <Button
+                                    className='module_modal_button'
                                     display="Button"
                                     justifyContent="center"
                                     alignItems="center"
@@ -353,6 +357,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                                     onClick={handleModal}
                                 >
                                     <Text
+                                        className='module_modal_button_text'
                                         fontFamily={fontTheme.fonts}
                                         fontSize="30px"
                                         color={colorPalette.textColor}
@@ -430,12 +435,12 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                                         }
                                     </div>
                                     <Flex justifyContent='space-around'>
-                                        <Button h='3.5rem' _hover={{ bg: colorPalette.confirmButton }} bg={colorPalette.confirmButton} onClick={() => {
+                                        <Button className="module_modal_confirmation_modal_button" h='3.5rem' _hover={{ bg: colorPalette.confirmButton }} bg={colorPalette.confirmButton} onClick={() => {
                                             closeConfirmationModal();
                                         }}>
-                                            Realizar desafio denovo!
+                                            Realizar novamente!
                                         </Button>
-                                        <Button h='3.5rem' w='45%' _hover={{ bg: colorPalette.closeButton }} bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
+                                        <Button className="module_modal_confirmation_modal_button" h='3.5rem' w='45%' _hover={{ bg: colorPalette.closeButton }} bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
                                             Voltar!
                                         </Button>
                                     </Flex>
