@@ -251,14 +251,14 @@ const Relics = () => {
                             <Relic
                                 onClick={userEquippedRelics.first_slot ? () => handleUserRelicInfoModal(userEquippedRelics.first_slot as UserRelicType, true, 'first_slot') : undefined}
                                 color={userEquippedRelics.first_slot ? userEquippedRelics.first_slot.rarity : 'default'}
-                                relicImage={userEquippedRelics.first_slot ? userEquippedRelics.first_slot.image : 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_sillouete.png'}
+                                relicImage={userEquippedRelics.first_slot ? userEquippedRelics.first_slot.image : 'https://d2musj5gyuvayp.cloudfront.net/relics/relic_sillouete.png'}
                                 badgeDescription={!userEquippedRelics.first_slot ? 'Nenhuma relíquia equipada' : undefined }
                                 isCursorActive={!!userEquippedRelics.first_slot}
                             />
                             <Relic
                                 onClick={userEquippedRelics.second_slot ? () => handleUserRelicInfoModal(userEquippedRelics.second_slot as UserRelicType, true, 'second_slot') : undefined}
                                 color={userEquippedRelics.second_slot ? userEquippedRelics.second_slot.rarity : 'default'}
-                                relicImage={userEquippedRelics.second_slot ? userEquippedRelics.second_slot.image : 'https://pionira.s3.sa-east-1.amazonaws.com/relics/relic_sillouete.png'}
+                                relicImage={userEquippedRelics.second_slot ? userEquippedRelics.second_slot.image : 'https://d2musj5gyuvayp.cloudfront.net/relics/relic_sillouete.png'}
                                 badgeDescription={!userEquippedRelics.second_slot ? 'Nenhuma relíquia equipada' : undefined }
                                 isCursorActive={!!userEquippedRelics.second_slot}
                             />
