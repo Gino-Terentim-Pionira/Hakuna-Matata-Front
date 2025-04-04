@@ -8,15 +8,15 @@ export enum pathEnum {
 
 export const getBackgroundAnimation = (path: pathEnum) => {
     const backgroundDay = {
-        home: 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/home.webm',
-        mainPage: 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/trail_selection.webm',
-        cheetah: 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail.webm'
+        home: 'https://d2musj5gyuvayp.cloudfront.net/backgrounds/home.webm',
+        mainPage: 'https://d2musj5gyuvayp.cloudfront.net/backgrounds/trail_selection.webm',
+        cheetah: 'https://d2musj5gyuvayp.cloudfront.net/backgrounds/cheetah_trail.webm'
     };
 
     const backgroundNight = {
-        home: 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/home_night.webm',
-        mainPage: 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/trail_selection_night.webm',
-        cheetah: 'https://pionira.s3.sa-east-1.amazonaws.com/backgrounds/cheetah_trail_night.webm'
+        home: 'https://d2musj5gyuvayp.cloudfront.net/backgrounds/home_night.webm',
+        mainPage: 'https://d2musj5gyuvayp.cloudfront.net/backgrounds/trail_selection_night.webm',
+        cheetah: 'https://d2musj5gyuvayp.cloudfront.net/backgrounds/cheetah_trail_night.webm'
     };
 
     return verifyIsDayTime() ? backgroundDay[path] : backgroundNight[path]
