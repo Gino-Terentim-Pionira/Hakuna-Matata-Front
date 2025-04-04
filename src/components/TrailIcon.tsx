@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Image, Tooltip } from '@chakra-ui/react';
+import "./styles/TrailIcon.css";
 
 type TrailIconProps = {
     image: string;
@@ -21,6 +22,7 @@ const TrailIcon: FC<TrailIconProps> = ({
             label={mouseOver}
         >
             <Image
+            className={"trail_icon_image"}
             src={image}
             _hover={{
                 cursor: 'pointer',

@@ -17,6 +17,7 @@ import { TutorialContent } from "./components/TutorialContent";
 import cheetahBlink from "../../../assets/icons/cheetahblink.svg";
 import WelcomeVideoModal from "../WelcomeVideoModal";
 import { useSoundtrack } from "../../../hooks/useSoundtrack";
+import "./styles/TutorialModal.css";
 
 type TutorialTopicsModalType = {
     isOpen: boolean,
@@ -103,6 +104,7 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic, selectedIcon }: 
                 <ModalOverlay />
 
                 <ModalContent
+                    className="tutorial_modal_container"
                     bgImage={`url(${TutorialTopicBackground})`}
                     backgroundPosition="center"
                     backgroundRepeat="no-repeat"

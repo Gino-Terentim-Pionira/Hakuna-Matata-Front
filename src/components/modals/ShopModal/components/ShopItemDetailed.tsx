@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Flex, Image, Slide, Text, Tooltip } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ShopItemInfoType } from '../ShopModal';
@@ -8,6 +8,7 @@ import { useUser } from '../../../../hooks';
 import { NOT_ENOUGHT_COINS } from '../../../../utils/constants/mouseOverConstants';
 import { BiSolidCheckCircle } from 'react-icons/bi';
 import { IoMdCloseCircle } from 'react-icons/io';
+import "./styles/ShopItemDetailed.css";
 
 type ShopItemDetailedTypes = {
 	isOpen: boolean;
@@ -19,6 +20,9 @@ type ShopItemDetailedTypes = {
 
 export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: ShopItemDetailedTypes) => {
 	const { userData } = useUser();
+	const [startY, setStartY] = useState<number | null>(null);
+	const [translateY, setTranslateY] = useState(0);
+	const [closing, setClosing] = useState(false);
 	const IS_USE_HAS_ENOUGHT_COINS = userData.coins >= Number(shopItemInfo?.price);
 	const IS_ITEM_CERTIFICATE = (shopItemInfo &&
 		shopItemInfo.isBlocked !== undefined &&
@@ -26,6 +30,30 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 		shopItemInfo.isEnoughQuestion !== undefined &&
 		shopItemInfo.isEnoughFinalQuiz !== undefined &&
 		shopItemInfo.trail !== undefined);
+
+	const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+		setStartY(e.touches[0].clientY);
+	};
+
+	const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+		if (startY === null) return;
+		const currentY = e.touches[0].clientY;
+		const diff = currentY - startY;
+		if (diff > 0) setTranslateY(diff);
+	};
+
+	const handleTouchEnd = () => {
+		if (translateY > 100) {
+			setClosing(true);
+			onClose();
+			setTimeout(() => {
+				setClosing(false);
+				setTranslateY(0);
+			}, 100);
+		} else {
+			setTranslateY(0);
+		}
+	};
 
 	const certificateRequirementsLabel = (count: number, singular: string, plural: string): string => {
 		return !count ? 'Finalizado!' : `Falta ${count > 1 ? plural : singular}`;
@@ -62,7 +90,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 
 			return (
 				<>
-					<Text fontFamily={fontTheme.fonts} fontWeight="bold">
+					<Text fontFamily={fontTheme.fonts} fontWeight="bold" mt="16px">
 						Requisitos para a compra, na Trilha do {shopItemInfo.trail}:
 					</Text>
 					<RequirementItem
@@ -89,6 +117,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 		<Slide direction="bottom" in={isOpen} style={{ zIndex: 1900 }}>
 			<Box onClick={onClose} w='100%' h='100vh' />
 			<Flex
+				className="shop_item_detailed_container"
 				position="relative"
 				w='100%'
 				h='360px'
@@ -99,8 +128,33 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 				border='4px solid'
 				borderColor={colorPalette.secondaryColor}
 				fontFamily={fontTheme.fonts}
+				color={colorPalette.textColor}
+				style={{
+					transform: `translateY(${translateY}px)`,
+					transition: closing ? 'transform 0.3s ease-in-out' : '',
+				}}
 			>
+				<Flex
+					className="shop_item_detailed_container_close_bar"
+					width="100%"
+					onTouchStart={handleTouchStart}
+					onTouchMove={handleTouchMove}
+					onTouchEnd={handleTouchEnd}
+					height='fit-content'
+					paddingBottom="8px"
+					paddingTop="12px"
+				>
+					<Flex
+						width="50px"
+						height="6px"
+						borderRadius="1000px"
+						backgroundColor={colorPalette.neutralGray}
+						margin="auto"
+					/>
+				</Flex>
+
 				<Text
+					className="shop_item_detailed_container_close_button"
 					alignItems="flex-start"
 					position="absolute"
 					onClick={onClose}
@@ -119,8 +173,9 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 				>
 					X
 				</Text>
-				<Flex paddingLeft="24px" flexDir="column" top="32px" position="absolute" w="95%">
+				<Flex className="shop_item_detailed_body_container" paddingLeft="24px" flexDir="column" top="32px" position="absolute" w="95%">
 					<Text
+						className="shop_item_detailed_body_container_title"
 						fontSize={['0.7rem', '1.5rem', '1.7rem']}
 						fontWeight='semibold'
 						textAlign='left'
@@ -128,15 +183,16 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 					>
 						{shopItemInfo && shopItemInfo.title}
 					</Text>
-					<Flex alignItems="flex-start" justifyContent="space-between" columnGap="24px">
-						<Box>
+					<Flex className="shop_item_detailed_body_container_items_container" alignItems="flex-start" justifyContent="space-between" columnGap="24px">
+						<Box
+							overflowY="auto"
+						>
 							<Text
+								className="shop_item_detailed_body_container_items_container_description"
 								fontSize={['0.5rem', '1rem', '1.2rem']}
 								fontWeight='regular'
 								textAlign='left'
-								overflowY="auto"
 								maxH="260px"
-								paddingBottom="16px"
 							>
 								{shopItemInfo && shopItemInfo.description}
 							</Text>
@@ -146,9 +202,10 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 						</Box>
 
 
-						<Flex flexDir="column" marginTop="1px">
+						<Flex className="shop_item_detailed_body_container_items_container_bottom" flexDir="column" marginTop="16px">
 							<Flex>
 								<Text
+									className="shop_item_detailed_body_container_items_container_user_coins"
 									fontFamily={fontTheme.fonts}
 									fontSize="24px"
 									fontWeight="semibold"
@@ -165,6 +222,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 							</Flex>
 							<Flex marginBottom="16px">
 								<Text
+									className="shop_item_detailed_body_container_items_container_item_price"
 									fontFamily={fontTheme.fonts}
 									fontSize='28px'
 									fontWeight='semibold'
@@ -188,6 +246,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 								closeOnClick={false}
 							>
 								<Button
+									className="shop_item_detailed_body_container_items_container_button"
 									w="200px"
 									height='3.5rem'
 									background={IS_USE_HAS_ENOUGHT_COINS ? colorPalette.primaryColor : colorPalette.grayBackground}
