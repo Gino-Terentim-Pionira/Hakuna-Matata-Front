@@ -3,6 +3,7 @@ import React, { FC, useState, useEffect } from 'react';
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
 import { validateQuestionSize } from '../../utils/validates';
+import "./styles/GenericQuizModal.css";
 
 interface IGenericQuizModal {
     openModal: boolean;
@@ -122,9 +123,10 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
         <>
             <Modal isOpen={openModal} onClose={openAlert ? openAlert : closeModal} size='full' >
                 <ModalOverlay />
-                <ModalContent margin="0" display='flex' justifyContent='center' alignItems='center' >
+                <ModalContent className="generic_quiz_modal_container" margin="0" display='flex' justifyContent='center' alignItems='center' >
                     <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     <Box
+                        className="generic_quiz_modal_container_box"
                         w="40%"
                         bg={colorPalette.primaryColor}
                         h="83vh"
@@ -136,20 +138,21 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                         clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
                     />
 
-                    <ModalBody display='flex' w='100%' alignItems='center' flexDirection='column' >
-                        <Flex w='94%' h='97.5vh' flexDirection='column' alignItems='center' justifyContent='space-between' >
+                    <ModalBody className="generic_quiz_modal_body_container" display='flex' w='100%' alignItems='center' flexDirection='column' >
+                        <Flex className="generic_quiz_modal_body_question_info_container" w='94%' h='97.5vh' flexDirection='column' alignItems='center' justifyContent='space-between' >
                             <Flex w='100%' flexDirection='column'>
-                                <Text marginTop='0.5rem' fontFamily={fontTheme.fonts} fontSize='30' fontWeight='bold' color={colorPalette.secondaryColor} >Q {step + 1}/{length}</Text>
-                                <Flex marginTop='0.5rem' bg='white' boxShadow='4px 4px 4px rgba(0, 0, 0, 0.25)' borderRadius='8' h='29vh' justifyContent='center' alignItems='center' >
-                                    <Text w='92%' h='77%' fontFamily={fontTheme.fonts} fontSize='25px' >
+                                <Text className="generic_quiz_modal_body_question_info_text" marginTop='0.5rem' fontFamily={fontTheme.fonts} fontSize='30' fontWeight='bold' color={colorPalette.secondaryColor} >Q {step + 1}/{length}</Text>
+                                <Flex className="generic_quiz_modal_body_question_info_description_container" marginTop='0.5rem' bg='white' boxShadow='4px 4px 4px rgba(0, 0, 0, 0.25)' borderRadius='8' h='29vh' justifyContent='center' alignItems='center' >
+                                    <Text className="generic_quiz_modal_body_question_info_description" w='92%' h='77%' fontFamily={fontTheme.fonts} fontSize='25px' >
                                         {questions_id[step]?.description}
                                     </Text>
                                 </Flex>
                             </Flex>
 
-                            <Flex flexDirection='column' justifyContent='space-around' w='83%' h='54vh' marginBottom='0.8rem'>
-                                <Flex justifyContent='space-around' h='45%' marginBottom='1rem'>
+                            <Flex className="generic_quiz_modal_body_question_answer_container" flexDirection='column' justifyContent='space-around' w='83%' h='54vh' marginBottom='0.8rem'>
+                                <Flex className="generic_quiz_modal_body_question_answer_subcontainer" justifyContent='space-around' h='45%' marginBottom='1rem'>
                                     <Center
+                                        className="generic_quiz_modal_body_question_answer"
                                         bg='white'
                                         h='100%'
                                         w='40%'
@@ -164,6 +167,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                                         onClick={() => buttonFunctions(0)}
                                     >
                                         <Text
+                                            className="generic_quiz_modal_body_question_answer_text"
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
                                             fontSize={validateQuestionSize(questions_id[step]?.alternatives[0]) ? '18px' : '24px'}
@@ -173,6 +177,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                                         </Text>
                                     </Center>
                                     <Center
+                                        className="generic_quiz_modal_body_question_answer"
                                         bg='white'
                                         h='100%'
                                         w='40%'
@@ -187,6 +192,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                                         onClick={() => buttonFunctions(1)}
                                     >
                                         <Text
+                                            className="generic_quiz_modal_body_question_answer_text"
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
                                             fontSize={validateQuestionSize(questions_id[step]?.alternatives[1]) ? '18px' : '24px'}
@@ -196,8 +202,9 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                                         </Text>
                                     </Center>
                                 </Flex>
-                                <Flex justifyContent='space-around' h='45%'>
+                                <Flex className="generic_quiz_modal_body_question_answer_subcontainer" justifyContent='space-around' h='45%'>
                                     <Center
+                                        className="generic_quiz_modal_body_question_answer"
                                         bg='white'
                                         h='100%'
                                         w='40%'
@@ -212,6 +219,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                                         onClick={() => buttonFunctions(2)}
                                     >
                                         <Text
+                                            className="generic_quiz_modal_body_question_answer_text"
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
                                             fontSize={validateQuestionSize(questions_id[step]?.alternatives[2]) ? '18px' : '24px'}
@@ -221,6 +229,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                                         </Text>
                                     </Center>
                                     <Center
+                                        className="generic_quiz_modal_body_question_answer"
                                         bg='white'
                                         h='100%'
                                         w='40%'
@@ -235,6 +244,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
                                         onClick={() => buttonFunctions(3)}
                                     >
                                         <Text
+                                            className="generic_quiz_modal_body_question_answer_text"
                                             w='90%'
                                             fontFamily={fontTheme.fonts}
                                             fontSize={validateQuestionSize(questions_id[step]?.alternatives[3]) ? '18px' : '24px'}
