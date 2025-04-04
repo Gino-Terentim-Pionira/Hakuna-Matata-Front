@@ -1,6 +1,6 @@
 import { Center, Flex, Slide, Text, Image, useDisclosure } from '@chakra-ui/react';
 import colorPalette from '../../styles/colorPalette';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import "./styles/MobileNavIcon.css";
 import fontTheme from '../../styles/base';
@@ -73,6 +73,7 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 	const [isShopLoading, setIsShopLoading] = useState(true);
 	const [isInventoryLoading, setIsInventoryLoading] = useState(true);
 	const [isDailyModalOpen, setDailyIsModalOpen] = useState(false);
+	const [isDifferentDay, setIsDifferentDay] = useState(false);
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -180,6 +181,32 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 		narrativeOnOpen();
 	}
 
+	const itemsWithoutDailyQuiz = [{
+		label: USER_PROFILE,
+		icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
+		onClick: handleProfileOpen
+	}, {
+		label: STORE,
+		icon: <Image src={icon_shop} width="45px" height="45px" />,
+		onClick: handleShop
+	}, {
+		label: INVENTORY,
+		icon: <Image src={inventory_icon} width="45px" height="45px" />,
+		onClick: handleInventory
+	}, {
+		label: TUTORIAL,
+		icon: <Image src={icon_tutorial} width="45px" height="45px" />,
+		onClick: handleTutorialOpen
+	}, {
+		label: IGNORANCE_GLASS,
+		icon: <Image src={isIgnoranceFilterOn ? glassesOn : glasses} width="45px" height="45px" />,
+		onClick: handleIgnoranceGlasses
+	}, {
+		label: LOG_OUT,
+		icon: <Image src={icon_logout} width="45px" height="45px" />,
+		onClick: LogOut
+	}]
+
 	const items = [{
 		label: USER_PROFILE,
 		icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
@@ -210,8 +237,21 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 		onClick: LogOut
 	}]
 
+	useEffect(() => {
+		const verifyDailyQuiz = () => {
+			const item = localStorage.getItem("@pionira/dailyQuiz");
+			if (item) {
+				const currentDate = new Date();
+				const storedDate = new Date(item);
+				setIsDifferentDay(currentDate.toDateString() !== storedDate.toDateString());
+			} else {
+				setIsDifferentDay(true);
+			}
+		}
+		verifyDailyQuiz();
+	}, []);
 	const renderItem = () =>
-		items.map((item) => (
+		(isDifferentDay ? items : itemsWithoutDailyQuiz).map((item) => (
 			<Flex
 				width='100%'
 				height='80px'
