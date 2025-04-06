@@ -23,6 +23,7 @@ import api from '../../services/api';
 // Styles
 import fontTheme from '../../styles/base';
 import colorPalette from "../../styles/colorPalette";
+import "./styles/VideoModal.css";
 
 // Images
 import { errorCases } from '../../utils/errors/errorsCases';
@@ -31,6 +32,7 @@ import { OnProgressProps } from "react-player/base";
 import { useSoundtrack } from '../../hooks/useSoundtrack';
 import { BiSkipNextCircle } from "react-icons/bi";
 import { BiSkipPreviousCircle } from "react-icons/bi";
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 interface IVideoModal {
     id: string;
@@ -67,6 +69,9 @@ const VideoModal: FC<IVideoModal> = ({
     const { pauseSoundtrack } = useSoundtrack();
     const hasWatchedVideo = userData.video_id.includes(id);
     const [clickCheck, setClickCheck] = useState(false);
+    const width = useWindowSize();
+
+    const isDesktop = width > 767;
 
     const updateVideo = async () => {
         try {
@@ -176,39 +181,67 @@ const VideoModal: FC<IVideoModal> = ({
         <>
             <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="5xl">
                 <ModalOverlay />
-                <ModalContent paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
-                    <ModalHeader paddingTop="0" paddingBottom="0px">
-                        <Text fontFamily={fontTheme.fonts} fontWeight="semibold" color={colorPalette.primaryColor} fontSize="40px">
+                <ModalContent onClick={() => console.log(width)} className="video_modal_container" paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
+                    <ModalHeader className="video_modal_header_container" paddingTop="0" paddingBottom="0px">
+                        <Text className="video_modal_header_title" fontFamily={fontTheme.fonts} fontWeight="semibold" color={colorPalette.primaryColor} fontSize="40px">
                             {name}
                         </Text>
-                        <Text ml="4px" mt="-2px" fontFamily={fontTheme.fonts} fontWeight="medium" color={colorPalette.secundaryGrey} fontSize="18px">
+                        <Text display={isDesktop ? "flex" : "none"} ml="4px" mt="-2px" fontFamily={fontTheme.fonts} fontWeight="medium" color={colorPalette.secundaryGrey} fontSize="18px">
                             {description}
                         </Text>
                     </ModalHeader>
                     <ModalCloseButton size="lg" color={colorPalette.closeButton} onClick={handleCloseModal} />
-                    <ModalBody mt="24px">
-                        <Flex direction="column" alignItems="center" paddingTop="0px">
-                            {
-                                isVideoLoading &&
-                                <Flex height="450px">
-                                    <LoadingState />
-                                </Flex>
-                            }
-                            <ReactPlayer
-                                url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
-                                controls={true}
-                                onStart={pauseSoundtrack}
-                                onDuration={handleDuration}
-                                onProgress={handleProgress}
-                                onEnded={handleOnEnded}
-                                width="100%"
-                                height="450px"
-                                onReady={() => setIsVideoLoading(false)}
-                                style={{
-                                    display: isVideoLoading ? 'none' : 'block',
-                                }}
-                            />
-                            <Flex width='100%'>
+                    <ModalBody className="video_modal_body_container" mt="24px">
+                        <Flex className="video_modal_body_infos_container" direction="column" alignItems="center" paddingTop="0px">
+                            <Flex flexDirection="column" width="100%" alignItems="flex-start">
+                                {
+                                    isVideoLoading &&
+                                    <Flex width="100%" height={isDesktop ? "450px" : "195px"} justifyContent="center">
+                                        <LoadingState />
+                                    </Flex>
+                                }
+                                <ReactPlayer
+                                    url={plataform == 'youtube' ? `https://www.youtube.com/watch?v=${url}` : `https://vimeo.com/${parseVideoUrl()}`}
+                                    controls={true}
+                                    onStart={pauseSoundtrack}
+                                    onDuration={handleDuration}
+                                    onProgress={handleProgress}
+                                    onEnded={handleOnEnded}
+                                    width="100%"
+                                    height={isDesktop ? "450px" : "195px"}
+                                    onReady={() => setIsVideoLoading(false)}
+                                    style={{
+                                        display: isVideoLoading ? 'none' : 'block',
+                                    }}
+                                />
+                                <Text display={isDesktop ? "none" : "flex"} ml="4px" mt="24px" fontFamily={fontTheme.fonts} fontWeight="medium" color={colorPalette.secundaryGrey} fontSize="16px">
+                                    {description}
+                                </Text>
+                                {
+                                    !hasWatchedVideo ? (
+                                        <Flex
+                                            display={isDesktop ? "none" : "flex"}
+                                            marginTop='16px'
+                                            alignSelf='flex-start'
+                                        >
+                                            <Checkbox
+                                                size='lg'
+                                                onChange={handleCheckBox}
+                                                disabled={clickCheck ?? hasWatchedVideo}
+                                            >
+                                                <Text
+                                                    fontSize='16px'
+                                                    fontFamily={fontTheme.fonts}
+                                                    color={colorPalette.textColor}
+                                                >
+                                                    Declaro que assisti este vídeo na íntegra
+                                                </Text>
+                                            </Checkbox>
+                                        </Flex>
+                                    ) : null
+                                }
+                            </Flex>
+                            <Flex columnGap="12px" width='100%'>
                                 {
                                     previousVideoFunction && renderNavigationVideoButton('left')
                                 }
@@ -219,13 +252,14 @@ const VideoModal: FC<IVideoModal> = ({
                             {
                                 !hasWatchedVideo ? (
                                     <Flex
+                                        display={isDesktop ? "flex" : "none"}
                                         marginTop='16px'
                                         alignSelf='flex-start'
                                     >
                                         <Checkbox
                                             size='lg'
                                             onChange={handleCheckBox}
-                                            disabled={clickCheck || hasWatchedVideo}
+                                            disabled={clickCheck ?? hasWatchedVideo}
                                         >
                                             <Text
                                                 fontSize='16px'

@@ -1,7 +1,7 @@
 .module_modal_container {
     @media (max-width: 767px) {
         max-height: none !important;
-        height: 100vh !important;
+        height: 100dvh !important;
     }
 }
 

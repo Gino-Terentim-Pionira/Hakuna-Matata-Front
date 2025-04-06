@@ -1,6 +1,7 @@
 .register_container {
     @media (max-width: 767px) {
         width: 100% !important;
+        height: 100dvh !important;
         padding: 80px 16px 24px 16px !important;
     }
 }
