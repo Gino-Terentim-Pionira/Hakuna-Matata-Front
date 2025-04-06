@@ -17,34 +17,21 @@ import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
 import { SoundtrackManager } from "./components/SoundtrackManager";
 import Trail from './pages/Trail';
-
-const useWindowSize = () => {
-	const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
-	useEffect(() => {
-		const handleResize = () => {
-			setSize([window.innerHeight, window.innerWidth]);
-		}
-		window.addEventListener("resize", handleResize);
-		return () => {
-			window.removeEventListener("resize", handleResize);
-		}
-	}, []);
-	return size;
-}
+import { useWindowSize } from './hooks/useWindowSize';
 
 const Routes = () => {
-	const [height, width] = useWindowSize();
+	const width = useWindowSize();
 
 	return (
 		<RecoilRoot>
 			<HashRouter basename="/">
 				<SoundtrackManager />
 				<AuthProvider>
-					{
-						height < 400 || width < 450 ? (
-							<CantUseApplication/>
-						) : null
-					}
+					{/*{*/}
+					{/*	height < 400 || width < 450 ? (*/}
+					{/*		<CantUseApplication/>*/}
+					{/*	) : null*/}
+					{/*}*/}
 					<Switch>
 						<Route path='/' exact component={Home}/>
 						<Route path='/login' component={Login}/>

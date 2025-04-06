@@ -1,0 +1,74 @@
+.main_page_container {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    background-size: cover;
+}
+
+.main_page_container_video_background {
+    @media (max-width: 767px) {
+        position: relative !important;
+        object-fit: cover !important;
+    }
+}
+
+.container {
+    @media (max-width: 767px) {
+        position: absolute;
+        margin: 0 auto;
+        overflow-x:scroll;
+        overflow-y: hidden;
+        width: 100%;
+        height: 100dvh;
+    }
+}
+
+.wrapper {
+    @media (max-width: 767px) {
+        display: flex;
+        width: 1500px;
+    }
+}
+
+.main_page_container_navigation_icons_container {
+    @media (max-width: 767px) {
+        display: none !important;
+    }
+}
+
+.main_page_container_cheeta_trail_icon {
+    @media (max-width: 767px) {
+        width: 80px !important;
+        left: 200px !important;
+        top: 56% !important;
+        z-index: 1 !important;
+    }
+}
+
+.main_page_container_mamba_trail_icon {
+    @media (max-width: 767px) {
+        width: 80px !important;
+        left: 655px !important;
+        top: 59% !important;
+    }
+}
+
+.main_page_container_baboon_icon {
+    @media (max-width: 767px) {
+        width: 340px !important;
+        left: 855px !important;
+        top: 50% !important;
+    }
+}
+
+.main_page_container_lion_trail_icon {
+    @media (max-width: 767px) {
+        width: 80px !important;
+        left: 1390px !important;
+        top: 56% !important;
+    }
+}
+
+

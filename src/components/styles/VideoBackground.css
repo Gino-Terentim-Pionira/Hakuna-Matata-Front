@@ -1,0 +1,5 @@
+.video_background_container {
+    @media (max-width: 767px) {
+        object-fit: cover !important;
+    }
+}

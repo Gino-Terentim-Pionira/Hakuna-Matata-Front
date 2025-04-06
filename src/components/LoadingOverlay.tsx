@@ -10,7 +10,7 @@ const LoadingOverlay = () => {
         <Center
             position='fixed'
             zIndex='10'
-            w="100%"
+            w="100vw"
             h="100vh"
             backgroundColor="#EBAF59"
             flexDir="column"

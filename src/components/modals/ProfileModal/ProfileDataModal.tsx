@@ -5,6 +5,7 @@ import moment from 'moment';
 import { motion } from "framer-motion"
 import { useUser } from '../../../hooks';
 import api from '../../../services/api';
+import "./styles/ProfileDataModal.css";
 
 // Components
 import LoadingState from '../../LoadingState';
@@ -235,13 +236,14 @@ const ProfileDataModal = () => {
         }];
 
         return infoArray.map((item, index) =>
-            <Flex key={index} alignItems="center" mb="16px">
-                <Text color={colorPalette.textColor} fontWeight="semibold" fontSize={{ xl: "24px", lg: "24px", md: "18px", sm: "18px" }}>
+            <Flex className="profile_data_modal_container_info_container_render_container" key={index} alignItems="center" mb="16px">
+                <Text className="profile_data_modal_container_info_container_render_container_title" color={colorPalette.textColor} fontWeight="semibold" fontSize={{ xl: "24px", lg: "24px", md: "18px", sm: "18px" }}>
                     {item.infoLabel}:
                 </Text>
                 {
                     isEditMode && item.onChange ?
                         <Input
+                            className="profile_data_modal_container_info_container_render_container_input"
                             width="fit-content"
                             ml="8px"
                             minWidth="200px"
@@ -253,7 +255,7 @@ const ProfileDataModal = () => {
                             onChange={item.onChange}
                             type={item.type || "text"}
                         /> :
-                        <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
+                        <Text className="profile_data_modal_container_info_container_render_container_text" ml="8px" color={colorPalette.textColor} fontSize='20px'>
                             {item.infoValue}
                         </Text>
                 }
@@ -266,9 +268,9 @@ const ProfileDataModal = () => {
             {
                 userData.email !== undefined ? (
                     <>
-                        <Flex mt="40px" ml="48px">
-                            <Flex direction='column' alignItems='center'>
-                                <Center borderRadius="4px" bg="#FFFEEE" position="relative">
+                        <Flex className="profile_data_modal_container" mt="40px" ml="48px">
+                            <Flex className="profile_data_modal_container_profile_icon_container" direction='column' alignItems='center'>
+                                <Center className="profile_data_modal_container_profile_icon_container_icon" borderRadius="4px" bg="#FFFEEE" position="relative">
                                     {
                                         isEditMode &&
                                         <AnimatedCenter
@@ -288,7 +290,7 @@ const ProfileDataModal = () => {
                                             <Text fontFamily={fontTheme.fonts} fontSize="18px" color={colorPalette.slideBackground}>Editar avatar</Text>
                                         </AnimatedCenter>
                                     }
-                                    <UserAvatar customAvatar={userData.custom_avatar} />
+                                    <UserAvatar width="100%" height="100%" customAvatar={userData.custom_avatar} />
                                 </Center>
                                 <Button bg='white' isLoading={isLoading} onClick={editButton} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
                                     <Text color={colorPalette.textColor} fontSize='1.3rem'>
@@ -296,11 +298,11 @@ const ProfileDataModal = () => {
                                     </Text>
                                 </Button>
                             </Flex>
-                            <Flex direction='column' marginLeft='80px'>
+                            <Flex className="profile_data_modal_container_info_container" direction='column' marginLeft='80px'>
                                 {
                                     renderInfo()
                                 }
-                                <Flex alignItems="center">
+                                <Flex className="profile_data_modal_container_info_container_coins" alignItems="center">
                                     <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="20px">
                                         Joias:
                                     </Text>
