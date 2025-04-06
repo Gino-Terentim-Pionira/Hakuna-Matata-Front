@@ -314,7 +314,9 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
                                                         }}
                                                         key={video._id}
                                                     >
-                                                        <Image className='module_modal_grid_video_card_image' height={video.thumbnail ? '' : '59px'} src={video.thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
+                                                        <Flex className='module_modal_grid_video_card_image_container' justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="165px" bg={colorPalette.textColor}>
+                                                            <Image className={video.thumbnail ? 'module_modal_grid_video_card_image' : 'module_modal_grid_video_card_image_placeholder'} height={video.thumbnail ? '' : '59px'} src={video.thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
+                                                        </Flex>
                                                         <Flex className='module_modal_grid_video_card_info_container' flexDir="column" paddingX="16px" marginTop="24px">
                                                             <Text className='module_modal_grid_video_card_info_title' color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
                                                                 {video.videoName}

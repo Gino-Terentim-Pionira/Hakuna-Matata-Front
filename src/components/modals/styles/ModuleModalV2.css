@@ -39,9 +39,24 @@
     }
 }
 
+.module_modal_grid_video_card_image_container {
+    @media (max-width: 767px) {
+        height: auto !important;
+        min-height: 90px !important;
+    }
+}
+
+.module_modal_grid_video_card_image_placeholder {
+    @media (max-width: 767px) {
+        object-fit: contain !important;
+        height: 70px !important;
+    }
+}
+
 .module_modal_grid_video_card_image {
     @media (max-width: 767px) {
         object-fit: fill !important;
+        width: 100% !important;
         height: 90px !important;
     }
 }
@@ -64,6 +79,10 @@
     @media (max-width: 767px) {
         font-size: 13px !important;
         margin-top: 4px !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 5 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
     }
 }
 
