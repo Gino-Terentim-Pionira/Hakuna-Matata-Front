@@ -20,7 +20,7 @@ import Trail from './pages/Trail';
 import { useWindowSize } from './hooks/useWindowSize';
 
 const Routes = () => {
-	const [height, width] = useWindowSize();
+	const width = useWindowSize();
 
 	return (
 		<RecoilRoot>

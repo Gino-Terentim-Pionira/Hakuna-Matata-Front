@@ -69,7 +69,7 @@ const VideoModal: FC<IVideoModal> = ({
     const { pauseSoundtrack } = useSoundtrack();
     const hasWatchedVideo = userData.video_id.includes(id);
     const [clickCheck, setClickCheck] = useState(false);
-    const [height, width] = useWindowSize();
+    const width = useWindowSize();
 
     const isDesktop = width > 767;
 
@@ -227,7 +227,7 @@ const VideoModal: FC<IVideoModal> = ({
                                             <Checkbox
                                                 size='lg'
                                                 onChange={handleCheckBox}
-                                                disabled={clickCheck || hasWatchedVideo}
+                                                disabled={clickCheck ?? hasWatchedVideo}
                                             >
                                                 <Text
                                                     fontSize='16px'
@@ -259,7 +259,7 @@ const VideoModal: FC<IVideoModal> = ({
                                         <Checkbox
                                             size='lg'
                                             onChange={handleCheckBox}
-                                            disabled={clickCheck || hasWatchedVideo}
+                                            disabled={clickCheck ?? hasWatchedVideo}
                                         >
                                             <Text
                                                 fontSize='16px'
