@@ -2,6 +2,8 @@ import { Flex, Text, Modal, ModalOverlay, ModalContent, Box, ModalBody, ModalClo
 import React, { FC, useState, useEffect } from 'react';
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
+import "./styles/GenericQuizModal.css";
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 interface IFinalChallengeQuizModal {
     openModal: boolean;
@@ -38,6 +40,8 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
     const [delayButton, setDelayButton] = useState(true);
     const length = questions_id.length;
 
+	const width = useWindowSize();
+	const isDesktop = width > 767;
     const callReward = () => {
         onEndQuiz();
     }
@@ -123,10 +127,11 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
         <>
             <Modal isOpen={openModal} onClose={openAlert ? openAlert : closeModal} size='full' >
                 <ModalOverlay />
-                <ModalContent margin="0" display='flex' justifyContent='center' alignItems='center' >
+                <ModalContent className="generic_quiz_modal_container" margin="0" display='flex' justifyContent='center' alignItems='center' >
                     <ModalCloseButton color={colorPalette.closeButton} size='lg' />
                     <Box
-                        w="40%"
+						className="generic_quiz_modal_container_box"
+						w="40%"
                         bg={colorPalette.primaryColor}
                         h="83vh"
                         position="absolute"
@@ -137,19 +142,22 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
                         clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
                     />
 
-                    <ModalBody display='flex' w='100%' alignItems='center' flexDirection='column' >
-                        <Flex w='100%' h='97vh'>
-							<Flex w='55%' h='100%'>
+                    <ModalBody className="generic_quiz_modal_body_container" display='flex' w='100%' alignItems='center' flexDirection='column' >
+                        <Flex className="generic_quiz_modal_body_question_info_container" w='100%' h='97vh'>
+							<Flex w={isDesktop ? "55%" : "100%"} h='100%'>
 								<Flex flexDir='column' w='100%' mt='-0.4rem'>
 									<Text
+										className="generic_quiz_modal_body_question_info_text"
 										fontSize='2rem'
 										fontWeight='bold'
 										color={colorPalette.secondaryColor}
-										marginLeft='2.8rem'
+										marginLeft={isDesktop ? '2.8rem' : "0"}
+										marginTop={isDesktop ? '0' : "24px"}
 									>
 										Q {step + 1}/{length}
 									</Text>
 									<Flex
+										className="generic_quiz_modal_body_question_info_description_container"
 										w='98%'
 										borderRadius='0.5rem'
 										boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
@@ -161,6 +169,8 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
 										padding="24px"
 									>
 										<Text
+											className="generic_quiz_modal_body_question_info_description"
+											color={colorPalette.textColor}
 											w='92%'
 											fontFamily={fontTheme.fonts}
 											fontSize={{xl: '20px', lg: '18px', md: '16px', sm: '14px'}}
@@ -180,49 +190,61 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
 											questions_id[step].alternatives.map( (item, index) => {
 												return (
 													<Flex
-													key={index}
-													justifyContent='center'
-													alignItems='center'
-													w='90%'
-													h='29%'
-													boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-													bg='white'
-													borderRadius='0.5rem'
-													marginBottom='0.7rem'
-													marginRight='1.3rem'
-													transition='all 200ms ease'
-													border={borderStyle[index]}
-													_hover={{
-														cursor: 'pointer',
-														transform: 'scale(1.05)',
-													}}
-													onClick={() => buttonFunctions(index)}
+														className='generic_quiz_modal_body_question_answer'
+														key={index}
+														justifyContent='center'
+														alignItems='center'
+														w='90%'
+														h='29%'
+														boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
+														bg='white'
+														borderRadius='0.5rem'
+														marginBottom='0.7rem'
+														marginRight={isDesktop ? '1.3rem' : "0"}
+														transition='all 200ms ease'
+														border={
+															borderStyle[index]
+														}
+														_hover={{
+															cursor: 'pointer',
+															transform:
+																'scale(1.05)',
+														}}
+														onClick={() =>
+															buttonFunctions(
+																index,
+															)
+														}
 													>
 														<Text
+															className="generic_quiz_modal_body_question_answer_text"
 															w='92%'
 															h='65%'
-															fontFamily={fontTheme.fonts}
+															fontFamily={
+																fontTheme.fonts
+															}
+															color={colorPalette.textColor}
 															fontSize='20px'
 														>
-															{
-																item
-															}
+															{item}
 														</Text>
 													</Flex>
-												)
+												);
 											} )
 										}
 									</Flex>
 								</Flex>
 							</Flex>
-							<Flex
-								w='45%'
-								h='100%'
-								justifyContent='center'
-								alignItems='center'
-							>
-								<Image src={image} h='70%' />
-							</Flex>
+							{
+								width > 767 && <Flex
+									w='45%'
+									h='100%'
+									justifyContent='center'
+									alignItems='center'
+								>
+									<Image src={image} h='70%' />
+								</Flex>
+							}
 						</Flex>
 
                     </ModalBody>

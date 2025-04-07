@@ -9,7 +9,9 @@ type QuizAlertProps = {
     modalOnClose: VoidFunction;
     title: string;
     image: string;
-    confirmFunction: VoidFunction
+    confirmFunction: VoidFunction;
+    firstButtonLabel?: string;
+    oneButtonOption?: boolean;
 }
 
 const QuizAlertModal: FC<QuizAlertProps> = ({ 
@@ -17,7 +19,9 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
     modalOnClose,
     title,
     image,
-    confirmFunction
+    confirmFunction,
+    firstButtonLabel,
+    oneButtonOption
  }) => {
     return (
         <Modal
@@ -89,7 +93,7 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
                             fontSize='24px'
 
                         >
-                            Bote em dia sua sabedoria completando esse desafio diário
+                            {title}
                         </Text>
                     </div>
 
@@ -103,7 +107,7 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
                             bgColor={
                                 colorPalette.confirmButton
                             }
-                            width='45%'
+                            width={oneButtonOption ? "100%" : "45%"}
                             height='4rem'
                             fontSize='1.2rem'
                             _hover={{
@@ -112,24 +116,26 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
                             color={colorPalette.textColor}
                             onClick={confirmFunction}
                         >
-                            Vamos nessa!
+                            {firstButtonLabel ?? "Vamos nessa!"}
                         </Button>
-                        <Button
-                            className="quiz_alert_modal_container_body_buttons"
-                            bgColor={
-                                colorPalette.alertText
-                            }
-                            width='45%'
-                            height='4rem'
-                            fontSize='1.2rem'
-                            _hover={{
-                                transform: 'scale(1.1)',
-                            }}
-                            onClick={modalOnClose}
-                            color={colorPalette.textColor}
-                        >
-                            Ainda não!
-                        </Button>
+                        {
+                            !oneButtonOption &&  <Button
+                                className="quiz_alert_modal_container_body_buttons"
+                                bgColor={
+                                    colorPalette.alertText
+                                }
+                                width='45%'
+                                height='4rem'
+                                fontSize='1.2rem'
+                                _hover={{
+                                    transform: 'scale(1.1)',
+                                }}
+                                onClick={modalOnClose}
+                                color={colorPalette.textColor}
+                            >
+                                Ainda não!
+                            </Button>
+                        }
                     </Flex>
                 </ModalBody>
             </ModalContent>

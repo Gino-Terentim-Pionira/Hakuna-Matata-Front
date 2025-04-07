@@ -27,6 +27,7 @@ import { UserServices } from '../services/UserServices';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from '../services/auth';
 import { verifyIsDayTime } from '../utils/algorithms/date';
+import QuizAlertModal from '../components/Quiz/QuizAlertModal';
 
 const Trail = () => {
 
@@ -41,7 +42,7 @@ const Trail = () => {
     const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
     const [trailPageIndex, setTrailPageIndex] = useState(0);
     const [script, setScript] = useState<IScript[]>([]);
-    const [challengeText, setChallengeText] = useState<string>();
+    const [challengeText, setChallengeText] = useState<string>("");
     const [challengeInfo, setChallengeInfo] = useState({
         isAvailable: false,
         isComplete: false,
@@ -425,148 +426,15 @@ const Trail = () => {
                             ) : null
                         }
 
-                        <Modal
-                            isOpen={modalIsOpen}
-                            onClose={handleCloseChallengeModal}
-                            size='4xl'
-                        >
-                            <ModalOverlay />
-                            <ModalContent
-                                height='34rem'
-                                fontFamily={fontTheme.fonts}
-                            >
-                                <Box
-                                    w='25%'
-                                    bg={colorPalette.primaryColor}
-                                    h='25rem'
-                                    position='absolute'
-                                    zIndex='-1'
-                                    left='0'
-                                    top='0'
-                                    borderTopStartRadius='5px'
-                                    clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
-                                />
-                                {challengeInfo.isComplete || !challengeInfo.isAvailable || challengeInfo.isBlocked ? (
-                                    <>
-                                        <ModalBody
-                                            d='flex'
-                                            mt='-1rem'
-                                            flexDirection='column'
-                                            alignItems='center'
-                                            justifyContent='space-between'
-                                        >
-                                            <Flex
-                                                w='65%'
-                                                h='100%'
-                                                justifyContent='space-between'
-                                                flexDirection='column'
-                                                marginBottom='0.8rem'
-                                            >
-                                                <Text
-                                                    w='100%'
-                                                    marginTop='5rem'
-                                                    fontSize='2rem'
-                                                    lineHeight='9vh'
-                                                    textAlign='center'
-                                                    fontWeight='normal'
-                                                >
-                                                    {challengeText}
-                                                </Text>
-                                                <Button
-                                                    bgColor={
-                                                        colorPalette.secondaryColor
-                                                    }
-                                                    width='45%'
-                                                    alignSelf='center'
-                                                    color={
-                                                        colorPalette.buttonTextColor
-                                                    }
-                                                    height='4rem'
-                                                    fontSize='1.4rem'
-                                                    _hover={{
-                                                        transform: 'scale(1.1)',
-                                                    }}
-                                                    onClick={handleCloseChallengeModal}
-                                                >
-                                                    Okay!
-                                                </Button>
-                                            </Flex>
-                                        </ModalBody>
-                                    </>
-                                ) : (
-                                        <>
-                                            <ModalHeader
-                                                d='flex'
-                                                justifyContent='center'
-                                                mt='1.4rem'
-                                            >
-                                                <Text
-                                                    ml='2.3rem'
-                                                    w='75%'
-                                                    fontSize='1.4rem'
-                                                    textAlign='center'
-                                                    fontWeight='normal'
-                                                >
-                                                    {challengeText}
-                                                </Text>
-                                                <ModalCloseButton
-                                                    color={colorPalette.closeButton}
-                                                    size='lg'
-                                                />
-                                            </ModalHeader>
-
-                                            <ModalBody
-                                                d='flex'
-                                                mt='-1rem'
-                                                flexDirection='column'
-                                                alignItems='center'
-                                                justifyContent='space-between'
-                                            >
-                                                <Image
-                                                    src={horizon}
-                                                    w='65%'
-                                                    h='75%'
-                                                />
-
-                                                <Flex
-                                                    w='65%'
-                                                    justifyContent='space-between'
-                                                    marginBottom='0.8rem'
-                                                >
-                                                    <Button
-                                                        bgColor={
-                                                            colorPalette.confirmButton
-                                                        }
-                                                        width='45%'
-                                                        height='4rem'
-                                                        fontSize='1.2rem'
-                                                        _hover={{
-                                                            transform: 'scale(1.1)',
-                                                        }}
-                                                        onClick={openChallengeConfirmation}
-                                                    >
-                                                        Vamos nessa!
-                                                </Button>
-                                                    <Button
-                                                        bgColor={
-                                                            colorPalette.closeButton
-                                                        }
-                                                        width='45%'
-                                                        height='4rem'
-                                                        fontSize='1.2rem'
-                                                        _hover={{
-                                                            transform: 'scale(1.1)',
-                                                        }}
-                                                        onClick={handleCloseChallengeModal}
-                                                    >
-                                                        Ainda não estou pronto!
-                                                </Button>
-                                                </Flex>
-                                            </ModalBody>
-                                        </>
-                                    )}
-                            </ModalContent>
-                        </Modal>
+                        <QuizAlertModal
+                            modalIsOpen={modalIsOpen}
+                            modalOnClose={handleCloseChallengeModal}
+                            title={challengeText}
+                            image={horizon}
+                            confirmFunction={challengeInfo.isComplete || !challengeInfo.isAvailable || challengeInfo.isBlocked ? handleCloseChallengeModal : openChallengeConfirmation}
+                            firstButtonLabel={challengeInfo.isComplete || !challengeInfo.isAvailable || challengeInfo.isBlocked ? "Voltar!" : undefined}
+                            oneButtonOption={true}
+                        />
 
                         {
                             finalChallengeInfo?.questions ? (
