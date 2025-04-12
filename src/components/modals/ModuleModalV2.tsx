@@ -21,6 +21,7 @@ import { errorCases } from '../../utils/errors/errorsCases';
 import ModuleQuizV2 from '../Quiz/ModuleQuizV2';
 import api from '../../services/api';
 import "./styles/ModuleModalV2.css";
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 interface IModuleModalV2 {
     moduleInfo: Module,
@@ -74,6 +75,8 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
     const [image, setImage] = useState(button_off);
     const [isModuleBlocked, setIsModuleBlocked] = useState(false);
     const { userData, getNewUserInfo } = useUser();
+    const width = useWindowSize();
+    const isDesktop = width > 767;
     const { getNewTrailInfo } = useTrail();
     const IS_MODULE_INFO_HAS_QUESTIONS = moduleInfo.questions.length;
     const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
@@ -217,6 +220,12 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
         }
     }
 
+    const extractNumber = (value: string | undefined) => {
+        if (!value) return 0
+        const match = value.match(/^(-?\d+)/);
+        return match ? parseInt(match[1], 10) : 0;
+    }
+
     useEffect(() => {
         defineProperties();
     }, [moduleInfo]);
@@ -246,11 +255,13 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
             >
                 <Flex
                     position="absolute"
-                    top={top}
+                    top={isDesktop ? top : extractNumber(top) * 5.9}
                     bottom={bottom}
-                    left={left}
                     flexDirection='column'
                     justifyContent='center'
+                    w="150px"
+                    h="150px"
+                    left={isDesktop ? left : extractNumber(left) * 16}
                     alignItems='center'
                 >
                     <Image
