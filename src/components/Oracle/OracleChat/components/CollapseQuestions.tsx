@@ -109,108 +109,79 @@ const CollapseQuestions = ({ commonQuestions, isMessageLoading, sendCommonQuesti
         </Box>
     );
 
+    const renderCollapseQuestions = () => (
+        <Box
+            borderTopRadius='18px'
+            background={colorPalette.slideBackground}
+            boxShadow={isDesktop ? "inset 0px 6px 4px rgba(74, 74, 74, 0.25)" : "none"}
+            height={isDesktop ? '50vh' : '70dvh'}
+            overflowY='auto'
+            onMouseLeave={ isDesktop ? closeCollapse : undefined}
+            sx={{
+                "&::-webkit-scrollbar": {
+                    width: "4px",
+                    height: "4px",
+                    borderRadius: "8px"
+                },
+                "&::-webkit-scrollbar-thumb": {
+                    background: "#9D9D9D",
+                    borderRadius: "10px"
+                },
+                "&::-webkit-scrollbar-thumb:hover": {
+                    background: "#555",
+                },
+                "&::-moz-scrollbar": {
+                    width: "4px",
+                    height: "4px",
+                    borderRadius: "8px"
+                },
+                "&::-moz-scrollbar-thumb": {
+                    background: "#9D9D9D",
+                    borderRadius: "10px"
+                },
+                "&::-moz-scrollbar-thumb:hover": {
+                    background: "#555",
+                },
+            }}
+            style={{
+                transform: `translateY(${translateY}px)`,
+                transition: closing ? 'transform 0.3s ease-in-out' : '',
+            }}
+        >
+            {
+                !isDesktop &&  <Flex
+                    className="shop_item_detailed_container_close_bar"
+                    width="100%"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    height='fit-content'
+                    paddingBottom="8px"
+                    paddingTop="12px"
+                >
+                    <Flex
+                        width="50px"
+                        height="6px"
+                        borderRadius="1000px"
+                        backgroundColor={colorPalette.neutralGray}
+                        margin="auto"
+                    />
+                </Flex>
+            }
+            {
+                renderGroupedQuestions()
+            }
+        </Box>
+    )
+
     return (
         isDesktop ?
             <Collapse in={isCommonQuestionOpen} animateOpacity>
-                <Box
-                    borderTopRadius='4px'
-                    background={colorPalette.oracleWhite}
-                    boxShadow="inset 0px 6px 4px rgba(74, 74, 74, 0.25)"
-                    height='50vh'
-                    overflowY='auto'
-                    onMouseLeave={closeCollapse}
-                    sx={{
-                        "&::-webkit-scrollbar": {
-                            width: "4px",
-                            height: "4px",
-                            borderRadius: "8px"
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                            background: "#9D9D9D",
-                            borderRadius: "10px"
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                            background: "#555",
-                        },
-                        "&::-moz-scrollbar": {
-                            width: "4px",
-                            height: "4px",
-                            borderRadius: "8px"
-                        },
-                        "&::-moz-scrollbar-thumb": {
-                            background: "#9D9D9D",
-                            borderRadius: "10px"
-                        },
-                        "&::-moz-scrollbar-thumb:hover": {
-                            background: "#555",
-                        },
-                    }}
-                >
-                    {
-                        renderGroupedQuestions()
-                    }
-                </Box>
+                {renderCollapseQuestions()}
             </Collapse>
             :
             <Slide direction="bottom" in={isCommonQuestionOpen} style={{zIndex: 99}} >
-                <Box
-                    borderTopRadius='18px'
-                    background={colorPalette.slideBackground}
-                    height='50vh'
-                    overflowY='auto'
-                    sx={{
-                        "&::-webkit-scrollbar": {
-                            width: "4px",
-                            height: "4px",
-                            borderRadius: "8px"
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                            background: "#9D9D9D",
-                            borderRadius: "10px"
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                            background: "#555",
-                        },
-                        "&::-moz-scrollbar": {
-                            width: "4px",
-                            height: "4px",
-                            borderRadius: "8px"
-                        },
-                        "&::-moz-scrollbar-thumb": {
-                            background: "#9D9D9D",
-                            borderRadius: "10px"
-                        },
-                        "&::-moz-scrollbar-thumb:hover": {
-                            background: "#555",
-                        },
-                    }}
-                    style={{
-                        transform: `translateY(${translateY}px)`,
-                        transition: closing ? 'transform 0.3s ease-in-out' : '',
-                    }}
-                >
-                    <Flex
-                        className="shop_item_detailed_container_close_bar"
-                        width="100%"
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                        height='fit-content'
-                        paddingBottom="8px"
-                        paddingTop="12px"
-                    >
-                        <Flex
-                            width="50px"
-                            height="6px"
-                            borderRadius="1000px"
-                            backgroundColor={colorPalette.neutralGray}
-                            margin="auto"
-                        />
-                    </Flex>
-                    {
-                        renderGroupedQuestions()
-                    }
-                </Box>
+                {renderCollapseQuestions()}
             </Slide>
     )
 }
