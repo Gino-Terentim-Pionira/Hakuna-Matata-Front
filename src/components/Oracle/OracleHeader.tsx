@@ -4,6 +4,8 @@ import { Center, Flex, Image, Text } from '@chakra-ui/react';
 import SideArrow from '../../assets/icons/sidearrow.png';
 import { useHistory } from 'react-router-dom';
 import { getStatusColor } from '../../utils/statusUtils';
+import { useWindowSize } from '../../hooks/useWindowSize';
+import { FaArrowLeft } from 'react-icons/fa';
 
 export const OracleHeader = ({
 	oracleName
@@ -11,6 +13,8 @@ export const OracleHeader = ({
 	oracleName: string
 }) => {
 	const history = useHistory();
+	const width = useWindowSize();
+	const isDesktop = width > 767;
 
 	return (
 		<Flex
@@ -19,20 +23,12 @@ export const OracleHeader = ({
 			height="95px"
 			alignItems="center"
 			color={colorPalette.whiteText}
-			paddingX="44px"
+			paddingX={isDesktop ? "44px" : "16px"}
 			paddingY="16px"
 		>
-			<Image
-				_hover={{ cursor: 'pointer', transform: 'scale(1.1)' }}
-				transition="all 0.2s ease"
-				width="44px"
-				src={SideArrow}
-				alt="Voltar para página anterior"
-				onClick={() => history.goBack()}
-			/>
-
-			<Center display="flex" flexDirection="column" alignSelf="center" flexGrow={1}>
-				<Text fontSize="32px" height="35px" color={colorPalette.whiteText}>
+			<FaArrowLeft size={isDesktop ? "44px" : "32px"} color={colorPalette.whiteText} onClick={() => history.goBack()} />
+			<Center display="flex" flexDirection="column" alignSelf="center" flexGrow={1} mr={isDesktop ? 0 : "32px"}>
+				<Text fontSize={isDesktop ? "32px" : "28px"} height="35px" color={colorPalette.whiteText}>
 					Oráculo
 				</Text>
 				<Text marginBottom="4px" fontSize="18px" mt="4px" color={getStatusColor(oracleName.toLowerCase())}>

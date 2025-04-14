@@ -12,6 +12,8 @@ import monkey from "../assets/sprites/monkey/monkey.webp";
 import { MdClose } from "react-icons/md";
 import { S3_BABOON_HELP } from '../utils/constants/constants';
 import { webmToOther } from '../utils/algorithms/webmToOther';
+import "./styles/BaboonHelp.css"
+import { useWindowSize } from '../hooks/useWindowSize';
 
 const BaboonHelp = () => {
     const MILI_SECONDS_INACTIVE = 40000;
@@ -34,6 +36,8 @@ const BaboonHelp = () => {
         ] as IMessages[],
         commonQuestions: [] as ICommonQuestion[]
     });
+    const width = useWindowSize();
+    const isDesktop = width > 767;
 
     const handleCloseInactive = () => {
         setIsInactiveOpen(false);
@@ -187,7 +191,7 @@ const BaboonHelp = () => {
 
             <Modal isCentered isOpen={isOpen} onClose={handleCloseModal} size="4xl" scrollBehavior="inside">
                 <ModalOverlay />
-                <ModalContent height='90vh' background={colorPalette.oracleWhite} paddingX="48px" minHeight='60vh' fontFamily={fontTheme.fonts}>
+                <ModalContent className="baboon_help_container" height='90vh' background={colorPalette.oracleWhite} paddingX="48px" minHeight='60vh' fontFamily={fontTheme.fonts}>
                     <ModalHeader width="100%" borderBottom={`2px solid ${colorPalette.primaryColor}`}>
                         <Text width="fit-content" margin="auto" fontSize="40px" color={colorPalette.textColor}
                             fontWeight="semibold">O Sábio Babuíno</Text>
@@ -198,6 +202,7 @@ const BaboonHelp = () => {
                         height='100%'
                         marginTop="16px"
                         paddingTop="0px"
+                        paddingX={isDesktop ? "24px" : "16px"}
                     >
                         {
                             isLoading ? (

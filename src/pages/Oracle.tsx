@@ -13,9 +13,12 @@ import { useUser } from '../hooks';
 import OracleAnimation from '../components/Oracle/OracleChat/components/OracleAnimation';
 import { useSoundtrack } from '../hooks/useSoundtrack';
 import useShopItems from '../hooks/useShopItems';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 export const Oracle = () => {
 	const { userData, getNewUserInfo } = useUser();
+	const width = useWindowSize();
+	const isDesktop = width > 767;
 	const history = useHistory();
 	const location = useLocation();
 	const oracleService = new OracleServices();
@@ -159,7 +162,7 @@ export const Oracle = () => {
 				) : (
 
 						<Flex
-							height="100vh"
+							height="100dvh"
 							width="100%"
 							flexDirection="column"
 							alignItems="center"
