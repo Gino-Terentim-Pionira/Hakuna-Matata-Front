@@ -69,9 +69,7 @@ const VideoModal: FC<IVideoModal> = ({
     const { pauseSoundtrack } = useSoundtrack();
     const hasWatchedVideo = userData.video_id.includes(id);
     const [clickCheck, setClickCheck] = useState(false);
-    const width = useWindowSize();
-
-    const isDesktop = width > 767;
+    const { isDesktop } = useWindowSize();
 
     const updateVideo = async () => {
         try {
@@ -181,7 +179,7 @@ const VideoModal: FC<IVideoModal> = ({
         <>
             <Modal isOpen={videoIsOpen} onClose={handleCloseModal} size="5xl">
                 <ModalOverlay />
-                <ModalContent onClick={() => console.log(width)} className="video_modal_container" paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
+                <ModalContent className="video_modal_container" paddingX="24px" paddingTop="24px" paddingBottom="48px" background={colorPalette.oracleWhite} height="fit-content">
                     <ModalHeader className="video_modal_header_container" paddingTop="0" paddingBottom="0px">
                         <Text className="video_modal_header_title" fontFamily={fontTheme.fonts} fontWeight="semibold" color={colorPalette.primaryColor} fontSize="40px">
                             {name}
