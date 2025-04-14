@@ -36,8 +36,7 @@ const CollapseQuestions = ({ commonQuestions, isMessageLoading, sendCommonQuesti
         acc[module_name][topic].push(question);
         return acc;
     }, {});
-    const width = useWindowSize();
-    const isDesktop = width > 767;
+    const { isDesktop } = useWindowSize();
 
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
         setStartY(e.touches[0].clientY);

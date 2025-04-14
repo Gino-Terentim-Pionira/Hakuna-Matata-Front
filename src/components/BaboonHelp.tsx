@@ -36,8 +36,7 @@ const BaboonHelp = () => {
         ] as IMessages[],
         commonQuestions: [] as ICommonQuestion[]
     });
-    const width = useWindowSize();
-    const isDesktop = width > 767;
+    const { isDesktop } = useWindowSize();
 
     const handleCloseInactive = () => {
         setIsInactiveOpen(false);

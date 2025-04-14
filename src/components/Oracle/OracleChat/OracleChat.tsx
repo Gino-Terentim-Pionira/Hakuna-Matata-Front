@@ -21,8 +21,7 @@ export const OracleChat = ({
 	inicialMessage
 }: OracleChatType) => {
 	const lastMessageRef = useRef<HTMLDivElement>(null);
-	const width = useWindowSize();
-	const isDesktop = width > 767;
+	const { isDesktop } = useWindowSize();
 	const sendUserMessage = async (content: string) => {
 		await userMessage(content);
 		if (lastMessageRef.current) {

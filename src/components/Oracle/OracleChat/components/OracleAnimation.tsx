@@ -16,8 +16,7 @@ function OracleAnimation({
     const [opacityIdle, setOpacityIdle] = useState(1);
     const talkingRef = useRef<HTMLVideoElement>(null);
     const idleRef = useRef<HTMLVideoElement>(null);
-    const width = useWindowSize();
-    const isDesktop = width > 767;
+    const { isDesktop } = useWindowSize();
 
     const playVideoFromStart = (videoRef: React.RefObject<HTMLVideoElement>) => {
         if (videoRef.current) {

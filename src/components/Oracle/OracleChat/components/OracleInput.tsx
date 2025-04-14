@@ -24,8 +24,7 @@ export const OracleInput = ({
 }: OracleInputType) => {
 	const [inputReleasedMessage, setInputReleasedMessage] = useState(inicialMessage || '');
 	const [isCommonQuestionOpen, setIsCommonQuestionOpen] = useState(false);
-	const width = useWindowSize();
-	const isDesktop = width > 767;
+	const { isDesktop } = useWindowSize();
 
 	const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === 'Enter') {

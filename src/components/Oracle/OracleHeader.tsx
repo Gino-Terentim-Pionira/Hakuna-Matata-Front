@@ -13,8 +13,7 @@ export const OracleHeader = ({
 	oracleName: string
 }) => {
 	const history = useHistory();
-	const width = useWindowSize();
-	const isDesktop = width > 767;
+	const { isDesktop } = useWindowSize();
 
 	return (
 		<Flex
