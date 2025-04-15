@@ -2,6 +2,7 @@ import { Center, Flex, Slide, Text, Image, useDisclosure } from '@chakra-ui/reac
 import colorPalette from '../../styles/colorPalette';
 import React, { useEffect, useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
+import { FaArrowLeft } from "react-icons/fa";
 import "./styles/MobileNavIcon.css";
 import fontTheme from '../../styles/base';
 import { IoCloseSharp } from "react-icons/io5";
@@ -41,12 +42,14 @@ import DailyQuiz from '../Quiz/DailyQuiz';
 import chat from '../../assets/icons/chat.png';
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import chatScript from '../../utils/scripts/Baboon/chatScript';
+import { useHistory } from 'react-router-dom';
 
 type MobileNavIconTypes = {
 	marginTop?: string;
+	showGoBack?: boolean;
 }
 
-const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
+const MobileNavIcon = ({ marginTop, showGoBack = false }: MobileNavIconTypes) => {
 	const tutorialServices = new TutorialServices();
 	const { userData } = useUser();
 	const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
@@ -74,6 +77,7 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 	const [isInventoryLoading, setIsInventoryLoading] = useState(true);
 	const [isDailyModalOpen, setDailyIsModalOpen] = useState(false);
 	const [isDifferentDay, setIsDifferentDay] = useState(false);
+	const history = useHistory();
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -179,6 +183,11 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 
 	const handleChat = () => {
 		narrativeOnOpen();
+	}
+
+	const handleMapNavigation = () => {
+		const path = '/mainPage';
+		history.push(path)
 	}
 
 	const itemsWithoutDailyQuiz = [{
@@ -313,10 +322,29 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 				</Center>
 			}
 
+			{showGoBack &&
+				<Center
+					position='fixed'
+					className='mobile_nav_icon_container'
+					transition='all 0.2s ease'
+					top={marginTop || '83px'}
+					left='16px'
+					border={`3px solid ${colorPalette.blackBorder}`}
+					borderRadius='999px'
+					width='53px'
+					height='53px'
+					bg='white'
+					onClick={handleMapNavigation}
+					zIndex={9}
+				>
+					<FaArrowLeft color={colorPalette.closeButton} size={32} />
+				</Center>
+			}
+
 			<Slide className="mobile_nav_icon_slide_container" direction='left' in={isOpen} style={{ zIndex: 1900 }}>
 				<Flex
 					w='100%'
-					h='100vh'
+					h='100dvh'
 					flexDirection='column'
 					justifyContent='flex-start'
 					alignItems='center'
@@ -328,7 +356,7 @@ const MobileNavIcon = ({ marginTop }: MobileNavIconTypes) => {
 					fontFamily={fontTheme.fonts}
 					paddingX='16px'
 					paddingTop='16px'
-					paddingBottom='150px'
+					paddingBottom='16px'
 				>
 					<Flex
 						alignSelf='flex-end'

@@ -17,6 +17,7 @@ const MobileIgnorancePremiumIcons = () => {
 			width="55%"
 			flexDirection='column'
 			alignItems='flex-end'
+			zIndex="3"
 		>
 			<CoinsDisplay
 				value={userData.coins}
