@@ -102,6 +102,13 @@ const Trail = () => {
         { top: "75vh", left: "78vw" },
     ];
 
+    const modulesMobilePositions = [
+        { top: "69vh", left: "260px" },
+        { top: "52vh", left: "650px" },
+        { top: "71vh", left: "1000px" },
+        { top: "64vh", left: "1260px" },
+    ];
+
     const finishFinalChallenge = async () => {
         try {
             const userId = sessionStorage.getItem('@pionira/userId');
@@ -320,7 +327,6 @@ const Trail = () => {
                         (isLoading || isAnimationLoading || !trailData) ? <></> :
                             <Flex
                                 justifyContent='space-between'
-                                margin={isDesktop ? '2vw' : 0}
                             >
                                 {
                                     trailPageIndex > 0 && <Box
@@ -337,14 +343,18 @@ const Trail = () => {
                                     </Box>
                                 }
                                 {
-                                    trailData.trailPages[trailPageIndex].modules.slice(0, 4).map((item, index) => (
-                                        <ModuleModalV2
-                                            key={item._id}
-                                            moduleInfo={item}
-                                            top={item.top || modulesPositions[index].top}
-                                            left={item.left || modulesPositions[index].left}
-                                        />
-                                    ))
+                                    trailData.trailPages[trailPageIndex].modules.slice(0, 4).map((item, index) => {
+                                        const top = isDesktop ?  item.top || modulesPositions[index].top : item.topMobile ?? modulesMobilePositions[index].top
+                                        const left = isDesktop ? item.left || modulesPositions[index].left : item.leftMobile ?? modulesMobilePositions[index].left
+                                        return (
+                                            <ModuleModalV2
+                                                key={item._id}
+                                                moduleInfo={item}
+                                                top={top}
+                                                left={left}
+                                            />
+                                        )
+                                    })
                                 }
                                 {
                                     trailData.finalChallenge.icon ? (
@@ -382,7 +392,8 @@ const Trail = () => {
                                     trailPageIndex < trailData.trailPages.length - 1 && <Box
                                         position='absolute'
                                         top='60vh'
-                                        right={isDesktop ? '5vw' : '-1060px'}
+                                        right={isDesktop ? '5vw' : undefined}
+                                        left={isDesktop ? undefined : '1400px'}
                                     >
                                         <NavIcon
                                             image={<FaArrowRight size={55} color={colorPalette.secondaryColor} />}

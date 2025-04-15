@@ -39,6 +39,8 @@ export interface Module {
     isCompleted: boolean;
     top?: string;
     left?: string;
+    topMobile?: string;
+    leftMobile?: string;
 }
 
 export interface TrailPage {

@@ -75,8 +75,6 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
     const [image, setImage] = useState(button_off);
     const [isModuleBlocked, setIsModuleBlocked] = useState(false);
     const { userData, getNewUserInfo } = useUser();
-    const width = useWindowSize();
-    const isDesktop = width > 767;
     const { getNewTrailInfo } = useTrail();
     const IS_MODULE_INFO_HAS_QUESTIONS = moduleInfo.questions.length;
     const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
@@ -255,13 +253,13 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
             >
                 <Flex
                     position="absolute"
-                    top={isDesktop ? top : extractNumber(top) * 5.9}
+                    top={top}
                     bottom={bottom}
                     flexDirection='column'
                     justifyContent='center'
                     w="150px"
                     h="150px"
-                    left={isDesktop ? left : extractNumber(left) * 16}
+                    left={left}
                     alignItems='center'
                 >
                     <Image
