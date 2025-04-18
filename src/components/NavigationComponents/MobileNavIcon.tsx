@@ -22,6 +22,7 @@ import {
 	IGNORANCE_GLASS,
 	INVENTORY,
 	LOG_OUT,
+	ORACLE,
 	STORE,
 	TUTORIAL,
 	USER_PROFILE,
@@ -43,13 +44,17 @@ import chat from '../../assets/icons/chat.png';
 import DefaultNarrativeModal from '../modals/Narrative/DefaultNarrativeModal';
 import chatScript from '../../utils/scripts/Baboon/chatScript';
 import { useHistory } from 'react-router-dom';
+import trailEnum from '../../utils/enums/trail';
+import OracleIcon from '../../assets/icons/oracle/oracle_icon.webp';
 
 type MobileNavIconTypes = {
 	marginTop?: string;
 	showGoBack?: boolean;
+	showOracle?: boolean;
+	trail?: trailEnum;
 }
 
-const MobileNavIcon = ({ marginTop, showGoBack = false }: MobileNavIconTypes) => {
+const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail }: MobileNavIconTypes) => {
 	const tutorialServices = new TutorialServices();
 	const { userData } = useUser();
 	const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
@@ -190,61 +195,84 @@ const MobileNavIcon = ({ marginTop, showGoBack = false }: MobileNavIconTypes) =>
 		history.push(path)
 	}
 
-	const itemsWithoutDailyQuiz = [{
+	const handleOracle = () => {
+		handleFirstView('Oráculo', () => history.push({
+			pathname: '/oracle',
+			state: {
+				trail
+			}
+		}));
+	}
+
+	const renderIconImage = (icon: string) => (
+		<Image src={icon} width="45px" height="45px" />
+	)
+
+	const oracleItem = showOracle ? {
+		label: ORACLE,
+		icon: renderIconImage(OracleIcon),
+		onClick: handleOracle
+	} : {}
+
+	const itemsWithoutDailyQuiz = [
+		oracleItem,
+		{
 		label: USER_PROFILE,
 		icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
 		onClick: handleProfileOpen
 	}, {
 		label: STORE,
-		icon: <Image src={icon_shop} width="45px" height="45px" />,
+		icon: renderIconImage(icon_shop),
 		onClick: handleShop
 	}, {
 		label: INVENTORY,
-		icon: <Image src={inventory_icon} width="45px" height="45px" />,
+		icon: renderIconImage(inventory_icon),
 		onClick: handleInventory
 	}, {
 		label: TUTORIAL,
-		icon: <Image src={icon_tutorial} width="45px" height="45px" />,
+		icon: renderIconImage(icon_tutorial),
 		onClick: handleTutorialOpen
 	}, {
 		label: IGNORANCE_GLASS,
-		icon: <Image src={isIgnoranceFilterOn ? glassesOn : glasses} width="45px" height="45px" />,
+		icon:  renderIconImage(isIgnoranceFilterOn ? glassesOn : glasses),
 		onClick: handleIgnoranceGlasses
 	}, {
 		label: LOG_OUT,
-		icon: <Image src={icon_logout} width="45px" height="45px" />,
+		icon: renderIconImage(icon_logout),
 		onClick: LogOut
 	}]
 
-	const items = [{
-		label: USER_PROFILE,
-		icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
-		onClick: handleProfileOpen
-	}, {
-		label: STORE,
-		icon: <Image src={icon_shop} width="45px" height="45px" />,
-		onClick: handleShop
-	}, {
-		label: INVENTORY,
-		icon: <Image src={inventory_icon} width="45px" height="45px" />,
-		onClick: handleInventory
-	}, {
-		label: TUTORIAL,
-		icon: <Image src={icon_tutorial} width="45px" height="45px" />,
-		onClick: handleTutorialOpen
-	}, {
-		label: IGNORANCE_GLASS,
-		icon: <Image src={isIgnoranceFilterOn ? glassesOn : glasses} width="45px" height="45px" />,
-		onClick: handleIgnoranceGlasses
-	}, {
-		label: DAILY_QUIZ,
-		icon: <Image src={daily} width="45px" height="45px" />,
-		onClick: handleDailyQuiz
-	}, {
-		label: LOG_OUT,
-		icon: <Image src={icon_logout} width="45px" height="45px" />,
-		onClick: LogOut
-	}]
+	const items = [
+		oracleItem,
+		{
+			label: USER_PROFILE,
+			icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
+			onClick: handleProfileOpen
+		}, {
+			label: STORE,
+			icon: renderIconImage(icon_shop),
+			onClick: handleShop
+		}, {
+			label: INVENTORY,
+			icon: renderIconImage(inventory_icon),
+			onClick: handleInventory
+		}, {
+			label: TUTORIAL,
+			icon: renderIconImage(icon_tutorial),
+			onClick: handleTutorialOpen
+		}, {
+			label: IGNORANCE_GLASS,
+			icon:  renderIconImage(isIgnoranceFilterOn ? glassesOn : glasses),
+			onClick: handleIgnoranceGlasses
+		}, {
+			label: DAILY_QUIZ,
+			icon: renderIconImage(daily),
+			onClick: handleDailyQuiz
+		}, {
+			label: LOG_OUT,
+			icon: renderIconImage(icon_logout),
+			onClick: LogOut
+		}]
 
 	useEffect(() => {
 		const verifyDailyQuiz = () => {
@@ -261,6 +289,7 @@ const MobileNavIcon = ({ marginTop, showGoBack = false }: MobileNavIconTypes) =>
 	}, []);
 	const renderItem = () =>
 		(isDifferentDay ? items : itemsWithoutDailyQuiz).map((item) => (
+			item.label ?
 			<Flex
 				width='100%'
 				height='80px'
@@ -276,7 +305,7 @@ const MobileNavIcon = ({ marginTop, showGoBack = false }: MobileNavIconTypes) =>
 				<Text>{item.label}</Text>
 
 				{item.icon}
-			</Flex>
+			</Flex> : <></>
 		));
 
 	return (

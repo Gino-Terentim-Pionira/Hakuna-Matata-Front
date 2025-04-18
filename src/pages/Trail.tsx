@@ -16,7 +16,7 @@ import FinalChallengeScript from '../utils/scripts/finalChallenge/FinalChallenge
 import DefaultNarrativeModal from '../components/modals/Narrative/DefaultNarrativeModal';
 import fontTheme from '../styles/base';
 import AlertModal from '../components/modals/AlertModal';
-import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
+import { FINAL_QUIZ_SINK, S3_LOCKED_STAMP } from '../utils/constants/constants';
 import horizon from '../assets/horizon.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import { TrailServices } from '../services/TrailServices';
@@ -31,6 +31,7 @@ import "./styles/Trail.css";
 import { MobileIgnorancePremiumIcons } from '../components/IgnoranceCoinsDisplay/MobileIgnorancePremiumIcons';
 import { MobileNavIcon } from '../components/NavigationComponents/MobileNavIcon';
 import { useWindowSize } from '../hooks/useWindowSize';
+import StampIcon from '../components/StampIcon';
 
 const Trail = () => {
 
@@ -41,8 +42,7 @@ const Trail = () => {
     const { userData, getNewUserInfo } = useUser();
     const { changeSoundtrack } = useSoundtrack();
     const { getNewTrailInfo, trailData } = useTrail();
-    const width = useWindowSize();
-    const isDesktop = width > 767;
+    const { isDesktop } = useWindowSize();
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
@@ -288,6 +288,27 @@ const Trail = () => {
         }
     }
 
+    const renderMobileStamps = () => (
+        <Flex
+            top="20px"
+            right="16px"
+            gap="2px"
+            position="absolute"
+        >
+            {
+                trailData?.trailPages[trailPageIndex].modules.map((item, index) => {
+                    return (
+                        <StampIcon
+                            key={index}
+                            size="60px"
+                            stampImage={item.isCompleted ? trailData?.stampImage as string : S3_LOCKED_STAMP}
+                        />
+                    )
+                })
+            }
+        </Flex>
+    )
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -313,7 +334,12 @@ const Trail = () => {
     return (
         <div className="trail_container">
             <MobileIgnorancePremiumIcons />
-            <MobileNavIcon showGoBack />
+            <MobileNavIcon showGoBack showOracle={trailData?.oracle.isAvailable} trail={trailName} />
+
+            {
+                !isDesktop && renderMobileStamps()
+            }
+
             <div className="container" ref={scrollRef}>
                 <div className="wrapper">
                     <VideoBackground
