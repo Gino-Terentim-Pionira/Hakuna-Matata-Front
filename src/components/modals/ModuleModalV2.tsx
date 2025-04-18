@@ -21,7 +21,6 @@ import { errorCases } from '../../utils/errors/errorsCases';
 import ModuleQuizV2 from '../Quiz/ModuleQuizV2';
 import api from '../../services/api';
 import "./styles/ModuleModalV2.css";
-import { useWindowSize } from '../../hooks/useWindowSize';
 
 interface IModuleModalV2 {
     moduleInfo: Module,
@@ -216,12 +215,6 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
             setIsModuleBlocked(false);
             setImage(button_off);
         }
-    }
-
-    const extractNumber = (value: string | undefined) => {
-        if (!value) return 0
-        const match = value.match(/^(-?\d+)/);
-        return match ? parseInt(match[1], 10) : 0;
     }
 
     useEffect(() => {

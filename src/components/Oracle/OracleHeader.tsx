@@ -1,7 +1,6 @@
 import React from 'react';
 import colorPalette from '../../styles/colorPalette';
-import { Center, Flex, Image, Text } from '@chakra-ui/react';
-import SideArrow from '../../assets/icons/sidearrow.png';
+import { Center, Flex, Text } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { getStatusColor } from '../../utils/statusUtils';
 import { useWindowSize } from '../../hooks/useWindowSize';
