@@ -159,7 +159,7 @@ export const Oracle = () => {
 				) : (
 
 						<Flex
-							height="100vh"
+							height="100dvh"
 							width="100%"
 							flexDirection="column"
 							alignItems="center"

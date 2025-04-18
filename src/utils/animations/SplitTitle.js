@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Text } from '@chakra-ui/react';
+import "./styles/SplitTitle.css";
 
 export function SplitTitle({ children, ...rest }) {
     let words = children.split(' ')
@@ -16,6 +17,7 @@ export function SplitTitle({ children, ...rest }) {
                     custom={i}
                 >
                     <Text
+                        className="split_title_text"
                         fontSize={['1rem', '1.5rem', '1.8rem']}
                         fontWeight='semibold'
                         textAlign='left'

@@ -1,0 +1,96 @@
+.generic_quiz_modal_container {
+    @media (max-width: 767px) {
+        max-height: none !important;
+        height: 100dvh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-y: auto !important;
+    }
+}
+
+.generic_quiz_modal_container_box {
+    @media (max-width: 767px) {
+        clip-path: polygon(0% 0%, 100% 0%, 0% 40%) !important;
+    }
+}
+
+.generic_quiz_modal_body_container {
+    @media (max-width: 767px) {
+        padding: 0 16px !important;
+        max-height: none !important;
+    }
+}
+
+.generic_quiz_modal_body_question_info_container {
+    @media (max-width: 767px) {
+        width: 100% !important;
+        justify-content: flex-start !important;
+    }
+}
+
+.generic_quiz_modal_body_question_info_text {
+    @media (max-width: 767px) {
+        font-size: 26px !important;
+    }
+}
+
+.generic_quiz_modal_body_question_info_description_container {
+    @media (max-width: 767px) {
+        width: 100% !important;
+        height: fit-content !important;
+        min-height: 120px !important;
+        max-height: 190px !important;
+        padding: 16px 16px !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+    }
+}
+
+.generic_quiz_modal_body_question_info_description {
+    @media (max-width: 767px) {
+        width: 100% !important;
+        font-size: 16px !important;
+    }
+}
+
+.generic_quiz_modal_body_question_answer_container {
+    @media (max-width: 767px) {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        margin-top: 20px !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+.generic_quiz_modal_body_question_answer_subcontainer {
+    @media (max-width: 767px) {
+        flex-direction: column !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+        height: fit-content !important;
+    }
+}
+
+.generic_quiz_modal_body_question_answer {
+    @media (max-width: 767px) {
+        width: 100% !important;
+        min-height: 90px !important;
+        height: fit-content !important;
+        max-height: 120px !important;
+        margin-bottom: 16px !important;
+        transition: none !important;
+        padding: 8px 8px !important;
+    }
+}
+
+.generic_quiz_modal_body_question_answer:hover {
+    @media (max-width: 767px) {
+        transform: none !important;
+    }
+}
+
+.generic_quiz_modal_body_question_answer_text {
+    @media (max-width: 767px) {
+        font-size: 16px !important;
+    }
+}

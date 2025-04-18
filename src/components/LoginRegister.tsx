@@ -7,6 +7,7 @@ import eye from '../assets/icons/eye.png'
 import TermsPolicyModal from './modals/TermsPolicyModal/TermsPolicyModal';
 import TermsOfUse from './modals/TermsPolicyModal/TermsComponent/TermsOfUse';
 import PrivacyPolicy from './modals/TermsPolicyModal/TermsComponent/PrivacyPolicy';
+import "./styles/LoginRegister.css"
 
 type LoginRegisterProps = {
     mainText: string | ReactElement;
@@ -101,8 +102,9 @@ const LoginRegister: FC<LoginRegisterProps> = ({
         onBlur?: VoidFunction,
         customBorderColor?: string,
     ) => (
-            <InputGroup display="flex" alignItems="center" w="60%" minWidth="250px" position="relative">
+            <InputGroup className="register_container_input_group" display="flex" alignItems="center" w="60%" minWidth="250px" position="relative">
                 <Input
+                    className="register_container_input_group_input"
                     ref={isFirstInput ? inputRef : null}
                     width="100%"
                     minWidth="250px"
@@ -149,6 +151,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
 
     return (
         <Flex
+            className="register_container"
             width="55%"
             height="100vh"
             padding="80px 0 60px 32px"
@@ -187,7 +190,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         <strong>Dica: </strong>{tip}
                     </Text>
                 }
-                {!noInput && <><Box marginTop="32px">
+                {!noInput && <><Box className="register_container_input_group_text" marginTop="32px">
                     <Text
                         fontSize={{base: "14px", md: '16px', lg: '18px'}}
                         color={colorPalette.textColor}
@@ -205,7 +208,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                         onBlur,
                         hasValidationError ? "#F47070" : undefined
                     )}
-                    <Text color="red" fontSize="15"> {validationError} </Text>
+                    <Text color="red" fontSize={{ base: "12px", md: '14px', lg: '18px' }}> {validationError} </Text>
                 </Box>
                     <Box marginTop="16px">
                 {secondText || secondValue || secondPlaceholder ? (
@@ -234,6 +237,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
         forgetPassword && (
             <Box display="flex" justifyContent="flex-start" marginTop='8px'>
                 <Link
+                    className="register_container_forget_password_container_text"
                     color={colorPalette.linkTextColor}
                     fontSize="1rem"
                     textDecoration="underline"
@@ -275,7 +279,7 @@ const LoginRegister: FC<LoginRegisterProps> = ({
                 {additionalComponents}
             </Flex>
 
-            <Box w='70%' h='fit-content'>
+            <Box className="register_container_button_container" w='70%' h='fit-content'>
                 <Center 
                     marginTop='1rem'
                     flexDirection='column'

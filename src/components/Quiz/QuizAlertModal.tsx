@@ -2,6 +2,7 @@ import { Flex, Image, Text, Modal, ModalOverlay, ModalContent, Box, ModalHeader,
 import React, { FC } from 'react';
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
+import "./styles/QuizAlertModal.css";
 
 type QuizAlertProps = {
     modalIsOpen: boolean;
@@ -26,10 +27,12 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
         >
             <ModalOverlay />
             <ModalContent
+                className="quiz_alert_modal_container"
                 height='530px'
                 fontFamily={fontTheme.fonts}
             >
                 <Box
+                    className="quiz_alert_modal_container_box"
                     w='20%'
                     bg={colorPalette.primaryColor}
                     h='100%'
@@ -46,6 +49,7 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
                     mt='1.4rem'
                 >
                     <Text
+                        className="quiz_alert_modal_container_header_title"
                         ml='2.3rem'
                         w='666px'
                         fontSize='32px'
@@ -63,23 +67,39 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
                 </ModalHeader>
 
                 <ModalBody
+                    className="quiz_alert_modal_container_body_container"
                     d='flex'
                     mt='-1rem'
                     flexDirection='column'
                     alignItems='center'
                 >
-                    <Image
-                        src={image}
-                        w='535px'
-                        h='280px'
-                        marginBottom='16px'
-                    />
+                    <div>
+                        <Image
+                            className="quiz_alert_modal_container_body_image"
+                            src={image}
+                            w='535px'
+                            h='280px'
+                            marginBottom='16px'
+                        />
+                        <Text
+                            className="quiz_alert_modal_container_body_text"
+                            margin="auto"
+                            textAlign="center"
+                            color={colorPalette.textColor}
+                            fontSize='24px'
+
+                        >
+                            Bote em dia sua sabedoria completando esse desafio diário
+                        </Text>
+                    </div>
 
                     <Flex
+                        className="quiz_alert_modal_container_body_buttons_container"
                         w='65%'
                         justifyContent='space-between'
                     >
                         <Button
+                            className="quiz_alert_modal_container_body_buttons"
                             bgColor={
                                 colorPalette.confirmButton
                             }
@@ -89,13 +109,15 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
                             _hover={{
                                 transform: 'scale(1.1)',
                             }}
+                            color={colorPalette.textColor}
                             onClick={confirmFunction}
                         >
                             Vamos nessa!
                         </Button>
                         <Button
+                            className="quiz_alert_modal_container_body_buttons"
                             bgColor={
-                                colorPalette.closeButton
+                                colorPalette.alertText
                             }
                             width='45%'
                             height='4rem'
@@ -104,8 +126,9 @@ const QuizAlertModal: FC<QuizAlertProps> = ({
                                 transform: 'scale(1.1)',
                             }}
                             onClick={modalOnClose}
+                            color={colorPalette.textColor}
                         >
-                            Ainda não estou pronto!
+                            Ainda não!
                         </Button>
                     </Flex>
                 </ModalBody>

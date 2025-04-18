@@ -1,0 +1,14 @@
+.navIcon_container {
+    @media (max-width: 767px) {
+        width: 53px !important;
+        height: 53px !important;
+        margin: 0 !important;
+    }
+}
+
+.navIcon_container_image {
+    @media (max-width: 767px) {
+        width: 34px !important;
+        height: 34px !important;
+    }
+}

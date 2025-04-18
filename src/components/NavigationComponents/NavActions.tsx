@@ -31,6 +31,7 @@ import useShopItems from "../../hooks/useShopItems";
 import { ShopModal } from "../modals/ShopModal/ShopModal";
 import { InventoryModal } from "../modals/InventoryModal/InventoryModal";
 import { useOwnedItems } from "../../hooks/useOwnedItems";
+import "./styles/NavActions.css"
 
 interface NavActionsInterface {
   logout: VoidFunction;
@@ -149,6 +150,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   return (
     <>
       <Flex
+        className="nav_actions_container"
         maxWidth='fit-content'
         marginTop='1.5rem'
         flexDirection='column'

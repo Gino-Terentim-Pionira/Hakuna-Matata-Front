@@ -1,0 +1,11 @@
+.register_container_image {
+    @media (max-width: 767px) {
+        display: none !important;
+    }
+}
+
+.register_container_bar {
+    @media (max-width: 767px) {
+        display: none !important;
+    }
+}

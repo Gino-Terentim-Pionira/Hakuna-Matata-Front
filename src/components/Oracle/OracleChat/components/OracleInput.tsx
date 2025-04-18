@@ -5,6 +5,7 @@ import { ICommonQuestion } from '../../../../services/OracleServices';
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import CollapseQuestions from './CollapseQuestions';
+import { useWindowSize } from '../../../../hooks/useWindowSize';
 
 export type userMessageFunction = (content: string) => Promise<void>;
 
@@ -23,6 +24,7 @@ export const OracleInput = ({
 }: OracleInputType) => {
 	const [inputReleasedMessage, setInputReleasedMessage] = useState(inicialMessage || '');
 	const [isCommonQuestionOpen, setIsCommonQuestionOpen] = useState(false);
+	const { isDesktop } = useWindowSize();
 
 	const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === 'Enter') {
@@ -66,7 +68,8 @@ export const OracleInput = ({
 							alignItems="center"
 							alignSelf='center'
 							cursor="pointer"
-							onMouseEnter={() => setIsCommonQuestionOpen(true)}
+							onClick={isDesktop ? undefined : () => setIsCommonQuestionOpen(true)}
+							onMouseEnter={isDesktop ? () => setIsCommonQuestionOpen(true) : undefined}
 						>
 							{
 								isCommonQuestionOpen ? (

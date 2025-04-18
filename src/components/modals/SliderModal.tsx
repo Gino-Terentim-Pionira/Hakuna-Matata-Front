@@ -5,6 +5,7 @@ import { SplitTitle } from "../../utils/animations/SplitTitle";
 import { SplitText } from "../../utils/animations/SplitText";
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
+import "./styles/SliderModal.css";
 
 const SliderModal = ({
     isOpen,
@@ -28,8 +29,9 @@ const SliderModal = ({
     customComponent: ReactNode
 }) => {
     return (
-        <Box 
-            zIndex={10000}
+        <Box
+            position="relative"
+            zIndex="10000"
             fontFamily={fontTheme.fonts}
         >
             <Slide direction="bottom" in={isOpen} >
@@ -43,7 +45,8 @@ const SliderModal = ({
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ ease: "easeOut", duration: 0.5 }}
                                 exit={{ opacity: -1 }}
-                            > <Image src={image} transform="rotateY(0deg)" position="absolute" zIndex="-1" bottom="0" right="0" maxHeight="40rem" />
+                            >
+                                <Image className="slider_modal_image" src={image} transform="rotateY(0deg)" position="absolute" zIndex="-1" bottom="0" right="0" maxHeight="40rem" />
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -61,8 +64,8 @@ const SliderModal = ({
                     zIndex="10"
                 >
                     <Flex
+                        className="slider_modal_items_container"
                         w='80%'
-
                         marginTop='1rem'
                         marginLeft='1.5rem'
                         flexDirection="column"
@@ -98,6 +101,7 @@ const SliderModal = ({
                                     initial={{ opacity: 1 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
+                                    style={{overflowY: "auto"}}
                                 >
                                     <SplitText
                                         initial={{ y: '100%' }}
