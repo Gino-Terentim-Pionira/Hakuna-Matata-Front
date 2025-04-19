@@ -7,21 +7,23 @@ import MediaQueriesEnum from '../utils/enums/mediaQueries';
 type VideoBackgroundProps = {
     source: string | undefined;
     handleLoading?: VoidFunction;
-    className?: string;
+    position?: 'absolute' | '-moz-initial' | 'inherit' | 'initial' | 'revert' | 'unset' | '-webkit-sticky' | 'fixed' | 'relative' | 'static' | 'sticky' | undefined;
+	className?: string;
 }
 
-const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading, className }) => {
+const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading, position="absolute", className }) => {
 	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     return source ? (
 		<video
+			className={className}
 			id='background-video'
 			autoPlay
 			loop
 			muted
 			playsInline
 			style={{
-				position: 'absolute',
+				position: position,
 				width: '100%',
 				height: '100vh',
 				objectFit: isDesktop ? 'fill' : 'cover',

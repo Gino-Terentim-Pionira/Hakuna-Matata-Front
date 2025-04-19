@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { Image, Tooltip } from '@chakra-ui/react';
-import "./styles/TrailIcon.css";
 
 type TrailIconProps = {
     image: string;
@@ -22,14 +21,13 @@ const TrailIcon: FC<TrailIconProps> = ({
             label={mouseOver}
         >
             <Image
-            className={"trail_icon_image"}
             src={image}
             _hover={{
                 cursor: 'pointer',
                 transform: 'scale(1.1)',
             }}
             transition='all 0.2s ease'
-            width='5.74vw'
+            width={{base: "80px", md: "5.74vw"}}
             onClick={onClick}
             />
         </Tooltip>

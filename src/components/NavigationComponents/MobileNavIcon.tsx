@@ -1,9 +1,8 @@
-import { Center, Flex, Slide, Text, Image, useDisclosure } from '@chakra-ui/react';
+import { Center, Flex, Slide, Text, Image, useDisclosure, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../styles/colorPalette';
 import React, { useEffect, useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaArrowLeft } from "react-icons/fa";
-import "./styles/MobileNavIcon.css";
 import fontTheme from '../../styles/base';
 import { IoCloseSharp } from "react-icons/io5";
 import TutorialTopicBackground from '../../assets/modal/tutorial_topic.png';
@@ -46,6 +45,7 @@ import chatScript from '../../utils/scripts/Baboon/chatScript';
 import { useHistory } from 'react-router-dom';
 import trailEnum from '../../utils/enums/trail';
 import OracleIcon from '../../assets/icons/oracle/oracle_icon.webp';
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 type MobileNavIconTypes = {
 	marginTop?: string;
@@ -83,6 +83,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 	const [isDailyModalOpen, setDailyIsModalOpen] = useState(false);
 	const [isDifferentDay, setIsDifferentDay] = useState(false);
 	const history = useHistory();
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP)
 
 	const {
 		isOpen: narrativeIsOpen,
@@ -312,7 +313,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 		<>
 			<Center
 				position='fixed'
-				className='mobile_nav_icon_container'
+				display={{ base: 'flex', md: 'none' }}
 				transition='all 0.2s ease'
 				top={marginTop || '24px'}
 				left='16px'
@@ -330,7 +331,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 			{isIgnoranceFilterOn &&
 				<Center
 					position='fixed'
-					className='mobile_nav_icon_container'
+					display={{ base: 'flex', md: 'none' }}
 					transition='all 0.2s ease'
 					top={marginTop || '83px'}
 					left='16px'
@@ -354,7 +355,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 			{showGoBack &&
 				<Center
 					position='fixed'
-					className='mobile_nav_icon_container'
+					display={{ base: 'flex', md: 'none' }}
 					transition='all 0.2s ease'
 					top={marginTop || '83px'}
 					left='16px'
@@ -370,7 +371,10 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 				</Center>
 			}
 
-			<Slide className="mobile_nav_icon_slide_container" direction='left' in={isOpen} style={{ zIndex: 1900 }}>
+			<Slide
+				direction='left' in={isOpen}
+				style={{ zIndex: 1900, display: isDesktop ? 'none' : 'flex' }}
+			>
 				<Flex
 					w='100%'
 					h='100dvh'

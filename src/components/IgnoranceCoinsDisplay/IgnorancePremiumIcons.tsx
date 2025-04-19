@@ -23,7 +23,6 @@ import TutorialServices from "../../services/TutorialServices";
 import { Module } from "../../recoil/trailRecoilState";
 import StampIcon from "../StampIcon";
 import { S3_LOCKED_STAMP } from "../../utils/constants/constants";
-import "./styles/IgnorancePremiumIcons.css";
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -121,7 +120,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, trail
   return (
     <>
       <Flex
-        className="ignorance_premium_icons_container"
+        display={{base: 'none', md: "flex"}}
         flexDirection='column'
         alignItems='flex-end'
         justifyContent='space-between'

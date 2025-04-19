@@ -1,5 +1,0 @@
-.mobile_ignorance_premium_icons_container {
-    @media (min-width: 767px) {
-        display: none !important;
-    }
-}
