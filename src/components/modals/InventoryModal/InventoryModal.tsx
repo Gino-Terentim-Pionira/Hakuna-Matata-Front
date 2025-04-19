@@ -16,7 +16,6 @@ import { InventoryItem } from './components/InventoryItem';
 import { ShopQuickFilter } from '../ShopModal/components/ShopQuickFilter';
 import { InventoryItemDetailed } from './components/InventoryItemDetailed';
 import { CertificateService } from '../../../services/CertificateService';
-import "./styles/InventoryModal.css";
 
 type InventoryModalType = {
     isOpen: boolean;
@@ -124,7 +123,7 @@ export const InventoryModal = ({ isOpen, onClose, shopItems, certificates, isLoa
             {
                 !ALL_ITEMS_AVAILABLE && <Text fontSize="18px" color={colorPalette.textColor} w="100%" margin="auto" textAlign="center" marginTop='8px'>Você não possui nenhum item. Acesse a loja para comprar um!</Text>
             }
-            <SimpleGrid className="inventory_modal_body_container_grid_container" mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px" height="432px">
+            <SimpleGrid columnGap={{base: "16px", md: "48px"}} mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px" height="432px">
                 {
                     ((quickFilterSelected === "certificate" || quickFilterSelected === "all") && certificates && certificates.length > 0) && certificates.map((item) =>
                         <InventoryItem
@@ -157,55 +156,86 @@ export const InventoryModal = ({ isOpen, onClose, shopItems, certificates, isLoa
 
 
     return (
-        <Modal isCentered isOpen={isOpen} onClose={onClose} size="4xl" scrollBehavior="inside">
-            <ModalOverlay />
-            <ModalContent className="inventory_modal_container" background={colorPalette.oracleWhite} paddingX="48px" minHeight='60vh' fontFamily={fontTheme.fonts}>
-                <ModalHeader className="inventory_modal_header_container" width="100%" borderBottom={`2px solid ${colorPalette.secondaryColor}`}>
-                    <Text className="inventory_modal_header_container_text" width="fit-content" margin="auto" fontSize="40px" color={colorPalette.textColor}
-                        fontWeight="semibold">Inventário</Text>
-                    <ModalCloseButton className="inventory_modal_header_container_close_button" color={colorPalette.closeButton} size="48px" mr="8px" mt="8px" />
-                </ModalHeader>
+		<Modal
+			isCentered
+			isOpen={isOpen}
+			onClose={onClose}
+			size='4xl'
+			scrollBehavior='inside'
+		>
+			<ModalOverlay />
+			<ModalContent
+				background={colorPalette.oracleWhite}
+				paddingX={{ base: '14px', md: '48px' }}
+				minHeight='60vh'
+				height={{ base: '100%', md: 'auto' }}
+				maxH={{ base: 'none', md: 'auto' }}
+				fontFamily={fontTheme.fonts}
+			>
+				<ModalHeader
+					display='flex'
+					justifyContent={{ base: 'flex-start', md: 'auto' }}
+					paddingLeft={{ base: '0', md: 'auto' }}
+					paddingBottom={{ base: '12px', md: 'auto' }}
+					width='100%'
+					borderBottom={`2px solid ${colorPalette.secondaryColor}`}
+				>
+					<Text
+						width='fit-content'
+						margin={{ base: '0', md: 'auto' }}
+						fontSize='40px'
+						color={colorPalette.textColor}
+						fontWeight='semibold'
+					>
+						Inventário
+					</Text>
+					<ModalCloseButton
+						color={colorPalette.closeButton}
+						size={'48px'}
+						mr='8px'
+						mt={{ base: "24px", md: '8px' }}
+					/>
+				</ModalHeader>
 
-                <ModalBody
-                    className="inventory_modal_body_container"
-                    width="100%"
-                    sx={{
-                        "&::-webkit-scrollbar": {
-                            width: "4px",
-                            height: "4px",
-                            borderRadius: "8px"
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                            background: "#9D9D9D",
-                            borderRadius: "10px"
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                            background: "#555",
-                        },
-                        "&::-moz-scrollbar": {
-                            width: "4px",
-                            height: "4px",
-                            borderRadius: "8px"
-                        },
-                        "&::-moz-scrollbar-thumb": {
-                            background: "#9D9D9D",
-                            borderRadius: "10px"
-                        },
-                        "&::-moz-scrollbar-thumb:hover": {
-                            background: "#555",
-                        },
-                    }}
-                >
-                    {
-                        isLoading ? (
-                            <LoadingState />
-                        ) : (
-                                renderContent()
-                            )
-                    }
-                </ModalBody>
-            </ModalContent>
-            <InventoryItemDetailed onClick={() => dowloadItem(shopItemInfo as OwnedItemInfoType)} shopItemInfo={shopItemInfo} isOpen={!!shopItemInfo} onClose={closeShopItemInfo} />
-        </Modal>
-    );
+				<ModalBody
+					width='100%'
+                    paddingX={{ base: '0', md: 'auto' }}
+					sx={{
+						'&::-webkit-scrollbar': {
+							width: '4px',
+							height: '4px',
+							borderRadius: '8px',
+						},
+						'&::-webkit-scrollbar-thumb': {
+							background: '#9D9D9D',
+							borderRadius: '10px',
+						},
+						'&::-webkit-scrollbar-thumb:hover': {
+							background: '#555',
+						},
+						'&::-moz-scrollbar': {
+							width: '4px',
+							height: '4px',
+							borderRadius: '8px',
+						},
+						'&::-moz-scrollbar-thumb': {
+							background: '#9D9D9D',
+							borderRadius: '10px',
+						},
+						'&::-moz-scrollbar-thumb:hover': {
+							background: '#555',
+						},
+					}}
+				>
+					{isLoading ? <LoadingState /> : renderContent()}
+				</ModalBody>
+			</ModalContent>
+			<InventoryItemDetailed
+				onClick={() => dowloadItem(shopItemInfo as OwnedItemInfoType)}
+				shopItemInfo={shopItemInfo}
+				isOpen={!!shopItemInfo}
+				onClose={closeShopItemInfo}
+			/>
+		</Modal>
+	);
 };
