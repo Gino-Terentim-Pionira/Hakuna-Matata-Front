@@ -17,7 +17,6 @@ import { TutorialContent } from "./components/TutorialContent";
 import cheetahBlink from "../../../assets/icons/cheetahblink.svg";
 import WelcomeVideoModal from "../WelcomeVideoModal";
 import { useSoundtrack } from "../../../hooks/useSoundtrack";
-import "./styles/TutorialModal.css";
 
 type TutorialTopicsModalType = {
     isOpen: boolean,
@@ -99,33 +98,52 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic, selectedIcon }: 
     }, [selectedTopic]);
 
     return (
-        <>
-            <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
-                <ModalOverlay />
+		<>
+			<Modal isOpen={isOpen} onClose={onClose} scrollBehavior='inside'>
+				<ModalOverlay />
 
-                <ModalContent
-                    className="tutorial_modal_container"
-                    bgImage={`url(${TutorialTopicBackground})`}
-                    backgroundPosition="center"
-                    backgroundRepeat="no-repeat"
-                    height="650px"
-                    fontFamily={fontTheme.fonts}
-                    boxShadow="0 10px 20px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 1)"
-                >
-                    <ModalCloseButton marginTop="14px" marginRight="14px" size="32px" color={colorPalette.closeButton} />
-                    {isLoading ? (
-                        <LoadingState />
-                    ) :
-                        (tutorialContentSelected ?
-                            <TutorialContent tutorialContent={tutorialContentSelected} userData={userData} goBack={handleGoBackToTopics} tutorialIcon={tutorialIcon} />
-                            :
-                            <TutorialTopics tutorialTopics={tutorialTopics} userData={userData}
-                                onClick={handleTutorialContentSelected} />
-                        )}
-                </ModalContent>
-            </Modal>
+				<ModalContent
+					marginTop={{ base: '0', md: '40px' }}
+					marginBottom={{ base: '0', md: 'auto' }}
+					bgImage={`url(${TutorialTopicBackground})`}
+					backgroundPosition='center'
+					backgroundRepeat='no-repeat'
+					backgroundSize={{ base: 'cover', md: 'auto' }}
+					width={{ base: '100%', md: 'auto' }}
+					height={{ base: '100%', md: '650px' }}
+					maxHeight={{ base: 'none', md: 'auto' }}
+					fontFamily={fontTheme.fonts}
+					boxShadow='0 10px 20px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 1)'
+				>
+					<ModalCloseButton
+						marginTop='14px'
+						marginRight='14px'
+						size='32px'
+						color={colorPalette.closeButton}
+					/>
+					{isLoading ? (
+						<LoadingState />
+					) : tutorialContentSelected ? (
+						<TutorialContent
+							tutorialContent={tutorialContentSelected}
+							userData={userData}
+							goBack={handleGoBackToTopics}
+							tutorialIcon={tutorialIcon}
+						/>
+					) : (
+						<TutorialTopics
+							tutorialTopics={tutorialTopics}
+							userData={userData}
+							onClick={handleTutorialContentSelected}
+						/>
+					)}
+				</ModalContent>
+			</Modal>
 
-            <WelcomeVideoModal isOpen={welcomeVideoIsOpen} onClose={handleWelcomeVideoOnClose} />
-        </>
-    )
+			<WelcomeVideoModal
+				isOpen={welcomeVideoIsOpen}
+				onClose={handleWelcomeVideoOnClose}
+			/>
+		</>
+	);
 }

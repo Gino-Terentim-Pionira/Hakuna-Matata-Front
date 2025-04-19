@@ -8,7 +8,6 @@ import { useUser } from '../../../../hooks';
 import { NOT_ENOUGHT_COINS } from '../../../../utils/constants/mouseOverConstants';
 import { BiSolidCheckCircle } from 'react-icons/bi';
 import { IoMdCloseCircle } from 'react-icons/io';
-import "./styles/ShopItemDetailed.css";
 
 type ShopItemDetailedTypes = {
 	isOpen: boolean;
@@ -114,13 +113,12 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 	}
 
 	return (
-		<Slide direction="bottom" in={isOpen} style={{ zIndex: 1900 }}>
+		<Slide direction='bottom' in={isOpen} style={{ zIndex: 1900 }}>
 			<Box onClick={onClose} w='100%' h='100vh' />
 			<Flex
-				className="shop_item_detailed_container"
-				position="relative"
+				position='relative'
 				w='100%'
-				h='360px'
+				h={{ base: 'fit-content', md: '360px' }}
 				bg={colorPalette.slideBackground}
 				rounded='md'
 				shadow='md'
@@ -135,28 +133,28 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 				}}
 			>
 				<Flex
-					className="shop_item_detailed_container_close_bar"
-					width="100%"
+					display={{ base: 'flex', md: 'none' }}
+					width='100%'
 					onTouchStart={handleTouchStart}
 					onTouchMove={handleTouchMove}
 					onTouchEnd={handleTouchEnd}
 					height='fit-content'
-					paddingBottom="8px"
-					paddingTop="12px"
+					paddingBottom='8px'
+					paddingTop='12px'
 				>
 					<Flex
-						width="50px"
-						height="6px"
-						borderRadius="1000px"
+						width='50px'
+						height='6px'
+						borderRadius='1000px'
 						backgroundColor={colorPalette.neutralGray}
-						margin="auto"
+						margin='auto'
 					/>
 				</Flex>
 
 				<Text
-					className="shop_item_detailed_container_close_button"
-					alignItems="flex-start"
-					position="absolute"
+					display={{ base: 'none', md: 'block' }}
+					alignItems='flex-start'
+					position='absolute'
 					onClick={onClose}
 					transition='all 0.2s'
 					_hover={{
@@ -164,7 +162,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 						opacity: '80%',
 					}}
 					w='fit-content'
-					height="36px"
+					height='36px'
 					color={colorPalette.closeButton}
 					fontWeight='bold'
 					fontSize='32px'
@@ -173,42 +171,54 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 				>
 					X
 				</Text>
-				<Flex className="shop_item_detailed_body_container" paddingLeft="24px" flexDir="column" top="32px" position="absolute" w="95%">
+				<Flex
+					paddingLeft={{ base: '16px', md: '24px' }}
+					paddingRight={{ base: '16px', md: '24px' }}
+					paddingTop={{ base: '8px', md: '24px' }}
+					flexDir='column'
+					top={{ base: '0', md: '32px' }}
+					position={{ base: 'relative', md: 'absolute' }}
+					w={{ base: '100&', md: '95%' }}
+					height={{ base: '100%', md: 'auto' }}
+				>
 					<Text
-						className="shop_item_detailed_body_container_title"
-						fontSize={['0.7rem', '1.5rem', '1.7rem']}
+						fontSize={{ base: '18px', md: '28px' }}
 						fontWeight='semibold'
 						textAlign='left'
-						mb='8px'
+						mb={{ base: '16px', md: '8px' }}
 					>
 						{shopItemInfo && shopItemInfo.title}
 					</Text>
-					<Flex className="shop_item_detailed_body_container_items_container" alignItems="flex-start" justifyContent="space-between" columnGap="24px">
-						<Box
-							overflowY="auto"
-						>
+					<Flex
+						flexDirection={{ base: 'column', md: 'row' }}
+						alignItems='flex-start'
+						justifyContent='space-between'
+						columnGap='24px'
+					>
+						<Box overflowY='auto'>
 							<Text
-								className="shop_item_detailed_body_container_items_container_description"
-								fontSize={['0.5rem', '1rem', '1.2rem']}
+								fontSize={{ base: '16px', md: '18px' }}
+								maxHeight={{ base: 'none', md: 'auto' }}
 								fontWeight='regular'
 								textAlign='left'
-								maxH="260px"
+								maxH='260px'
 							>
 								{shopItemInfo && shopItemInfo.description}
 							</Text>
-							{
-								IS_ITEM_CERTIFICATE && renderCertificateDescription()
-							}
+							{IS_ITEM_CERTIFICATE &&
+								renderCertificateDescription()}
 						</Box>
 
-
-						<Flex className="shop_item_detailed_body_container_items_container_bottom" flexDir="column" marginTop="16px">
+						<Flex
+							width={{ base: '100%', md: 'auto' }}
+							flexDir='column'
+							marginTop='16px'
+						>
 							<Flex>
 								<Text
-									className="shop_item_detailed_body_container_items_container_user_coins"
 									fontFamily={fontTheme.fonts}
-									fontSize="24px"
-									fontWeight="semibold"
+									fontSize={{ base: '18px', md: '24px' }}
+									fontWeight='semibold'
 									color={colorPalette.secundaryGrey}
 								>
 									Suas joias: {userData.coins}
@@ -220,11 +230,10 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 									ml='4px'
 								/>
 							</Flex>
-							<Flex marginBottom="16px">
+							<Flex marginBottom='16px'>
 								<Text
-									className="shop_item_detailed_body_container_items_container_item_price"
 									fontFamily={fontTheme.fonts}
-									fontSize='28px'
+									fontSize={{ base: '20px', md: '28px' }}
 									fontWeight='semibold'
 									color={colorPalette.closeButton}
 								>
@@ -239,25 +248,37 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 							</Flex>
 
 							<Tooltip
-								label={IS_USE_HAS_ENOUGHT_COINS ? '' : NOT_ENOUGHT_COINS}
+								label={
+									IS_USE_HAS_ENOUGHT_COINS
+										? ''
+										: NOT_ENOUGHT_COINS
+								}
 								placement='bottom'
 								hasArrow
 								isDisabled={IS_USE_HAS_ENOUGHT_COINS}
 								closeOnClick={false}
 							>
 								<Button
-									className="shop_item_detailed_body_container_items_container_button"
-									w="200px"
+									w={{ base: '100%', md: '200px' }}
 									height='3.5rem'
-									background={IS_USE_HAS_ENOUGHT_COINS ? colorPalette.primaryColor : colorPalette.grayBackground}
+									background={
+										IS_USE_HAS_ENOUGHT_COINS
+											? colorPalette.primaryColor
+											: colorPalette.grayBackground
+									}
 									color={colorPalette.buttonTextColor}
-									fontSize='1.5rem'
+									fontSize={{ base: '20px', md: '1.5rem' }}
 									borderRadius='8px'
 									_hover={{
-										opacity: 0.7
+										opacity: 0.7,
 									}}
-									onClick={IS_USE_HAS_ENOUGHT_COINS ? onClick : undefined}
+									onClick={
+										IS_USE_HAS_ENOUGHT_COINS
+											? onClick
+											: undefined
+									}
 									cursor={'pointer'}
+									marginBottom={{ base: '24px', md: '0' }}
 								>
 									Comprar
 								</Button>
@@ -265,8 +286,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 						</Flex>
 					</Flex>
 				</Flex>
-
 			</Flex>
 		</Slide>
-	)
+	);
 }
