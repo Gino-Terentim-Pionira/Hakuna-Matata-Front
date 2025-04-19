@@ -1,7 +1,6 @@
 import React, { FC, } from 'react';
 import { Button, Text } from "@chakra-ui/react";
 import colorPalette from '../styles/colorPalette';
-import "./styles/PerfilModalButton.css";
 
 type PerfilModalButtonProps = {
     isSelected: boolean,
@@ -13,17 +12,17 @@ const PerfilModalButton: FC<PerfilModalButtonProps> = ({ onClick, label, isSelec
     const bg = isSelected ? colorPalette.secondaryColor : colorPalette.inactiveButton;
     return (
         <Button
-            className="profile_modal_button_container"
+            padding={{base: "8px 23px", md: "auto"}}
             size='lg'
-            height='4rem'
-            width='25%'
+            height={{base: "fit-content", md: '4rem'}}
+            width={{base: "fit-content", md:'25%'}}
             bg={bg}
             color={colorPalette.buttonTextColor}
-            _hover={{ transform: "scale(1.1)" }}
-            transition='all 200ms ease'
+            _hover={{ transform: {base: "none", md: "scale(1.1)"} }}
+            transition={{base: "none", md: "all 200ms ease"}}
             onClick={onClick}
         >
-            <Text className="profile_modal_button_container_text" fontSize='1.5rem'>
+            <Text fontSize={{base: "16px", md: "1.5rem"}}>
                 {label}
             </Text>
         </Button>

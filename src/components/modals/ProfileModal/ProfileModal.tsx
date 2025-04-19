@@ -18,7 +18,6 @@ import ProgressionStatusModal from './ProgressionStatusModal/ProgressionStatusMo
 
 //styles
 import colorPalette from '../../../styles/colorPalette';
-import "./styles/ProfileModal.css";
 
 // Images
 import WorldMap from '../../../assets/WorldMap.webp';
@@ -61,39 +60,63 @@ const ProfileModal: FC<ProfileModalProps> = ({
         }
     }, [width]);
 
-    const renderBackgroundImage = (component: ReactElement, notShowStamp?: boolean) => (
-        <Box
-            className="profile_modal_container_body_container_background_container"
-            position="relative"
-            bgColor="#FFFCEA"
-            bgImage={`url(${WorldMap})`}
-            bgPosition="top"
-            bgRepeat="no-repeat"
-            h='97%' w='100%' borderRadius='8px'
-            border='2px solid'
-            borderColor={colorPalette.secondaryColor}
-            boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'
-        >
-            {component}
-            {
-                !notShowStamp && <Image className="profile_modal_container_body_container_background_image" bottom="16px" right="32px" position="absolute" src={ApprovedIcon} />
-            }
-        </Box>
-    )
+    const renderBackgroundImage = (
+		component: ReactElement,
+		notShowStamp?: boolean,
+	) => (
+		<Box
+			position='relative'
+			bgColor='#FFFCEA'
+			bgImage={`url(${WorldMap})`}
+			bgPosition='top'
+			bgRepeat='no-repeat'
+			h={{ base: '99%', md: '97%' }}
+			w='100%'
+			borderRadius='8px'
+			border='2px solid'
+			borderColor={colorPalette.secondaryColor}
+			boxShadow='6px 6px 4px rgba(0, 0, 0, 0.25)'
+		>
+			{component}
+			{!notShowStamp && (
+				<Image
+					w={{ base: '100px', md: 'fit-content' }}
+					h={{ base: '100px', md: 'fit-content' }}
+					bottom='16px'
+					right='32px'
+					position='absolute'
+					src={ApprovedIcon}
+				/>
+			)}
+		</Box>
+	);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size={variant} >
             <ModalOverlay />
-            <ModalContent className="profile_modal_container" height="600px" bg={colorPalette.backgroundColor}>
+            <ModalContent
+                maxHeight={{base: "none", md: "auto"}}
+                height={{base: "100dvh", md: "600px"}}
+                marginTop={{base: "0", md: "50px"}}
+                marginBottom={{base: "0", md: "auto"}}
+                bg={colorPalette.backgroundColor}
+            >
                 <Box w="25%" bg={colorPalette.primaryColor} h="100%" position="absolute" zIndex='0' left="0" top="0"></Box>
-                <ModalHeader className="profile_modal_header_container" margin-top='1rem'>
-                    <Flex className="profile_modal_header_container_buttons_container" justifyContent='space-evenly'>
+                <ModalHeader
+                    marginTop={{base: "0", md: '1rem'}}
+                    padding={{base: "0", md: 'auto'}}
+                >
+                    <Flex
+                        padding={{base: "40px 0 8px 16px", md: "auto"}}
+                        columnGap={{base: "8px", md: "auto"}}
+                        justifyContent={{base: "flex-start", md: 'space-evenly'}}
+                    >
                             <PerfilModalButton onClick={() => setStep(1)} label='Status' isSelected={step === 1} />
                             <PerfilModalButton onClick={() => setStep(2)} label='Dados' isSelected={step === 2} />
                     </Flex>
                 </ModalHeader>
                 <ModalCloseButton color={colorPalette.closeButton} size="48px" mr="8px" mt="8px" />
-                <ModalBody className="profile_modal_container_body_container" zIndex='1'>
+                <ModalBody padding={{base: "0", md: "24px"}} zIndex='1'>
                     {step === 1 ? (
                         renderBackgroundImage(<ProgressionStatusModal />, true)
                     ) : (
