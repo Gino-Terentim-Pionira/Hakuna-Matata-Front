@@ -16,7 +16,6 @@ import AlertModal from '../components/modals/AlertModal';
 
 //styles
 import colorPalette from "../styles/colorPalette";
-import "./styles/ResetPassword.css";
 
 // Requisitions
 import api from '../services/api';
@@ -35,7 +34,7 @@ const ResetPassword = () => {
 
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
-    const [validationError, setValidationError] = useState('');
+	const [validationError, setValidationError] = useState('');
 
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const onClose = () => setIsConfirmOpen(false);
@@ -50,12 +49,12 @@ const ResetPassword = () => {
 	const handlePasswordChanged = (event: { target: { value: React.SetStateAction<string>; }; }) => {
 		setValidationError('');
 		setPassword(event.target.value);
-    }
+	};
 
 	const isValidPassword = () => {
 		const {message} = validatePassword(password);
 		setValidationError(message);
-	}
+	};
 
 	useEffect(() => {
 		if (authenticated) {
@@ -97,7 +96,16 @@ const ResetPassword = () => {
 			fontFamily={fontTheme.fonts}
 			fontWeight='regular'
 		>
-			<Box className="reset_password_container_bar" w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
+			<Box
+				display={{ base: "none", md: "block" }}
+				w="27%"
+				bg={colorPalette.primaryColor}
+				h="100vh"
+				position="absolute"
+				zIndex='0'
+				right="0"
+			/>
+
 			<Center width='100%'>
 				<LoginRegister
 					mainText='Parece que vocês esqueceu a sua senha. Sem problemas, só colocar uma outra que não seja a mesma para redefiní-la.'
@@ -125,7 +133,17 @@ const ResetPassword = () => {
 					buttonText='Enviar'
 					loading={isLoading}
 				/>
-				<Image className="reset_password_container_image" zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
+				<Image
+					display={{ base: "none", md: "block" }}
+					zIndex="1"
+					width="25%"
+					src={monkey}
+					maxW="400px"
+					minW="300px"
+					alt='Image'
+					ml="8px"
+					mr="24px"
+				/>
 
 				<AlertModal
 					isOpen={isConfirmOpen}
@@ -149,10 +167,8 @@ const ResetPassword = () => {
 						</Button>
 					}
 				/>
-
 			</Center>
 		</Flex>
-
 	);
 };
 
