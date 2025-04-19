@@ -1,7 +1,6 @@
 import { Flex, Image, Text, Tooltip } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import colorPalette from '../styles/colorPalette';
-import "./styles/HomeButtonStyles.css";
 
 type HomeButtonProps = {
     text: string;
@@ -9,21 +8,16 @@ type HomeButtonProps = {
     onClick: VoidFunction;
     mouseOver: string;
     subText: string;
-}
+};
 
-const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver, subText}) => {
+const HomeButton: FC<HomeButtonProps> = ({ text, image, onClick, mouseOver, subText }) => {
     return (
-        <Tooltip 
-            label={mouseOver} 
-            hasArrow
-        >
+        <Tooltip label={mouseOver} hasArrow>
             <Flex
-                className="home_button_container"
-                width='320px'
-                h='fit-content'
+                width={{ base: '100%', md: '320px' }}
                 paddingTop="32px"
-                paddingBottom="22px"
-                border='0.1rem  solid'
+                paddingBottom={{ base: "32px", md: "22px" }}
+                border='0.1rem solid'
                 borderColor={colorPalette.primaryColor}
                 background='rgba(255, 255, 255, 0.51)'
                 borderRadius='8px'
@@ -39,23 +33,29 @@ const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver, subTe
                 onClick={onClick}
             >
                 <Flex
-                    className="home_button_sub_container"
-                    flexDirection='column'
+                    flexDirection={{ base: 'row', md: 'column' }}
                     width='100%'
-                    justifyContent='space-around'
+                    height={{ base: '70px', md: 'auto' }}
+                    justifyContent='center'
                     alignItems='center'
                 >
-                    <Image className="home_button_sub_container_image" w='17%' src={image} mb='1rem' />
+                    <Image
+                        w={{ base: '30px', md: '17%' }}
+                        h={{ base: '33px', md: 'auto' }}
+                        mb={{ base: '0', md: '1rem' }}
+                        mr={{ base: '16px', md: '0' }}
+                        src={image}
+                        alt="Ícone"
+                    />
                     <Text
-                        className="home_button_sub_container_primary_text"
-                        fontSize={{ lg: '28px', md: '28px', sm: '25px' }}
+                        fontSize={{ base: '28px', md: '28px', sm: '25px' }}
                         color='#926021'
                     >
                         {text}
                     </Text>
                     <Text
-                        className="home_button_sub_container_secondary_text"
-                        fontSize={{ lg: '24px', md: '24px', sm: '20px' }}
+                        display={{ base: 'none', md: 'block' }}
+                        fontSize={{ base: '0', md: '24px', sm: '20px' }}
                         color='#926021'
                     >
                         {subText}
@@ -63,7 +63,7 @@ const HomeButton: FC<HomeButtonProps> = ({text, image, onClick, mouseOver, subTe
                 </Flex>
             </Flex>
         </Tooltip>
-    )
-}
+    );
+};
 
 export default HomeButton;

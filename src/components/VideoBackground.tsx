@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import { webmToOther } from '../utils/algorithms/webmToOther';
 import "./styles/VideoBackground.css"
+import { useMediaQuery } from '@chakra-ui/react';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 type VideoBackgroundProps = {
     source: string | undefined;
@@ -9,10 +11,10 @@ type VideoBackgroundProps = {
 }
 
 const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading, className }) => {
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     return source ? (
 		<video
-			className={className ?? 'video_background_container'}
 			id='background-video'
 			autoPlay
 			loop
@@ -22,7 +24,7 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading, clas
 				position: 'absolute',
 				width: '100%',
 				height: '100vh',
-				objectFit: 'fill',
+				objectFit: isDesktop ? 'fill' : 'cover',
 				zIndex: -3
 			}}
 			onLoadedData={() => (handleLoading ? handleLoading() : null)}

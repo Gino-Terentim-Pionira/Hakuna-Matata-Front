@@ -4,10 +4,6 @@ import { useHistory } from 'react-router-dom';
 
 // Requisitions
 import { useAuth } from '../contexts/authContext';
-import "./styles/Home.css";
-
-//styles
-import './../styles/fadeEffect.css';
 
 // Images
 import registerImg from '../assets/icons/registerImg.svg';
@@ -23,11 +19,13 @@ import { NavSoundtrackIcon } from "../components/NavigationComponents/NavSoundtr
 const Home = () => {
 	const { authenticated } = useAuth();
 	const history = useHistory();
+
 	useEffect(() => {
 		if (authenticated) {
 			history.replace('/mainPage');
 		}
 	}, [authenticated]);
+
 	return (
 		<Flex
 			className="fadeIn"
@@ -40,13 +38,23 @@ const Home = () => {
 
 			<Box w='100vw' mt='5%'>
 				<Center flexDir="column">
-					<Image className="home_container_image" ml="40px" filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))" width="530px" src={PioniraLogo} alt="Logo pionira" />
+					<Image
+						ml={{ base: '0px', md: '40px' }}
+						mt={{ base: '64px', md: '0px' }}
+						filter="drop-shadow(0px 10px 1px rgba(0, 0, 0, 0.14))"
+						width={{ base: '80%', md: '530px' }}
+						maxW={{ base: '600px', md: 'none' }}
+						src={PioniraLogo}
+						alt="Logo pionira"
+					/>
 					<Flex
-						className="home_container_sub_container"
-						gap="72px"
-						flexDirection='row'
+						gap={{ base: "24px", md: "72px" }}
+						flexDirection={{ base: 'column', md: 'row' }}
 						align='center'
 						mt="16px"
+						w={{ base: "100%", md: "auto" }}
+						px={{ base: "32px", md: "0" }}
+						m={{ base: "8px", md: "0" }}
 					>
 						<HomeButton
 							text='Entrar na Savana'
@@ -65,7 +73,17 @@ const Home = () => {
 					</Flex>
 				</Center>
 				<a target="_blank" href='https://novo.ginoterentim.com/'>
-					<Image filter="drop-shadow(0px 4px 1px rgba(0, 0, 0, 0.14))" position="absolute" left="0" right="0" margin="auto" bottom="40px" width="125px" src={GinoLogo} alt="Logo gino" />
+					<Image
+						filter="drop-shadow(0px 4px 1px rgba(0, 0, 0, 0.14))"
+						position="absolute"
+						left="0"
+						right="0"
+						margin="auto"
+						bottom="40px"
+						width="125px"
+						src={GinoLogo}
+						alt="Logo gino"
+					/>
 				</a>
 			</Box>
 		</Flex>
