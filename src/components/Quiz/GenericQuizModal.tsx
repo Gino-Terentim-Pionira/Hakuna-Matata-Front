@@ -3,7 +3,6 @@ import React, { FC, useState, useEffect } from 'react';
 import colorPalette from '../../styles/colorPalette';
 import fontTheme from '../../styles/base';
 import { validateQuestionSize } from '../../utils/validates';
-import "./styles/GenericQuizModal.css";
 
 interface IGenericQuizModal {
     openModal: boolean;
@@ -120,148 +119,303 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
     }, [openModal])
 
     return (
-        <>
-            <Modal isOpen={openModal} onClose={openAlert ? openAlert : closeModal} size='full' >
-                <ModalOverlay />
-                <ModalContent className="generic_quiz_modal_container" margin="0" display='flex' justifyContent='center' alignItems='center' >
-                    <ModalCloseButton color={colorPalette.closeButton} size='lg' />
-                    <Box
-                        className="generic_quiz_modal_container_box"
-                        w="40%"
-                        bg={colorPalette.primaryColor}
-                        h="83vh"
-                        position="absolute"
-                        zIndex="-1"
-                        left="0"
-                        top="0"
-                        borderTopStartRadius='5px'
-                        clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
-                    />
+		<>
+			<Modal
+				isOpen={openModal}
+				onClose={openAlert ? openAlert : closeModal}
+				size='full'
+			>
+				<ModalOverlay />
+				<ModalContent
+					margin='0'
+					padding={{ base: 0, md: 'auto' }}
+					height='100dvh'
+					display='flex'
+					justifyContent='center'
+					alignItems='center'
+					overflowY='auto'
+				>
+					<ModalCloseButton
+						color={colorPalette.closeButton}
+						size='lg'
+					/>
+					<Box
+						w='40%'
+						bg={colorPalette.primaryColor}
+						h='83vh'
+						position='absolute'
+						zIndex='-1'
+						left='0'
+						top='0'
+						borderTopStartRadius='5px'
+						clipPath={{
+							base: 'polygon(0% 0%, 100% 0%, 0% 40%)',
+							md: 'polygon(0% 0%, 100% 0%, 0% 100%)',
+						}}
+					/>
 
-                    <ModalBody className="generic_quiz_modal_body_container" display='flex' w='100%' alignItems='center' flexDirection='column' >
-                        <Flex className="generic_quiz_modal_body_question_info_container" w='94%' h='97.5vh' flexDirection='column' alignItems='center' justifyContent='space-between' >
-                            <Flex w='100%' flexDirection='column'>
-                                <Text className="generic_quiz_modal_body_question_info_text" marginTop='0.5rem' fontFamily={fontTheme.fonts} fontSize='30' fontWeight='bold' color={colorPalette.secondaryColor} >Q {step + 1}/{length}</Text>
-                                <Flex className="generic_quiz_modal_body_question_info_description_container" marginTop='0.5rem' bg='white' boxShadow='4px 4px 4px rgba(0, 0, 0, 0.25)' borderRadius='8' h='29vh' justifyContent='center' alignItems='center' >
-                                    <Text className="generic_quiz_modal_body_question_info_description" w='92%' h='77%' fontFamily={fontTheme.fonts} fontSize='25px' >
-                                        {questions_id[step]?.description}
-                                    </Text>
-                                </Flex>
-                            </Flex>
+					<ModalBody
+						display='flex'
+						w='100%'
+						padding={{ base: '0 16px', md: 'auto' }}
+						alignItems='center'
+						maxHeight={{ base: 'none', md: 'auto' }}
+						flexDirection='column'
+					>
+						<Flex
+							w={{ base: '100%', md: '94%' }}
+							h='97.5vh'
+							flexDirection='column'
+							alignItems='center'
+							justifyContent={{
+								base: 'flex-start',
+								md: 'space-between',
+							}}
+						>
+							<Flex w='100%' flexDirection='column'>
+								<Text
+									marginTop='0.5rem'
+									fontFamily={fontTheme.fonts}
+									fontSize={{ base: '26px', md: '30' }}
+									fontWeight='bold'
+									color={colorPalette.secondaryColor}
+								>
+									Q {step + 1}/{length}
+								</Text>
+								<Flex
+									w={{ base: '100%', md: 'auto' }}
+									marginTop='0.5rem'
+									bg='white'
+									boxShadow='4px 4px 4px rgba(0, 0, 0, 0.25)'
+									borderRadius='8'
+									h={{ base: 'fit-content', md: '29vh' }}
+									minHeight={{ base: '120px', md: 'auto' }}
+									maxHeight={{ base: '190px', md: 'auto' }}
+									padding={{ base: '16px 16px', md: 'auto' }}
+									justifyContent={{
+										base: 'flex-start',
+										md: 'center',
+									}}
+									alignItems={{
+										base: 'flex-start',
+										md: 'center',
+									}}
+								>
+									<Text
+										w={{ base: '100%', md: '92%' }}
+										h='77%'
+										fontFamily={fontTheme.fonts}
+										fontSize={{ base: '16px', md: '25px' }}
+									>
+										{questions_id[step]?.description}
+									</Text>
+								</Flex>
+							</Flex>
 
-                            <Flex className="generic_quiz_modal_body_question_answer_container" flexDirection='column' justifyContent='space-around' w='83%' h='54vh' marginBottom='0.8rem'>
-                                <Flex className="generic_quiz_modal_body_question_answer_subcontainer" justifyContent='space-around' h='45%' marginBottom='1rem'>
-                                    <Center
-                                        className="generic_quiz_modal_body_question_answer"
-                                        bg='white'
-                                        h='100%'
-                                        w='40%'
-                                        borderRadius='8px'
-                                        border={borderStyle[0]}
-                                        boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
-                                        transition='all 200ms ease'
-                                        _hover={{
-                                            cursor: 'pointer',
-                                            transform: 'scale(1.05)'
-                                        }}
-                                        onClick={() => buttonFunctions(0)}
-                                    >
-                                        <Text
-                                            className="generic_quiz_modal_body_question_answer_text"
-                                            w='90%'
-                                            fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[0]) ? '18px' : '24px'}
-                                            textAlign='center'
-                                        >
-                                            {questions_id[step]?.alternatives[0]}
-                                        </Text>
-                                    </Center>
-                                    <Center
-                                        className="generic_quiz_modal_body_question_answer"
-                                        bg='white'
-                                        h='100%'
-                                        w='40%'
-                                        border={borderStyle[1]}
-                                        borderRadius='8px'
-                                        boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
-                                        transition='all 200ms ease'
-                                        _hover={{
-                                            cursor: 'pointer',
-                                            transform: 'scale(1.05)'
-                                        }}
-                                        onClick={() => buttonFunctions(1)}
-                                    >
-                                        <Text
-                                            className="generic_quiz_modal_body_question_answer_text"
-                                            w='90%'
-                                            fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[1]) ? '18px' : '24px'}
-                                            textAlign='center'
-                                        >
-                                            {questions_id[step]?.alternatives[1]}
-                                        </Text>
-                                    </Center>
-                                </Flex>
-                                <Flex className="generic_quiz_modal_body_question_answer_subcontainer" justifyContent='space-around' h='45%'>
-                                    <Center
-                                        className="generic_quiz_modal_body_question_answer"
-                                        bg='white'
-                                        h='100%'
-                                        w='40%'
-                                        borderRadius='8px'
-                                        boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
-                                        transition='all 200ms ease'
-                                        border={borderStyle[2]}
-                                        _hover={{
-                                            cursor: 'pointer',
-                                            transform: 'scale(1.05)'
-                                        }}
-                                        onClick={() => buttonFunctions(2)}
-                                    >
-                                        <Text
-                                            className="generic_quiz_modal_body_question_answer_text"
-                                            w='90%'
-                                            fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[2]) ? '18px' : '24px'}
-                                            textAlign='center'
-                                        >
-                                            {questions_id[step]?.alternatives[2]}
-                                        </Text>
-                                    </Center>
-                                    <Center
-                                        className="generic_quiz_modal_body_question_answer"
-                                        bg='white'
-                                        h='100%'
-                                        w='40%'
-                                        borderRadius='8px'
-                                        boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
-                                        border={borderStyle[3]}
-                                        transition='all 200ms ease'
-                                        _hover={{
-                                            cursor: 'pointer',
-                                            transform: 'scale(1.05)'
-                                        }}
-                                        onClick={() => buttonFunctions(3)}
-                                    >
-                                        <Text
-                                            className="generic_quiz_modal_body_question_answer_text"
-                                            w='90%'
-                                            fontFamily={fontTheme.fonts}
-                                            fontSize={validateQuestionSize(questions_id[step]?.alternatives[3]) ? '18px' : '24px'}
-                                            textAlign='center'
-                                        >
-                                            {questions_id[step]?.alternatives[3]}
-                                        </Text>
-                                    </Center>
-                                </Flex>
-                            </Flex>
-                        </Flex>
-
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
-        </>
-    );
+							<Flex
+								flexDirection='column'
+								justifyContent={{
+									base: 'flex-start',
+									md: 'space-around',
+								}}
+								w={{ base: '100%', md: '83%' }}
+								h='54vh'
+								marginTop={{ base: '20px', md: 'none' }}
+								marginBottom={{ base: '0', md: '0.8rem' }}
+							>
+								<Flex
+									flexDirection={{
+										base: 'column',
+										md: 'row',
+									}}
+									justifyContent='space-around'
+									width={{ base: '100%', md: 'auto' }}
+									h={{ base: 'fit-content', md: '45%' }}
+									marginBottom={{ base: 0, md: '1rem' }}
+								>
+									<Center
+										bg='white'
+										h={{ base: 'fit-content', md: '100%' }}
+										minHeight={{ base: '90px', md: 'auto' }}
+										maxHeight={{
+											base: '120px',
+											md: 'auto',
+										}}
+										w={{ base: '100%', md: '40%' }}
+										marginBottom={{ base: '16px', md: '0' }}
+										padding={{ base: '8px 8px', md: 'auto' }}
+										borderRadius='8px'
+										border={borderStyle[0]}
+										boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
+										transition={{ base: "none", md: 'all 200ms ease' }}
+										_hover={{
+											cursor: 'pointer',
+											transform: { base: "none", md: 'scale(1.05)' },
+										}}
+										onClick={() => buttonFunctions(0)}
+									>
+										<Text
+											w='90%'
+											fontFamily={fontTheme.fonts}
+											fontSize={{
+												base: '16px',
+												md: validateQuestionSize(
+													questions_id[step]
+												?.alternatives[0],
+												)
+												? '18px'
+												: '24px'
+											}}
+											textAlign='center'
+										>
+											{
+												questions_id[step]
+													?.alternatives[0]
+											}
+										</Text>
+									</Center>
+									<Center
+										bg='white'
+										h={{ base: 'fit-content', md: '100%' }}
+										minHeight={{ base: '90px', md: 'auto' }}
+										maxHeight={{
+											base: '120px',
+											md: 'auto',
+										}}
+										w={{ base: '100%', md: '40%' }}
+										marginBottom={{ base: '16px', md: '0' }}
+										padding={{ base: '8px 8px', md: 'auto' }}
+										borderRadius='8px'
+										border={borderStyle[1]}
+										boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
+										transition={{ base: "none", md: 'all 200ms ease' }}
+										_hover={{
+											cursor: 'pointer',
+											transform: { base: "none", md: 'scale(1.05)' },
+										}}
+										onClick={() => buttonFunctions(1)}
+									>
+										<Text
+											w='90%'
+											fontFamily={fontTheme.fonts}
+											fontSize={{
+												base: '16px',
+												md: validateQuestionSize(
+													questions_id[step]
+														?.alternatives[1],
+												)
+													? '18px'
+													: '24px'
+											}}
+											textAlign='center'
+										>
+											{
+												questions_id[step]
+													?.alternatives[1]
+											}
+										</Text>
+									</Center>
+								</Flex>
+								<Flex
+									flexDirection={{
+										base: 'column',
+										md: 'row',
+									}}
+									justifyContent='space-around'
+									width={{ base: '100%', md: 'auto' }}
+									h={{ base: 'fit-content', md: '45%' }}
+									marginBottom={{ base: 0, md: '1rem' }}
+								>
+									<Center
+										bg='white'
+										h={{ base: 'fit-content', md: '100%' }}
+										minHeight={{ base: '90px', md: 'auto' }}
+										maxHeight={{
+											base: '120px',
+											md: 'auto',
+										}}
+										w={{ base: '100%', md: '40%' }}
+										marginBottom={{ base: '16px', md: '0' }}
+										padding={{ base: '8px 8px', md: 'auto' }}
+										borderRadius='8px'
+										border={borderStyle[2]}
+										boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
+										transition={{ base: "none", md: 'all 200ms ease' }}
+										_hover={{
+											cursor: 'pointer',
+											transform: { base: "none", md: 'scale(1.05)' },
+										}}
+										onClick={() => buttonFunctions(2)}
+									>
+										<Text
+											w='90%'
+											fontFamily={fontTheme.fonts}
+											fontSize={{
+												base: '16px',
+												md: validateQuestionSize(
+													questions_id[step]
+														?.alternatives[2],
+												)
+													? '18px'
+													: '24px'
+											}}
+											textAlign='center'
+										>
+											{
+												questions_id[step]
+													?.alternatives[2]
+											}
+										</Text>
+									</Center>
+									<Center
+										bg='white'
+										h={{ base: 'fit-content', md: '100%' }}
+										minHeight={{ base: '90px', md: 'auto' }}
+										maxHeight={{
+											base: '120px',
+											md: 'auto',
+										}}
+										w={{ base: '100%', md: '40%' }}
+										marginBottom={{ base: '16px', md: '0' }}
+										padding={{ base: '8px 8px', md: 'auto' }}
+										borderRadius='8px'
+										border={borderStyle[3]}
+										boxShadow='4px 4px 4px 4px rgba(0, 0, 0, 0.25)'
+										transition={{ base: "none", md: 'all 200ms ease' }}
+										_hover={{
+											cursor: 'pointer',
+											transform: { base: "none", md: 'scale(1.05)' },
+										}}
+										onClick={() => buttonFunctions(3)}
+									>
+										<Text
+											w='90%'
+											fontFamily={fontTheme.fonts}
+											fontSize={{
+												base: '16px',
+												md: validateQuestionSize(
+													questions_id[step]
+														?.alternatives[3],
+												)
+													? '18px'
+													: '24px'
+											}}
+											textAlign='center'
+										>
+											{
+												questions_id[step]
+													?.alternatives[3]
+											}
+										</Text>
+									</Center>
+								</Flex>
+							</Flex>
+						</Flex>
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
+	);
 }
 
 export default GenericQuizModal;
