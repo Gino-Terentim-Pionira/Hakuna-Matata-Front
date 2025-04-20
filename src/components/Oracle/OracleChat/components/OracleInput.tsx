@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Center, Flex, Input, Box } from '@chakra-ui/react';
+import { Button, Center, Flex, Input, Box, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ICommonQuestion } from '../../../../services/OracleServices';
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import CollapseQuestions from './CollapseQuestions';
-import { useWindowSize } from '../../../../hooks/useWindowSize';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 export type userMessageFunction = (content: string) => Promise<void>;
 
@@ -24,7 +24,7 @@ export const OracleInput = ({
 }: OracleInputType) => {
 	const [inputReleasedMessage, setInputReleasedMessage] = useState(inicialMessage || '');
 	const [isCommonQuestionOpen, setIsCommonQuestionOpen] = useState(false);
-	const { isDesktop } = useWindowSize();
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
 	const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === 'Enter') {

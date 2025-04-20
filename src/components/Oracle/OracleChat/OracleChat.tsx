@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import { Flex, Box } from '@chakra-ui/react';
+import { Flex, Box, useMediaQuery } from '@chakra-ui/react';
 import { OracleInput, userMessageFunction } from './components/OracleInput';
 import { ICommonQuestion, IMessages } from '../../../services/OracleServices';
 import OracleMessage from './components/OracleMessage';
-import { useWindowSize } from '../../../hooks/useWindowSize';
+import MediaQueriesEnum from '../../../utils/enums/mediaQueries';
 
 type OracleChatType = {
 	commonQuestions: ICommonQuestion[];
@@ -21,7 +21,7 @@ export const OracleChat = ({
 	inicialMessage
 }: OracleChatType) => {
 	const lastMessageRef = useRef<HTMLDivElement>(null);
-	const { isDesktop } = useWindowSize();
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 	const sendUserMessage = async (content: string) => {
 		await userMessage(content);
 		if (lastMessageRef.current) {

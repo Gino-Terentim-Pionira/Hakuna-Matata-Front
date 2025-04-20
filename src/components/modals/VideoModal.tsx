@@ -1,16 +1,16 @@
 import React, { FC, useState } from 'react';
 import {
-    Modal,
-    ModalContent,
-    ModalOverlay,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
-    Flex,
-    Button,
-    Text,
-    Checkbox,
-} from "@chakra-ui/react";
+	Modal,
+	ModalContent,
+	ModalOverlay,
+	ModalHeader,
+	ModalBody,
+	ModalCloseButton,
+	Flex,
+	Button,
+	Text,
+	Checkbox, useMediaQuery,
+} from '@chakra-ui/react';
 import ReactPlayer from 'react-player';
 import { useUser } from '../../hooks';
 
@@ -31,7 +31,7 @@ import { OnProgressProps } from "react-player/base";
 import { useSoundtrack } from '../../hooks/useSoundtrack';
 import { BiSkipNextCircle } from "react-icons/bi";
 import { BiSkipPreviousCircle } from "react-icons/bi";
-import { useWindowSize } from '../../hooks/useWindowSize';
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 interface IVideoModal {
     id: string;
@@ -68,7 +68,7 @@ const VideoModal: FC<IVideoModal> = ({
     const { pauseSoundtrack } = useSoundtrack();
     const hasWatchedVideo = userData.video_id.includes(id);
     const [clickCheck, setClickCheck] = useState(false);
-    const { isDesktop } = useWindowSize();
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const updateVideo = async () => {
         try {

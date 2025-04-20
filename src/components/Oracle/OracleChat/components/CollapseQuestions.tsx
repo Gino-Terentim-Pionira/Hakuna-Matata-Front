@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { ICommonQuestion } from '../../../../services/OracleServices';
-import { Box, Text, Stack, Button, Collapse, Slide, Flex } from '@chakra-ui/react';
+import { Box, Text, Stack, Button, Collapse, Slide, Flex, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
-import { useWindowSize } from '../../../../hooks/useWindowSize';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 type CollapseQuestionsType = {
     commonQuestions: ICommonQuestion[];
@@ -36,7 +36,7 @@ const CollapseQuestions = ({ commonQuestions, isMessageLoading, sendCommonQuesti
         acc[module_name][topic].push(question);
         return acc;
     }, {});
-    const { isDesktop } = useWindowSize();
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
         setStartY(e.touches[0].clientY);
@@ -150,7 +150,6 @@ const CollapseQuestions = ({ commonQuestions, isMessageLoading, sendCommonQuesti
         >
             {
                 !isDesktop &&  <Flex
-                    className="shop_item_detailed_container_close_bar"
                     width="100%"
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}

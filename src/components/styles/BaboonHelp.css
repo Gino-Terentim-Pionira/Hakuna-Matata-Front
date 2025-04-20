@@ -1,8 +1,0 @@
-.baboon_help_container {
-    @media (max-width: 767px) {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        max-height: none !important;
-        height: 100dvh !important;
-    }
-}
