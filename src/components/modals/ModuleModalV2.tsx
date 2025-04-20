@@ -4,7 +4,22 @@ import button_on from '../../assets/icons/button_on.png';
 import button_off from '../../assets/icons/button_off.png';
 import button_blocked from '../../assets/icons/button_blocked.png';
 import { MODULE_INFO } from '../../utils/constants/mouseOverConstants';
-import { Tooltip, Flex, Image, Modal, ModalOverlay, ModalContent, useDisclosure, Box, ModalHeader, Text, ModalCloseButton, ModalBody, Button } from '@chakra-ui/react';
+import {
+    Tooltip,
+    Flex,
+    Image,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    useDisclosure,
+    Box,
+    ModalHeader,
+    Text,
+    ModalCloseButton,
+    ModalBody,
+    Button,
+    useMediaQuery,
+} from '@chakra-ui/react';
 import fontTheme from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 import styled from 'styled-components';
@@ -20,7 +35,7 @@ import AlertModal from './AlertModal';
 import { errorCases } from '../../utils/errors/errorsCases';
 import ModuleQuizV2 from '../Quiz/ModuleQuizV2';
 import api from '../../services/api';
-import "./styles/ModuleModalV2.css";
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 interface IModuleModalV2 {
     moduleInfo: Module,
@@ -79,6 +94,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
     const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
     const [isLoading, setIsLoading] = useState(false);
     const [onError, setOnError] = useState(false);
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const { isOpen,
         onClose,
@@ -236,270 +252,536 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
     }
 
     return (
-        <>
-            <Tooltip
-                hasArrow
-                placement='top'
-                gutter={12}
-                label={renderTooltip()}
-                closeOnClick={false}
-            >
-                <Flex
-                    position="absolute"
-                    top={top}
-                    bottom={bottom}
-                    flexDirection='column'
-                    justifyContent='center'
-                    w="150px"
-                    h="150px"
-                    left={left}
-                    alignItems='center'
-                >
-                    <Image
-                        src={image}
-                        onClick={handleOpenModule}
-                        _hover={{
-                            cursor: isModuleBlocked ? 'not-allowed' : 'pointer',
-                            transform: 'scale(1.1)',
-                        }}
-                        transition='all 0.2s ease'
-                        width={[116, null, null, null, null, 180]}
-                        height={[70, null, null, null, null, 110]}
+		<>
+			<Tooltip
+				hasArrow
+				placement='top'
+				gutter={12}
+				label={renderTooltip()}
+				closeOnClick={false}
+			>
+				<Flex
+					position='absolute'
+					top={top}
+					bottom={bottom}
+					flexDirection='column'
+					justifyContent='center'
+					w='150px'
+					h='150px'
+					left={left}
+					alignItems='center'
+				>
+					<Image
+						src={image}
+						onClick={handleOpenModule}
+						_hover={{
+							cursor: isModuleBlocked ? 'not-allowed' : 'pointer',
+							transform: 'scale(1.1)',
+						}}
+						transition='all 0.2s ease'
+						width={[116, null, null, null, null, 180]}
+						height={[70, null, null, null, null, 110]}
+					/>
+				</Flex>
+			</Tooltip>
 
-                    />
-                </Flex>
-            </Tooltip>
+			<Modal isOpen={isOpen} onClose={onClose} size='full'>
+				<ModalOverlay />
+				<ModalContent
+					height={{ base: '100dvh', md: '34rem' }}
+					maxWidth={{ base: 'none', md: 'initial' }}
+					fontFamily={fontTheme.fonts}
+				>
+					<Box
+						display={{ base: 'none', md: 'block' }}
+						w='150px'
+						bg={colorPalette.primaryColor}
+						h='100%'
+						position='absolute'
+						zIndex='-1'
+						left='0'
+						top='0'
+						borderTopStartRadius='5px'
+					/>
+					<ModalHeader
+						d='flex'
+						justifyContent={{ base: 'flex-start', md: 'center' }}
+						padding={{ base: '28px 20px', md: 'initial' }}
+					>
+						<Text
+							color={colorPalette.textColor}
+							fontFamily={fontTheme.fonts}
+							fontSize={{ base: '24px', md: '60' }}
+							ml={{ base: '0', md: '2.3rem' }}
+							maxWidth={{ base: '80%', md: 'initial' }}
+						>
+							{moduleInfo.moduleName}
+						</Text>
+						<ModalCloseButton
+							color={colorPalette.closeButton}
+							size='lg'
+						/>
+					</ModalHeader>
 
-            <Modal isOpen={isOpen} onClose={onClose} size="full">
-                <ModalOverlay />
-                <ModalContent className="module_modal_container" height="34rem" fontFamily={fontTheme.fonts}>
-                    <Box
-                        className="module_modal_container_box"
-                        w="150px"
-                        bg={colorPalette.primaryColor}
-                        h="100%"
-                        position="absolute"
-                        zIndex="-1"
-                        left="0"
-                        top="0"
-                        borderTopStartRadius='5px'
-                    />
-                    <ModalHeader className="module_modal_header_container" d='flex' justifyContent='center'>
-                        <Text className="module_modal_header_text" color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize='60' ml='2.3rem' >{moduleInfo.moduleName}</Text>
-                        <ModalCloseButton color={colorPalette.closeButton} size='lg' />
-                    </ModalHeader>
+					<ModalBody
+						overflowY='auto'
+						display='flex'
+						flexDirection='column'
+						alignItems='center'
+						padding={{ base: '0px 20px', md: 'initial' }}
+					>
+						{isLoading ? (
+							<Box width='100%' h='90%'>
+								<LoadingState />
+							</Box>
+						) : (
+							<GridContainer>
+								{moduleInfo.videos.map(
+									(video: Video, index) => {
+										return (
+											<Flex
+												width={{
+													base: '100%',
+													md: '297px',
+												}}
+												height={{
+													base: '270px',
+													md: 'auto',
+												}}
+												borderRadius='8px'
+												flexDir='column'
+												boxShadow='0px 4px 14px rgba(0, 0, 0, 0.25)'
+												bg={'#FEFEFE'}
+												onClick={() =>
+													handleVideoModal(
+														video._id,
+														video.videoName,
+														video.url,
+														video.coins,
+														video.description,
+														index,
+													)
+												}
+												transition='ease 200ms'
+												_hover={{
+													cursor: 'pointer',
+													opacity: '0.8',
+												}}
+												key={video._id}
+											>
+												<Flex
+													justifyContent='center'
+													alignItems='center'
+													borderTopRadius='8px'
+													width='100%'
+													minH={{
+														base: '90px',
+														md: 'initial',
+													}}
+													height={{
+														base: 'auto',
+														md: '165px',
+													}}
+													bg={colorPalette.textColor}
+												>
+													<Image
+														w={{
+															base: video.thumbnail
+																? '100%'
+																: 'initial',
+															md: '100%',
+														}}
+														height={{
+															base: video.thumbnail
+																? '90px'
+																: '70px',
+															md: video.thumbnail
+																? '100%'
+																: '59px',
+														}}
+														src={
+															video.thumbnail ||
+															VideoIcon
+														}
+														objectFit={{
+															base: video.thumbnail
+																? 'fill'
+																: 'contain',
+															md: 'fill',
+														}}
+														alt='Icone de video'
+														borderTopRadius='8px'
+													/>
+												</Flex>
+												<Flex
+													flexDir='column'
+													paddingX={{
+														base: '8px',
+														md: '16px',
+													}}
+													paddingY={{
+														base: '0',
+														md: 'initial',
+													}}
+													marginTop={{
+														base: '8px',
+														md: '24px',
+													}}
+												>
+													<Text
+														display={{
+															base: '-webkit-box',
+															md: 'block',
+														}}
+														color={
+															colorPalette.textColor
+														}
+														fontFamily={
+															fontTheme.fonts
+														}
+														fontSize={{
+															base: '16px',
+															md: '24px',
+														}}
+														fontWeight={{
+															base: '600',
+															md: '500',
+														}}
+														sx={
+															isDesktop
+																? undefined
+																: {
+																		WebkitLineClamp: 2,
+																		WebkitBoxOrient:
+																			'vertical',
+																  }
+														}
+													>
+														{video.videoName}
+													</Text>
+													<Text
+														display={{
+															base: '-webkit-box',
+															md: 'block',
+														}}
+														color={
+															colorPalette.secundaryGrey
+														}
+														fontFamily={
+															fontTheme.fonts
+														}
+														fontSize={{
+															base: '13px',
+															md: '16px',
+														}}
+														marginTop={{
+															base: '4px',
+															md: '0',
+														}}
+														sx={
+															isDesktop
+																? undefined
+																: {
+																		WebkitLineClamp: 5,
+																		WebkitBoxOrient:
+																			'vertical',
+																  }
+														}
+														overflow={{
+															base: 'hidden',
+															md: 'auto',
+														}}
+													>
+														{video.description}
+													</Text>
+													{userData?.video_id.includes(
+														video._id,
+													) && (
+														<Text
+															color={
+																colorPalette.correctAnswer
+															}
+															fontFamily={
+																fontTheme.fonts
+															}
+															fontSize='14px'
+															fontWeight='bold'
+															marginTop='8px'
+														>
+															Já assistido
+														</Text>
+													)}
+												</Flex>
+											</Flex>
+										);
+									},
+								)}
+							</GridContainer>
+						)}
+						{!isLoading && IS_MODULE_INFO_HAS_QUESTIONS ? (
+							<Button
+								display='Button'
+								justifyContent='center'
+								alignItems='center'
+								boxShadow='5px 5px 5px rgba(0, 0, 0, 0.25)'
+								margin='auto'
+								bottom={{ base: '28px', md: '56px' }}
+								position='absolute'
+								bg={colorPalette.progressOrange}
+								width={{ base: '260px', md: '330px' }}
+								height={{ base: '60px', md: '65px' }}
+								borderRadius='16px'
+								_hover={{
+									transform: 'scale(1.05)',
+								}}
+								onClick={handleModal}
+							>
+								<Text
+									fontFamily={fontTheme.fonts}
+									fontSize={{ base: '24px', md: '30px' }}
+									fontWeight={{ base: '500', md: 'initial' }}
+									color={colorPalette.textColor}
+								>
+									Ir para o desafio!
+								</Text>
+							</Button>
+						) : null}
+					</ModalBody>
+				</ModalContent>
+			</Modal>
 
-                    <ModalBody className="module_modal_body_container" overflowY="auto" display="flex" flexDirection='column' alignItems='center' >
-                        {
-                            isLoading ? (
-                                <Box width="100%" h="90%">
-                                    <LoadingState />
-                                </Box>
-                            ) : (
-                                    <GridContainer>
-                                        {
-                                            moduleInfo.videos.map((video: Video, index) => {
-                                                return (
-                                                    <Flex
-                                                        className='module_modal_grid_video_card_container'
-                                                        width="297px"
-                                                        height="auto"
-                                                        borderRadius="8px"
-                                                        flexDir="column"
-                                                        boxShadow="0px 4px 14px rgba(0, 0, 0, 0.25)"
-                                                        bg={"#FEFEFE"}
-                                                        onClick={() => handleVideoModal(video._id, video.videoName, video.url, video.coins, video.description, index)}
-                                                        transition="ease 200ms"
-                                                        _hover={{
-                                                            cursor: 'pointer',
-                                                            opacity: '0.8'
-                                                        }}
-                                                        key={video._id}
-                                                    >
-                                                        <Flex className='module_modal_grid_video_card_image_container' justifyContent="center" alignItems="center" borderTopRadius="8px" width="100%" height="165px" bg={colorPalette.textColor}>
-                                                            <Image className={video.thumbnail ? 'module_modal_grid_video_card_image' : 'module_modal_grid_video_card_image_placeholder'} height={video.thumbnail ? '' : '59px'} src={video.thumbnail || VideoIcon} alt="Icone de video" borderTopRadius='8px' />
-                                                        </Flex>
-                                                        <Flex className='module_modal_grid_video_card_info_container' flexDir="column" paddingX="16px" marginTop="24px">
-                                                            <Text className='module_modal_grid_video_card_info_title' color={colorPalette.textColor} fontFamily={fontTheme.fonts} fontSize="24px" fontWeight="500" >
-                                                                {video.videoName}
-                                                            </Text>
-                                                            <Text className='module_modal_grid_video_card_info_description' color={colorPalette.secundaryGrey} fontFamily={fontTheme.fonts} fontSize="16px" >
-                                                                {video.description}
-                                                            </Text>
-                                                            {
-                                                                userData?.video_id.includes(video._id) &&
-                                                                <Text color={colorPalette.correctAnswer} fontFamily={fontTheme.fonts} fontSize="14px" fontWeight="bold" marginTop="8px">
-                                                                    Já assistido
-                                                                </Text>
-                                                            }
-                                                        </Flex>
-                                                    </Flex>
-                                                )
-                                            })
-                                        }
-                                    </GridContainer>
-                                )
-                        }
-                        {
-                            (!isLoading && IS_MODULE_INFO_HAS_QUESTIONS) ? (
-                                <Button
-                                    className='module_modal_button'
-                                    display="Button"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    boxShadow="5px 5px 5px rgba(0, 0, 0, 0.25)"
-                                    margin="auto"
-                                    bottom="56px"
-                                    position='absolute'
-                                    bg={colorPalette.progressOrange}
-                                    width="330px"
-                                    height="65px"
-                                    borderRadius="16px"
-                                    _hover={{
-                                        transform: 'scale(1.05)',
-                                    }}
-                                    onClick={handleModal}
-                                >
-                                    <Text
-                                        className='module_modal_button_text'
-                                        fontFamily={fontTheme.fonts}
-                                        fontSize="30px"
-                                        color={colorPalette.textColor}
-                                    >
-                                        Ir para o desafio!
-                                </Text>
-                                </Button>
-                            ) : null
-                        }
-                    </ModalBody>
-                </ModalContent >
-            </Modal >
+			<TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} />
 
-            <TimeModal timeIsOpen={timeIsOpen} timeOnClose={timeOnClose} />
+			{moduleInfo && IS_MODULE_INFO_HAS_QUESTIONS ? (
+				<ModuleQuizV2
+					openModal={quizIsOpen}
+					closeModal={quizOnClose}
+					moduleInfo={moduleInfo}
+					onToggle={quizToggle}
+					completeModuleFunction={confirmationValidation}
+				/>
+			) : null}
 
-            {
-                moduleInfo && IS_MODULE_INFO_HAS_QUESTIONS ? <ModuleQuizV2
-                    openModal={quizIsOpen}
-                    closeModal={quizOnClose}
-                    moduleInfo={moduleInfo}
-                    onToggle={quizToggle}
-                    completeModuleFunction={confirmationValidation}
-                /> : null
-            }
+			<Modal
+				isOpen={verificationIsOpen}
+				onClose={verificatioOnClose}
+				size='3xl'
+			>
+				<ModalOverlay />
+				<ModalContent
+					height='34rem'
+					display='flex'
+					justifyContent='center'
+					alignItems='center'
+				>
+					<Box
+						w='23%'
+						bg={colorPalette.secondaryColor}
+						h='55vh'
+						position='absolute'
+						zIndex='-1'
+						left='0'
+						top='0'
+						borderTopStartRadius='5px'
+						clipPath='polygon(0% 0%, 100% 0%, 0% 100%)'
+					/>
+					<ModalHeader>
+						<ModalCloseButton
+							color={colorPalette.closeButton}
+							size='lg'
+						/>
+					</ModalHeader>
 
-            <Modal isOpen={verificationIsOpen} onClose={verificatioOnClose} size='3xl' >
-                <ModalOverlay />
-                <ModalContent height='34rem' display='flex' justifyContent='center' alignItems='center' >
-                    <Box
-                        w="23%"
-                        bg={colorPalette.secondaryColor}
-                        h="55vh"
-                        position="absolute"
-                        zIndex="-1"
-                        left="0"
-                        top="0"
-                        borderTopStartRadius='5px'
-                        clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
-                    />
-                    <ModalHeader>
-                        <ModalCloseButton color={colorPalette.closeButton} size='lg' />
-                    </ModalHeader>
+					<ModalBody
+						d='flex'
+						w='80%'
+						flexDirection='column'
+						justifyContent='space-evenly'
+					>
+						{userData.module_id?.includes(moduleInfo._id) ? (
+							<>
+								<div>
+									{moduleInfo.coinsRemaining == 0 ? (
+										<>
+											<Text
+												textAlign='center'
+												fontFamily={fontTheme.fonts}
+												fontSize='2.4rem'
+												marginTop='2.5rem'
+											>
+												Voce já provou por completo seu
+												valor nesse desafio!
+											</Text>
+											<Text
+												textAlign='center'
+												fontFamily={fontTheme.fonts}
+												color='red'
+												fontSize='1.2rem'
+												mt='1rem'
+											>
+												Você não ganhara recompensas por
+												realizar o desafio novamente *
+											</Text>
+											<Text
+												textAlign='center'
+												fontFamily={fontTheme.fonts}
+												color='red'
+												fontSize='1.2rem'
+											>
+												deseja continuar?
+											</Text>
+										</>
+									) : (
+										<>
+											<Text
+												textAlign='center'
+												fontFamily={fontTheme.fonts}
+												fontSize='2.4rem'
+												marginTop='2.5rem'
+											>
+												Ainda faltam Joias para se
+												conquistar!
+											</Text>
+											<Text
+												textAlign='center'
+												fontFamily={fontTheme.fonts}
+												fontSize='2.1rem'
+												marginTop='0.2rem'
+											>
+												Deseja realizar o desafio
+												novamente?
+											</Text>
+											<Text
+												textAlign='center'
+												fontFamily={fontTheme.fonts}
+												color='red'
+												fontSize='1.2rem'
+												mt='1rem'
+											>
+												Joias restantes{' '}
+												{moduleInfo.coinsRemaining}
+											</Text>
+										</>
+									)}
+								</div>
+								<Flex justifyContent='space-around'>
+									<Button
+										maxW={{ base: '50%', md: '100%' }}
+										minH={{ base: '60px', md: 'initial' }}
+										h={{ base: "fit-content", md: '3.5rem' }}
+                                        padding={{base: "4px", md: '16px'}}
+                                        fontWeight={{ base: 'normal', md: "semibold" }}
+										fontSize={{base: "16px", md: "18px"}}
+										wordBreak="break-word"
+										whiteSpace="normal"
+                                        w="45%"
+										_hover={{
+											bg: colorPalette.confirmButton,
+										}}
+										bg={colorPalette.confirmButton}
+										onClick={() => {
+											closeConfirmationModal();
+										}}
+									>
+										Realizar novamente!
+									</Button>
+									<Button
+										maxW={{ base: '50%', md: '100%' }}
+										minH={{ base: '60px', md: 'initial' }}
+										h={{ base: "fit-content", md: '3.5rem' }}
+										padding={{base: "4px", md: '16px'}}
+										fontWeight={{ base: 'normal', md: "semibold" }}
+										fontSize={{base: "16px", md: "18px"}}
+										wordBreak="break-word"
+										whiteSpace="normal"
+										w="45%"
+										_hover={{
+											bg: colorPalette.closeButton,
+										}}
+										bg={colorPalette.closeButton}
+										onClick={() => verificationOnToggle()}
+									>
+										Voltar!
+									</Button>
+								</Flex>
+							</>
+						) : (
+							<>
+								<Text
+									textAlign='center'
+									fontFamily={fontTheme.fonts}
+									fontSize='2.4rem'
+									marginTop='1rem'
+								>
+									Está preparado para responder o desafio
+									desse módulo?
+								</Text>
+								<Flex justifyContent='space-around' gap="16px">
+									<Button
+										maxW={{ base: '50%', md: '100%' }}
+										minH={{ base: '60px', md: 'initial' }}
+										h={{ base: "fit-content", md: '3.5rem' }}
+										padding={{base: "4px", md: '16px'}}
+										fontWeight={{ base: 'normal', md: "semibold" }}
+										fontSize={{base: "16px", md: "18px"}}
+										wordBreak="break-word"
+										whiteSpace="normal"
+										bg={colorPalette.confirmButton}
+										onClick={() => closeConfirmationModal()}
+									>
+										Sim, estou pronto!
+									</Button>
+									<Button
+										maxW={{ base: '50%', md: '100%' }}
+										minH={{ base: '60px', md: 'initial' }}
+										h={{ base: "fit-content", md: '3.5rem' }}
+										padding={{base: "4px", md: '16px'}}
+										fontWeight={{ base: 'normal', md: "semibold" }}
+										fontSize={{base: "16px", md: "18px"}}
+										wordBreak="break-word"
+										whiteSpace="normal"
+										bg={colorPalette.closeButton}
+										onClick={() => verificationOnToggle()}
+									>
+										Não, não estou pronto!
+									</Button>
+								</Flex>
+							</>
+						)}
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+			<AlertModal
+				isOpen={onError}
+				onClose={() => window.location.reload()}
+				alertTitle='Ops!'
+				alertBody={errorCases.SERVER_ERROR}
+				buttonBody={
+					<Button
+						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
+						bg={colorPalette.primaryColor}
+						onClick={() => window.location.reload()}
+					>
+						Recarregar
+					</Button>
+				}
+			/>
 
-                    <ModalBody d='flex' w='80%' flexDirection='column' justifyContent='space-evenly'>
-                        {
-                            userData.module_id?.includes(moduleInfo._id) ? (
-                                <>
-                                    <div>
-                                        {
-                                            moduleInfo.coinsRemaining == 0 ? (
-                                                <>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
-                                                        Voce já provou por completo seu valor nesse desafio!
-                                                    </Text>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
-                                                        Você não ganhara recompensas por realizar o desafio novamente *
-                                                    </Text>
-                                                    <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' >
-                                                        deseja continuar?
-                                                    </Text>
-                                                </>
-                                            ) : (
-                                                    <>
-                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='2.5rem'>
-                                                            Ainda faltam Joias para se conquistar!
-                                                    </Text>
-                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.1rem' marginTop='0.2rem'>
-                                                            Deseja realizar o desafio novamente?
-                                                    </Text>
-                                                        <Text textAlign='center' fontFamily={fontTheme.fonts} color='red' fontSize='1.2rem' mt='1rem'>
-                                                            Joias restantes {moduleInfo.coinsRemaining}
-                                                        </Text>
-                                                    </>
-                                                )
-                                        }
-                                    </div>
-                                    <Flex justifyContent='space-around'>
-                                        <Button className="module_modal_confirmation_modal_button" h='3.5rem' _hover={{ bg: colorPalette.confirmButton }} bg={colorPalette.confirmButton} onClick={() => {
-                                            closeConfirmationModal();
-                                        }}>
-                                            Realizar novamente!
-                                        </Button>
-                                        <Button className="module_modal_confirmation_modal_button" h='3.5rem' w='45%' _hover={{ bg: colorPalette.closeButton }} bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
-                                            Voltar!
-                                        </Button>
-                                    </Flex>
-                                </>
-                            ) : (
-                                    <>
-                                        <Text textAlign='center' fontFamily={fontTheme.fonts} fontSize='2.4rem' marginTop='1rem'>
-                                            Está preparado para responder o desafio desse módulo?
-                                    </Text>
-                                        <Flex justifyContent='space-around'>
-                                            <Button h='3.5rem' bg={colorPalette.confirmButton} onClick={() => closeConfirmationModal()}>
-                                                Sim, estou pronto!
-                                        </Button>
-                                            <Button h='3.5rem' bg={colorPalette.closeButton} onClick={() => verificationOnToggle()}>
-                                                Não, não estou pronto!
-                                        </Button>
-                                        </Flex>
-                                    </>
-                                )
-                        }
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
-            <AlertModal
-                isOpen={onError}
-                onClose={() => window.location.reload()}
-                alertTitle='Ops!'
-                alertBody={errorCases.SERVER_ERROR}
-
-                buttonBody={
-                    <Button
-                        color='white'
-                        _hover={{ bg: colorPalette.primaryColor }}
-                        bg={colorPalette.primaryColor}
-                        onClick={() => window.location.reload()}
-                    >
-                        Recarregar
-                    </Button>
-                }
-            />
-
-            <VideoModal
-                id={videoInfo.id}
-                name={videoInfo.name}
-                description={videoInfo.description}
-                url={videoInfo.url}
-                coins={videoInfo.coins}
-                videoIsOpen={videoIsOpen}
-                videoOnClose={handleOnCloseVideo}
-                updateQuiz={getNewUserInfo}
-                nextVideoFunction={videoInfo.nextVideoFunction}
-                previousVideoFunction={videoInfo.previousVideoFunction}
-            />
-        </>
-    )
+			<VideoModal
+				id={videoInfo.id}
+				name={videoInfo.name}
+				description={videoInfo.description}
+				url={videoInfo.url}
+				coins={videoInfo.coins}
+				videoIsOpen={videoIsOpen}
+				videoOnClose={handleOnCloseVideo}
+				updateQuiz={getNewUserInfo}
+				nextVideoFunction={videoInfo.nextVideoFunction}
+				previousVideoFunction={videoInfo.previousVideoFunction}
+			/>
+		</>
+	);
 }
 
 export default ModuleModalV2;

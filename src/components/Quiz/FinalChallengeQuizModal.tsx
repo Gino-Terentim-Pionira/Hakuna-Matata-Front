@@ -120,50 +120,76 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
     }, [openModal])
 
     return (
-        <>
-            <Modal isOpen={openModal} onClose={openAlert ? openAlert : closeModal} size='full' >
-                <ModalOverlay />
-                <ModalContent margin="0" display='flex' justifyContent='center' alignItems='center' >
-                    <ModalCloseButton color={colorPalette.closeButton} size='lg' />
-                    <Box
-                        w="40%"
-                        bg={colorPalette.primaryColor}
-                        h="83vh"
-                        position="absolute"
-                        zIndex="-1"
-                        left="0"
-                        top="0"
-                        borderTopStartRadius='5px'
-                        clipPath="polygon(0% 0%, 100% 0%, 0% 100%)"
-                    />
+		<>
+			<Modal
+				isOpen={openModal}
+				onClose={openAlert ? openAlert : closeModal}
+				size='full'
+			>
+				<ModalOverlay />
+				<ModalContent
+					margin='0'
+					display='flex'
+					justifyContent='center'
+					alignItems='center'
+				>
+					<ModalCloseButton
+						color={colorPalette.closeButton}
+						size='lg'
+					/>
+					<Box
+						w='40%'
+						bg={colorPalette.primaryColor}
+						h='83vh'
+						position='absolute'
+						zIndex='-1'
+						left='0'
+						top='0'
+						borderTopStartRadius='5px'
+						clipPath={{
+							base: 'polygon(0% 0%, 100% 0%, 0% 40%)',
+							md: 'polygon(0% 0%, 100% 0%, 0% 100%)',
+						}}
+					/>
 
-                    <ModalBody display='flex' w='100%' alignItems='center' flexDirection='column' >
-                        <Flex w='100%' h='97vh'>
-							<Flex w='55%' h='100%'>
-								<Flex flexDir='column' w='100%' mt='-0.4rem'>
+					<ModalBody
+						display='flex'
+						w='100%'
+						alignItems='center'
+						flexDirection='column'
+						padding={{base: "8px 16px", md: "8px, 24px"}}
+					>
+						<Flex w='100%' h='97vh'>
+							<Flex w={{ base: '100%', md: '55%' }} h='100%'>
+								<Flex
+									flexDir='column'
+									w='100%'
+									mt={{ base: '0', md: '-0.4rem' }}
+								>
 									<Text
-										fontSize='2rem'
+										fontSize={{ base: '28px', md: '2rem' }}
 										fontWeight='bold'
 										color={colorPalette.secondaryColor}
-										marginLeft='2.8rem'
+										marginLeft={{ base: '0', md: '2.8rem' }}
 									>
 										Q {step + 1}/{length}
 									</Text>
 									<Flex
-										w='98%'
+										w={{ base: "100%", md: '98%' }}
 										borderRadius='0.5rem'
 										boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-										h='29%'
-										maxH='161px'
+										h={{ base: 'fit-content', md: '29%' }}
+										minHeight={{ base: '120px', md: 'auto' }}
+										maxHeight={{ base: '190px', md: '161px' }}
+										padding={{ base: '16px 16px', md: '24px' }}
 										bg='white'
 										marginTop='0.5rem'
-										overflowY="auto"
-										padding="24px"
+										overflowY='auto'
 									>
 										<Text
-											w='92%'
+											w={{ base: '100%', md: '92%' }}
 											fontFamily={fontTheme.fonts}
-											fontSize={{xl: '20px', lg: '18px', md: '16px', sm: '14px'}}
+											fontSize={{ base: '16px', md: '25px' }}
 										>
 											{questions_id[step]?.description}
 										</Text>
@@ -176,46 +202,67 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
 										alignItems='center'
 										marginTop='0.5rem'
 									>
-										{
-											questions_id[step].alternatives.map( (item, index) => {
+										{questions_id[step].alternatives.map(
+											(item, index) => {
 												return (
 													<Flex
-													key={index}
-													justifyContent='center'
-													alignItems='center'
-													w='90%'
-													h='29%'
-													boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
-													bg='white'
-													borderRadius='0.5rem'
-													marginBottom='0.7rem'
-													marginRight='1.3rem'
-													transition='all 200ms ease'
-													border={borderStyle[index]}
-													_hover={{
-														cursor: 'pointer',
-														transform: 'scale(1.05)',
-													}}
-													onClick={() => buttonFunctions(index)}
+														key={index}
+														justifyContent='center'
+														alignItems='center'
+														w={{
+															base: '100%',
+															md: '90%',
+														}}
+														h='29%'
+														boxShadow='4px 4px 4px rgba(0,0,0,0.25)'
+														bg='white'
+														borderRadius='0.5rem'
+														marginBottom='0.7rem'
+														marginRight={{
+															base: '0',
+															md: '1.3rem',
+														}}
+														paddingX={{
+															base: '16px',
+															md: '0',
+														}}
+														transition='all 200ms ease'
+														border={
+															borderStyle[index]
+														}
+														_hover={{
+															cursor: 'pointer',
+															transform:
+																'scale(1.05)',
+														}}
+														onClick={() =>
+															buttonFunctions(
+																index,
+															)
+														}
 													>
 														<Text
-															w='92%'
+															w={{
+																base: '100%',
+																md: '92%',
+															}}
 															h='65%'
-															fontFamily={fontTheme.fonts}
-															fontSize='20px'
-														>
-															{
-																item
+															fontFamily={
+																fontTheme.fonts
 															}
+															fontSize={{ base: "18px", md: '20px' }}
+														>
+															{item}
 														</Text>
 													</Flex>
-												)
-											} )
-										}
+												);
+											},
+										)}
 									</Flex>
 								</Flex>
 							</Flex>
 							<Flex
+								display={{ base: 'none', md: 'flex' }}
 								w='45%'
 								h='100%'
 								justifyContent='center'
@@ -224,12 +271,11 @@ const FinalChallengeQuizModal: FC<IFinalChallengeQuizModal> = ({
 								<Image src={image} h='70%' />
 							</Flex>
 						</Flex>
-
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
-        </>
-    );
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
+	);
 }
 
 export default FinalChallengeQuizModal;
