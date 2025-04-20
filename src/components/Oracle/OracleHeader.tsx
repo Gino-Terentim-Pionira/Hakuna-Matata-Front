@@ -1,10 +1,10 @@
 import React from 'react';
 import colorPalette from '../../styles/colorPalette';
-import { Center, Flex, Text } from '@chakra-ui/react';
+import { Center, Flex, Text, useMediaQuery } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { getStatusColor } from '../../utils/statusUtils';
-import { useWindowSize } from '../../hooks/useWindowSize';
 import { FaArrowLeft } from 'react-icons/fa';
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 export const OracleHeader = ({
 	oracleName
@@ -12,7 +12,7 @@ export const OracleHeader = ({
 	oracleName: string
 }) => {
 	const history = useHistory();
-	const { isDesktop } = useWindowSize();
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
 	return (
 		<Flex

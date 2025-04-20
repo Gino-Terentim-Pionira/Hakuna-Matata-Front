@@ -6,7 +6,6 @@ import colorPalette from '../../styles/colorPalette';
 import { PositionProps } from '../../utils/props';
 import UserAvatar from '../UserAvatar';
 import { useUser } from '../../hooks';
-import "./styles/NavIcon.css";
 
 type NavIconProps = {
     image: string | ReactElement;
@@ -44,7 +43,6 @@ const NavIcon: FC<NavIconProps> = ({
                     <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="52px" height="52px" marginBottom="4px" />
                     :
                     <Image
-                        className="navIcon_container_image"
                         maxW={isMap ? '' : '50px'}
                         src={image}
                         marginBottom='.1rem'
@@ -73,17 +71,16 @@ const NavIcon: FC<NavIconProps> = ({
             label={mouseOver}
         >
             <Center
-                className="navIcon_container"
                 _hover={{
                     cursor: cursor,
                     transform: 'scale(1.1)',
                 }}
                 transition='all 0.2s ease'
-                mt={marginTop || '8px'}
+                mt={{ base: "0", md: marginTop || '8px'}}
                 border={`2px solid ${colorPalette.blackBorder}`}
                 borderRadius='4.5rem'
-                width={defineSize[size]}
-                height={defineSize[size]}
+                width={{ base: "53px", md: defineSize[size] }}
+                height={{ base: "53px", md: defineSize[size] }}
                 bg='white'
                 onClick={onClick}
             >

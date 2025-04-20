@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IOracle } from '../../../../services/OracleServices';
 import { webmToOther } from '../../../../utils/algorithms/webmToOther';
-import { useWindowSize } from '../../../../hooks/useWindowSize';
+import { useMediaQuery } from '@chakra-ui/react';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 function OracleAnimation({
     oracleObject,
@@ -16,7 +17,7 @@ function OracleAnimation({
     const [opacityIdle, setOpacityIdle] = useState(1);
     const talkingRef = useRef<HTMLVideoElement>(null);
     const idleRef = useRef<HTMLVideoElement>(null);
-    const { isDesktop } = useWindowSize();
+    const [isDesktop]  = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const playVideoFromStart = (videoRef: React.RefObject<HTMLVideoElement>) => {
         if (videoRef.current) {

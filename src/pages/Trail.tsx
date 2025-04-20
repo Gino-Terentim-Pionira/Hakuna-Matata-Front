@@ -43,7 +43,6 @@ import { UserServices } from '../services/UserServices';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from '../services/auth';
 import { verifyIsDayTime } from '../utils/algorithms/date';
-import "./styles/Trail.css";
 import { MobileIgnorancePremiumIcons } from '../components/IgnoranceCoinsDisplay/MobileIgnorancePremiumIcons';
 import { MobileNavIcon } from '../components/NavigationComponents/MobileNavIcon';
 import StampIcon from '../components/StampIcon';
