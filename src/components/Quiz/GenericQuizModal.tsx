@@ -236,7 +236,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
 									<Center
 										bg='white'
 										h={{ base: 'fit-content', md: '100%' }}
-										minHeight={{ base: '90px', md: 'auto' }}
+										minHeight={{ base: '90px', md: '200px' }}
 										maxHeight={{
 											base: '120px',
 											md: 'auto',
@@ -277,7 +277,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
 									<Center
 										bg='white'
 										h={{ base: 'fit-content', md: '100%' }}
-										minHeight={{ base: '90px', md: 'auto' }}
+										minHeight={{ base: '90px', md: '200px' }}
 										maxHeight={{
 											base: '120px',
 											md: 'auto',
@@ -329,7 +329,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
 									<Center
 										bg='white'
 										h={{ base: 'fit-content', md: '100%' }}
-										minHeight={{ base: '90px', md: 'auto' }}
+										minHeight={{ base: '90px', md: '200px' }}
 										maxHeight={{
 											base: '120px',
 											md: 'auto',
@@ -370,7 +370,7 @@ const GenericQuizModal: FC<IGenericQuizModal> = ({
 									<Center
 										bg='white'
 										h={{ base: 'fit-content', md: '100%' }}
-										minHeight={{ base: '90px', md: 'auto' }}
+										minHeight={{ base: '90px', md: '200px' }}
 										maxHeight={{
 											base: '120px',
 											md: 'auto',
