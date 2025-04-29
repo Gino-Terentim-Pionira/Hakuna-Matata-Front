@@ -1,6 +1,6 @@
 import React from 'react';
 import colorPalette from '../../styles/colorPalette';
-import { Center, Flex, Text, useMediaQuery } from '@chakra-ui/react';
+import { Box, Center, Flex, Text, useMediaQuery } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { getStatusColor } from '../../utils/statusUtils';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -24,14 +24,17 @@ export const OracleHeader = ({
 			paddingX={isDesktop ? "44px" : "16px"}
 			paddingY="16px"
 		>
-			<FaArrowLeft
-				size={isDesktop ? "44px" : "32px"}
-				color={colorPalette.whiteText}
+			<Box
+				_hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+				transition="all 0.2s ease"
+				width={isDesktop ? "44px" : "32px"}
 				onClick={() => history.goBack()}
-				style={{
-					cursor: 'pointer',
-				}}
-			/>
+			>
+				<FaArrowLeft
+					size="100%"
+					color={colorPalette.whiteText}
+				/>
+			</Box>
 			<Center display="flex" flexDirection="column" alignSelf="center" flexGrow={1} mr={isDesktop ? 0 : "32px"}>
 				<Text fontSize={isDesktop ? "32px" : "28px"} height="35px" color={colorPalette.whiteText}>
 					Oráculo

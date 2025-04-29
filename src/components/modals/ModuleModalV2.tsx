@@ -456,6 +456,10 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 																			'vertical',
 																  }
 														}
+														overflow={{
+															base: 'hidden',
+															md: 'auto',
+														}}
 													>
 														{video.videoName}
 													</Text>
