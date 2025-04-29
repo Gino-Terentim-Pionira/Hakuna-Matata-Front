@@ -23,7 +23,7 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading, posi
 				position: position,
 				width: '100%',
 				height: '100vh',
-				objectFit: isDesktop ? 'fill' : 'cover',
+				objectFit: isDesktop ? 'fill' : 'fill',
 				zIndex: -3
 			}}
 			onLoadedData={() => (handleLoading ? handleLoading() : null)}

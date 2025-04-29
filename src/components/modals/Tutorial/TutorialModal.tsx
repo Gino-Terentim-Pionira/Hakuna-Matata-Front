@@ -104,14 +104,14 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic, selectedIcon }: 
 
 				<ModalContent
 					marginTop={{ base: '0', md: '40px' }}
-					marginBottom={{ base: '0', md: 'auto' }}
+					marginBottom={{ base: '0', md: '100%' }}
 					bgImage={`url(${TutorialTopicBackground})`}
 					backgroundPosition='center'
 					backgroundRepeat='no-repeat'
 					backgroundSize={{ base: 'cover', md: 'auto' }}
-					width={{ base: '100%', md: 'auto' }}
+					width={{ base: '100%', md: '100vw' }}
 					height={{ base: '100%', md: '650px' }}
-					maxHeight={{ base: 'none', md: 'auto' }}
+					maxHeight={{ base: 'none', md: 'calc(100% - 7.5rem)' }}
 					fontFamily={fontTheme.fonts}
 					boxShadow='0 10px 20px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 1)'
 				>

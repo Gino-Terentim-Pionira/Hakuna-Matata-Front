@@ -320,7 +320,7 @@ const MainPage = () => {
 			<Box
 				position={{base: "absolute", md: "relative"}}
 				margin="0 auto"
-				overflowX="scroll"
+				overflowX="auto"
 				overflowY="hidden"
 				width="100%"
 				height="100dvh"

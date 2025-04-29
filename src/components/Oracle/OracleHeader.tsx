@@ -24,7 +24,14 @@ export const OracleHeader = ({
 			paddingX={isDesktop ? "44px" : "16px"}
 			paddingY="16px"
 		>
-			<FaArrowLeft size={isDesktop ? "44px" : "32px"} color={colorPalette.whiteText} onClick={() => history.goBack()} />
+			<FaArrowLeft
+				size={isDesktop ? "44px" : "32px"}
+				color={colorPalette.whiteText}
+				onClick={() => history.goBack()}
+				style={{
+					cursor: 'pointer',
+				}}
+			/>
 			<Center display="flex" flexDirection="column" alignSelf="center" flexGrow={1} mr={isDesktop ? 0 : "32px"}>
 				<Text fontSize={isDesktop ? "32px" : "28px"} height="35px" color={colorPalette.whiteText}>
 					Oráculo

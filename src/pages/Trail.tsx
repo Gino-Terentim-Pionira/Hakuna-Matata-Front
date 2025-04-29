@@ -354,6 +354,7 @@ const Trail = () => {
 			w='100vw'
 			h='100dvh'
 			backgroundSize='cover'
+            overflowY="hidden"
 		>
 			<MobileIgnorancePremiumIcons />
 			<MobileNavIcon
