@@ -79,7 +79,6 @@ export class CertificateService {
             tempDiv.style.alignItems = 'center';
             tempDiv.style.justifyContent = 'center';
             tempDiv.style.flexDirection = 'column';
-            tempDiv.style.color = '#2e1e0b';
 
             const titleDiv = document.createElement('div');
             titleDiv.innerHTML = 'É com orgulho que conferimos este certificado a';
@@ -87,13 +86,14 @@ export class CertificateService {
 
             const contentDiv = document.createElement('div');
             contentDiv.innerHTML = content;
-            contentDiv.style.width = '800px';
+            contentDiv.style.width = '700px';
             contentDiv.style.fontSize = '15px';
 
             const nameDiv = document.createElement('div');
             nameDiv.innerHTML = `${first_name} ${last_name}`;
-            nameDiv.style.fontSize = '70px';
+            nameDiv.style.fontSize = '36px';
             nameDiv.style.marginBottom = '32px';
+            nameDiv.style.fontWeight = 'bold';
 
             const dateDiv = document.createElement('div');
             dateDiv.innerHTML = issue_date;
