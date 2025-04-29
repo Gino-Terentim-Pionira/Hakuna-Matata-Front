@@ -19,7 +19,7 @@ const VideoBackground: FC<VideoBackgroundProps> = ({ source, handleLoading, posi
 			style={{
 				position: position,
 				width: '100%',
-				height: '100vh',
+				height: '100dvh',
 				objectFit: objectFit,
 				zIndex: -3
 			}}

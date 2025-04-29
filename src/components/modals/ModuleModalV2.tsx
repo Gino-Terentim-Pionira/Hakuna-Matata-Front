@@ -262,13 +262,13 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 			>
 				<Flex
 					position='absolute'
-					top={top}
+					top={isDesktop ? top : moduleInfo.topMobile}
+					left={isDesktop ? left : moduleInfo.leftMobile}
 					bottom={bottom}
 					flexDirection='column'
 					justifyContent='center'
 					w={{ base: '150px', md: 'fit-content' }}
 					h={{ base: '150px', md: 'fit-content' }}
-					left={left}
 					alignItems='center'
 				>
 					<Image
