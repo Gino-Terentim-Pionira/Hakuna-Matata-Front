@@ -16,14 +16,23 @@ import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
 import { SoundtrackManager } from "./components/SoundtrackManager";
 import Trail from './pages/Trail';
+import { useMediaQuery } from '@chakra-ui/react';
+import MediaQueriesEnum from './utils/enums/mediaQueries';
+import CantUseApplication from './components/CantUseApplication';
 
 const Routes = () => {
+	const [isMaxHeight] = useMediaQuery(MediaQueriesEnum.MAX_HEIGHT)
 
 	return (
 		<RecoilRoot>
 			<HashRouter basename="/">
 				<SoundtrackManager />
 				<AuthProvider>
+					{
+						isMaxHeight ? (
+							<CantUseApplication/>
+						) : null
+					}
 					<Switch>
 						<Route path='/' exact component={Home}/>
 						<Route path='/login' component={Login}/>

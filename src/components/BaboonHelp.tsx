@@ -213,6 +213,7 @@ const BaboonHelp = () => {
 					minHeight='60vh'
 					maxHeight={{ base: "none", md: 'initial' }}
 					fontFamily={fontTheme.fonts}
+					margin={0}
 				>
 					<ModalHeader
 						width='100%'
