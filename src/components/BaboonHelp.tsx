@@ -24,7 +24,7 @@ import SliderModal from './modals/SliderModal';
 import monkey from "../assets/sprites/monkey/monkey.webp";
 import { MdClose } from "react-icons/md";
 import { S3_BABOON_HELP } from '../utils/constants/constants';
-import { webmToOther } from '../utils/algorithms/webmToOther';
+import { webmOrMov } from '../utils/algorithms/webmToOther';
 import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 const BaboonHelp = () => {
@@ -190,11 +190,7 @@ const BaboonHelp = () => {
 				onClick={handleOpenChat}
 			>
 				<video autoPlay loop muted playsInline>
-					<source
-						src={webmToOther(S3_BABOON_HELP, '.mov')}
-						type='video/quicktime'
-					/>
-					<source src={S3_BABOON_HELP} type='video/webm' />
+					<source src={webmOrMov(S3_BABOON_HELP)} />
 				</video>
 			</Box>
 
