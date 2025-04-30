@@ -292,6 +292,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 		(isDifferentDay ? items : itemsWithoutDailyQuiz).map((item) => (
 			item.label ?
 			<Flex
+				key={item.label}
 				width='100%'
 				height='80px'
 				marginBottom='16px'
