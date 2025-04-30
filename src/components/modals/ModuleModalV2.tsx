@@ -24,7 +24,7 @@ import fontTheme from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 import styled from 'styled-components';
 import VideoIcon from '../../assets/icons/video.png';
-import { useUser, useTrail } from '../../hooks';
+import { useUser } from '../../hooks';
 import { IVideoInfo } from './ModuleModal';
 import VideoModal from './VideoModal';
 import { AxiosResponse } from 'axios';
@@ -89,7 +89,6 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
     const [image, setImage] = useState(button_off);
     const [isModuleBlocked, setIsModuleBlocked] = useState(false);
     const { userData, getNewUserInfo } = useUser();
-    const { getNewTrailInfo } = useTrail();
     const IS_MODULE_INFO_HAS_QUESTIONS = moduleInfo.questions.length;
     const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
     const [isLoading, setIsLoading] = useState(false);
@@ -159,8 +158,6 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
             await api.patch(`user/addmodule/${userId}`, {
                 module_id: moduleInfo._id
             });
-            await getNewUserInfo();
-            await getNewTrailInfo(moduleInfo.trailName, true);
         } catch (error) {
             setOnError(true);
         }
