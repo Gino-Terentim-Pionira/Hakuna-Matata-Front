@@ -136,8 +136,6 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
 
             }
             await updateUserQuizTime();
-            await getNewUserInfo();
-            await getNewTrailInfo(moduleInfo.trailName, true);
             if (coins >= moduleInfo.coinsRemaining) {
                 completeModuleFunction();
             }
@@ -147,9 +145,13 @@ const ModuleQuizV2: FC<IModuleQuizV2> = ({
         }
     };
 
-    const handleOnCloseReward = () => {
+    const handleOnCloseReward = async () => {
+        setIsLoading(true);
         setCoins(0);
         setCorrectAnswers(0);
+        await getNewUserInfo();
+        await getNewTrailInfo(moduleInfo.trailName, true);
+        setIsLoading(false);
         onClose();
     }
 
