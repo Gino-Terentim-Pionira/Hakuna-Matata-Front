@@ -118,10 +118,10 @@ const Trail = () => {
     ];
 
     const modulesMobilePositions = [
-        { top: "69vh", left: "260px" },
-        { top: "52vh", left: "650px" },
-        { top: "71vh", left: "1000px" },
-        { top: "64vh", left: "1260px" },
+        { top: "69dvh", left: "260px" },
+        { top: "52dvh", left: "650px" },
+        { top: "71dvh", left: "1000px" },
+        { top: "64dvh", left: "1260px" },
     ];
 
     const finishFinalChallenge = async () => {

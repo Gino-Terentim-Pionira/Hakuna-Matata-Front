@@ -251,9 +251,6 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
         isModuleBlocked ? null : onOpen();
     }
 
-	const mobileTop = moduleInfo.topMobile ?? top;
-	const mobileLeft = moduleInfo.leftMobile ?? left;
-
 	return (
 		<>
 			<Tooltip
@@ -265,8 +262,8 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 			>
 				<Flex
 					position='absolute'
-					top={isDesktop ? top : mobileTop}
-					left={isDesktop ? left : mobileLeft}
+					top={top}
+					left={left}
 					bottom={bottom}
 					flexDirection='column'
 					justifyContent='center'
