@@ -51,12 +51,7 @@ export const useOwnedItems = () => {
                 type: "Certificado",
                 itemType: 'certificate',
                 id: item._id,
-                backgroundImage: item.image,
-                first_name: item.first_name,
-                last_name: item.last_name,
-                content: item.content,
-                hash: item.hash,
-                issue_date: item.issue_date
+                hash: item.hash
             }));
 
             setOwnedCertificateItemData(certificates);

@@ -16,6 +16,7 @@ import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
 import { SoundtrackManager } from "./components/SoundtrackManager";
 import Trail from './pages/Trail';
+import CertificateDisplay from './pages/CertificateDisplay';
 
 const Routes = () => {
 
@@ -30,6 +31,7 @@ const Routes = () => {
 						<Route path='/forgotPassword' component={ForgotPassword}/>
 						<Route path="/resetPassword/:id" component={ResetPassword}/>
 						<Route path='/register' component={Register}/>
+						<Route path='/certificate/:hash' component={CertificateDisplay} />
 						<ProtectedRoute path='/mainPage' component={MainPage}/>
 						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath}/>
 						{/*
