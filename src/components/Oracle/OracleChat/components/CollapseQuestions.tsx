@@ -111,6 +111,7 @@ const CollapseQuestions = ({ commonQuestions, isMessageLoading, sendCommonQuesti
 
     const renderCollapseQuestions = () => (
         <Box
+            zIndex={1000}
             borderTopRadius='18px'
             background={colorPalette.slideBackground}
             boxShadow={isDesktop ? "inset 0px 6px 4px rgba(74, 74, 74, 0.25)" : "none"}
@@ -179,7 +180,8 @@ const CollapseQuestions = ({ commonQuestions, isMessageLoading, sendCommonQuesti
                 {renderCollapseQuestions()}
             </Collapse>
             :
-            <Slide direction="bottom" in={isCommonQuestionOpen} style={{zIndex: 99}} >
+            <Slide direction="bottom" in={isCommonQuestionOpen} style={{zIndex: 99}}  >
+                <Box onClick={closeCollapse} w='100%' h='100vh' />
                 {renderCollapseQuestions()}
             </Slide>
     )
