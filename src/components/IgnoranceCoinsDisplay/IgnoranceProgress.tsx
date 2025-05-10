@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 
 // Styles
 import font from '../../styles/base';
@@ -7,6 +7,7 @@ import colorPalette from '../../styles/colorPalette';
 import { WISDOM } from '../../utils/constants/mouseOverConstants';
 import { PositionProps } from '../../utils/props';
 import useIgnoranceFilter from '../../hooks/useIgnoranceFilter';
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 
 const IgnoranceProgress = ({ ignorance, position, width }: {
@@ -16,8 +17,10 @@ const IgnoranceProgress = ({ ignorance, position, width }: {
 }) => {
     const progressBar = Math.floor(100 - ignorance);
     const {isIgnoranceFilterOn} = useIgnoranceFilter();
-    return (
-		<Tooltip hasArrow placement={position} label={WISDOM}>
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
+
+	return (
+		<Tooltip isDisabled={!isDesktop} hasArrow placement={position} label={WISDOM}>
 			<Box
 				position='relative'
 				height='32px'

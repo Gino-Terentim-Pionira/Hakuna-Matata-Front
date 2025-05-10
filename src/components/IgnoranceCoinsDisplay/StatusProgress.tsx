@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import { STATUS } from '../../utils/constants/mouseOverConstants';
 import { PositionProps } from '../../utils/props';
 
 // Styles
 import font from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 
 const StatusProgress = ({ status, position, labelText, color }: {
@@ -14,8 +15,11 @@ const StatusProgress = ({ status, position, labelText, color }: {
     labelText: string,
     color: string,
 }) => {
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
+
     return (
         <Tooltip
+            isDisabled={!isDesktop}
             hasArrow
             placement={position}
             label={STATUS}

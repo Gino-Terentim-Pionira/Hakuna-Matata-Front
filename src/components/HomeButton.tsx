@@ -1,6 +1,7 @@
-import { Flex, Image, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Image, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import colorPalette from '../styles/colorPalette';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 type HomeButtonProps = {
     text: string;
@@ -11,8 +12,10 @@ type HomeButtonProps = {
 };
 
 const HomeButton: FC<HomeButtonProps> = ({ text, image, onClick, mouseOver, subText }) => {
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
+
     return (
-        <Tooltip label={mouseOver} hasArrow>
+        <Tooltip isDisabled={!isDesktop} label={mouseOver} hasArrow>
             <Flex
                 width={{ base: '100%', md: '320px' }}
                 paddingTop="32px"

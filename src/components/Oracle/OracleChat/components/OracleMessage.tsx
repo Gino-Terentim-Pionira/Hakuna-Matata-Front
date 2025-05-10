@@ -1,10 +1,11 @@
 import React, { forwardRef, useEffect, useState } from 'react';
-import { Box, Tooltip } from '@chakra-ui/react';
+import { Box, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import Markdown from 'react-markdown';
 import './styles/OracleMessage.css';
 import { PiCopyBold } from "react-icons/pi";
 import { COPIED, COPY } from '../../../../utils/constants/textConstants';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 interface OracleMessageType {
     message: string;
@@ -29,6 +30,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
         displayCopy: true,
         isCopied: false
     });
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     useEffect(() => {
         if (IS_ANIMATED_RESPONSE) {
@@ -113,6 +115,7 @@ const OracleMessage = forwardRef<HTMLDivElement, OracleMessageType>((props, ref)
             {
                 (!IS_USER && !isLoading) &&
                 <Tooltip
+                    isDisabled={!isDesktop}
                     label={copyButtonInfo.isCopied ? COPIED : COPY}
                     closeOnClick={false}
                     hasArrow

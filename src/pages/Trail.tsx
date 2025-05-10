@@ -444,8 +444,9 @@ const Trail = () => {
 									left={isDesktop ? '70vw' : '1000px'}
 								>
 									<Tooltip
+                                        isDisabled={!isDesktop}
 										hasArrow
-										placement='top'
+                                        placement='top'
 										gutter={35}
 										label={FINAL_CHALLENGE(trailName)}
 									>

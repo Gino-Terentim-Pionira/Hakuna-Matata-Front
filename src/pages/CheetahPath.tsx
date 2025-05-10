@@ -13,7 +13,7 @@ import {
     Text,
     ModalHeader,
     ModalCloseButton,
-    Tooltip,
+    Tooltip, useMediaQuery,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 
@@ -65,6 +65,7 @@ import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { getTrailAccess, trailAccessEnum, setTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 interface IQuiz {
     _id: string;
@@ -214,6 +215,7 @@ const CheetahPath = () => {
     const [blockedMessage, setBlockedMessage] = useState<string>('');
     const { changeSoundtrack} = useSoundtrack();
     const [canDoFinalQuiz, setCanDoFinalQuiz] = useState(false);
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const logout = () => {
         setAlertAnswer('Tem certeza que você deseja sair da Savana?');
@@ -512,6 +514,7 @@ const CheetahPath = () => {
                                         left='70vw'
                                     >
                                         <Tooltip
+                                            isDisabled={!isDesktop}
                                             hasArrow
                                             placement='top'
                                             gutter={12}

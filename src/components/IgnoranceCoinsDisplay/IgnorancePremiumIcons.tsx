@@ -1,4 +1,4 @@
-import { Flex, useDisclosure, Tooltip } from "@chakra-ui/react";
+import { Flex, useDisclosure, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import React, { useState, useEffect } from "react";
 import IgnoranceProgress from "./IgnoranceProgress";
 import RandomRewardModal from "../modals/RandomRewardModal";
@@ -23,6 +23,7 @@ import TutorialServices from "../../services/TutorialServices";
 import { Module } from "../../recoil/trailRecoilState";
 import StampIcon from "../StampIcon";
 import { S3_LOCKED_STAMP } from "../../utils/constants/constants";
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 interface IgnoracenPremiumIconsInterface {
   ignorance: number;
@@ -52,6 +53,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, trail
   const [isDifferentDay, setIsDifferentDay] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
+  const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
   const { isOpen: quizIsOpen,
     onClose: quizOnClose,
@@ -161,6 +163,7 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, trail
             {
               modules?.length ? (
                 <Tooltip
+                  isDisabled={!isDesktop}
                   label='Complete módulos para ganhar carimbos no passaporte!'
                   hasArrow
                 >
