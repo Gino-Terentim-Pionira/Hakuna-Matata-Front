@@ -174,7 +174,7 @@ export const Oracle = () => {
 								backgroundSize="cover"
 								backgroundPosition="top"
 								backgroundRepeat="no-repeat"
-								height="calc(100vh - 95px)"
+								height="calc(100dvh - 95px)"
 								width="100%"
 								justifyContent="center"
 								alignItems="flex-end"
