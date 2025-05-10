@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Flex, Image, Slide, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Slide, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ShopItemInfoType } from '../ShopModal';
 import fontTheme from '../../../../styles/base';
@@ -8,6 +8,7 @@ import { useUser } from '../../../../hooks';
 import { NOT_ENOUGHT_COINS } from '../../../../utils/constants/mouseOverConstants';
 import { BiSolidCheckCircle } from 'react-icons/bi';
 import { IoMdCloseCircle } from 'react-icons/io';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 type ShopItemDetailedTypes = {
 	isOpen: boolean;
@@ -29,6 +30,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 		shopItemInfo.isEnoughQuestion !== undefined &&
 		shopItemInfo.isEnoughFinalQuiz !== undefined &&
 		shopItemInfo.trail !== undefined);
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
 	const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
 		setStartY(e.touches[0].clientY);
@@ -255,7 +257,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 								}
 								placement='bottom'
 								hasArrow
-								isDisabled={IS_USE_HAS_ENOUGHT_COINS}
+								isDisabled={IS_USE_HAS_ENOUGHT_COINS || !isDesktop}
 								closeOnClick={false}
 							>
 								<Button

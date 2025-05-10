@@ -3,7 +3,7 @@ import {
     useDisclosure,
     Box,
     Image,
-    Tooltip,
+    Tooltip, useMediaQuery,
 } from '@chakra-ui/react';
 
 // Requisitions
@@ -20,6 +20,7 @@ import rewardOpenChest from "../../assets/icons/bauAberto.svg";
 import { useUser } from '../../hooks';
 import { CHEST_LUCK_SOURCE, CHEST_NORMAL_SOURCE } from '../../utils/constants/constants';
 import { SURPRISE_CHEST } from '../../utils/constants/mouseOverConstants';
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 interface userDataProps {
     coins: number
@@ -33,6 +34,7 @@ const RandomRewardModal = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const getUser = async () => {
         try {
@@ -92,7 +94,8 @@ const RandomRewardModal = () => {
 
     return (
         <>
-            <Tooltip 
+            <Tooltip
+                isDisabled={!isDesktop}
                 hasArrow
                 placement='top'
                 label={SURPRISE_CHEST}

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Flex,
-    Text,
-    Grid,
-    Tooltip
-} from "@chakra-ui/react"
+	Flex,
+	Text,
+	Grid,
+	Tooltip, useMediaQuery,
+} from '@chakra-ui/react';
 import { useUser } from '../../../../hooks';
 
 // Components
@@ -17,6 +17,7 @@ import { IStamps, TrailServices } from '../../../../services/TrailServices';
 import StampIcon from '../../../StampIcon';
 import fontTheme from '../../../../styles/base';
 import colorPalette from '../../../../styles/colorPalette';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 
 const ProgressionStatusModal = () => {
@@ -30,6 +31,7 @@ const ProgressionStatusModal = () => {
             setStamps(stampsInfo);
         }
     }
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     useEffect(() => {
         fetchStampsInfo(userData._id);
@@ -96,6 +98,7 @@ const ProgressionStatusModal = () => {
 					{stamps.map((item) => {
 						return (
 							<Tooltip
+								isDisabled={!isDesktop}
 								placement='right'
 								hasArrow
 								label={`Você possui ${item.stamps} carimbo${

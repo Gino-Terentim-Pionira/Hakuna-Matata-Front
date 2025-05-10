@@ -252,6 +252,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 		<>
 			<Tooltip
 				hasArrow
+				isDisabled={!isDesktop}
 				placement='top'
 				gutter={12}
 				label={renderTooltip()}
