@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
-import { Flex, Box } from '@chakra-ui/react';
+import { Flex, Box, useMediaQuery } from '@chakra-ui/react';
 import { OracleInput, userMessageFunction } from './components/OracleInput';
 import { ICommonQuestion, IMessages } from '../../../services/OracleServices';
 import OracleMessage from './components/OracleMessage';
+import MediaQueriesEnum from '../../../utils/enums/mediaQueries';
 
 type OracleChatType = {
 	commonQuestions: ICommonQuestion[];
@@ -20,7 +21,7 @@ export const OracleChat = ({
 	inicialMessage
 }: OracleChatType) => {
 	const lastMessageRef = useRef<HTMLDivElement>(null);
-
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 	const sendUserMessage = async (content: string) => {
 		await userMessage(content);
 		if (lastMessageRef.current) {
@@ -32,12 +33,12 @@ export const OracleChat = ({
 		<Flex
 			flexDir="column"
 			justifyContent="flex-end"
-			paddingX="24px"
-			paddingBottom="20px"
-			width="700px"
+			paddingX={isDesktop ? "24px" : "16px"}
+			paddingBottom={isDesktop ? "20px" : "16px"}
+			width={isDesktop ? "700px" : "100%"}
 			overflowX="auto"
 			overflowY="auto"
-			height="90%"
+			height={isDesktop ? "90%" : "95%"}
 			maxHeight="880px"
 			background="rgba(240, 240, 240, 0.95)"
 			borderRadius="8px"

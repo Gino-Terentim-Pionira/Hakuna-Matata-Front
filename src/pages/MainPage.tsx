@@ -4,7 +4,7 @@ import {
 	useDisclosure,
 	Flex,
 	Button,
-	Box,
+	Box, useMediaQuery,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks';
 
@@ -51,6 +51,9 @@ import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
 import { useSoundtrack } from '../hooks/useSoundtrack';
 import BaboonHelp from '../components/BaboonHelp';
 import trailEnum from '../utils/enums/trail';
+import { MobileIgnorancePremiumIcons } from '../components/IgnoranceCoinsDisplay/MobileIgnorancePremiumIcons';
+import { MobileNavIcon } from '../components/NavigationComponents/MobileNavIcon';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 interface IScript {
 	name: string;
@@ -104,6 +107,7 @@ const MainPage = () => {
 	});
 	const [rewardOpen, setRewardOpen] = useState(false);
 	const [rewardLoading, setRewardLoading] = useState(false);
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP)
 
 	const ignoranceArray = [
 		ignorance100,
@@ -302,54 +306,60 @@ const MainPage = () => {
 	}, []);
 
 	return (
-		<>
-			<VideoBackground handleLoading={() => setIsAnimationLoading(false)} source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
-			{
-				(isLoading || isAnimationLoading) ? (
-					<LoadingOverlay />
-				) : (
-						<>
-							<IgnoranceFilter
-								ignoranceImage={ignoranceImage}
-							/>
-							<Flex
-								width='92.5%'
-								justifyContent='space-between'
-								alignItems='flex-start'
-								margin='auto'
-							>
-								<NavActions logout={logout} dontShowMap />
-								{narrativeIsOpen ? null : (
-									<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
-								)}
-							</Flex>
 
-							{script.length > 0 ? (
-								//verifica se o script possui algum conteúdo
-								<NarrativeModal
-									isOpen={narrativeIsOpen}
-									script={script}
-									onToggle={narrativeOnToggle}
-								/>
-							) : null}
+		<Box
+			position="relative"
+			top={0}
+			left={0}
+			width="100vw"
+			height="100dvh"
+			backgroundSize="cover"
+		>
+			<MobileIgnorancePremiumIcons />
+			<MobileNavIcon />
+			<Box
+				position={{base: "absolute", md: "relative"}}
+				margin="0 auto"
+				overflowX="auto"
+				overflowY="hidden"
+				width="100%"
+				height="100dvh"
+			>
+				<Box
+					display={{ base: "flex", md: "block" }}
+					w={{ base: "1500px", md: "auto" }}
+				>
+					<VideoBackground
+									 position={isDesktop ? "absolute" : "relative"}
+									 handleLoading={() => setIsAnimationLoading(false)}
+									 source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 
-							<DailyReward
-								isOpen={dailyIsOpen}
-								onOpen={dailyOnOpen}
-								onClose={dailyOnClose}
-							/>
-							<WelcomeVideoModal
-								isOpen={welcomeVideoIsOpen}
-								onClose={tutorialFirstOnClose}
-							/>
+					{
+						(isLoading || isAnimationLoading) ? (
+							<LoadingOverlay />
+						) : (
+							<>
+								<Flex
+									display={{ base: "none", md: "flex" }}
+									width='92.5%'
+									justifyContent='space-between'
+									alignItems='flex-start'
+									margin='auto'
+								>
+									<NavActions logout={logout} dontShowMap />
+									{narrativeIsOpen ? null : (
+										<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
+									)}
+								</Flex>
 
-							<Flex margin='2vw' justifyContent='space-between'>
 								{narrativeIsOpen ? null : (
 									<>
 										<Flex
 											position='absolute'
-											left='18vw'
-											top='49.5vh'
+											left={{base: "200px", md: "18vw"}}
+											top={{base: "56%", md: "49.5vh"}}
+											w={{ base: "80px", md: "auto" }}
+											zIndex={{ base: 1, md: "auto" }}
 										>
 											<motion.div
 												animate={checkFirstTrailAcess(trailAccessEnum.CHEETAH) ? { scale: [0.8, 1, 0.8] } : false}
@@ -364,9 +374,10 @@ const MainPage = () => {
 										</Flex>
 
 										<Flex
-											position='absolute'
-											left='43.5vw'
-											top='57.5vh'
+											position="absolute"
+											left={{ base: "655px", md: "43.5vw" }}
+											top={{ base: "59%", md: "57.5vh" }}
+											w={{ base: "80px", md: "auto" }}
 										>
 											<TrailIcon
 												image={icon_block}
@@ -376,18 +387,20 @@ const MainPage = () => {
 										</Flex>
 
 										<Box
-											position='absolute'
-											width='22%'
-											left='60vw'
-											top='52vh'
+											position="absolute"
+											w={{ base: "340px", md: "22%" }}
+											left={{ base: "855px", md: "60vw" }}
+											top={{ base: "50%", md: "52vh" }}
 										>
 											<BaboonHelp />
 										</Box>
 
 										<Flex
-											position='absolute'
-											right='2vw'
-											top='50vh'
+											position="absolute"
+											left={{ base: "1390px", md: "auto" }}
+											right={{ base: "auto", md: "2vw" }}
+											top={{ base: "56%", md: "50vh" }}
+											w={{ base: "80px", md: "auto" }}
 										>
 											<motion.div
 												animate={checkFirstTrailAcess(trailAccessEnum.LION) ? { scale: [0.8, 1, 0.8] } : false}
@@ -403,10 +416,34 @@ const MainPage = () => {
 
 									</>
 								)}
-							</Flex>
-						</>
-					)
-			}
+							</>
+						)
+					}
+				</Box>
+			</Box>
+
+			{script.length > 0 ? (
+				//verifica se o script possui algum conteúdo
+				<NarrativeModal
+					isOpen={narrativeIsOpen}
+					script={script}
+					onToggle={narrativeOnToggle}
+				/>
+			) : null}
+
+			<IgnoranceFilter
+				ignoranceImage={ignoranceImage}
+			/>
+
+			<DailyReward
+				isOpen={dailyIsOpen}
+				onOpen={dailyOnOpen}
+				onClose={dailyOnClose}
+			/>
+			<WelcomeVideoModal
+				isOpen={welcomeVideoIsOpen}
+				onClose={tutorialFirstOnClose}
+			/>
 
 			<AlertModal
 				isOpen={onAlert}
@@ -440,10 +477,12 @@ const MainPage = () => {
 
 			<BlockedModal
 				isOpen={openBlockedModal}
-				onClose={() => { setOpenBlockedModal(false) }}
+				onClose={() => {
+					setOpenBlockedModal(false)
+				}}
 				subtitle="Esse horizonte ainda não pode ser explorado, por enquanto..."
 			/>
-		</>
+		</Box>
 	);
 };
 

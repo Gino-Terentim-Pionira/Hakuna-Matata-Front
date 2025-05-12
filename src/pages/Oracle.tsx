@@ -159,7 +159,7 @@ export const Oracle = () => {
 				) : (
 
 						<Flex
-							height="100vh"
+							height="100dvh"
 							width="100%"
 							flexDirection="column"
 							alignItems="center"
@@ -174,7 +174,7 @@ export const Oracle = () => {
 								backgroundSize="cover"
 								backgroundPosition="top"
 								backgroundRepeat="no-repeat"
-								height="calc(100vh - 95px)"
+								height="calc(100dvh - 95px)"
 								width="100%"
 								justifyContent="center"
 								alignItems="flex-end"

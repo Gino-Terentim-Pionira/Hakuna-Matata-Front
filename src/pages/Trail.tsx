@@ -1,5 +1,21 @@
-import React, { useEffect, useState, SetStateAction } from 'react';
-import { Flex, Box, Center, Tooltip, Image, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Text, Button, ModalHeader, ModalCloseButton } from '@chakra-ui/react';
+import React, { useEffect, useState, SetStateAction, useRef } from 'react';
+import {
+    Flex,
+    Box,
+    Center,
+    Tooltip,
+    Image,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalBody,
+    Text,
+    Button,
+    ModalHeader,
+    ModalCloseButton,
+    useMediaQuery,
+} from '@chakra-ui/react';
 import { useTrail, useUser } from '../hooks';
 import trailEnum from '../utils/enums/trail';
 import VideoBackground from '../components/VideoBackground';
@@ -16,7 +32,7 @@ import FinalChallengeScript from '../utils/scripts/finalChallenge/FinalChallenge
 import DefaultNarrativeModal from '../components/modals/Narrative/DefaultNarrativeModal';
 import fontTheme from '../styles/base';
 import AlertModal from '../components/modals/AlertModal';
-import { FINAL_QUIZ_SINK } from '../utils/constants/constants';
+import { FINAL_QUIZ_SINK, S3_LOCKED_STAMP } from '../utils/constants/constants';
 import horizon from '../assets/horizon.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import { TrailServices } from '../services/TrailServices';
@@ -27,6 +43,10 @@ import { UserServices } from '../services/UserServices';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from '../services/auth';
 import { verifyIsDayTime } from '../utils/algorithms/date';
+import { MobileIgnorancePremiumIcons } from '../components/IgnoranceCoinsDisplay/MobileIgnorancePremiumIcons';
+import { MobileNavIcon } from '../components/NavigationComponents/MobileNavIcon';
+import StampIcon from '../components/StampIcon';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 const Trail = () => {
 
@@ -37,6 +57,8 @@ const Trail = () => {
     const { userData, getNewUserInfo } = useUser();
     const { changeSoundtrack } = useSoundtrack();
     const { getNewTrailInfo, trailData } = useTrail();
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP)
+    const scrollRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isAnimationLoading, setIsAnimationLoading] = useState<boolean>(true);
     const [trailPageIndex, setTrailPageIndex] = useState(0);
@@ -93,6 +115,13 @@ const Trail = () => {
         { top: "56vh", left: "45vw" },
         { top: "75vh", left: "60vw" },
         { top: "75vh", left: "78vw" },
+    ];
+
+    const modulesMobilePositions = [
+        { top: "69dvh", left: "260px" },
+        { top: "52dvh", left: "650px" },
+        { top: "71dvh", left: "1000px" },
+        { top: "64dvh", left: "1260px" },
     ];
 
     const finishFinalChallenge = async () => {
@@ -195,6 +224,13 @@ const Trail = () => {
     const handleChangePage = (offset: number) => {
         setIsAnimationLoading(true);
         setTrailPageIndex(trailPageIndex + offset);
+
+        if (scrollRef.current) {
+            scrollRef.current.scrollTo({
+                left: 0,
+                behavior: 'smooth',
+            });
+        }
     }
 
     const handleCloseChallengeModal = () => {
@@ -267,6 +303,27 @@ const Trail = () => {
         }
     }
 
+    const renderMobileStamps = () => (
+        <Flex
+            top="20px"
+            right="16px"
+            gap="2px"
+            position="absolute"
+        >
+            {
+                trailData?.trailPages[trailPageIndex].modules.map((item, index) => {
+                    return (
+                        <StampIcon
+                            key={index}
+                            size="60px"
+                            stampImage={item.isCompleted ? trailData?.stampImage as string : S3_LOCKED_STAMP}
+                        />
+                    )
+                })
+            }
+        </Flex>
+    )
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -290,303 +347,372 @@ const Trail = () => {
     }, [trailData, userData]);
 
     return (
-        <>
-            <VideoBackground
-                key={`${trailData?.trailName}-${trailPageIndex}`}
-                handleLoading={() => setIsAnimationLoading(false)}
-                source={getBackgroundAnimation()}
-            />
-            <AlertModal
-                isOpen={alertInfo.isOpen}
-                onClose={handleCloseAlert}
-                onClickClose={handleCloseAlert}
-                alertTitle={alertInfo.title}
-                alertBody={alertInfo.body}
-                buttonBody={
-                    <Button
-                        color='white'
-                        _hover={{ bg: colorPalette.primaryColor }}
-                        bg={colorPalette.primaryColor}
-                        onClick={alertInfo.buttonFunction}
-                        isLoading={alertInfo.isLoading}
-                    >
-                        {alertInfo.buttonText}
-                    </Button>
-                }
-            />
-            {
-                (isLoading || isAnimationLoading || !trailData) ? <LoadingOverlay /> : (
-                    <>
-                        <Flex
-                            width='92.5%'
-                            height='100%'
-                            justifyContent='space-between'
-                            alignItems='flex-start'
-                            margin='auto'
-                        >
-                            <NavActions logout={handleLogOut} />
+		<Box
+			position='relative'
+			top='0'
+			left='0'
+			w='100vw'
+			h='100dvh'
+			backgroundSize='cover'
+            overflowY="hidden"
+		>
+			<MobileIgnorancePremiumIcons />
+			<MobileNavIcon
+				showGoBack
+				showOracle={trailData?.oracle.isAvailable}
+				trail={trailName}
+			/>
 
-                            <IgnorancePremiumIcons
-                                ignorance={userData.ignorance}
-                                showStatus={false}
-                                dontShowIgnorance={true}
-                                trail={trailName}
-                                dontShowOracle={!trailData.oracle.isAvailable}
-                                modules={trailData.trailPages[trailPageIndex].modules}
-                                stampImage={trailData.stampImage}
-                            />
+			{!isDesktop && renderMobileStamps()}
+			<Box
+				position={{ base: 'absolute', md: 'static' }}
+				margin={{ base: '0 auto', md: 'initial' }}
+				overflowX={{ base: 'scroll', md: 'visible' }}
+				overflowY={{ base: 'hidden', md: 'visible' }}
+				width={{ base: '100%', md: 'auto' }}
+				height={{ base: '100dvh', md: 'auto' }}
+				ref={scrollRef}
+			>
+				<Box
+					display={{ base: 'flex', md: 'block' }}
+					width={{ base: '1500px', md: 'auto' }}
+				>
+					<VideoBackground
+						key={`${trailData?.trailName}-${trailPageIndex}`}
+						position={isDesktop ? 'absolute' : 'relative'}
+						handleLoading={() => setIsAnimationLoading(false)}
+						source={getBackgroundAnimation()}
+					/>
 
+					{isLoading || isAnimationLoading || !trailData ? (
+						<></>
+					) : (
+						<Flex justifyContent='space-between'>
+							{trailPageIndex > 0 && (
+								<Box position='absolute' top='60vh' left='10vw'>
+									<NavIcon
+										image={
+											<FaArrowLeft
+												size={55}
+												color={
+													colorPalette.secondaryColor
+												}
+											/>
+										}
+										onClick={() => handleChangePage(-1)}
+										size='normal'
+										mouseOver='Voltar na trilha'
+									/>
+								</Box>
+							)}
+							{trailData.trailPages[trailPageIndex].modules
+								.slice(0, 4)
+								.map((item, index) => {
+									const top = isDesktop
+										? item.top ||
+										  modulesPositions[index].top
+										: item.topMobile ??
+										  modulesMobilePositions[index].top;
+									const left = isDesktop
+										? item.left ||
+										  modulesPositions[index].left
+										: item.leftMobile ??
+										  modulesMobilePositions[index].left;
+									return (
+										<ModuleModalV2
+											key={item._id}
+											moduleInfo={item}
+											top={top}
+											left={left}
+										/>
+									);
+								})}
+							{trailData.finalChallenge.icon ? (
+								<Center
+									_hover={{
+										cursor: 'pointer',
+										transform: 'scale(2.2)',
+									}}
+									transition='all 0.2s ease'
+									width='4rem'
+									height='4rem'
+									onClick={() => {
+										handleFinalChallenge();
+									}}
+									position='absolute'
+									top={'40vh'}
+									left={isDesktop ? '70vw' : '1000px'}
+								>
+									<Tooltip
+                                        isDisabled={!isDesktop}
+										hasArrow
+                                        placement='top'
+										gutter={35}
+										label={FINAL_CHALLENGE(trailName)}
+									>
+										<Image
+											src={trailData.finalChallenge.icon}
+											width='90%'
+											height='90%'
+										/>
+									</Tooltip>
+								</Center>
+							) : null}
+							{trailPageIndex <
+								trailData.trailPages.length - 1 && (
+								<Box
+									position='absolute'
+									top='60vh'
+									right={isDesktop ? '5vw' : undefined}
+									left={isDesktop ? undefined : '1400px'}
+								>
+									<NavIcon
+										image={
+											<FaArrowRight
+												size={55}
+												color={
+													colorPalette.secondaryColor
+												}
+											/>
+										}
+										onClick={() => handleChangePage(1)}
+										size='normal'
+										mouseOver='Avançar pela trilha'
+									/>
+								</Box>
+							)}
+						</Flex>
+					)}
+				</Box>
+			</Box>
 
-                        </Flex>
-                        <Flex
-                            justifyContent='space-between'
-                            margin='2vw'
-                        >
-                            {
-                                trailPageIndex > 0 && <Box
-                                    position='absolute'
-                                    top='60vh'
-                                    left='10vw'
-                                >
-                                    <NavIcon
-                                        image={<FaArrowLeft size={55} color={colorPalette.secondaryColor} />}
-                                        onClick={() => handleChangePage(-1)}
-                                        size='normal'
-                                        mouseOver='Voltar na trilha'
-                                    />
-                                </Box>
-                            }
-                            {
-                                trailData.trailPages[trailPageIndex].modules.slice(0, 4).map((item, index) => (
-                                    <ModuleModalV2
-                                        key={item._id}
-                                        moduleInfo={item}
-                                        top={item.top || modulesPositions[index].top}
-                                        left={item.left || modulesPositions[index].left}
-                                    />
-                                ))
-                            }
-                            {
-                                trailData.finalChallenge.icon ? (
-                                    <Center
-                                        _hover={{
-                                            cursor: 'pointer',
-                                            transform: 'scale(2.2)',
-                                        }}
-                                        transition='all 0.2s ease'
-                                        width='4rem'
-                                        height='4rem'
-                                        onClick={() => {
-                                            handleFinalChallenge()
-                                        }}
-                                        position='absolute'
-                                        top='40vh'
-                                        left='70vw'
-                                    >
-                                        <Tooltip
-                                            hasArrow
-                                            placement='top'
-                                            gutter={35}
-                                            label={FINAL_CHALLENGE(trailName)}
-                                        >
-                                            <Image
-                                                src={trailData.finalChallenge.icon}
-                                                width='90%'
-                                                height='90%'
-                                            />
-                                        </Tooltip>
-                                    </Center>
-                                ) : null
-                            }
-                            {
-                                trailPageIndex < trailData.trailPages.length - 1 && <Box
-                                    position='absolute'
-                                    top='60vh'
-                                    right='5vw'
-                                >
-                                    <NavIcon
-                                        image={<FaArrowRight size={55} color={colorPalette.secondaryColor} />}
-                                        onClick={() => handleChangePage(1)}
-                                        size='normal'
-                                        mouseOver='Avançar pela trilha'
-                                    />
-                                </Box>
-                            }
-                        </Flex>
+			{isLoading || isAnimationLoading || !trailData ? (
+				<LoadingOverlay />
+			) : (
+				<>
+					<Flex
+						width='92.5%'
+						height='100%'
+						justifyContent='space-between'
+						alignItems='flex-start'
+						margin='auto'
+					>
+						<NavActions logout={handleLogOut} />
 
-                        {
-                            script.length ? (
-                                <DefaultNarrativeModal
-                                    isOpen={narrativeIsOpen}
-                                    onToggle={narrativeOnToggle}
-                                    script={script}
-                                    endScriptFunction={onEndNarrative}
-                                />
-                            ) : null
-                        }
+						<IgnorancePremiumIcons
+							ignorance={userData.ignorance}
+							showStatus={false}
+							dontShowIgnorance={true}
+							trail={trailName}
+							dontShowOracle={!trailData.oracle.isAvailable}
+							modules={
+								trailData.trailPages[trailPageIndex].modules
+							}
+							stampImage={trailData.stampImage}
+						/>
+					</Flex>
 
-                        <Modal
-                            isOpen={modalIsOpen}
-                            onClose={handleCloseChallengeModal}
-                            size='4xl'
-                        >
-                            <ModalOverlay />
-                            <ModalContent
-                                height='34rem'
-                                fontFamily={fontTheme.fonts}
-                            >
-                                <Box
-                                    w='25%'
-                                    bg={colorPalette.primaryColor}
-                                    h='25rem'
-                                    position='absolute'
-                                    zIndex='-1'
-                                    left='0'
-                                    top='0'
-                                    borderTopStartRadius='5px'
-                                    clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
-                                />
-                                {challengeInfo.isComplete || !challengeInfo.isAvailable || challengeInfo.isBlocked ? (
-                                    <>
-                                        <ModalBody
-                                            d='flex'
-                                            mt='-1rem'
-                                            flexDirection='column'
-                                            alignItems='center'
-                                            justifyContent='space-between'
-                                        >
-                                            <Flex
-                                                w='65%'
-                                                h='100%'
-                                                justifyContent='space-between'
-                                                flexDirection='column'
-                                                marginBottom='0.8rem'
-                                            >
-                                                <Text
-                                                    w='100%'
-                                                    marginTop='5rem'
-                                                    fontSize='2rem'
-                                                    lineHeight='9vh'
-                                                    textAlign='center'
-                                                    fontWeight='normal'
-                                                >
-                                                    {challengeText}
-                                                </Text>
-                                                <Button
-                                                    bgColor={
-                                                        colorPalette.secondaryColor
-                                                    }
-                                                    width='45%'
-                                                    alignSelf='center'
-                                                    color={
-                                                        colorPalette.buttonTextColor
-                                                    }
-                                                    height='4rem'
-                                                    fontSize='1.4rem'
-                                                    _hover={{
-                                                        transform: 'scale(1.1)',
-                                                    }}
-                                                    onClick={handleCloseChallengeModal}
-                                                >
-                                                    Okay!
-                                                </Button>
-                                            </Flex>
-                                        </ModalBody>
-                                    </>
-                                ) : (
-                                        <>
-                                            <ModalHeader
-                                                d='flex'
-                                                justifyContent='center'
-                                                mt='1.4rem'
-                                            >
-                                                <Text
-                                                    ml='2.3rem'
-                                                    w='75%'
-                                                    fontSize='1.4rem'
-                                                    textAlign='center'
-                                                    fontWeight='normal'
-                                                >
-                                                    {challengeText}
-                                                </Text>
-                                                <ModalCloseButton
-                                                    color={colorPalette.closeButton}
-                                                    size='lg'
-                                                />
-                                            </ModalHeader>
+					{script.length ? (
+						<DefaultNarrativeModal
+							isOpen={narrativeIsOpen}
+							onToggle={narrativeOnToggle}
+							script={script}
+							endScriptFunction={onEndNarrative}
+						/>
+					) : null}
 
-                                            <ModalBody
-                                                d='flex'
-                                                mt='-1rem'
-                                                flexDirection='column'
-                                                alignItems='center'
-                                                justifyContent='space-between'
-                                            >
-                                                <Image
-                                                    src={horizon}
-                                                    w='65%'
-                                                    h='75%'
-                                                />
+					<Modal
+						isOpen={modalIsOpen}
+						onClose={handleCloseChallengeModal}
+						size='4xl'
+					>
+						<ModalOverlay />
+						<ModalContent
+							height='34rem'
+							fontFamily={fontTheme.fonts}
+						>
+							<Box
+								w='25%'
+								bg={colorPalette.primaryColor}
+								h='25rem'
+								position='absolute'
+								zIndex='-1'
+								left='0'
+								top='0'
+								borderTopStartRadius='5px'
+								clipPath='polygon(0% 0%, 55% 0%, 0% 100%)'
+							/>
+							{challengeInfo.isComplete ||
+							!challengeInfo.isAvailable ||
+							challengeInfo.isBlocked ? (
+								<>
+									<ModalBody
+										d='flex'
+										mt='-1rem'
+										flexDirection='column'
+										alignItems='center'
+										justifyContent='space-between'
+									>
+										<Flex
+											w='65%'
+											h='100%'
+											justifyContent='space-between'
+											flexDirection='column'
+											marginBottom='0.8rem'
+										>
+											<Text
+												w='100%'
+												marginTop='5rem'
+												fontSize='2rem'
+												lineHeight='9vh'
+												textAlign='center'
+												fontWeight='normal'
+											>
+												{challengeText}
+											</Text>
+											<Button
+												bgColor={
+													colorPalette.secondaryColor
+												}
+												width='45%'
+												alignSelf='center'
+												color={
+													colorPalette.buttonTextColor
+												}
+												height='4rem'
+												fontSize='1.4rem'
+												_hover={{
+													transform: 'scale(1.1)',
+												}}
+												onClick={
+													handleCloseChallengeModal
+												}
+											>
+												Okay!
+											</Button>
+										</Flex>
+									</ModalBody>
+								</>
+							) : (
+								<>
+									<ModalHeader
+										d='flex'
+										justifyContent='center'
+										mt='1.4rem'
+									>
+										<Text
+											ml='2.3rem'
+											w='75%'
+											fontSize='1.4rem'
+											textAlign='center'
+											fontWeight='normal'
+										>
+											{challengeText}
+										</Text>
+										<ModalCloseButton
+											color={colorPalette.closeButton}
+											size='lg'
+										/>
+									</ModalHeader>
 
-                                                <Flex
-                                                    w='65%'
-                                                    justifyContent='space-between'
-                                                    marginBottom='0.8rem'
-                                                >
-                                                    <Button
-                                                        bgColor={
-                                                            colorPalette.confirmButton
-                                                        }
-                                                        width='45%'
-                                                        height='4rem'
-                                                        fontSize='1.2rem'
-                                                        _hover={{
-                                                            transform: 'scale(1.1)',
-                                                        }}
-                                                        onClick={openChallengeConfirmation}
-                                                    >
-                                                        Vamos nessa!
-                                                </Button>
-                                                    <Button
-                                                        bgColor={
-                                                            colorPalette.closeButton
-                                                        }
-                                                        width='45%'
-                                                        height='4rem'
-                                                        fontSize='1.2rem'
-                                                        _hover={{
-                                                            transform: 'scale(1.1)',
-                                                        }}
-                                                        onClick={handleCloseChallengeModal}
-                                                    >
-                                                        Ainda não estou pronto!
-                                                </Button>
-                                                </Flex>
-                                            </ModalBody>
-                                        </>
-                                    )}
-                            </ModalContent>
-                        </Modal>
+									<ModalBody
+										d='flex'
+										mt='-1rem'
+										flexDirection='column'
+										alignItems='center'
+										justifyContent='space-between'
+									>
+										<Image
+											src={horizon}
+											w={{ base: '100%', md: '65%' }}
+											h={{ base: '60%', md: '75%' }}
+										/>
 
-                        {
-                            finalChallengeInfo?.questions ? (
-                                <FinalChallengeQuiz
-                                    openModal={finalChallengeIsOpen}
-                                    closeModal={finalChallengeOnClose}
-                                    onToggle={finalChallengeOnToggle}
-                                    QuestionInfo={finalChallengeInfo.questions}
-                                    totalQuestions={finalChallengeInfo.totalQuestions}
-                                    trailName={trailName}
-                                    image={trailData.finalChallenge.image as string}
-                                    completeModuleFunction={finishFinalChallenge}
-                                />
-                            ) : null
-                        }
-                    </>
-                )
-            }
-        </>
-    )
+										<Flex
+											w={{ base: "100%", md: '65%' }}
+                                            gap="16px"
+											justifyContent='space-between'
+											marginBottom='0.8rem'
+										>
+											<Button
+												bgColor={
+													colorPalette.confirmButton
+												}
+												width={{
+													base: '200px',
+													md: '45%',
+												}}
+												height='4rem'
+												fontSize='1.2rem'
+												_hover={{
+													transform: 'scale(1.1)',
+												}}
+												onClick={
+													openChallengeConfirmation
+												}
+											>
+												Vamos nessa!
+											</Button>
+											<Button
+												bgColor={
+													colorPalette.closeButton
+												}
+												width={{
+													base: 'fit-content',
+													md: '45%',
+												}}
+												height='4rem'
+												fontSize='1.2rem'
+												_hover={{
+													transform: 'scale(1.1)',
+												}}
+												onClick={
+													handleCloseChallengeModal
+												}
+											>
+												Ainda não!
+											</Button>
+										</Flex>
+									</ModalBody>
+								</>
+							)}
+						</ModalContent>
+					</Modal>
+					{finalChallengeInfo?.questions ? (
+						<FinalChallengeQuiz
+							openModal={finalChallengeIsOpen}
+							closeModal={finalChallengeOnClose}
+							onToggle={finalChallengeOnToggle}
+							QuestionInfo={finalChallengeInfo.questions}
+							totalQuestions={finalChallengeInfo.totalQuestions}
+							trailName={trailName}
+							image={trailData.finalChallenge.image as string}
+							completeModuleFunction={finishFinalChallenge}
+						/>
+					) : null}
+				</>
+			)}
+
+			<AlertModal
+				isOpen={alertInfo.isOpen}
+				onClose={handleCloseAlert}
+				onClickClose={handleCloseAlert}
+				alertTitle={alertInfo.title}
+				alertBody={alertInfo.body}
+				buttonBody={
+					<Button
+						color='white'
+						_hover={{ bg: colorPalette.primaryColor }}
+						bg={colorPalette.primaryColor}
+						onClick={alertInfo.buttonFunction}
+						isLoading={alertInfo.isLoading}
+					>
+						{alertInfo.buttonText}
+					</Button>
+				}
+			/>
+		</Box>
+	);
 }
 
 export default Trail;

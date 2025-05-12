@@ -206,7 +206,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 	const renderContent = () => (
 		<>
 			{
-				showQuickFilters && <Flex alignItems="center" gap="16px">
+				showQuickFilters && <Flex alignItems="center" gap="16px" maxW="100%" overflowX="auto" overflowY="hidden">
 					<ShopQuickFilter isSelected={handleQuickFilters['all'].isSelected} label="Todos" onClick={handleQuickFilters['all'].onClick} color={colorPalette.primaryColor} />
 					<ShopQuickFilter isSelected={handleQuickFilters['certificate'].isSelected} label="Certificados" onClick={handleQuickFilters['certificate'].onClick} color={colorPalette.primaryColor} />
 					<ShopQuickFilter isSelected={handleQuickFilters['normal'].isSelected} label="Materiais de estudo" onClick={handleQuickFilters['normal'].onClick} color={colorPalette.primaryColor} />
@@ -216,8 +216,14 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 			{
 				!ALL_ITEMS_AVAILABLE && <Text fontSize="18px" color={colorPalette.textColor} w="100%" margin="auto" textAlign="center" marginTop='8px'>Estamos sem items disponiveis no momento, volte novamente mais tarde!</Text>
 			}
-			<SimpleGrid mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px"
-				height="432px">
+			<SimpleGrid
+				mt="32px"
+				mb="16px"
+				minChildWidth="130px"
+				spacingX={{base: "16px", md:"48px"}}
+				spacingY="28px"
+				height="432px"
+			>
 				{
 					((quickFilterSelected === "certificate" || quickFilterSelected === "all") && certificates && certificates.length > 0) && certificates.map((item) =>
 						<ShopItem
@@ -254,14 +260,42 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 	return (
 		<Modal isCentered isOpen={isOpen} onClose={onClose} size="4xl" scrollBehavior="inside">
 			<ModalOverlay />
-			<ModalContent background={colorPalette.oracleWhite} paddingX="48px" minHeight='60vh' fontFamily={fontTheme.fonts}>
-				<ModalHeader width="100%" borderBottom={`2px solid ${colorPalette.primaryColor}`}>
-					<Text width="fit-content" margin="auto" fontSize="40px" color={colorPalette.textColor}
-						fontWeight="semibold">Loja</Text>
-					<ModalCloseButton color={colorPalette.closeButton} size="48px" mr="8px" mt="8px" />
+			<ModalContent
+				bg={colorPalette.oracleWhite}
+				px={{ base: '14px', md: '48px' }}
+				minH={{ base: '100%', md: '60vh' }}
+				maxH={{ base: '100%', md: 'auto' }}
+				fontFamily={fontTheme.fonts}
+			>
+				<ModalHeader
+					w="100%"
+					borderBottom={`2px solid ${colorPalette.primaryColor}`}
+					display={{ base: 'flex' }}
+					justifyContent={{ base: 'flex-start' }}
+					pb={{ base: '12px' }}
+					pl={{ base: 0 }}
+				>
+					<Text
+						w="fit-content"
+						fontSize="40px"
+						color={colorPalette.textColor}
+						fontWeight="semibold"
+						m={{ base: 0, md: 'auto' }}
+					>
+						Loja
+					</Text>
+					<ModalCloseButton
+						color={colorPalette.closeButton}
+						fontSize={{ base: '28px', md: 'inherit' }}
+						mt={{ base: '24px', md: '8px' }}
+						mr={{ base: '8px', md: '8px' }}
+					/>
 				</ModalHeader>
 
-				<ModalBody width="100%"
+				<ModalBody
+					w="100%"
+					px={{ base: 0 }}
+					py={{ base: 0, md: '16px' }}
 					sx={{
 						"&::-webkit-scrollbar": {
 							width: "4px",
@@ -273,19 +307,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 							borderRadius: "10px"
 						},
 						"&::-webkit-scrollbar-thumb:hover": {
-							background: "#555",
-						},
-						"&::-moz-scrollbar": {
-							width: "4px",
-							height: "4px",
-							borderRadius: "8px"
-						},
-						"&::-moz-scrollbar-thumb": {
-							background: "#9D9D9D",
-							borderRadius: "10px"
-						},
-						"&::-moz-scrollbar-thumb:hover": {
-							background: "#555",
+							background: "#555"
 						},
 					}}
 				>

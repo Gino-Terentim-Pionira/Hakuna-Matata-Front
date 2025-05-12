@@ -1,8 +1,9 @@
-import { Box, Button, Flex, Slide, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Flex, Slide, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import fontTheme from '../../../../styles/base';
 import React from 'react';
 import rarityEnum from '../../../../utils/enums/rarity';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 type RelicInfoModalType = {
 	isOpen: boolean;
@@ -28,6 +29,8 @@ export const RelicInfoSlide = ({ isOpen, onClose, isHaveNoButton, title, rarity,
 		'Lendário': '#A344E8',
 		'Místico': '#F0C05D',
 	}[rarity]
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
+
 	return (
 		<Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }} >
 			<Box onClick={onClose} width="100vw" height="100vh" top="0" bg={"transparent"} />

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Button, Flex, Image, Slide, Text, Tooltip } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Box, Button, Flex, Image, Slide, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import { ShopItemInfoType } from '../ShopModal';
 import fontTheme from '../../../../styles/base';
@@ -8,6 +8,7 @@ import { useUser } from '../../../../hooks';
 import { NOT_ENOUGHT_COINS } from '../../../../utils/constants/mouseOverConstants';
 import { BiSolidCheckCircle } from 'react-icons/bi';
 import { IoMdCloseCircle } from 'react-icons/io';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 type ShopItemDetailedTypes = {
 	isOpen: boolean;
@@ -19,6 +20,9 @@ type ShopItemDetailedTypes = {
 
 export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: ShopItemDetailedTypes) => {
 	const { userData } = useUser();
+	const [startY, setStartY] = useState<number | null>(null);
+	const [translateY, setTranslateY] = useState(0);
+	const [closing, setClosing] = useState(false);
 	const IS_USE_HAS_ENOUGHT_COINS = userData.coins >= Number(shopItemInfo?.price);
 	const IS_ITEM_CERTIFICATE = (shopItemInfo &&
 		shopItemInfo.isBlocked !== undefined &&
@@ -26,6 +30,31 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 		shopItemInfo.isEnoughQuestion !== undefined &&
 		shopItemInfo.isEnoughFinalQuiz !== undefined &&
 		shopItemInfo.trail !== undefined);
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
+
+	const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+		setStartY(e.touches[0].clientY);
+	};
+
+	const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+		if (startY === null) return;
+		const currentY = e.touches[0].clientY;
+		const diff = currentY - startY;
+		if (diff > 0) setTranslateY(diff);
+	};
+
+	const handleTouchEnd = () => {
+		if (translateY > 100) {
+			setClosing(true);
+			onClose();
+			setTimeout(() => {
+				setClosing(false);
+				setTranslateY(0);
+			}, 100);
+		} else {
+			setTranslateY(0);
+		}
+	};
 
 	const certificateRequirementsLabel = (count: number, singular: string, plural: string): string => {
 		return !count ? 'Finalizado!' : `Falta ${count > 1 ? plural : singular}`;
@@ -62,7 +91,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 
 			return (
 				<>
-					<Text fontFamily={fontTheme.fonts} fontWeight="bold">
+					<Text fontFamily={fontTheme.fonts} fontWeight="bold" mt="16px">
 						Requisitos para a compra, na Trilha do {shopItemInfo.trail}:
 					</Text>
 					<RequirementItem
@@ -86,12 +115,12 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 	}
 
 	return (
-		<Slide direction="bottom" in={isOpen} style={{ zIndex: 1900 }}>
+		<Slide direction='bottom' in={isOpen} style={{ zIndex: 1900 }}>
 			<Box onClick={onClose} w='100%' h='100vh' />
 			<Flex
-				position="relative"
+				position='relative'
 				w='100%'
-				h='360px'
+				h={{ base: 'fit-content', md: '360px' }}
 				bg={colorPalette.slideBackground}
 				rounded='md'
 				shadow='md'
@@ -99,10 +128,35 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 				border='4px solid'
 				borderColor={colorPalette.secondaryColor}
 				fontFamily={fontTheme.fonts}
+				color={colorPalette.textColor}
+				style={{
+					transform: `translateY(${translateY}px)`,
+					transition: closing ? 'transform 0.3s ease-in-out' : '',
+				}}
 			>
+				<Flex
+					display={{ base: 'flex', md: 'none' }}
+					width='100%'
+					onTouchStart={handleTouchStart}
+					onTouchMove={handleTouchMove}
+					onTouchEnd={handleTouchEnd}
+					height='fit-content'
+					paddingBottom='8px'
+					paddingTop='12px'
+				>
+					<Flex
+						width='50px'
+						height='6px'
+						borderRadius='1000px'
+						backgroundColor={colorPalette.neutralGray}
+						margin='auto'
+					/>
+				</Flex>
+
 				<Text
-					alignItems="flex-start"
-					position="absolute"
+					display={{ base: 'none', md: 'block' }}
+					alignItems='flex-start'
+					position='absolute'
 					onClick={onClose}
 					transition='all 0.2s'
 					_hover={{
@@ -110,7 +164,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 						opacity: '80%',
 					}}
 					w='fit-content'
-					height="36px"
+					height='36px'
 					color={colorPalette.closeButton}
 					fontWeight='bold'
 					fontSize='32px'
@@ -119,39 +173,54 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 				>
 					X
 				</Text>
-				<Flex paddingLeft="24px" flexDir="column" top="32px" position="absolute" w="95%">
+				<Flex
+					paddingLeft={{ base: '16px', md: '24px' }}
+					paddingRight={{ base: '16px', md: '24px' }}
+					paddingTop={{ base: '8px', md: '24px' }}
+					flexDir='column'
+					top={{ base: '0', md: '32px' }}
+					position={{ base: 'relative', md: 'absolute' }}
+					w={{ base: '100&', md: '95%' }}
+					height={{ base: '100%', md: 'auto' }}
+				>
 					<Text
-						fontSize={['0.7rem', '1.5rem', '1.7rem']}
+						fontSize={{ base: '18px', md: '28px' }}
 						fontWeight='semibold'
 						textAlign='left'
-						mb='8px'
+						mb={{ base: '16px', md: '8px' }}
 					>
 						{shopItemInfo && shopItemInfo.title}
 					</Text>
-					<Flex alignItems="flex-start" justifyContent="space-between" columnGap="24px">
-						<Box>
+					<Flex
+						flexDirection={{ base: 'column', md: 'row' }}
+						alignItems='flex-start'
+						justifyContent='space-between'
+						columnGap='24px'
+					>
+						<Box overflowY='auto'>
 							<Text
-								fontSize={['0.5rem', '1rem', '1.2rem']}
+								fontSize={{ base: '16px', md: '18px' }}
+								maxHeight={{ base: 'none', md: 'auto' }}
 								fontWeight='regular'
 								textAlign='left'
-								overflowY="auto"
-								maxH="260px"
-								paddingBottom="16px"
+								maxH='260px'
 							>
 								{shopItemInfo && shopItemInfo.description}
 							</Text>
-							{
-								IS_ITEM_CERTIFICATE && renderCertificateDescription()
-							}
+							{IS_ITEM_CERTIFICATE &&
+								renderCertificateDescription()}
 						</Box>
 
-
-						<Flex flexDir="column" marginTop="1px">
+						<Flex
+							width={{ base: '100%', md: 'auto' }}
+							flexDir='column'
+							marginTop='16px'
+						>
 							<Flex>
 								<Text
 									fontFamily={fontTheme.fonts}
-									fontSize="24px"
-									fontWeight="semibold"
+									fontSize={{ base: '18px', md: '24px' }}
+									fontWeight='semibold'
 									color={colorPalette.secundaryGrey}
 								>
 									Suas joias: {userData.coins}
@@ -163,10 +232,10 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 									ml='4px'
 								/>
 							</Flex>
-							<Flex marginBottom="16px">
+							<Flex marginBottom='16px'>
 								<Text
 									fontFamily={fontTheme.fonts}
-									fontSize='28px'
+									fontSize={{ base: '20px', md: '28px' }}
 									fontWeight='semibold'
 									color={colorPalette.closeButton}
 								>
@@ -181,24 +250,37 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 							</Flex>
 
 							<Tooltip
-								label={IS_USE_HAS_ENOUGHT_COINS ? '' : NOT_ENOUGHT_COINS}
+								label={
+									IS_USE_HAS_ENOUGHT_COINS
+										? ''
+										: NOT_ENOUGHT_COINS
+								}
 								placement='bottom'
 								hasArrow
-								isDisabled={IS_USE_HAS_ENOUGHT_COINS}
+								isDisabled={IS_USE_HAS_ENOUGHT_COINS || !isDesktop}
 								closeOnClick={false}
 							>
 								<Button
-									w="200px"
+									w={{ base: '100%', md: '200px' }}
 									height='3.5rem'
-									background={IS_USE_HAS_ENOUGHT_COINS ? colorPalette.primaryColor : colorPalette.grayBackground}
+									background={
+										IS_USE_HAS_ENOUGHT_COINS
+											? colorPalette.primaryColor
+											: colorPalette.grayBackground
+									}
 									color={colorPalette.buttonTextColor}
-									fontSize='1.5rem'
+									fontSize={{ base: '20px', md: '1.5rem' }}
 									borderRadius='8px'
 									_hover={{
-										opacity: 0.7
+										opacity: 0.7,
 									}}
-									onClick={IS_USE_HAS_ENOUGHT_COINS ? onClick : undefined}
+									onClick={
+										IS_USE_HAS_ENOUGHT_COINS
+											? onClick
+											: undefined
+									}
 									cursor={'pointer'}
+									marginBottom={{ base: '24px', md: '0' }}
 								>
 									Comprar
 								</Button>
@@ -206,8 +288,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 						</Flex>
 					</Flex>
 				</Flex>
-
 			</Flex>
 		</Slide>
-	)
+	);
 }

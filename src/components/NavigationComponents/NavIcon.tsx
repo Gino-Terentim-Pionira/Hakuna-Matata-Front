@@ -1,4 +1,4 @@
-import { Center, Image, Tooltip } from '@chakra-ui/react';
+import { Center, Image, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import React, { FC, ReactElement } from 'react';
 import icon_map from '../../assets/icons/icon_map.svg';
 import icon_map_opened from '../../assets/icons/icon_map_opened.svg';
@@ -6,6 +6,7 @@ import colorPalette from '../../styles/colorPalette';
 import { PositionProps } from '../../utils/props';
 import UserAvatar from '../UserAvatar';
 import { useUser } from '../../hooks';
+import MediaQueriesEnum from '../../utils/enums/mediaQueries';
 
 type NavIconProps = {
     image: string | ReactElement;
@@ -29,6 +30,7 @@ const NavIcon: FC<NavIconProps> = ({
     cursor = 'pointer'
 }) => {
     const { userData } = useUser();
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const defineSize: {[key: string]: string} = {
         'big': '6.55rem',
@@ -65,6 +67,7 @@ const NavIcon: FC<NavIconProps> = ({
 
     return (
         <Tooltip
+            isDisabled={!isDesktop}
             hasArrow
             placement={position || 'right'}
             gutter={14}
@@ -76,11 +79,11 @@ const NavIcon: FC<NavIconProps> = ({
                     transform: 'scale(1.1)',
                 }}
                 transition='all 0.2s ease'
-                mt={marginTop || '8px'}
+                mt={{ base: "0", md: marginTop || '8px'}}
                 border={`2px solid ${colorPalette.blackBorder}`}
                 borderRadius='4.5rem'
-                width={defineSize[size]}
-                height={defineSize[size]}
+                width={{ base: "53px", md: defineSize[size] }}
+                height={{ base: "53px", md: defineSize[size] }}
                 bg='white'
                 onClick={onClick}
             >

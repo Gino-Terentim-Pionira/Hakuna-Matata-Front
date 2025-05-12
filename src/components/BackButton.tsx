@@ -1,15 +1,19 @@
 import React from 'react';
-import { Tooltip, Image } from '@chakra-ui/react';
+import { Tooltip, Image, useMediaQuery } from '@chakra-ui/react';
 import { BACK_BUTTON } from '../utils/constants/mouseOverConstants';
 import sidearrow from '../assets/icons/sidearrow.png';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 const BackButton = ({
     onClick
 }: {
     onClick: VoidFunction
 }) => {
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
+
     return (
         <Tooltip
+            isDisabled={!isDesktop}
             hasArrow
             gutter={14}
             label={BACK_BUTTON}

@@ -112,58 +112,63 @@ const DefaultNarrativeModal = ({
     }, [isOpen]);
 
     return (
-        <SliderModal 
-            isOpen={isOpen}
-            buttonFunctions={buttonFunctions}
-            visibleImage={visibleImage}
-            title={scriptName}
-            image={scriptImage}
-            visibleName={visibleName}
-            visibleText={visibleText}
-            content={scriptText}
-            customComponent={
-                <Flex
-                        justifyContent='space-between'
-                        alignItems='flex-end'
-                        paddingTop='9px'
-                        flexDirection='column'
-                    >
-                        <Text
-                            mt=".5rem"
-                            _hover={{
-                                cursor: 'pointer',
-                                opacity: '80%'
-                            }}
-                            onClick={() => {
-                                trackEvent('narrative', 'Pular Narrativa');
-                                endScriptFunction ? endScriptFunction() :  onToggle();
-                            }}
-                            mr="32px"
-                            fontFamily={fontTheme.fonts}
-                            fontSize="26px"
-                            fontWeight="semibold"
-                            color={colorPalette.closeButton}
-                        >
-                            Pular
-                        </Text>
+		<SliderModal
+			isOpen={isOpen}
+			buttonFunctions={buttonFunctions}
+			visibleImage={visibleImage}
+			title={scriptName}
+			image={scriptImage}
+			visibleName={visibleName}
+			visibleText={visibleText}
+			content={scriptText}
+			customComponent={
+				<Flex
+					justifyContent='space-between'
+					alignItems='flex-end'
+					paddingTop='9px'
+					flexDirection='column'
+				>
+					<Text
+						mt='.5rem'
+						_hover={{
+							cursor: 'pointer',
+							opacity: '80%',
+						}}
+						onClick={() => {
+							trackEvent('narrative', 'Pular Narrativa');
+							endScriptFunction
+								? endScriptFunction()
+								: onToggle();
+						}}
+						mr={{ base: '16px', md: '32px' }}
+						fontFamily={fontTheme.fonts}
+						fontSize={{ base: '22px', md: '26px' }}
+						fontWeight='semibold'
+						color={colorPalette.closeButton}
+					>
+						Pular
+					</Text>
 
-                        <motion.div
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ loop: Infinity }}
-                        >
-                            <Image src={rightArrow}
-                                mb="1.5rem"
-                                _hover={{
-                                    cursor: 'pointer',
-                                    opacity: '80%'
-                                }}
-                                onClick={() => buttonFunctions()}
-                                mr="1.5rem" />
-                        </motion.div>
-                    </Flex>
-            }
-        />
-    )
+					<motion.div
+						animate={{ scale: [1, 1.2, 1] }}
+						transition={{ loop: Infinity }}
+					>
+						<Image
+							src={rightArrow}
+							mb={{ base: '16px', md: '1.5rem' }}
+							_hover={{
+								cursor: 'pointer',
+								opacity: '80%',
+							}}
+							height={{ base: "48px", md: 'initial' }}
+							onClick={() => buttonFunctions()}
+							mr={{ base: '16px', md: '1.5rem' }}
+						/>
+					</motion.div>
+				</Flex>
+			}
+		/>
+	);
 }
 
 export default DefaultNarrativeModal;

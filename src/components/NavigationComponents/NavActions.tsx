@@ -149,6 +149,7 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   return (
     <>
       <Flex
+        display={{base: 'none', md: "flex"}}
         maxWidth='fit-content'
         marginTop='1.5rem'
         flexDirection='column'

@@ -16,7 +16,7 @@ export function SplitText({ children, ...rest }) {
                     custom={i}
                 >
                     <Text
-                        fontSize={['.75rem', '1rem', '1.25rem']}
+                        fontSize={{base: "16px", md: "20px"}}
                     >
                         {word + (i !== words.length - 1 ? '\u00A0' : '')}
                     </Text>

@@ -12,8 +12,7 @@ type ShopQuickFilterType = {
 export const ShopQuickFilter = ({ isSelected, label, onClick, color }: ShopQuickFilterType) => {
     return (
         <Flex
-            minW="100px"
-            w="fit-content"
+            minW="fit-content"
             h="35px"
             alignItems="center"
             justifyContent="center"

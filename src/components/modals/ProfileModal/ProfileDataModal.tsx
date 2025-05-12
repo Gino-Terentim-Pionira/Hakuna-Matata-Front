@@ -234,31 +234,50 @@ const ProfileDataModal = () => {
             type: 'date'
         }];
 
-        return infoArray.map((item, index) =>
-            <Flex key={index} alignItems="center" mb="16px">
-                <Text color={colorPalette.textColor} fontWeight="semibold" fontSize={{ xl: "24px", lg: "24px", md: "18px", sm: "18px" }}>
-                    {item.infoLabel}:
-                </Text>
-                {
-                    isEditMode && item.onChange ?
-                        <Input
-                            width="fit-content"
-                            ml="8px"
-                            minWidth="200px"
-                            height="32px"
-                            color={colorPalette.textColor}
-                            borderColor={colorPalette.secundaryGrey}
-                            placeholder={item.infoValue}
-                            value={item.infoValue}
-                            onChange={item.onChange}
-                            type={item.type || "text"}
-                        /> :
-                        <Text ml="8px" color={colorPalette.textColor} fontSize='20px'>
-                            {item.infoValue}
-                        </Text>
-                }
-            </Flex>
-        )
+        return infoArray.map((item, index) => (
+			<Flex
+				key={index}
+				flexDirection={{ base: 'column', md: 'row' }}
+				alignItems={{ base: 'flex-start', md: 'center' }}
+				mb='16px'
+			>
+				<Text
+					color={colorPalette.textColor}
+					fontWeight='semibold'
+					fontSize={{
+						base: '18px',
+						xl: '24px',
+						lg: '24px',
+						md: '18px',
+						sm: '18px',
+					}}
+				>
+					{item.infoLabel}:
+				</Text>
+				{isEditMode && item.onChange ? (
+					<Input
+						width='fit-content'
+						ml={{ base: '2px', md: '8px' }}
+						minWidth='200px'
+						height='32px'
+						color={colorPalette.textColor}
+						borderColor={colorPalette.secundaryGrey}
+						placeholder={item.infoValue}
+						value={item.infoValue}
+						onChange={item.onChange}
+						type={item.type || 'text'}
+					/>
+				) : (
+					<Text
+						ml={{ base: '4px', md: '8px' }}
+						color={colorPalette.textColor}
+						fontSize={{ base: "18px", md: '20px' }}
+					>
+						{item.infoValue}
+					</Text>
+				)}
+			</Flex>
+		));
     }
 
     return (
@@ -266,9 +285,23 @@ const ProfileDataModal = () => {
             {
                 userData.email !== undefined ? (
                     <>
-                        <Flex mt="40px" ml="48px">
-                            <Flex direction='column' alignItems='center'>
-                                <Center borderRadius="4px" bg="#FFFEEE" position="relative">
+                        <Flex
+                            flexDirection={{base: "column", md: "row"}}
+                            mt={{base: "28px", md: "40px"}}
+                            ml={{base: "24px", md: "48px"}}
+                        >
+                            <Flex
+                                direction={{base:"row", md: "column"}}
+                                columnGap={{base: "4px", md: "auto"}}
+                                alignItems='center'
+                            >
+                                <Center
+                                    w={{base: "100px", md: "auto"}}
+                                    h={{base: "100px", md: "auto"}}
+                                    borderRadius="4px"
+                                    bg="#FFFEEE"
+                                    position="relative"
+                                >
                                     {
                                         isEditMode &&
                                         <AnimatedCenter
@@ -288,7 +321,7 @@ const ProfileDataModal = () => {
                                             <Text fontFamily={fontTheme.fonts} fontSize="18px" color={colorPalette.slideBackground}>Editar avatar</Text>
                                         </AnimatedCenter>
                                     }
-                                    <UserAvatar customAvatar={userData.custom_avatar} />
+                                    <UserAvatar width="100%" height="100%" customAvatar={userData.custom_avatar} />
                                 </Center>
                                 <Button bg='white' isLoading={isLoading} onClick={editButton} marginTop='16px' borderRadius='50px' border='1px solid rgba(109, 153, 242, 0.79)' width='140px' height='40px' boxShadow="0 4px 4px rgba(0, 0, 0, 0.25)">
                                     <Text color={colorPalette.textColor} fontSize='1.3rem'>
@@ -296,11 +329,20 @@ const ProfileDataModal = () => {
                                     </Text>
                                 </Button>
                             </Flex>
-                            <Flex direction='column' marginLeft='80px'>
+                            <Flex
+                                direction='column'
+                                marginTop={{base: "16px", md: "auto"}}
+                                marginLeft={{base: "4px", md: '80px'}}
+                            >
                                 {
                                     renderInfo()
                                 }
-                                <Flex alignItems="center">
+                                <Flex
+                                    position={{base: "absolute", md: "relative"}}
+                                    bottom={{base: "40px", md: 'auto'}}
+                                    left={{base: "32px", md: 'auto'}}
+                                    alignItems="center"
+                                >
                                     <Text color={colorPalette.textColor} fontWeight="semibold" fontSize="20px">
                                         Joias:
                                     </Text>

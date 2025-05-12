@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IOracle } from '../../../../services/OracleServices';
-import { webmToOther } from '../../../../utils/algorithms/webmToOther';
+import { webmOrMov } from '../../../../utils/algorithms/webmToOther';
+import { useMediaQuery } from '@chakra-ui/react';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 function OracleAnimation({
     oracleObject,
@@ -15,6 +17,7 @@ function OracleAnimation({
     const [opacityIdle, setOpacityIdle] = useState(1);
     const talkingRef = useRef<HTMLVideoElement>(null);
     const idleRef = useRef<HTMLVideoElement>(null);
+    const [isDesktop]  = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     const playVideoFromStart = (videoRef: React.RefObject<HTMLVideoElement>) => {
         if (videoRef.current) {
@@ -33,6 +36,7 @@ function OracleAnimation({
     }, [isTalking]);
 
     const containerStyle: React.CSSProperties = {
+        display: isDesktop ? 'flex' : 'none',
         position: 'relative',
         width: "50%",
         height: "70%",
@@ -62,8 +66,7 @@ function OracleAnimation({
                 playsInline
                 style={{ ...videoStyle, opacity: opacityIdle }}
             >
-                <source src={webmToOther(oracleObject.sprite_idle as string, '.mov')} type="video/quicktime" />
-                <source src={oracleObject.sprite_idle} type="video/webm" />
+                <source src={webmOrMov(oracleObject.sprite_idle as string)} />
             </video>
             <video
                 ref={talkingRef}
@@ -73,8 +76,7 @@ function OracleAnimation({
                 style={{ ...videoStyle, opacity: opacityTalking }}
                 onEnded={onEnd}
             >
-                <source src={webmToOther(oracleObject.sprite_talking as string, '.mov')} type="video/quicktime" />
-                <source src={oracleObject.sprite_talking} type="video/webm" />
+                <source src={webmOrMov(oracleObject.sprite_talking as string)} />
             </video>
         </div>
     );

@@ -33,7 +33,7 @@ type NarrativeModalProps = {
     narrative?: 'cheetah' | 'lion' | undefined
 }
 
-const NarrativeModal: FC<NarrativeModalProps> = ({
+const   NarrativeModal: FC<NarrativeModalProps> = ({
     isOpen,
     onToggle,
     script,

@@ -98,32 +98,52 @@ export const TutorialModal = ({ isOpen, onClose, selectedTopic, selectedIcon }: 
     }, [selectedTopic]);
 
     return (
-        <>
-            <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
-                <ModalOverlay />
+		<>
+			<Modal isOpen={isOpen} onClose={onClose} scrollBehavior='inside'>
+				<ModalOverlay />
 
-                <ModalContent
-                    bgImage={`url(${TutorialTopicBackground})`}
-                    backgroundPosition="center"
-                    backgroundRepeat="no-repeat"
-                    height="650px"
-                    fontFamily={fontTheme.fonts}
-                    boxShadow="0 10px 20px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 1)"
-                >
-                    <ModalCloseButton marginTop="14px" marginRight="14px" size="32px" color={colorPalette.closeButton} />
-                    {isLoading ? (
-                        <LoadingState />
-                    ) :
-                        (tutorialContentSelected ?
-                            <TutorialContent tutorialContent={tutorialContentSelected} userData={userData} goBack={handleGoBackToTopics} tutorialIcon={tutorialIcon} />
-                            :
-                            <TutorialTopics tutorialTopics={tutorialTopics} userData={userData}
-                                onClick={handleTutorialContentSelected} />
-                        )}
-                </ModalContent>
-            </Modal>
+				<ModalContent
+					marginTop={{ base: '0', md: '40px' }}
+					marginBottom={{ base: '0', md: '100%' }}
+					bgImage={`url(${TutorialTopicBackground})`}
+					backgroundPosition='center'
+					backgroundRepeat='no-repeat'
+					backgroundSize={{ base: 'cover', md: 'auto' }}
+					width={{ base: '100%', md: '100vw' }}
+					height={{ base: '100%', md: '650px' }}
+					maxHeight={{ base: 'none', md: 'calc(100% - 7.5rem)' }}
+					fontFamily={fontTheme.fonts}
+					boxShadow='0 10px 20px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 1)'
+				>
+					<ModalCloseButton
+						marginTop='14px'
+						marginRight='14px'
+						size='32px'
+						color={colorPalette.closeButton}
+					/>
+					{isLoading ? (
+						<LoadingState />
+					) : tutorialContentSelected ? (
+						<TutorialContent
+							tutorialContent={tutorialContentSelected}
+							userData={userData}
+							goBack={handleGoBackToTopics}
+							tutorialIcon={tutorialIcon}
+						/>
+					) : (
+						<TutorialTopics
+							tutorialTopics={tutorialTopics}
+							userData={userData}
+							onClick={handleTutorialContentSelected}
+						/>
+					)}
+				</ModalContent>
+			</Modal>
 
-            <WelcomeVideoModal isOpen={welcomeVideoIsOpen} onClose={handleWelcomeVideoOnClose} />
-        </>
-    )
+			<WelcomeVideoModal
+				isOpen={welcomeVideoIsOpen}
+				onClose={handleWelcomeVideoOnClose}
+			/>
+		</>
+	);
 }

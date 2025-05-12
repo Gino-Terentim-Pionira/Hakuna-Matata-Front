@@ -237,9 +237,26 @@ const Login = () => {
 					tip={screenInfo[step].tip}
 					noInput={screenInfo[step].noInput}
 				/>
-
-				<Image zIndex="1" width="25%" src={monkey} maxW="400px" minW="300px" alt='Image' ml="8px" mr="24px" />
-				<Box w="27%" bg={colorPalette.primaryColor} h="100vh" position="absolute" zIndex='0' right="0" />
+				<Image
+					zIndex="1"
+					width="25%"
+					src={monkey}
+					maxW="400px"
+					minW="300px"
+					alt='Image'
+					ml="8px"
+					mr="24px"
+					display={{ base: "none", md: "block" }}
+				/>
+				<Box
+					w="27%"
+					bg={colorPalette.primaryColor}
+					h="100vh"
+					position="absolute"
+					zIndex="0"
+					right="0"
+					display={{ base: "none", md: "block" }}
+				/>
 			</Center>
 
 			<AlertModal
