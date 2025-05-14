@@ -37,6 +37,23 @@ const CertificateDisplay = () => {
         });
     };
 
+    const handleDownloadPDF = () => {
+        if (pdfUrl) {
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = 'certificado.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast({
+                title: 'Download iniciado!',
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            });
+        }
+    }
+
     useEffect(() => {
         const fetchCertificate = async () => {
             try {
@@ -48,7 +65,8 @@ const CertificateDisplay = () => {
                     data.first_name,
                     data.last_name,
                     data.issue_date,
-                    data.hash
+                    data.hash,
+                    data.titleColor
                 );
 
                 setPdfUrl(url);
@@ -99,9 +117,23 @@ const CertificateDisplay = () => {
                             fontSize='1rem'
                             onClick={handleCopyUrl}
                             _hover={{}}
+                            marginRight='16px'
                         >
                             Copiar URL
                         </Button>
+
+                        <Button
+                            width="150px"
+                            height="50px"
+                            background={colorPalette.primaryColor}
+                            color={colorPalette.buttonTextColor}
+                            fontSize="1rem"
+                            onClick={handleDownloadPDF}
+                            _hover={{}}
+                        >
+                            Baixar Certificado
+                        </Button>
+
 
                     </Center>
                     <Box

@@ -1,7 +1,6 @@
 import api from "./api"
 import trailEnum from "../utils/enums/trail";
 import jsPDF from "jspdf";
-
 export interface IOwnedCertificate {
     certificate_name: string,
     description: string,
@@ -15,7 +14,8 @@ export interface ICertificateDetails {
     image: string,
     content: string,
     hash: string,
-    issue_date: string
+    issue_date: string,
+    titleColor: string
 }
 
 export interface IShopCertificate {
@@ -60,7 +60,7 @@ export class CertificateService {
         await api.post('certificate/buy', data);
     }
 
-    handleGeneratePDF = (image: string, content: string, first_name: string, last_name: string, issue_date: string, hash: string): Promise<string> => {
+    handleGeneratePDF = (image: string, content: string, first_name: string, last_name: string, issue_date: string, hash: string, titleColor: string): Promise<string> => {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = image + '?r=' + Math.floor(Math.random() * 100000);
@@ -93,23 +93,22 @@ export class CertificateService {
 
                 const titleDiv = document.createElement('div');
                 titleDiv.innerHTML = 'É com orgulho que conferimos este certificado a';
-                titleDiv.style.fontSize = '15px';
+                titleDiv.style.fontSize = '18px';
 
                 const contentDiv = document.createElement('div');
                 contentDiv.innerHTML = content;
-                contentDiv.style.width = '700px';
-                contentDiv.style.fontSize = '15px';
+                contentDiv.style.width = '780px';
 
                 const nameDiv = document.createElement('div');
                 nameDiv.innerHTML = `${first_name} ${last_name}`;
                 nameDiv.style.fontSize = '36px';
-                nameDiv.style.marginBottom = '32px';
+                nameDiv.style.marginBottom = '4px';
                 nameDiv.style.fontWeight = 'bold';
+                nameDiv.style.color = titleColor;
 
                 const dateDiv = document.createElement('div');
                 dateDiv.innerHTML = issue_date;
-                dateDiv.style.fontSize = '15px';
-                dateDiv.style.marginTop = '32px';
+                dateDiv.style.fontSize = '18px';
 
                 tempDiv.appendChild(titleDiv);
                 tempDiv.appendChild(nameDiv);
@@ -117,8 +116,8 @@ export class CertificateService {
                 tempDiv.appendChild(dateDiv);
 
                 doc.html(tempDiv, {
-                    x: 0,
-                    y: 50,
+                    x: 10,
+                    y: 55,
                     callback: function (doc) {
 
                         doc.setFontSize(8);
