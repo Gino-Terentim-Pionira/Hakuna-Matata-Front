@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Button, Flex, Slide, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Flex, Slide, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import colorPalette from '../../../../styles/colorPalette';
 import fontTheme from '../../../../styles/base';
 import { OwnedItemInfoType } from '../InventoryModal';
+import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 type InventoryItemDetailedTypes = {
 	isOpen: boolean;
@@ -16,6 +17,7 @@ export const InventoryItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }
 	const [startY, setStartY] = useState<number | null>(null);
 	const [translateY, setTranslateY] = useState(0);
 	const [closing, setClosing] = useState(false);
+	const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
 	const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
 		setStartY(e.touches[0].clientY);
@@ -136,6 +138,7 @@ export const InventoryItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }
 						</Text>
 
 						<Tooltip
+							isDisabled={!isDesktop}
 							label={'Baixar Item'}
 							placement='bottom'
 							hasArrow

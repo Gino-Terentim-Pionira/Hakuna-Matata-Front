@@ -33,7 +33,7 @@ const Home = () => {
 			position="relative"
 			overflow="hidden"
 		>
-			<VideoBackground source={getBackgroundAnimation(pathEnum.HOME)} />
+			<VideoBackground source={getBackgroundAnimation(pathEnum.HOME)} objectFit="cover" />
 			<NavSoundtrackIcon position="absolute" left="16px" top="12px" />
 
 			<Box w='100vw' mt='5%'>

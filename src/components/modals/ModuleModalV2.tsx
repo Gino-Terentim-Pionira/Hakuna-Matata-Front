@@ -24,7 +24,7 @@ import fontTheme from '../../styles/base';
 import colorPalette from '../../styles/colorPalette';
 import styled from 'styled-components';
 import VideoIcon from '../../assets/icons/video.png';
-import { useUser, useTrail } from '../../hooks';
+import { useUser } from '../../hooks';
 import { IVideoInfo } from './ModuleModal';
 import VideoModal from './VideoModal';
 import { AxiosResponse } from 'axios';
@@ -58,7 +58,7 @@ const GridContainer = styled.div`
     @media (max-width: 1100px) {
         width: 100%;
         margin: 0;
-        padding: 0 0 120px 0;
+        padding: 0 120px;
         grid-template-columns: 1fr 1fr;
         grid-column-gap: 32px;
         overflow-x: hidden;
@@ -89,7 +89,6 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
     const [image, setImage] = useState(button_off);
     const [isModuleBlocked, setIsModuleBlocked] = useState(false);
     const { userData, getNewUserInfo } = useUser();
-    const { getNewTrailInfo } = useTrail();
     const IS_MODULE_INFO_HAS_QUESTIONS = moduleInfo.questions.length;
     const [videoInfo, setVideoInfo] = useState<IVideoInfo>({ id: '', name: '', url: '', coins: 0, description: '' });
     const [isLoading, setIsLoading] = useState(false);
@@ -159,8 +158,6 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
             await api.patch(`user/addmodule/${userId}`, {
                 module_id: moduleInfo._id
             });
-            await getNewUserInfo();
-            await getNewTrailInfo(moduleInfo.trailName, true);
         } catch (error) {
             setOnError(true);
         }
@@ -251,10 +248,11 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
         isModuleBlocked ? null : onOpen();
     }
 
-    return (
+	return (
 		<>
 			<Tooltip
 				hasArrow
+				isDisabled={!isDesktop}
 				placement='top'
 				gutter={12}
 				label={renderTooltip()}
@@ -263,12 +261,12 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 				<Flex
 					position='absolute'
 					top={top}
+					left={left}
 					bottom={bottom}
 					flexDirection='column'
 					justifyContent='center'
-					w='150px'
-					h='150px'
-					left={left}
+					w={{ base: '150px', md: 'fit-content' }}
+					h={{ base: '150px', md: 'fit-content' }}
 					alignItems='center'
 				>
 					<Image
@@ -389,7 +387,7 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 															base: video.thumbnail
 																? '100%'
 																: 'initial',
-															md: '100%',
+															md: 'auto',
 														}}
 														height={{
 															base: video.thumbnail
@@ -456,6 +454,10 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 																			'vertical',
 																  }
 														}
+														overflow={{
+															base: 'hidden',
+															md: 'auto',
+														}}
 													>
 														{video.videoName}
 													</Text>
@@ -668,13 +670,19 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 									<Button
 										maxW={{ base: '50%', md: '100%' }}
 										minH={{ base: '60px', md: 'initial' }}
-										h={{ base: "fit-content", md: '3.5rem' }}
-                                        padding={{base: "4px", md: '16px'}}
-                                        fontWeight={{ base: 'normal', md: "semibold" }}
-										fontSize={{base: "16px", md: "18px"}}
-										wordBreak="break-word"
-										whiteSpace="normal"
-                                        w="45%"
+										h={{
+											base: 'fit-content',
+											md: '3.5rem',
+										}}
+										padding={{ base: '4px', md: '16px' }}
+										fontWeight={{
+											base: 'normal',
+											md: 'semibold',
+										}}
+										fontSize={{ base: '16px', md: '18px' }}
+										wordBreak='break-word'
+										whiteSpace='normal'
+										w='45%'
 										_hover={{
 											bg: colorPalette.confirmButton,
 										}}
@@ -688,13 +696,19 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 									<Button
 										maxW={{ base: '50%', md: '100%' }}
 										minH={{ base: '60px', md: 'initial' }}
-										h={{ base: "fit-content", md: '3.5rem' }}
-										padding={{base: "4px", md: '16px'}}
-										fontWeight={{ base: 'normal', md: "semibold" }}
-										fontSize={{base: "16px", md: "18px"}}
-										wordBreak="break-word"
-										whiteSpace="normal"
-										w="45%"
+										h={{
+											base: 'fit-content',
+											md: '3.5rem',
+										}}
+										padding={{ base: '4px', md: '16px' }}
+										fontWeight={{
+											base: 'normal',
+											md: 'semibold',
+										}}
+										fontSize={{ base: '16px', md: '18px' }}
+										wordBreak='break-word'
+										whiteSpace='normal'
+										w='45%'
 										_hover={{
 											bg: colorPalette.closeButton,
 										}}
@@ -716,16 +730,22 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 									Está preparado para responder o desafio
 									desse módulo?
 								</Text>
-								<Flex justifyContent='space-around' gap="16px">
+								<Flex justifyContent='space-around' gap='16px'>
 									<Button
 										maxW={{ base: '50%', md: '100%' }}
 										minH={{ base: '60px', md: 'initial' }}
-										h={{ base: "fit-content", md: '3.5rem' }}
-										padding={{base: "4px", md: '16px'}}
-										fontWeight={{ base: 'normal', md: "semibold" }}
-										fontSize={{base: "16px", md: "18px"}}
-										wordBreak="break-word"
-										whiteSpace="normal"
+										h={{
+											base: 'fit-content',
+											md: '3.5rem',
+										}}
+										padding={{ base: '4px', md: '16px' }}
+										fontWeight={{
+											base: 'normal',
+											md: 'semibold',
+										}}
+										fontSize={{ base: '16px', md: '18px' }}
+										wordBreak='break-word'
+										whiteSpace='normal'
 										bg={colorPalette.confirmButton}
 										onClick={() => closeConfirmationModal()}
 									>
@@ -734,12 +754,18 @@ const ModuleModalV2: FC<IModuleModalV2> = ({
 									<Button
 										maxW={{ base: '50%', md: '100%' }}
 										minH={{ base: '60px', md: 'initial' }}
-										h={{ base: "fit-content", md: '3.5rem' }}
-										padding={{base: "4px", md: '16px'}}
-										fontWeight={{ base: 'normal', md: "semibold" }}
-										fontSize={{base: "16px", md: "18px"}}
-										wordBreak="break-word"
-										whiteSpace="normal"
+										h={{
+											base: 'fit-content',
+											md: '3.5rem',
+										}}
+										padding={{ base: '4px', md: '16px' }}
+										fontWeight={{
+											base: 'normal',
+											md: 'semibold',
+										}}
+										fontSize={{ base: '16px', md: '18px' }}
+										wordBreak='break-word'
+										whiteSpace='normal'
 										bg={colorPalette.closeButton}
 										onClick={() => verificationOnToggle()}
 									>

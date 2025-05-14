@@ -4,7 +4,7 @@ import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from 'framer-motion';
 import colorPalette from '../../styles/colorPalette';
 import { useSoundtrack } from "../../hooks/useSoundtrack";
-import { webmToOther } from '../../utils/algorithms/webmToOther';
+import { webmOrMov } from '../../utils/algorithms/webmToOther';
 
 const UnlockAnimation = (
     {
@@ -62,8 +62,7 @@ const UnlockAnimation = (
                             width='1000px'
                             onEnded={onClose}
                         >
-                            <source key={webmToOther(animation, '.mov')} src={webmToOther(animation, '.mov')} type="video/quicktime" />
-                            <source key={animation} src={animation} type="video/webm" />
+                            <source key={animation} src={webmOrMov(animation)} />
                         </video>
                     </Box>
                 </motion.div>

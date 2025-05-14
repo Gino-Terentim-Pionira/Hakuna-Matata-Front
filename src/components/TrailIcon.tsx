@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { Image, Tooltip } from '@chakra-ui/react';
+import { Image, Tooltip, useMediaQuery } from '@chakra-ui/react';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 type TrailIconProps = {
     image: string;
@@ -12,9 +13,11 @@ const TrailIcon: FC<TrailIconProps> = ({
     onClick,
     mouseOver,
 }) => {
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
 
     return (
         <Tooltip
+            isDisabled={!isDesktop}
             hasArrow
             placement='top'
             gutter={14}
