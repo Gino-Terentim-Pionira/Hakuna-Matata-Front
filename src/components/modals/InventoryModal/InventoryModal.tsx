@@ -15,7 +15,6 @@ import LoadingState from '../../LoadingState';
 import { InventoryItem } from './components/InventoryItem';
 import { ShopQuickFilter } from '../ShopModal/components/ShopQuickFilter';
 import { InventoryItemDetailed } from './components/InventoryItemDetailed';
-import { CertificateService } from '../../../services/CertificateService';
 
 type InventoryModalType = {
     isOpen: boolean;
@@ -31,12 +30,7 @@ export type OwnedItemInfoType = {
     price?: string;
     type: string;
     image: string;
-    backgroundImage?: string;
-    content?: string;
     hash?: string;
-    issue_date?: string;
-    first_name?: string;
-    last_name?: string;
     itemType: 'certificate' | 'normal';
     id: string;
     id_link?: string
@@ -54,12 +48,7 @@ export const InventoryModal = ({ isOpen, onClose, shopItems, certificates, isLoa
             type: item.type,
             image: item.image,
             itemType: item.itemType,
-            backgroundImage: item.backgroundImage,
-            content: item.content,
             hash: item.hash,
-            issue_date: item.issue_date,
-            first_name: item.first_name,
-            last_name: item.last_name,
             id: item.id,
             id_link: item.id_link
         })
@@ -72,17 +61,7 @@ export const InventoryModal = ({ isOpen, onClose, shopItems, certificates, isLoa
             },
             'certificate': {
                 download: () => {
-                    const certificateService = new CertificateService();
-
-                    certificateService.handleGeneratePDF(
-                        shopItemInfo?.backgroundImage as string,
-                        shopItemInfo?.content as string,
-                        shopItemInfo?.first_name as string,
-                        shopItemInfo?.last_name as string,
-                        shopItemInfo?.issue_date as string,
-                        shopItemInfo?.hash as string,
-                        shopItemInfo?.title as string
-                    );
+                    window.open(`/certificate/${shopItemInfo?.hash}`, '_blank');
                 }
             }
         }
