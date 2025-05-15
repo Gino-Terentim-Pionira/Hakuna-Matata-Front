@@ -4,6 +4,8 @@ import { CertificateService } from '../services/CertificateService';
 import LoadingOverlay from '../components/LoadingOverlay';
 import colorPalette from '../styles/colorPalette';
 import { Flex, Box, useToast, Button, Center } from '@chakra-ui/react';
+import AlertModal from '../components/modals/AlertModal';
+import { errorCases } from '../utils/errors/errorsCases';
 
 
 const CertificateDisplay = () => {
@@ -85,75 +87,94 @@ const CertificateDisplay = () => {
         loading ? (
             <LoadingOverlay />
         ) : (
-                <Flex
-                    bg={colorPalette.oracleWhite}
-                    minH="100vh"
-                    p={{ base: 4, md: 8 }}
-                    justify="center"
-                    align="center"
-                    flexDirection='column'
-                >
-                    <Center
-                        marginBottom='16px'
+                <>
+                    <Flex
+                        bg={colorPalette.oracleWhite}
+                        minH="100vh"
+                        p={{ base: 4, md: 8 }}
+                        justify="center"
+                        align="center"
+                        flexDirection='column'
                     >
-                        <Button
-                            width='150px'
-                            height='50px'
-                            background={colorPalette.primaryColor}
-                            color={colorPalette.buttonTextColor}
-                            fontSize='1rem'
-                            onClick={handleCopyHash}
-                            _hover={{}}
-                            marginRight='16px'
+                        <Center
+                            marginBottom='16px'
                         >
-                            Copiar Código
+                            <Button
+                                width='150px'
+                                height='50px'
+                                background={colorPalette.primaryColor}
+                                color={colorPalette.buttonTextColor}
+                                fontSize='1rem'
+                                onClick={handleCopyHash}
+                                _hover={{}}
+                                marginRight='16px'
+                            >
+                                Copiar Código
                         </Button>
 
-                        <Button
-                            width='150px'
-                            height='50px'
-                            background={colorPalette.primaryColor}
-                            color={colorPalette.buttonTextColor}
-                            fontSize='1rem'
-                            onClick={handleCopyUrl}
-                            _hover={{}}
-                            marginRight='16px'
-                        >
-                            Copiar URL
+                            <Button
+                                width='150px'
+                                height='50px'
+                                background={colorPalette.primaryColor}
+                                color={colorPalette.buttonTextColor}
+                                fontSize='1rem'
+                                onClick={handleCopyUrl}
+                                _hover={{}}
+                                marginRight='16px'
+                            >
+                                Copiar URL
                         </Button>
 
-                        <Button
-                            width="150px"
-                            height="50px"
-                            background={colorPalette.primaryColor}
-                            color={colorPalette.buttonTextColor}
-                            fontSize="1rem"
-                            onClick={handleDownloadPDF}
-                            _hover={{}}
-                        >
-                            Baixar Certificado
+                            <Button
+                                width="150px"
+                                height="50px"
+                                background={colorPalette.primaryColor}
+                                color={colorPalette.buttonTextColor}
+                                fontSize="1rem"
+                                onClick={handleDownloadPDF}
+                                _hover={{}}
+                            >
+                                Baixar Certificado
                         </Button>
 
 
-                    </Center>
-                    <Box
-                        w="100%"
-                        maxW="900px"
-                        h={{ base: '75vh', md: '80vh' }}
-                        boxShadow="md"
-                        borderRadius="lg"
-                        overflow="hidden"
-                        bg="white"
-                    >
-                        <Box as="iframe"
-                            src={pdfUrl as string}
-                            width="100%"
-                            height="100%"
-                            title="Certificado PDF"
-                            border="none"
-                        />
-                    </Box>
-                </Flex>
+                        </Center>
+                        <Box
+                            w="100%"
+                            maxW="900px"
+                            h={{ base: '75vh', md: '80vh' }}
+                            boxShadow="md"
+                            borderRadius="lg"
+                            overflow="hidden"
+                            bg="white"
+                        >
+                            <Box as="iframe"
+                                src={pdfUrl as string}
+                                width="100%"
+                                height="100%"
+                                title="Certificado PDF"
+                                border="none"
+                            />
+                        </Box>
+                    </Flex>
+                    <AlertModal
+                        isOpen={error}
+                        onClose={() => window.location.reload()}
+                        alertTitle='Ops!'
+                        alertBody={errorCases.SERVER_ERROR}
+
+                        buttonBody={
+                            <Button
+                                color='white'
+                                _hover={{ bg: colorPalette.primaryColor }}
+                                bg={colorPalette.primaryColor}
+                                onClick={() => window.location.reload()}
+                            >
+                                Recarregar
+                    </Button>
+                        }
+                    />
+                </>
             )
     );
 };
