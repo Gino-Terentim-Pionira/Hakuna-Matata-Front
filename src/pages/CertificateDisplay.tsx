@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom';
 import { CertificateService } from '../services/CertificateService';
 import LoadingOverlay from '../components/LoadingOverlay';
 import colorPalette from '../styles/colorPalette';
-import { Flex, Box, useToast, Button, Center } from '@chakra-ui/react';
+import { Flex, Box, useToast, Button, useMediaQuery } from '@chakra-ui/react';
 import AlertModal from '../components/modals/AlertModal';
 import { errorCases } from '../utils/errors/errorsCases';
+import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 
 const CertificateDisplay = () => {
@@ -14,6 +15,7 @@ const CertificateDisplay = () => {
     const certificateService = new CertificateService();
     const [error, setError] = useState(false);
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+    const [isDesktop] = useMediaQuery(MediaQueriesEnum.DESKTOP);
     const toast = useToast();
 
     const handleCopyHash = () => {
@@ -96,8 +98,12 @@ const CertificateDisplay = () => {
                         align="center"
                         flexDirection='column'
                     >
-                        <Center
-                            marginBottom='16px'
+                        <Flex
+                            direction={isDesktop ? 'row' : 'column'}
+                            align="center"
+                            justify="center"
+                            gap={4}
+                            mb={6}
                         >
                             <Button
                                 width='150px'
@@ -107,7 +113,6 @@ const CertificateDisplay = () => {
                                 fontSize='1rem'
                                 onClick={handleCopyHash}
                                 _hover={{}}
-                                marginRight='16px'
                             >
                                 Copiar Código
                         </Button>
@@ -120,7 +125,6 @@ const CertificateDisplay = () => {
                                 fontSize='1rem'
                                 onClick={handleCopyUrl}
                                 _hover={{}}
-                                marginRight='16px'
                             >
                                 Copiar URL
                         </Button>
@@ -138,7 +142,7 @@ const CertificateDisplay = () => {
                         </Button>
 
 
-                        </Center>
+                        </Flex>
                         <Box
                             w="100%"
                             maxW="900px"
