@@ -19,6 +19,7 @@ import Trail from './pages/Trail';
 import { useMediaQuery } from '@chakra-ui/react';
 import MediaQueriesEnum from './utils/enums/mediaQueries';
 import CantUseApplication from './components/CantUseApplication';
+import CertificateDisplay from './pages/CertificateDisplay';
 
 const Routes = () => {
 	const [isMaxHeight] = useMediaQuery(MediaQueriesEnum.MAX_HEIGHT)
@@ -39,6 +40,7 @@ const Routes = () => {
 						<Route path='/forgotPassword' component={ForgotPassword}/>
 						<Route path="/resetPassword/:id" component={ResetPassword}/>
 						<Route path='/register' component={Register}/>
+						<Route path='/certificate/:hash' component={CertificateDisplay} />
 						<ProtectedRoute path='/mainPage' component={MainPage}/>
 						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath}/>
 						{/*
