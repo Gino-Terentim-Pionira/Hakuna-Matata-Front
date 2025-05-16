@@ -63,15 +63,7 @@ const CertificateDisplay = () => {
             try {
                 const data = await certificateService.getCertificateDetail(hash as string);
 
-                const url = await certificateService.handleGeneratePDF(
-                    data.image,
-                    data.content,
-                    data.first_name,
-                    data.last_name,
-                    data.issue_date,
-                    data.hash,
-                    data.titleColor
-                );
+                const url = URL.createObjectURL(data);
 
                 setPdfUrl(url);
 
