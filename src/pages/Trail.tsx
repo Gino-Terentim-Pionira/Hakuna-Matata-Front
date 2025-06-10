@@ -253,6 +253,7 @@ const Trail = () => {
                     trailData.finalChallenge.image as string,
                     trailName,
                     challengeInfo.remainingModules,
+					trailData.statusName,
                     challengeInfo.isAvailable,
                     challengeInfo.isBlocked
                 );
@@ -262,7 +263,7 @@ const Trail = () => {
                 if (!challengeInfo.isAvailable) {
                     setChallengeText('Este desafio ainda não está disponível, Viajante.');
                 } else if (challengeInfo.isBlocked) {
-                    setChallengeText(`Você ainda não pode realizar este desafio. Complete ${challengeInfo.remainingModules} módulo${challengeInfo.remainingModules > 1 ? 's' : null} e volte novamente!`);
+                    setChallengeText(`Você ainda não pode realizar este desafio. Complete ${challengeInfo.remainingModules} módulo${challengeInfo.remainingModules > 1 ? 's' : ''} e volte novamente!`);
                 } else {
                     setChallengeText('Você está pronto para este desafio, Viajante!');
                 }
