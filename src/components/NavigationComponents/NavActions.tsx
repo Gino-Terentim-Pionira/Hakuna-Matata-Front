@@ -45,7 +45,6 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
   const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
   const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
   const {
-    getNewOraclePackagesItem,
     getNewCertificateItems,
     getNewShopItems,
     shopItemsData,
@@ -100,9 +99,8 @@ const NavActions = ({ logout, dontShowMap }: NavActionsInterface) => {
 
   const openShop = async () => {
     shopOnOpen();
-    !certificatesItemData.length && await getNewCertificateItems();
+    await getNewCertificateItems();
     !shopItemsData.length && await getNewShopItems();
-    !oraclePackagesItemData.length && await getNewOraclePackagesItem();
     setIsShopLoading(false);
   }
 

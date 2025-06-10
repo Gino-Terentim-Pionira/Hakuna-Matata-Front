@@ -94,7 +94,7 @@ const FinalChallengeQuiz: FC<IFinalChallengeQuiz> = ({
     const rewardModalInfo = () => {
         const answaredQuestions = totalQuestions - QuestionInfo.length + correctAnswers;
         const numberQuestion80 = totalQuestions * 0.8;
-        const questionsRemainingTo80 = numberQuestion80 - answaredQuestions;
+        const questionsRemainingTo80 = Math.ceil(numberQuestion80 - answaredQuestions);
 		const questionLabel = questionsRemainingTo80 == 1 ? 'questão' : 'questões';
 		if (correctAnswers === QuestionInfo.length)
 			return {

@@ -60,7 +60,6 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 	const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
 	const scriptChat = () => chatScript(userData.ignorance);
 	const {
-		getNewOraclePackagesItem,
 		getNewCertificateItems,
 		getNewShopItems,
 		shopItemsData,
@@ -138,9 +137,8 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 
 	const openShop = async () => {
 		shopOnOpen();
-		!certificatesItemData.length && await getNewCertificateItems();
+		await getNewCertificateItems();
 		!shopItemsData.length && await getNewShopItems();
-		!oraclePackagesItemData.length && await getNewOraclePackagesItem();
 		setIsShopLoading(false);
 	}
 
