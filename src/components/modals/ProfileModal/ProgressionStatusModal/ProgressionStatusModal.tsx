@@ -52,7 +52,7 @@ const ProgressionStatusModal = () => {
 					ignorance={userData.ignorance}
 					position='top'
 				/>
-				<CoinsDisplay value={userData.coins} position='top' />
+				<CoinsDisplay coins={userData.coins} premiumCoins={userData.premiumCoins} position='top' />
 			</Flex>
 
 			{stamps ? (

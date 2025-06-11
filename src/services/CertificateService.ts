@@ -10,6 +10,7 @@ export interface IOwnedCertificate {
 export interface IShopCertificate {
     name: string;
     price: number;
+    premiumPrice?: number;
     description: string;
     trail: trailEnum;
     isBlocked: boolean;
@@ -47,7 +48,8 @@ export class CertificateService {
 
     buyCertificate = async (data: {
         userId: string,
-        certificateId: string
+        certificateId: string,
+        usePremium: boolean
     }) => {
         await api.post('certificate/buy', data);
     }

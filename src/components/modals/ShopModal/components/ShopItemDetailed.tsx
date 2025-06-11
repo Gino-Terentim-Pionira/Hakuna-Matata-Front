@@ -4,8 +4,9 @@ import colorPalette from '../../../../styles/colorPalette';
 import { ShopItemInfoType } from '../ShopModal';
 import fontTheme from '../../../../styles/base';
 import Coinicon from '../../../../assets/icons/coinicon.svg';
+import PremiumCoin from '../../../../assets/icons/premiumCoins.svg'
 import { useUser } from '../../../../hooks';
-import { NOT_ENOUGHT_COINS } from '../../../../utils/constants/mouseOverConstants';
+import { NOT_ENOUGHT_COINS, NOT_ENOUGHT_PREMIUM_COINS } from '../../../../utils/constants/mouseOverConstants';
 import { BiSolidCheckCircle } from 'react-icons/bi';
 import { IoMdCloseCircle } from 'react-icons/io';
 import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
@@ -14,7 +15,7 @@ type ShopItemDetailedTypes = {
 	isOpen: boolean;
 	onClose: VoidFunction;
 	shopItemInfo: ShopItemInfoType | undefined;
-	onClick: VoidFunction;
+	onClick: (usePremium: boolean) => void;
 }
 
 
@@ -23,7 +24,9 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 	const [startY, setStartY] = useState<number | null>(null);
 	const [translateY, setTranslateY] = useState(0);
 	const [closing, setClosing] = useState(false);
-	const IS_USE_HAS_ENOUGHT_COINS = userData.coins >= Number(shopItemInfo?.price);
+	const IS_USER_HAS_ENOUGHT_COINS = userData.coins >= Number(shopItemInfo?.price);
+	const HAS_PREMIUM = shopItemInfo?.premiumPrice;
+	const IS_USER_HAS_ENOUGHT_PREMIUM = userData.premiumCoins >= Number(shopItemInfo?.premiumPrice);
 	const IS_ITEM_CERTIFICATE = (shopItemInfo &&
 		shopItemInfo.isBlocked !== undefined &&
 		shopItemInfo.isEnoughVideo !== undefined &&
@@ -197,7 +200,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 						justifyContent='space-between'
 						columnGap='24px'
 					>
-						<Box overflowY='auto'>
+						<Box overflowY='auto' width={{ base: '100%', md: '75%' }}>
 							<Text
 								fontSize={{ base: '16px', md: '18px' }}
 								maxHeight={{ base: 'none', md: 'auto' }}
@@ -223,68 +226,132 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 									fontWeight='semibold'
 									color={colorPalette.secundaryGrey}
 								>
-									Suas joias: {userData.coins}
+									Seu Saldo:
 								</Text>
-								<Image
-									w='28px'
-									src={Coinicon}
-									alt='coinicon'
-									ml='4px'
-								/>
-							</Flex>
-							<Flex marginBottom='16px'>
-								<Text
-									fontFamily={fontTheme.fonts}
-									fontSize={{ base: '20px', md: '28px' }}
-									fontWeight='semibold'
-									color={colorPalette.closeButton}
+								<Flex
+									alignItems="center"
 								>
-									Valor: {shopItemInfo && shopItemInfo.price}
-								</Text>
-								<Image
-									w='32px'
-									src={Coinicon}
-									alt='coinicon'
-									ml='4px'
-								/>
+									<Text ml='4px' fontFamily={fontTheme.fonts}
+										fontSize={{ base: '18px', md: '24px' }}
+										fontWeight='semibold'
+										color={colorPalette.secundaryGrey}>
+										{userData.coins}
+									</Text>
+									<Image
+										w="28px"
+										ml="1px"
+										src={Coinicon}
+										alt="icone de Joias"
+									/>
+								</Flex>
+								<Flex
+									alignItems="center"
+								>
+									<Text ml='4px' fontFamily={fontTheme.fonts}
+										fontSize={{ base: '18px', md: '24px' }}
+										fontWeight='semibold'
+										color={colorPalette.secundaryGrey}>
+										{userData.premiumCoins}
+									</Text>
+									<Image
+										w="20px"
+										ml="1px"
+										src={PremiumCoin}
+										alt="icone de Essências"
+									/>
+								</Flex>
 							</Flex>
 
 							<Tooltip
 								label={
-									IS_USE_HAS_ENOUGHT_COINS
+									IS_USER_HAS_ENOUGHT_COINS
 										? ''
 										: NOT_ENOUGHT_COINS
 								}
 								placement='bottom'
 								hasArrow
-								isDisabled={IS_USE_HAS_ENOUGHT_COINS || !isDesktop}
+								isDisabled={IS_USER_HAS_ENOUGHT_COINS || !isDesktop}
 								closeOnClick={false}
 							>
 								<Button
-									w={{ base: '100%', md: '200px' }}
+									mt='8px'
+									w='100%'
 									height='3.5rem'
 									background={
-										IS_USE_HAS_ENOUGHT_COINS
+										IS_USER_HAS_ENOUGHT_COINS
 											? colorPalette.primaryColor
 											: colorPalette.grayBackground
 									}
 									color={colorPalette.buttonTextColor}
-									fontSize={{ base: '20px', md: '1.5rem' }}
+									fontSize='20px'
 									borderRadius='8px'
 									_hover={{
 										opacity: 0.7,
 									}}
 									onClick={
-										IS_USE_HAS_ENOUGHT_COINS
-											? onClick
+										IS_USER_HAS_ENOUGHT_COINS
+											? () => onClick(false)
 											: undefined
 									}
 									cursor={'pointer'}
-									marginBottom={{ base: '24px', md: '0' }}
+									marginBottom={HAS_PREMIUM ? { base: '8px', md: '8px' } : { base: '24px', md: '0' }}
 								>
-									Comprar
+									{`Comprar com ${shopItemInfo?.price}`}
+									<Image
+										w="28px"
+										ml="4px"
+										src={Coinicon}
+										alt="icone de Joias"
+									/>
 								</Button>
 							</Tooltip>
+
+							{
+								HAS_PREMIUM ? (
+									<Tooltip
+										label={
+											IS_USER_HAS_ENOUGHT_PREMIUM
+												? ''
+												: NOT_ENOUGHT_PREMIUM_COINS
+										}
+										placement='bottom'
+										hasArrow
+										isDisabled={IS_USER_HAS_ENOUGHT_PREMIUM || !isDesktop}
+										closeOnClick={false}
+									>
+										<Button
+											w='100%'
+											height='3.5rem'
+											background={
+												IS_USER_HAS_ENOUGHT_PREMIUM
+													? colorPalette.correctAnswer
+													: colorPalette.grayBackground
+											}
+											color={colorPalette.buttonTextColor}
+											fontSize='20px'
+											borderRadius='8px'
+											_hover={{
+												opacity: 0.7,
+											}}
+											onClick={
+												IS_USER_HAS_ENOUGHT_PREMIUM
+													? () => onClick(true)
+													: undefined
+											}
+											cursor={'pointer'}
+											marginBottom={{ base: '24px', md: '0' }}
+										>
+											{`Comprar com ${shopItemInfo?.premiumPrice}`}
+											<Image
+												w="20px"
+												ml="4px"
+												src={PremiumCoin}
+												alt="icone de Essências"
+											/>
+										</Button>
+									</Tooltip>
+								) : null
+							}
 						</Flex>
 					</Flex>
 				</Flex>

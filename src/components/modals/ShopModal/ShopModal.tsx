@@ -39,7 +39,8 @@ type ShopModalType = {
 export type ShopItemInfoType = {
 	title: string;
 	description: string;
-	price: string;
+	price: number;
+	premiumPrice?: number;
 	messages?: string;
 	type: string;
 	image: string;
@@ -74,11 +75,13 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 	const [quickFilterSelected, setQuickFilterSelected] = useState<'all' | 'certificate' | 'oracle' | 'normal'>('all');
 	const { getNewShopItems, getNewCertificateItems } = useShopItems();
 	const { getNewOwnedItems, getNewOwnedCertificateItems } = useOwnedItems();
+	const [shopItemUsePremium, setShopItemUsePremium] = useState<boolean>(false);
 	const handleShopItemInfo = (item: ShopItemInfoType) => {
 		setShopItemInfo({
 			title: item.title,
 			description: item.description,
 			price: item.price,
+			premiumPrice: item.premiumPrice,
 			type: item.type,
 			image: item.image,
 			id: item.id,
@@ -120,10 +123,10 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 		'certificate': CERTIFICATE
 	}
 
-	const buyShopItem = async () => {
+	const buyShopItem = async (usePremium: boolean) => {
 		try {
 			setIsAlertLoading(true);
-			await handleBuyFunction(shopItemInfo as ShopItemInfoType);
+			await handleBuyFunction(shopItemInfo as ShopItemInfoType, usePremium);
 			closeShopItemInfo();
 			setAlertModalInfo({
 				alertTitle: 'Compra realizada com sucesso!',
@@ -158,17 +161,17 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 		setIsAlertLoading(false);
 	}
 
-	const handleBuyFunction = async (item: ShopItemInfoType) => {
+	const handleBuyFunction = async (item: ShopItemInfoType, usePremium: boolean) => {
 		const buyType = {
 			'normal': {
-				buy: async () => await shopService.buyShopItem(userData._id, item.id),
+				buy: async () => await shopService.buyShopItem(userData._id, item.id, usePremium),
 				reload: async () => {
 					await getNewShopItems();
 					await getNewOwnedItems();
 				}
 			},
 			'especial': {
-				buy: async () => await shopService.buyShopItem(userData._id, item.id),
+				buy: async () => await shopService.buyShopItem(userData._id, item.id, usePremium),
 				reload: async () => await getNewShopItems()
 			},
 			'oracle': {
@@ -176,7 +179,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 				reload: () => null
 			},
 			'certificate': {
-				buy: async () => await certificateService.buyCertificate({ userId: userData._id, certificateId: item.id }),
+				buy: async () => await certificateService.buyCertificate({ userId: userData._id, certificateId: item.id, usePremium }),
 				reload: async () => {
 					await getNewCertificateItems();
 					await getNewOwnedCertificateItems();
@@ -220,7 +223,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 				mt="32px"
 				mb="16px"
 				minChildWidth="130px"
-				spacingX={{base: "16px", md:"48px"}}
+				spacingX={{ base: "16px", md: "48px" }}
 				spacingY="28px"
 				height="432px"
 			>
@@ -233,6 +236,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 							title={item.title}
 							type={item.type}
 							value={item.price}
+							premiumValue={item.premiumPrice}
 						/>
 					)
 				}
@@ -246,6 +250,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 							title={item.title}
 							type={item.type}
 							value={item.price}
+							premiumValue={item.premiumPrice}
 						/>
 					)
 				}
@@ -320,7 +325,10 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 					}
 				</ModalBody>
 			</ModalContent>
-			<ShopItemDetailed onClick={openAlertModalInfo} shopItemInfo={shopItemInfo} isOpen={!!shopItemInfo} onClose={closeShopItemInfo} />
+			<ShopItemDetailed onClick={(usePremium) => {
+				setShopItemUsePremium(usePremium);
+				openAlertModalInfo();
+			}} shopItemInfo={shopItemInfo} isOpen={!!shopItemInfo} onClose={closeShopItemInfo} />
 			<AlertModal
 				isOpen={alertModalInfo.isOpen}
 				onClose={closeAlertModal}
@@ -336,7 +344,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 						color='white'
 						bg={colorPalette.primaryColor}
 						_hover={{ bg: colorPalette.primaryColor }}
-						onClick={buyShopItem}
+						onClick={() => buyShopItem(shopItemUsePremium)}
 						ml={3}
 						isLoading={isAlertLoading}
 					>

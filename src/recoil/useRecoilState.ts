@@ -15,6 +15,7 @@ export interface IUser {
         points: number;
     }];
 	coins: number;
+	premiumCoins: number;
 	contribution: number;
 	first_certificate: string;
 	second_certificate: string;

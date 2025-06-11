@@ -32,6 +32,8 @@ export const WISDOM = 'Seu progresso na luta contra a Ignorância';
 
 export const COINS = 'Quantidade atual de Joias';
 
+export const PREMIUMCOINS = 'Quantidade atual de Essências';
+
 export const MODULE_INFO = (type: 'blocked' | 'incomplete' | 'complete', totalAnsweredQuestions: number | null, totalQuestions: number | null) => {
     const module_info = {
         'blocked' : {
@@ -80,7 +82,9 @@ export const BLOCKED_ORACLE = "O Oráculo ainda não está disponível";
 
 export const NOT_ENOUGH_STATUS = (statusName: string) => `Seu nivel de ${statusName} não é o suficiente para comprar esse item!`
 
-export const  NOT_ENOUGHT_COINS = 'Você não tem moedas suficientes!';
+export const  NOT_ENOUGHT_COINS = 'Você não possui Joias suficientes!';
+
+export const NOT_ENOUGHT_PREMIUM_COINS = 'Você não possui Essências suficientes!';
 
 export const NOT_ENOUGH_MESSAGES = 'É necessário comprar um pacote de tokens na loja para falar com o Oráculo';
 

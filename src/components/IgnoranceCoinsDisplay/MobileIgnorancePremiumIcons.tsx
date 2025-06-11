@@ -19,7 +19,8 @@ const MobileIgnorancePremiumIcons = () => {
 			display={{ base: 'flex', md: 'none' }}
 		>
 			<CoinsDisplay
-				value={userData.coins}
+				coins={userData.coins}
+				premiumCoins={userData.premiumCoins}
 				position="bottom"
 			/>
 			<IgnoranceProgress

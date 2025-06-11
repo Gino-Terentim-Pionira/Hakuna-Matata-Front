@@ -14,10 +14,11 @@ class ShopService {
         return await api.get(`/shopItem/${userId}`);
     }
 
-    buyShopItem = async (userId: string, shopItemId: string) => {
+    buyShopItem = async (userId: string, shopItemId: string, usePremium: boolean) => {
         await api.post(`/shopItem/buy`, {
             userId,
-            shopItemId
+            shopItemId,
+            usePremium
         });
     }
 

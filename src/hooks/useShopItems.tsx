@@ -21,12 +21,13 @@ export const useShopItems = () => {
             );
 
             const res = await shopService.getShopItems(_userId as string);
-            const shopItems = res.data.map((item: { _id: string, name: string, description: string, image: string, type: string, value: number }) => ({
+            const shopItems = res.data.map((item: { _id: string, name: string, description: string, image: string, type: string, value: number, premiumValue?: number }) => ({
                 title: item.name,
                 description: item.description,
                 image: item.image,
                 type: item.type.charAt(0).toUpperCase() + item.type.slice(1),
-                price: String(item.value),
+                price: item.value,
+                premiumPrice: item.premiumValue,
                 itemType: item.type,
                 id: item._id
             }));
@@ -52,7 +53,8 @@ export const useShopItems = () => {
                     description: item.description,
                     image: certificateIcon,
                     type: "Certificado",
-                    price: String(item.price),
+                    price: item.price,
+                    premiumPrice: item.premiumPrice,
                     itemType: 'certificate',
                     id: item.id,
                     isBlocked: item.isBlocked,

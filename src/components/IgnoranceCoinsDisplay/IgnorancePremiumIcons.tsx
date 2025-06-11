@@ -187,7 +187,8 @@ const IgnorancePremiumIcons = ({ dontShowIgnorance, ignorance, showStatus, trail
             }
           </Flex>
           <CoinsDisplay
-            value={userData.coins}
+            coins={userData.coins}
+            premiumCoins={userData.premiumCoins}
             position='bottom'
           />
           {
