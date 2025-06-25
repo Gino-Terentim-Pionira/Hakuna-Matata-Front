@@ -52,9 +52,10 @@ type MobileNavIconTypes = {
 	showGoBack?: boolean;
 	showOracle?: boolean;
 	trail?: trailEnum;
+	showGlasses?: boolean;
 }
 
-const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail }: MobileNavIconTypes) => {
+const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trail, showGlasses = true }: MobileNavIconTypes) => {
 	const tutorialServices = new TutorialServices();
 	const { userData } = useUser();
 	const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
@@ -195,6 +196,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 	}
 
 	const handleOracle = () => {
+		setIsOpen(false);
 		handleFirstView('Oráculo', () => history.push({
 			pathname: '/oracle',
 			state: {
@@ -213,33 +215,37 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 		onClick: handleOracle
 	} : {}
 
+	const glassesItem = showGlasses ? {
+		label: IGNORANCE_GLASS,
+		icon: renderIconImage(isIgnoranceFilterOn ? glassesOn : glasses),
+		onClick: handleIgnoranceGlasses
+	} : {}
+
 	const itemsWithoutDailyQuiz = [
 		oracleItem,
 		{
-		label: USER_PROFILE,
-		icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
-		onClick: handleProfileOpen
-	}, {
-		label: STORE,
-		icon: renderIconImage(icon_shop),
-		onClick: handleShop
-	}, {
-		label: INVENTORY,
-		icon: renderIconImage(inventory_icon),
-		onClick: handleInventory
-	}, {
-		label: TUTORIAL,
-		icon: renderIconImage(icon_tutorial),
-		onClick: handleTutorialOpen
-	}, {
-		label: IGNORANCE_GLASS,
-		icon:  renderIconImage(isIgnoranceFilterOn ? glassesOn : glasses),
-		onClick: handleIgnoranceGlasses
-	}, {
-		label: LOG_OUT,
-		icon: renderIconImage(icon_logout),
-		onClick: LogOut
-	}]
+			label: USER_PROFILE,
+			icon: <UserAvatar customAvatar={userData.custom_avatar} avatarStyle="Transparent" width="45px" height="45px" marginBottom="4px" />,
+			onClick: handleProfileOpen
+		}, {
+			label: STORE,
+			icon: renderIconImage(icon_shop),
+			onClick: handleShop
+		}, {
+			label: INVENTORY,
+			icon: renderIconImage(inventory_icon),
+			onClick: handleInventory
+		}, {
+			label: TUTORIAL,
+			icon: renderIconImage(icon_tutorial),
+			onClick: handleTutorialOpen
+		},
+		glassesItem, 
+		{
+			label: LOG_OUT,
+			icon: renderIconImage(icon_logout),
+			onClick: LogOut
+		}]
 
 	const items = [
 		oracleItem,
@@ -259,11 +265,9 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 			label: TUTORIAL,
 			icon: renderIconImage(icon_tutorial),
 			onClick: handleTutorialOpen
-		}, {
-			label: IGNORANCE_GLASS,
-			icon:  renderIconImage(isIgnoranceFilterOn ? glassesOn : glasses),
-			onClick: handleIgnoranceGlasses
-		}, {
+		}, 
+		glassesItem, 
+		{
 			label: DAILY_QUIZ,
 			icon: renderIconImage(daily),
 			onClick: handleDailyQuiz
@@ -289,30 +293,31 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 	const renderItem = () =>
 		(isDifferentDay ? items : itemsWithoutDailyQuiz).map((item) => (
 			item.label ?
-			<Flex
-				key={item.label}
-				width='100%'
-				height='80px'
-				marginBottom='16px'
-				border={`2px solid ${colorPalette.textColor}`}
-				justifyContent='space-between'
-				alignItems='center'
-				padding='12px 16px'
-				borderRadius='8px'
-				backgroundColor='#FBEFC9'
-				onClick={item.onClick}
-			>
-				<Text>{item.label}</Text>
+				<Flex
+					key={item.label}
+					width='100%'
+					height='80px'
+					marginBottom='16px'
+					border={`2px solid ${colorPalette.textColor}`}
+					justifyContent='space-between'
+					alignItems='center'
+					padding='12px 16px'
+					borderRadius='8px'
+					backgroundColor='#FBEFC9'
+					onClick={item.onClick}
+					cursor='pointer'
+				>
+					<Text>{item.label}</Text>
 
-				{item.icon}
-			</Flex> : <></>
+					{item.icon}
+				</Flex> : <></>
 		));
 
 	return (
 		<>
 			<Center
 				position='fixed'
-				display={{ base: 'flex', md: 'none' }}
+				display='flex'
 				transition='all 0.2s ease'
 				top={marginTop || '24px'}
 				left='16px'
@@ -323,6 +328,10 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 				bg='white'
 				onClick={() => setIsOpen(!isOpen)}
 				zIndex={9}
+				_hover={{
+					cursor: 'pointer',
+					transform: 'scale(1.1)',
+				}}
 			>
 				<GiHamburgerMenu size={32} />
 			</Center>
@@ -330,7 +339,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 			{isIgnoranceFilterOn &&
 				<Center
 					position='fixed'
-					display={{ base: 'flex', md: 'none' }}
+					display='flex'
 					transition='all 0.2s ease'
 					top={marginTop || '83px'}
 					left='16px'
@@ -354,7 +363,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 			{showGoBack &&
 				<Center
 					position='fixed'
-					display={{ base: 'flex', md: 'none' }}
+					display='flex'
 					transition='all 0.2s ease'
 					top={marginTop || '83px'}
 					left='16px'
@@ -365,6 +374,10 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 					bg='white'
 					onClick={handleMapNavigation}
 					zIndex={9}
+					_hover={{
+						cursor: 'pointer',
+						transform: 'scale(1.1)',
+					}}
 				>
 					<FaArrowLeft color={colorPalette.closeButton} size={32} />
 				</Center>
@@ -372,10 +385,10 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 
 			<Slide
 				direction='left' in={isOpen}
-				style={{ zIndex: 1900, display: isDesktop ? 'none' : 'flex' }}
+				style={{ zIndex: 1900, display: 'flex' }}
 			>
 				<Flex
-					w='100%'
+					w={isDesktop ? '30%' : '100%'}
 					h='100dvh'
 					flexDirection='column'
 					justifyContent='flex-start'
@@ -389,6 +402,32 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 					paddingX='16px'
 					paddingTop='16px'
 					paddingBottom='16px'
+					sx={{
+						'&::-webkit-scrollbar': {
+							width: '4px',
+							height: '4px',
+							borderRadius: '8px',
+						},
+						'&::-webkit-scrollbar-thumb': {
+							background: '#9D9D9D',
+							borderRadius: '10px',
+						},
+						'&::-webkit-scrollbar-thumb:hover': {
+							background: '#555',
+						},
+						'&::-moz-scrollbar': {
+							width: '4px',
+							height: '4px',
+							borderRadius: '8px',
+						},
+						'&::-moz-scrollbar-thumb': {
+							background: '#9D9D9D',
+							borderRadius: '10px',
+						},
+						'&::-moz-scrollbar-thumb:hover': {
+							background: '#555',
+						},
+					}}
 				>
 					<Flex
 						alignSelf='flex-end'
@@ -407,7 +446,7 @@ const MobileNavIcon = ({marginTop, showGoBack = false, showOracle = false, trail
 						<IoCloseSharp size={40} />
 					</Flex>
 
-					{ userData?.custom_avatar && renderItem()}
+					{userData?.custom_avatar && renderItem()}
 				</Flex>
 			</Slide>
 
