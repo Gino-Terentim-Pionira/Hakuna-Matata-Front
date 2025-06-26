@@ -350,6 +350,10 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 					bg='white'
 					onClick={handleChat}
 					zIndex={9}
+					_hover={{
+						cursor: 'pointer',
+						transform: 'scale(1.1)',
+					}}
 				>
 					<Image
 						alt="chat_image"
