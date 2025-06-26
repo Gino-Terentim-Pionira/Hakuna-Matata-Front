@@ -9,9 +9,6 @@ import Register from './pages/Register';
 import MainPage from './pages/MainPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import CheetahPath from './pages/CheetahPath';
-// import BlackMambaPath from './pages/blackMambaPath';
-// import LionPath from './pages/lionPath';
 import { RecoilRoot } from 'recoil';
 import { Oracle } from './pages/Oracle';
 import { SoundtrackManager } from "./components/SoundtrackManager";
@@ -42,11 +39,6 @@ const Routes = () => {
 						<Route path='/register' component={Register}/>
 						<Route path='/certificate/:hash' component={CertificateDisplay} />
 						<ProtectedRoute path='/mainPage' component={MainPage}/>
-						<ProtectedRoute path='/trilha-cheetah' component={CheetahPath}/>
-						{/*
-							<ProtectedRoute path='/finalTrail' component={BlackMambaPath} />
-							<ProtectedRoute path='/trilha-leao' component={LionPath} />
-						*/}
 						<ProtectedRoute path='/oracle' component={Oracle}/>
 						<ProtectedRoute path='/trail' component={Trail} />
 					</Switch>

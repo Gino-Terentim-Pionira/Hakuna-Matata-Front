@@ -33,7 +33,6 @@ import ignorance50 from '../assets/ignorance/mainPage/ignorance_50.webp';
 import ignorance25 from '../assets/ignorance/mainPage/ignorance_25.webp';
 import { errorCases } from '../utils/errors/errorsCases';
 import IgnorancePremiumIcons from '../components/IgnoranceCoinsDisplay/IgnorancePremiumIcons';
-import NavActions from '../components/NavigationComponents/NavActions';
 import LoadingOverlay from '../components/LoadingOverlay';
 import BlockedModal from '../components/modals/BlockedModal';
 import IgnoranceFilter from '../components/IgnoranceFilter';
@@ -44,7 +43,6 @@ import { verifySocialShare } from '../services/socialShare';
 import Cheetah from '../assets/icons/cheetahblink.svg';
 import GenericModal from '../components/modals/GenericModal';
 import VideoBackground from '../components/VideoBackground';
-import { LogOut } from '../services/auth';
 import { getBackgroundAnimation, pathEnum } from '../utils/algorithms/backgroundAnimation';
 import { motion } from 'framer-motion';
 import { trailAccessEnum, getTrailAccess } from '../utils/localStorageUtils';
@@ -52,7 +50,7 @@ import { useSoundtrack } from '../hooks/useSoundtrack';
 import BaboonHelp from '../components/BaboonHelp';
 import trailEnum from '../utils/enums/trail';
 import { MobileIgnorancePremiumIcons } from '../components/IgnoranceCoinsDisplay/MobileIgnorancePremiumIcons';
-import { MobileNavIcon } from '../components/NavigationComponents/MobileNavIcon';
+import { MobileNavIcon } from '../components/NavigationComponents/NavMenu';
 import MediaQueriesEnum from '../utils/enums/mediaQueries';
 
 interface IScript {
@@ -128,19 +126,6 @@ const MainPage = () => {
 		setOnAlert(true);
 	}
 
-	const handleLogOutAlert = () => {
-		setAlert({
-			title: 'Logout',
-			body: 'Tem certeza que você deseja sair da Savana?',
-			closeFunction: () => setOnAlert(false),
-			buttonFunction: () => {
-				LogOut();
-			},
-			buttonText: 'Sair'
-		});
-
-		setOnAlert(true);
-	}
 
 	//logic for checking and switching if first time is set to true
 	const tutorialFirstOnClose = () => {
@@ -254,10 +239,6 @@ const MainPage = () => {
 		})
 	};
 
-	const logout = () => {
-		handleLogOutAlert();
-	};
-
 	const checkFirstTrailAcess = (trail: trailAccessEnum) => {
 		const trailFirstAcess = getTrailAccess(trail);
 
@@ -342,13 +323,12 @@ const MainPage = () => {
 								<Flex
 									display={{ base: "none", md: "flex" }}
 									width='92.5%'
-									justifyContent='space-between'
+									justifyContent='flex-end'
 									alignItems='flex-start'
 									margin='auto'
 								>
-									<NavActions logout={logout} dontShowMap />
 									{narrativeIsOpen ? null : (
-										<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
+										<IgnorancePremiumIcons ignorance={userData.ignorance} />
 									)}
 								</Flex>
 
