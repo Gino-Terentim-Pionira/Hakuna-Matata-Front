@@ -102,7 +102,7 @@ export const InventoryModal = ({ isOpen, onClose, shopItems, certificates, isLoa
             {
                 !ALL_ITEMS_AVAILABLE && <Text fontSize="18px" color={colorPalette.textColor} w="100%" margin="auto" textAlign="center" marginTop='8px'>Você não possui nenhum item. Acesse a loja para comprar um!</Text>
             }
-            <SimpleGrid columnGap={{base: "16px", md: "48px"}} mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px" height="432px">
+            <SimpleGrid columnGap={{base: "16px", md: "48px"}} mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px" height="432px" justifyItems="center">
                 {
                     ((quickFilterSelected === "certificate" || quickFilterSelected === "all") && certificates && certificates.length > 0) && certificates.map((item) =>
                         <InventoryItem

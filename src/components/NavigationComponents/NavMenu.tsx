@@ -15,6 +15,7 @@ import daily from '../../assets/icons/daily_quiz.png';
 import icon_logout from '../../assets/icons/icon_logout.svg';
 import glasses from '../../assets/icons/double-glasses.png';
 import glassesOn from '../../assets/icons/double-glasses-on.png';
+import premium from '../../assets/icons/icon_membership.svg';
 
 import {
 	DAILY_QUIZ,
@@ -46,6 +47,8 @@ import { useHistory } from 'react-router-dom';
 import trailEnum from '../../utils/enums/trail';
 import OracleIcon from '../../assets/icons/oracle/oracle_icon.webp';
 import MediaQueriesEnum from '../../utils/enums/mediaQueries';
+import usePremium from '../../hooks/usePremium';
+import { PremiumModal } from '../modals/PremiumModal/PremiumModal';
 
 type MobileNavIconTypes = {
 	marginTop?: string;
@@ -75,11 +78,14 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 		getNewOwnedItems
 	} = useOwnedItems();
 
+	const { premiumTiers, getNewPremiumTiers } = usePremium();
+
 	const [isOpen, setIsOpen] = useState(false);
 	const [onCloseTutorial, setOnCloseTutorial] = useState<VoidFunction>();
 	const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
 	const [isShopLoading, setIsShopLoading] = useState(true);
 	const [isInventoryLoading, setIsInventoryLoading] = useState(true);
+	const [isPremiumLoading, setIsPremiumLoading] = useState(true);
 	const [isDailyModalOpen, setDailyIsModalOpen] = useState(false);
 	const [isDifferentDay, setIsDifferentDay] = useState(false);
 	const history = useHistory();
@@ -113,6 +119,12 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 		isOpen: inventoryIsOpen,
 		onClose: inventoryOnClose,
 		onOpen: inventoryOnOpen
+	} = useDisclosure();
+
+	const {
+		isOpen: premiumIsOpen,
+		onClose: premiumOnClose,
+		onOpen: premiumOnOpen
 	} = useDisclosure();
 
 	const { isOpen: quizIsOpen,
@@ -153,6 +165,13 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 		!ownedCertificateItemData.length && await getNewOwnedCertificateItems();
 		!ownedItemsData.length && await getNewOwnedItems();
 		setIsInventoryLoading(false);
+	}
+
+	const openPremium = async () => {
+		setIsOpen(false);
+		premiumOnOpen();
+		!premiumTiers.length && await getNewPremiumTiers(userData.email);
+		setIsPremiumLoading(false);
 	}
 
 	const handleInventory = () => {
@@ -240,7 +259,7 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 			icon: renderIconImage(icon_tutorial),
 			onClick: handleTutorialOpen
 		},
-		glassesItem, 
+		glassesItem,
 		{
 			label: LOG_OUT,
 			icon: renderIconImage(icon_logout),
@@ -265,8 +284,8 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 			label: TUTORIAL,
 			icon: renderIconImage(icon_tutorial),
 			onClick: handleTutorialOpen
-		}, 
-		glassesItem, 
+		},
+		glassesItem,
 		{
 			label: DAILY_QUIZ,
 			icon: renderIconImage(daily),
@@ -291,10 +310,11 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 		verifyDailyQuiz();
 	}, []);
 	const renderItem = () =>
-		(isDifferentDay ? items : itemsWithoutDailyQuiz).map((item) => (
-			item.label ?
+		(isDifferentDay ? items : itemsWithoutDailyQuiz)
+        .filter(item => item.label)
+        .map((item, idx) => (
 				<Flex
-					key={item.label}
+					key={`${item.label}-${idx}`}
 					width='100%'
 					height='80px'
 					marginBottom='16px'
@@ -310,7 +330,7 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 					<Text>{item.label}</Text>
 
 					{item.icon}
-				</Flex> : <></>
+				</Flex>
 		));
 
 	return (
@@ -450,6 +470,25 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 						<IoCloseSharp size={40} />
 					</Flex>
 
+					<Flex
+						width='100%'
+						height='80px'
+						marginBottom='64px'
+						border={`2px solid ${colorPalette.textColor}`}
+						color={colorPalette.backgroundColor}
+						justifyContent='space-between'
+						alignItems='center'
+						padding='12px 16px'
+						borderRadius='8px'
+						backgroundColor={colorPalette.primaryColor}
+						onClick={openPremium}
+						cursor='pointer'
+					>
+						<Text>{userData.isSubscribed ? 'Gerencie sua assinatura' : 'Contribua com nosso propósito!'}</Text>
+
+						<Image src={premium} width="45px" height="45px" />
+					</Flex>
+
 					{userData?.custom_avatar && renderItem()}
 				</Flex>
 			</Slide>
@@ -472,6 +511,13 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 				shopItems={ownedItemsData}
 				certificates={ownedCertificateItemData}
 				isLoading={isInventoryLoading}
+			/>
+
+			<PremiumModal 
+				isOpen={premiumIsOpen}
+				onClose={premiumOnClose}
+				premiumTiers={premiumTiers}
+				isLoading={isPremiumLoading}
 			/>
 
 			<TutorialModal isOpen={tutorialTopicIsOpen} onClose={handleTutorialClose} selectedTopic={selectedTopic} />

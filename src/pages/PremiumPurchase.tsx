@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Flex, Box, Button } from '@chakra-ui/react';
 import LoadingOverlay from '../components/LoadingOverlay';
 import AlertModal from '../components/modals/AlertModal';
 import colorPalette from '../styles/colorPalette';
-
-const CHECKOUT_CONTENT_ID = "E9OOB5VV9B"; // Substitua pelo seu ID se necessário
 
 interface EduzzCheckout {
   Checkout: {
@@ -22,11 +21,11 @@ declare global {
 }
 
 const EduzzCheckoutPage = () => {
+  const { checkoutId } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // Cria o script dinamicamente
     const scriptId = "eduzz-bridge-js";
     if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
@@ -36,10 +35,9 @@ const EduzzCheckoutPage = () => {
       script.id = scriptId;
 
       script.onload = () => {
-        // Espera o objeto window.Eduzz ficar disponível
         if (window.Eduzz && window.Eduzz.Checkout) {
           window.Eduzz.Checkout.init({
-            contentId: CHECKOUT_CONTENT_ID,
+            contentId: checkoutId,
             target: "elements",
             errorCover: false
           });
@@ -55,10 +53,9 @@ const EduzzCheckoutPage = () => {
 
       document.body.appendChild(script);
     } else {
-      // Script já estava carregado (SPA navigation)
       if (window.Eduzz && window.Eduzz.Checkout) {
         window.Eduzz.Checkout.init({
-          contentId: CHECKOUT_CONTENT_ID,
+          contentId: checkoutId,
           target: "elements",
           errorCover: false
         });
@@ -68,18 +65,18 @@ const EduzzCheckoutPage = () => {
       }
     }
 
-    // Quando desmontar, pode remover o elemento, se quiser (opcional)
-    // return () => {
-    //   const el = document.getElementById("elements");
-    //   if (el) el.innerHTML = "";
-    // };
+    return () => {
+      const el = document.getElementById("elements");
+      if (el) el.innerHTML = "";
+    };
 
   }, []);
 
-  if (loading) return <LoadingOverlay />;
-
   return (
     <>
+      {
+        loading && <LoadingOverlay />
+      }
       <Flex
         bg={colorPalette.oracleWhite}
         minH="100vh"
@@ -98,7 +95,6 @@ const EduzzCheckoutPage = () => {
           bg="white"
           p={6}
         >
-          {/* Aqui será renderizado o checkout da Eduzz */}
           <div id="elements" />
         </Box>
       </Flex>

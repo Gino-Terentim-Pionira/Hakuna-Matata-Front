@@ -226,6 +226,7 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 				spacingX={{ base: "16px", md: "48px" }}
 				spacingY="28px"
 				height="432px"
+				justifyItems="center"
 			>
 				{
 					((quickFilterSelected === "certificate" || quickFilterSelected === "all") && certificates && certificates.length > 0) && certificates.map((item) =>
