@@ -83,7 +83,7 @@ const MainPage = () => {
 		onClose: dailyOnClose,
 	} = useDisclosure();
 
-	const { getNewUserInfo, setUserData, userData } = useUser();
+	const { getNewUserInfo, userData } = useUser();
 	const { changeSoundtrack, pauseSoundtrack } = useSoundtrack();
 	const [script, setScript] = useState<IScript[]>([]);
 	const [onAlert, setOnAlert] = useState(false);
@@ -277,20 +277,16 @@ const MainPage = () => {
 			};
 			try {
 				setIsLoading(true);
-				const _userId: SetStateAction<string> | null = sessionStorage.getItem(
-					'@pionira/userId',
-				);
-				const res = await api.get(`/user/${_userId}`);
-				setUserData(res.data);
+				const user = await getNewUserInfo();
 
-				setIgnoranceFilter(res.data.ignorance, ignoranceArray);
+				setIgnoranceFilter(user.ignorance, ignoranceArray);
 
-				if (res.data.isFirstTimeAppLaunching) {
+				if (user.isFirstTimeAppLaunching) {
 					pauseSoundtrack();
 					welcomeVideoOnOpen();
 				}
 
-				await checkCanCollectDaily(res.data.lastCollected, res.data.coins);
+				await checkCanCollectDaily(user.lastCollected, user.coins);
 				await verifySocialLoginRedirect();
 
 			} catch (error) {
@@ -318,7 +314,7 @@ const MainPage = () => {
 			<MobileIgnorancePremiumIcons />
 			<MobileNavIcon />
 			<Box
-				position={{base: "absolute", md: "relative"}}
+				position={{ base: "absolute", md: "relative" }}
 				margin="0 auto"
 				overflowX="auto"
 				overflowY="hidden"
@@ -330,94 +326,94 @@ const MainPage = () => {
 					w={{ base: "1500px", md: "auto" }}
 				>
 					<VideoBackground
-									 position={isDesktop ? "absolute" : "relative"}
-									 handleLoading={() => setIsAnimationLoading(false)}
-									 source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
+						position={isDesktop ? "absolute" : "relative"}
+						handleLoading={() => setIsAnimationLoading(false)}
+						source={getBackgroundAnimation(pathEnum.MAINPAGE)} />
 
 					{
 						(isLoading || isAnimationLoading) ? (
 							<LoadingOverlay />
 						) : (
-							<>
-								<Flex
-									display={{ base: "none", md: "flex" }}
-									width='92.5%'
-									justifyContent='space-between'
-									alignItems='flex-start'
-									margin='auto'
-								>
-									<NavActions logout={logout} dontShowMap />
+								<>
+									<Flex
+										display={{ base: "none", md: "flex" }}
+										width='92.5%'
+										justifyContent='space-between'
+										alignItems='flex-start'
+										margin='auto'
+									>
+										<NavActions logout={logout} dontShowMap />
+										{narrativeIsOpen ? null : (
+											<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
+										)}
+									</Flex>
+
 									{narrativeIsOpen ? null : (
-										<IgnorancePremiumIcons ignorance={userData.ignorance} dontShowOracle />
+										<>
+											<Flex
+												position='absolute'
+												left={{ base: "200px", md: "18vw" }}
+												top={{ base: "56%", md: "49.5vh" }}
+												w={{ base: "80px", md: "auto" }}
+												zIndex={{ base: 1, md: "auto" }}
+											>
+												<motion.div
+													animate={checkFirstTrailAcess(trailAccessEnum.CHEETAH) ? { scale: [0.8, 1, 0.8] } : false}
+													transition={{ loop: Infinity }}
+												>
+													<TrailIcon
+														image={icon_cheeta}
+														onClick={() => goToPath(trailEnum.CHEETAH)}
+														mouseOver={CHEETAH_TRAIL}
+													/>
+												</motion.div>
+											</Flex>
+
+											<Flex
+												position="absolute"
+												left={{ base: "655px", md: "43.5vw" }}
+												top={{ base: "59%", md: "57.5vh" }}
+												w={{ base: "80px", md: "auto" }}
+											>
+												<TrailIcon
+													image={icon_block}
+													onClick={() => setOpenBlockedModal(true)}
+													mouseOver={BLOCKED_TRAIL}
+												/>
+											</Flex>
+
+											<Box
+												position="absolute"
+												w={{ base: "340px", md: "22%" }}
+												left={{ base: "855px", md: "60vw" }}
+												top={{ base: "50%", md: "52vh" }}
+											>
+												<BaboonHelp />
+											</Box>
+
+											<Flex
+												position="absolute"
+												left={{ base: "1390px", md: "auto" }}
+												right={{ base: "auto", md: "2vw" }}
+												top={{ base: "56%", md: "50vh" }}
+												w={{ base: "80px", md: "auto" }}
+											>
+												<motion.div
+													animate={checkFirstTrailAcess(trailAccessEnum.LION) ? { scale: [0.8, 1, 0.8] } : false}
+													transition={{ loop: Infinity }}
+												>
+													<TrailIcon
+														image={icon_lion}
+														onClick={() => goToPath(trailEnum.LION)}
+														mouseOver={LION_TRAIL}
+													/>
+												</motion.div>
+											</Flex>
+
+										</>
 									)}
-								</Flex>
-
-								{narrativeIsOpen ? null : (
-									<>
-										<Flex
-											position='absolute'
-											left={{base: "200px", md: "18vw"}}
-											top={{base: "56%", md: "49.5vh"}}
-											w={{ base: "80px", md: "auto" }}
-											zIndex={{ base: 1, md: "auto" }}
-										>
-											<motion.div
-												animate={checkFirstTrailAcess(trailAccessEnum.CHEETAH) ? { scale: [0.8, 1, 0.8] } : false}
-												transition={{ loop: Infinity }}
-											>
-												<TrailIcon
-													image={icon_cheeta}
-													onClick={() => goToPath(trailEnum.CHEETAH)}
-													mouseOver={CHEETAH_TRAIL}
-												/>
-											</motion.div>
-										</Flex>
-
-										<Flex
-											position="absolute"
-											left={{ base: "655px", md: "43.5vw" }}
-											top={{ base: "59%", md: "57.5vh" }}
-											w={{ base: "80px", md: "auto" }}
-										>
-											<TrailIcon
-												image={icon_block}
-												onClick={() => setOpenBlockedModal(true)}
-												mouseOver={BLOCKED_TRAIL}
-											/>
-										</Flex>
-
-										<Box
-											position="absolute"
-											w={{ base: "340px", md: "22%" }}
-											left={{ base: "855px", md: "60vw" }}
-											top={{ base: "50%", md: "52vh" }}
-										>
-											<BaboonHelp />
-										</Box>
-
-										<Flex
-											position="absolute"
-											left={{ base: "1390px", md: "auto" }}
-											right={{ base: "auto", md: "2vw" }}
-											top={{ base: "56%", md: "50vh" }}
-											w={{ base: "80px", md: "auto" }}
-										>
-											<motion.div
-												animate={checkFirstTrailAcess(trailAccessEnum.LION) ? { scale: [0.8, 1, 0.8] } : false}
-												transition={{ loop: Infinity }}
-											>
-												<TrailIcon
-													image={icon_lion}
-													onClick={() => goToPath(trailEnum.LION)}
-													mouseOver={LION_TRAIL}
-												/>
-											</motion.div>
-										</Flex>
-
-									</>
-								)}
-							</>
-						)
+								</>
+							)
 					}
 				</Box>
 			</Box>

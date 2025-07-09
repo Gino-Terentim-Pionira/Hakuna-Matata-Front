@@ -31,6 +31,7 @@ export interface IUser {
 		lionFinal: boolean;
 	};
 	consecutiveDays: number;
+	lastCollected: number;
 	luck: number;
 	items_id: string[];
 	question_id: string[];
@@ -61,6 +62,7 @@ export interface IUser {
         skin: string
     };
 	oracle_messages: number;
+	isSubscribed: boolean;
 }
 
 const userState = atom({
