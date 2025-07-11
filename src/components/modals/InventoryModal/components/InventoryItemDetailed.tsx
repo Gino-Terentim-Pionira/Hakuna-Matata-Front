@@ -123,19 +123,21 @@ export const InventoryItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }
 						alignItems='flex-start'
 						justifyContent='space-between'
 						columnGap='24px'
-						height={{ base: '100%', md: 'aut' }}
+						height={{ base: '100%', md: 'auto' }}
 					>
-						<Text
-							width='80%'
-							maxHeight={{ base: 'none', md: 'auto' }}
-							fontSize={{ base: '16px', md: '22px' }}
-							fontWeight='regular'
-							textAlign='left'
+						<Box
+							maxHeight={{ base: '60dvh', md: 'auto' }}
 							overflowY='auto'
-							maxH='260px'
+							width={{ base: '100%', md: '80%' }}
 						>
-							{shopItemInfo && shopItemInfo.description}
-						</Text>
+							<Text
+								fontSize={{ base: '16px', md: '18px' }}
+								fontWeight='regular'
+								textAlign='justify'
+							>
+								{shopItemInfo && shopItemInfo.description} 
+							</Text>
+						</Box>
 
 						<Tooltip
 							isDisabled={!isDesktop}
@@ -147,7 +149,7 @@ export const InventoryItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }
 							<Button
 								w={{ base: "100%", md: '200px' }}
 								height='3.5rem'
-								marginTop={{base: "24px", md: "4px"}}
+								marginTop={{ base: "24px", md: "4px" }}
 								marginBottom={{ base: '24px', md: '4px' }}
 								background={colorPalette.secondaryColor}
 								color={colorPalette.buttonTextColor}

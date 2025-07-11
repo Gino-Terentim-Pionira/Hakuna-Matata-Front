@@ -29,7 +29,8 @@ const colorPalette = {
     darkGrey: '#999999',
     alertText: '#F47070',
     gold: '#F2CB05',
-    oracleWhite: '#F5F6F9'
+    oracleWhite: '#F5F6F9',
+    beige: '#F9F5C8'
 }
 
 export default colorPalette;

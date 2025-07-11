@@ -124,6 +124,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 				position='relative'
 				w='100%'
 				h={{ base: 'fit-content', md: '360px' }}
+				maxH={{base: '80dvh', md: 'none'}}
 				bg={colorPalette.slideBackground}
 				rounded='md'
 				shadow='md'
@@ -136,6 +137,7 @@ export const ShopItemDetailed = ({ isOpen, onClose, shopItemInfo, onClick }: Sho
 					transform: `translateY(${translateY}px)`,
 					transition: closing ? 'transform 0.3s ease-in-out' : '',
 				}}
+				overflowY='auto'
 			>
 				<Flex
 					display={{ base: 'flex', md: 'none' }}

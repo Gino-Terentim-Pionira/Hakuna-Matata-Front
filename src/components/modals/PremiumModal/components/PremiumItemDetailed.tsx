@@ -6,10 +6,10 @@ import MediaQueriesEnum from '../../../../utils/enums/mediaQueries';
 
 type PremiumItemDetailedTypes = {
 	isOpen: boolean;
-    title: string | undefined;
-    detail: string | undefined;
-    checkoutId: string | undefined;
-    isSubscribed: boolean | undefined;
+	title: string | undefined;
+	detail: string | undefined;
+	checkoutId: string | undefined;
+	isSubscribed: boolean | undefined;
 	onClose: VoidFunction;
 }
 
@@ -49,7 +49,7 @@ export const PremiumItemDetailed = ({ isOpen, onClose, title, detail, isSubscrib
 	};
 
 	return (
-		<Slide direction='bottom' in={isOpen} style={{ zIndex: 1900 }}>
+		<Slide direction='bottom' in={isOpen} style={{ zIndex: 3000 }}>
 			<Box onClick={onClose} w='100%' h='100vh' />
 			<Flex
 				position='relative'
@@ -128,19 +128,21 @@ export const PremiumItemDetailed = ({ isOpen, onClose, title, detail, isSubscrib
 						alignItems='flex-start'
 						justifyContent='space-between'
 						columnGap='24px'
-						height={{ base: '100%', md: 'aut' }}
+						height={{ base: '100%', md: 'auto' }}
 					>
-						<Text
-							width='80%'
-							maxHeight={{ base: 'none', md: 'auto' }}
-							fontSize={{ base: '16px', md: '22px' }}
-							fontWeight='regular'
-							textAlign='left'
+						<Box
+							maxHeight={{ base: '60dvh', md: 'auto' }}
 							overflowY='auto'
-							maxH='260px'
+							width={{ base: '100%', md: '80%' }}
 						>
-							{detail}
-						</Text>
+							<Text
+								fontSize={{ base: '16px', md: '18px' }}
+								fontWeight='regular'
+								textAlign='justify'
+							>
+								{detail}
+							</Text>
+						</Box>
 
 						<Tooltip
 							isDisabled={!isDesktop}
@@ -152,7 +154,7 @@ export const PremiumItemDetailed = ({ isOpen, onClose, title, detail, isSubscrib
 							<Button
 								w={{ base: "100%", md: '200px' }}
 								height='3.5rem'
-								marginTop={{base: "24px", md: "4px"}}
+								marginTop={{ base: "24px", md: "4px" }}
 								marginBottom={{ base: '24px', md: '4px' }}
 								background={isSubscribed ? colorPalette.closeButton : colorPalette.primaryColor}
 								color={colorPalette.buttonTextColor}
@@ -161,7 +163,7 @@ export const PremiumItemDetailed = ({ isOpen, onClose, title, detail, isSubscrib
 								_hover={{
 									opacity: 0.7,
 								}}
-								onClick={isSubscribed ? ()=>console.log("cancelar") : goToEduzz}
+								onClick={isSubscribed ? () => console.log("cancelar") : goToEduzz}
 								cursor={'pointer'}
 							>
 								{isSubscribed ? 'Cancelar' : 'Saiba Mais'}

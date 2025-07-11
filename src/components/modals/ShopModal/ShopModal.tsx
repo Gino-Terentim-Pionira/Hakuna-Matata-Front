@@ -264,68 +264,70 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 
 
 	return (
-		<Modal isCentered isOpen={isOpen} onClose={onClose} size="4xl" scrollBehavior="inside">
-			<ModalOverlay />
-			<ModalContent
-				bg={colorPalette.oracleWhite}
-				px={{ base: '14px', md: '48px' }}
-				minH={{ base: '100%', md: '60vh' }}
-				maxH={{ base: '100%', md: 'auto' }}
-				fontFamily={fontTheme.fonts}
-			>
-				<ModalHeader
-					w="100%"
-					borderBottom={`2px solid ${colorPalette.primaryColor}`}
-					display={{ base: 'flex' }}
-					justifyContent={{ base: 'flex-start' }}
-					pb={{ base: '12px' }}
-					pl={{ base: 0 }}
+		<>
+			<Modal isCentered isOpen={isOpen && !shopItemInfo} onClose={onClose} size="4xl" scrollBehavior="inside">
+				<ModalOverlay />
+				<ModalContent
+					bg={colorPalette.oracleWhite}
+					px={{ base: '14px', md: '48px' }}
+					minH={{ base: '100%', md: '60vh' }}
+					maxH={{ base: '100%', md: 'auto' }}
+					fontFamily={fontTheme.fonts}
 				>
-					<Text
-						w="fit-content"
-						fontSize="40px"
-						color={colorPalette.textColor}
-						fontWeight="semibold"
-						m={{ base: 0, md: 'auto' }}
+					<ModalHeader
+						w="100%"
+						borderBottom={`2px solid ${colorPalette.primaryColor}`}
+						display={{ base: 'flex' }}
+						justifyContent={{ base: 'flex-start' }}
+						pb={{ base: '12px' }}
+						pl={{ base: 0 }}
 					>
-						Loja
+						<Text
+							w="fit-content"
+							fontSize="40px"
+							color={colorPalette.textColor}
+							fontWeight="semibold"
+							m={{ base: 0, md: 'auto' }}
+						>
+							Loja
 					</Text>
-					<ModalCloseButton
-						color={colorPalette.closeButton}
-						fontSize={{ base: '28px', md: 'inherit' }}
-						mt={{ base: '24px', md: '8px' }}
-						mr={{ base: '8px', md: '8px' }}
-					/>
-				</ModalHeader>
+						<ModalCloseButton
+							color={colorPalette.closeButton}
+							fontSize={{ base: '28px', md: 'inherit' }}
+							mt={{ base: '24px', md: '8px' }}
+							mr={{ base: '8px', md: '8px' }}
+						/>
+					</ModalHeader>
 
-				<ModalBody
-					w="100%"
-					px={{ base: 0 }}
-					py={{ base: 0, md: '16px' }}
-					sx={{
-						"&::-webkit-scrollbar": {
-							width: "4px",
-							height: "4px",
-							borderRadius: "8px"
-						},
-						"&::-webkit-scrollbar-thumb": {
-							background: "#9D9D9D",
-							borderRadius: "10px"
-						},
-						"&::-webkit-scrollbar-thumb:hover": {
-							background: "#555"
-						},
-					}}
-				>
-					{
-						isLoading ? (
-							<LoadingState />
-						) : (
-								renderContent()
-							)
-					}
-				</ModalBody>
-			</ModalContent>
+					<ModalBody
+						w="100%"
+						px={{ base: 0 }}
+						py={{ base: 0, md: '16px' }}
+						sx={{
+							"&::-webkit-scrollbar": {
+								width: "4px",
+								height: "4px",
+								borderRadius: "8px"
+							},
+							"&::-webkit-scrollbar-thumb": {
+								background: "#9D9D9D",
+								borderRadius: "10px"
+							},
+							"&::-webkit-scrollbar-thumb:hover": {
+								background: "#555"
+							},
+						}}
+					>
+						{
+							isLoading ? (
+								<LoadingState />
+							) : (
+									renderContent()
+								)
+						}
+					</ModalBody>
+				</ModalContent>
+			</Modal>
 			<ShopItemDetailed onClick={(usePremium) => {
 				setShopItemUsePremium(usePremium);
 				openAlertModalInfo();
@@ -355,6 +357,6 @@ export const ShopModal = ({ isOpen, onClose, shopItems, certificates, oraclePack
 				alertTitle={alertModalInfo.alertTitle}
 				alertBody={alertModalInfo.alertBody}
 			/>
-		</Modal>
+		</>
 	);
 };
