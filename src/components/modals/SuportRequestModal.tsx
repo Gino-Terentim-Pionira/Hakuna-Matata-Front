@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEventHandler } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -7,61 +7,36 @@ import {
     ModalBody,
     ModalCloseButton,
     Text,
-    SimpleGrid, Flex
+    Flex,
+    FormControl,
+    FormLabel,
+    FormHelperText,
+    Button,
+    Textarea
 } from '@chakra-ui/react';
-import colorPalette from '../../../styles/colorPalette';
-import fontTheme from '../../../styles/base';
-import LoadingState from '../../LoadingState';
-import { IPremiumTier } from '../../../recoil/premiumRecoil';
-import { PremiumItem } from './components/PremiumItem';
-import { PremiumItemDetailed } from './components/PremiumItemDetailed';
+import colorPalette from '../../styles/colorPalette';
+import fontTheme from '../../styles/base';
+import LoadingState from '../LoadingState';
 
-type PremiumModalType = {
+
+type SuportModalType = {
     isOpen: boolean;
+    inputHeader: string;
+    inputFooter: string;
+    buttonText: string;
+    isLoading: boolean;
+    messageOnChange: ChangeEventHandler;
+    onButtonClick: () => void;
     onClose: VoidFunction;
-    premiumTiers?: IPremiumTier[];
-    isLoading?: boolean
 }
 
-export const PremiumModal = ({ isOpen, onClose, premiumTiers, isLoading }: PremiumModalType) => {
-
-    const [premiumItemInfo, setPremiumItemInfo] = useState<IPremiumTier | undefined>();
-
-    const handlePremiumInfo = (item: IPremiumTier) => {
-        setPremiumItemInfo(item);
-    }
-
-    const closePremiumInfo = () => {
-        setPremiumItemInfo(undefined);
-    }
-
-    const renderContent = () => (
-        <>
-            <SimpleGrid columnGap={{ base: "16px", md: "48px" }} mt="32px" mb="16px" minChildWidth="130px" spacingX="48px" spacingY="28px" height="432px" justifyItems="center">
-                {
-                    premiumTiers?.map(item => (
-                        <PremiumItem
-                            isSubscribed={item.isUserSubscribed}
-                            title={item.name}
-                            description={item.description}
-                            premiumValue={item.premiumValue}
-                            onClick={() => handlePremiumInfo(item)}
-                        />
-                    ))
-                }
-                <Flex w="130px" h="1px" />
-                <Flex w="130px" h="1px" />
-                <Flex w="130px" h="1px" />
-            </SimpleGrid>
-        </>
-    )
-
+export const SuportRequestModal = ({ isOpen, inputHeader, inputFooter, buttonText, messageOnChange, onButtonClick, isLoading, onClose }: SuportModalType) => {
 
     return (
         <>
             <Modal
                 isCentered
-                isOpen={isOpen && !premiumItemInfo}
+                isOpen={isOpen}
                 onClose={onClose}
                 size='4xl'
                 scrollBehavior='inside'
@@ -90,7 +65,7 @@ export const PremiumModal = ({ isOpen, onClose, premiumTiers, isLoading }: Premi
                             color={colorPalette.textColor}
                             fontWeight='semibold'
                         >
-                            Contribua com Nosso Propósito!
+                            Suporte Pionira
 					</Text>
                         <ModalCloseButton
                             color={colorPalette.closeButton}
@@ -130,19 +105,56 @@ export const PremiumModal = ({ isOpen, onClose, premiumTiers, isLoading }: Premi
                             },
                         }}
                     >
-                        {isLoading ? <LoadingState /> : renderContent()}
+                        <Flex
+                            flexDirection='column'
+                            alignItems='center'
+                            justifyContent='center'
+                            minH='80%'
+                        >
+                            {isLoading ? (
+                                <LoadingState />
+                            ) : (
+                                    <>
+                                        <Flex
+                                            w='640px'
+                                            mt='64px'
+                                            mb='64px'
+                                        >
+                                            <FormControl>
+                                                <FormLabel>{inputHeader}</FormLabel>
+                                                <Textarea
+                                                    width='100%'
+                                                    height='200px'
+                                                    placeholder='Escreva sua mensagem aqui...'
+                                                    onChange={messageOnChange}
+                                                />
+                                                <FormHelperText>{inputFooter}</FormHelperText>
+                                            </FormControl>
+                                        </Flex>
+
+                                        <Button
+                                            w='230px'
+                                            height='48px'
+                                            background={colorPalette.primaryColor}
+                                            color={colorPalette.buttonTextColor}
+                                            fontSize='20px'
+                                            borderRadius='8px'
+                                            _hover={{
+                                                opacity: 0.7,
+                                            }}
+                                            onClick={onButtonClick}
+                                            cursor={'pointer'}
+                                            mb='32px'
+                                        >
+                                            {buttonText}
+                                        </Button>
+                                    </>
+                                )}
+                        </Flex>
+
                     </ModalBody>
                 </ModalContent>
             </Modal>
-            <PremiumItemDetailed
-                isOpen={!!premiumItemInfo}
-                title={premiumItemInfo?.name}
-                detail={premiumItemInfo?.details}
-                isSubscribed={premiumItemInfo?.isUserSubscribed}
-                checkoutId={premiumItemInfo?.checkoutId}
-                productId={premiumItemInfo?.productId}
-                onClose={closePremiumInfo}
-            />
         </>
     );
 }
