@@ -21,7 +21,7 @@ export const useUser = () => {
         const user: IUser = {
             ...res.data,
             custom_avatar: resAvatar.data,
-            isSubscribed
+            isSubscribed: isSubscribed.data.isSubscribed
         }
         setUserData(user);
         return user;
