@@ -18,6 +18,7 @@ import MediaQueriesEnum from './utils/enums/mediaQueries';
 import CantUseApplication from './components/CantUseApplication';
 import CertificateDisplay from './pages/CertificateDisplay';
 import PremiumPurchase from './pages/PremiumPurchase';
+import PremiumThanks from './pages/PremiumThanks';
 
 const Routes = () => {
 	const [isMaxHeight] = useMediaQuery(MediaQueriesEnum.MAX_HEIGHT)
@@ -36,6 +37,7 @@ const Routes = () => {
 						<Route path='/' exact component={Home}/>
 						<Route path='/login' component={Login}/>
 						<Route path='/eduzz/:checkoutId' component={PremiumPurchase}/>
+						<Route path='/thanks' component={PremiumThanks} />
 						<Route path='/forgotPassword' component={ForgotPassword}/>
 						<Route path="/resetPassword/:id" component={ResetPassword}/>
 						<Route path='/register' component={Register}/>

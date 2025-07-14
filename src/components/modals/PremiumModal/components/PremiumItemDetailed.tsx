@@ -45,7 +45,7 @@ export const PremiumItemDetailed = ({ isOpen, onClose, title, detail, isSubscrib
             setAlertMsg('Seu pedido de cancelamento foi recebido com sucesso. Em breve entraremos em contato por e-mail.');
         } catch (error) {
             setAlertTitle('Erro ao enviar');
-            setAlertMsg('Não foi possível enviar seu pedido. Entre em contato pelo email de suporte: pionira_adm@ginoterentim.com');
+            setAlertMsg('Não foi possível enviar seu pedido. Por favor, entre em contato pelo email de suporte: pionira_adm@ginoterentim.com');
         } finally {
             setIsLoading(false);
             setSuportIsOpen(false);

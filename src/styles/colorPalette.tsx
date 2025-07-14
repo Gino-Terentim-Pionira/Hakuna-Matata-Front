@@ -30,7 +30,8 @@ const colorPalette = {
     alertText: '#F47070',
     gold: '#F2CB05',
     oracleWhite: '#F5F6F9',
-    beige: '#F9F5C8'
+    beige: '#F9F5C8',
+    brownText: '#56340A'
 }
 
 export default colorPalette;
