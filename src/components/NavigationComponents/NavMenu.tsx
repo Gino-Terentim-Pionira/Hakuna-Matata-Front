@@ -46,16 +46,16 @@ import { useHistory } from 'react-router-dom';
 import trailEnum from '../../utils/enums/trail';
 import OracleIcon from '../../assets/icons/oracle/oracle_icon.webp';
 import MediaQueriesEnum from '../../utils/enums/mediaQueries';
+import { NavSoundtrackIcon } from './NavSoundtrackIcon';
 
 type MobileNavIconTypes = {
-	marginTop?: string;
 	showGoBack?: boolean;
 	showOracle?: boolean;
 	trail?: trailEnum;
 	showGlasses?: boolean;
 }
 
-const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trail, showGlasses = true }: MobileNavIconTypes) => {
+const MobileNavIcon = ({ showGoBack = false, showOracle = false, trail, showGlasses = true }: MobileNavIconTypes) => {
 	const tutorialServices = new TutorialServices();
 	const { userData } = useUser();
 	const { isIgnoranceFilterOn, handleIgnoranceFilter } = useIgnoranceFilter();
@@ -240,7 +240,7 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 			icon: renderIconImage(icon_tutorial),
 			onClick: handleTutorialOpen
 		},
-		glassesItem, 
+		glassesItem,
 		{
 			label: LOG_OUT,
 			icon: renderIconImage(icon_logout),
@@ -265,8 +265,8 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 			label: TUTORIAL,
 			icon: renderIconImage(icon_tutorial),
 			onClick: handleTutorialOpen
-		}, 
-		glassesItem, 
+		},
+		glassesItem,
 		{
 			label: DAILY_QUIZ,
 			icon: renderIconImage(daily),
@@ -319,7 +319,7 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 				position='fixed'
 				display='flex'
 				transition='all 0.2s ease'
-				top={marginTop || '24px'}
+				top='24px'
 				left='16px'
 				border={`3px solid ${colorPalette.blackBorder}`}
 				borderRadius='999px'
@@ -336,12 +336,22 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 				<GiHamburgerMenu size={32} />
 			</Center>
 
+			<Center
+				position='fixed'
+				display='flex'
+				top={isDesktop ? "74px" : "83px"}
+				left={isDesktop ? "12px" : '16px'}
+				zIndex={9}
+			>
+				<NavSoundtrackIcon />
+			</Center>
+
 			{isIgnoranceFilterOn &&
 				<Center
 					position='fixed'
 					display='flex'
 					transition='all 0.2s ease'
-					top={marginTop || '83px'}
+					top='147px'
 					left='16px'
 					border={`3px solid ${colorPalette.blackBorder}`}
 					borderRadius='999px'
@@ -369,7 +379,7 @@ const MobileNavIcon = ({ marginTop, showGoBack = false, showOracle = false, trai
 					position='fixed'
 					display='flex'
 					transition='all 0.2s ease'
-					top={marginTop || '83px'}
+					top='147px'
 					left='16px'
 					border={`3px solid ${colorPalette.blackBorder}`}
 					borderRadius='999px'
