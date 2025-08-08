@@ -156,12 +156,29 @@ const BaboonHelp = () => {
     useEffect(() => {
         let timeout: NodeJS.Timeout;
 
+        const isAnyChakraModalOpen = () => {
+            // Modais do Chakra
+            const modals = document.querySelectorAll('.chakra-modal__content-container');
+
+            // Slides abertos do Chakra
+            const allSlides = document.querySelectorAll('.chakra-slide');
+            const openSlides = Array.from(allSlides).filter(el => {
+                const style = getComputedStyle(el);
+                return style.transform === 'matrix(1, 0, 0, 1, 0, 0)';
+            });
+
+            return modals.length > 0 || openSlides.length > 0;
+        };
+
+
         const resetTimer = () => {
             clearTimeout(timeout);
             if (!isInactive) {
                 timeout = setTimeout(() => {
-                    setIsInactive(true);
-                    setIsInactiveOpen(true);
+                    if (!isAnyChakraModalOpen()) {
+                        setIsInactive(true);
+                        setIsInactiveOpen(true);
+                    }
                 }, MILI_SECONDS_INACTIVE);
             }
         };
@@ -182,142 +199,142 @@ const BaboonHelp = () => {
     }, [isInactive]);
 
     return (
-		<>
-			<Box
-				_hover={{
-					cursor: 'pointer',
-				}}
-				onClick={handleOpenChat}
-			>
-				<video autoPlay loop muted playsInline>
-					<source src={webmOrMov(S3_BABOON_HELP)} />
-				</video>
-			</Box>
+        <>
+            <Box
+                _hover={{
+                    cursor: 'pointer',
+                }}
+                onClick={handleOpenChat}
+            >
+                <video autoPlay loop muted playsInline>
+                    <source src={webmOrMov(S3_BABOON_HELP)} />
+                </video>
+            </Box>
 
-			<Modal
-				isCentered
-				isOpen={isOpen}
-				onClose={handleCloseModal}
-				size='4xl'
-				scrollBehavior='inside'
-			>
-				<ModalOverlay />
-				<ModalContent
-					height={{ base: '100dvh', md: '90vh' }}
-					background={colorPalette.oracleWhite}
-					paddingX={{ base: '0', md: '48px' }}
-					minHeight='60vh'
-					maxHeight={{ base: "none", md: 'initial' }}
-					fontFamily={fontTheme.fonts}
-					margin={0}
-				>
-					<ModalHeader
-						width='100%'
-						borderBottom={`2px solid ${colorPalette.primaryColor}`}
-					>
-						<Text
-							width='fit-content'
-							margin='auto'
-							fontSize='40px'
-							color={colorPalette.textColor}
-							fontWeight='semibold'
-						>
-							O Sábio Babuíno
+            <Modal
+                isCentered
+                isOpen={isOpen}
+                onClose={handleCloseModal}
+                size='4xl'
+                scrollBehavior='inside'
+            >
+                <ModalOverlay />
+                <ModalContent
+                    height={{ base: '100dvh', md: '90vh' }}
+                    background={colorPalette.oracleWhite}
+                    paddingX={{ base: '0', md: '48px' }}
+                    minHeight='60vh'
+                    maxHeight={{ base: "none", md: 'initial' }}
+                    fontFamily={fontTheme.fonts}
+                    margin={0}
+                >
+                    <ModalHeader
+                        width='100%'
+                        borderBottom={`2px solid ${colorPalette.primaryColor}`}
+                    >
+                        <Text
+                            width='fit-content'
+                            margin='auto'
+                            fontSize='40px'
+                            color={colorPalette.textColor}
+                            fontWeight='semibold'
+                        >
+                            O Sábio Babuíno
 						</Text>
-						<ModalCloseButton
-							color={colorPalette.closeButton}
-							size='48px'
-							mr='8px'
-							mt='8px'
-						/>
-					</ModalHeader>
+                        <ModalCloseButton
+                            color={colorPalette.closeButton}
+                            size='48px'
+                            mr='8px'
+                            mt='8px'
+                        />
+                    </ModalHeader>
 
-					<ModalBody
-						height='100%'
-						marginTop='16px'
-						paddingTop='0px'
-						paddingX={isDesktop ? '24px' : '16px'}
-					>
-						{isLoading ? (
-							<LoadingState />
-						) : (
-							<Flex justifyContent='center' height='100%'>
-								<OracleChat
-									commonQuestions={
-										oracleObject.commonQuestions
-									}
-									messages={oracleObject.messages}
-									userMessage={sendMessage}
-									isMessageLoading={isMessageLoading}
-									inicialMessage='Estou perdido nesta Savana, o que posso fazer?'
-								/>
-							</Flex>
-						)}
-					</ModalBody>
-				</ModalContent>
-			</Modal>
-			<AlertModal
-				isOpen={isErrorOpen}
-				onClose={handleCloseError}
-				buttonBody={
-					<Button
-						color='white'
-						bg={colorPalette.primaryColor}
-						_hover={{ bg: colorPalette.primaryColor }}
-						onClick={handleCloseError}
-						ml={3}
-					>
-						Confirmar
+                    <ModalBody
+                        height='100%'
+                        marginTop='16px'
+                        paddingTop='0px'
+                        paddingX={isDesktop ? '24px' : '16px'}
+                    >
+                        {isLoading ? (
+                            <LoadingState />
+                        ) : (
+                                <Flex justifyContent='center' height='100%'>
+                                    <OracleChat
+                                        commonQuestions={
+                                            oracleObject.commonQuestions
+                                        }
+                                        messages={oracleObject.messages}
+                                        userMessage={sendMessage}
+                                        isMessageLoading={isMessageLoading}
+                                        inicialMessage='Estou perdido nesta Savana, o que posso fazer?'
+                                    />
+                                </Flex>
+                            )}
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+            <AlertModal
+                isOpen={isErrorOpen}
+                onClose={handleCloseError}
+                buttonBody={
+                    <Button
+                        color='white'
+                        bg={colorPalette.primaryColor}
+                        _hover={{ bg: colorPalette.primaryColor }}
+                        onClick={handleCloseError}
+                        ml={3}
+                    >
+                        Confirmar
 					</Button>
-				}
-				alertTitle={'Babuíno indisponível'}
-				alertBody={
-					'O Sábio Babuíno está indisponível no momento. Tente novamente mais tarde!'
-				}
-			/>
+                }
+                alertTitle={'Babuíno indisponível'}
+                alertBody={
+                    'O Sábio Babuíno está indisponível no momento. Tente novamente mais tarde!'
+                }
+            />
 
-			<SliderModal
-				isOpen={isInactiveOpen}
-				buttonFunctions={handleCloseInactive}
-				image={monkey}
-				visibleName={true}
-				title='Está perdido, viajante?'
-				visibleText={true}
-				visibleImage={true}
-				content='Tenho algumas dicas do que você poderia fazer em seguida!'
-				customComponent={
-					<Flex
-						justifyContent='space-between'
-						alignItems='flex-end'
-						marginRight='32px'
-						marginTop='32px'
-						marginBottom='32px'
-						flexDirection='column'
-					>
-						<MdClose
-							size='54px'
-							color={colorPalette.closeButton}
-							cursor='pointer'
-							onClick={handleCloseInactive}
-						/>
+            <SliderModal
+                isOpen={isInactiveOpen}
+                buttonFunctions={handleCloseInactive}
+                image={monkey}
+                visibleName={true}
+                title='Está perdido, viajante?'
+                visibleText={true}
+                visibleImage={true}
+                content='Tenho algumas dicas do que você poderia fazer em seguida!'
+                customComponent={
+                    <Flex
+                        justifyContent='space-between'
+                        alignItems='flex-end'
+                        marginRight='32px'
+                        marginTop='32px'
+                        marginBottom='32px'
+                        flexDirection='column'
+                    >
+                        <MdClose
+                            size='54px'
+                            color={colorPalette.closeButton}
+                            cursor='pointer'
+                            onClick={handleCloseInactive}
+                        />
 
-						<Button
-							width='142px'
-							height='45px'
-							backgroundColor={colorPalette.primaryColor}
-							_hover={{ bg: colorPalette.primaryColor }}
-							color={colorPalette.whiteText}
-							fontFamily={fontTheme.fonts}
-							fontSize='20px'
-							onClick={openInactiveChat}
-						>
-							Converse comigo
+                        <Button
+                            width='142px'
+                            height='45px'
+                            backgroundColor={colorPalette.primaryColor}
+                            _hover={{ bg: colorPalette.primaryColor }}
+                            color={colorPalette.whiteText}
+                            fontFamily={fontTheme.fonts}
+                            fontSize='20px'
+                            onClick={openInactiveChat}
+                        >
+                            Converse comigo
 						</Button>
-					</Flex>
-				}
-			/>
-		</>
-	);
+                    </Flex>
+                }
+            />
+        </>
+    );
 }
 
 export default BaboonHelp;
